@@ -351,6 +351,10 @@ gulp.task('release:make', 'Generate a release.', function() {
         ncp(path.join(__dirname, 'app'), target, function(err) {
             if(err) return console.error(err);
 
+            // Copy license and installation instructions
+            ncp(path.join(__dirname, 'LICENSE.md'), path.join(target, 'LICENSE.md'));
+            ncp(path.join(__dirname, 'INSTALL.md'), path.join(target, 'INSTALL.md'));
+
             // Inject version number into runtime.php
             try {
                 fs.writeFileSync(
