@@ -14,6 +14,12 @@ This software is dedicated to my daughter, Sophia. Chase your dreams, little tan
 - PHP 5.5+
 - MySQL 5.5.3+
 
+## Download
+
+**This is the development repo!** You'll need to build Postleaf using the instructions below before running it.
+
+Download the latest ready-to-use version from: https://www.postleaf.org/download
+
 ## Contributing
 
 Postleaf uses Composer and NPM to manage dependencies and Gulp as its task runner. To contribute to this project, you'll need to clone the repository and install the required development tools listed below.
@@ -22,21 +28,21 @@ Postleaf uses Composer and NPM to manage dependencies and Gulp as its task runne
 - [Node](https://nodejs.org/en/)
 - [Gulp](http://gulpjs.com/) (Install using `npm install -g gulp-cli`)
 
-Please read through our [contributing guidelines](https://github.com/claviska/postleaf-app/blob/master/CONTRIBUTING.md). Included are directions for opening issues, coding standards, and notes on development.
+Please read through our [contributing guidelines](https://github.com/claviska/postleaf-app/blob/master/CONTRIBUTING.md).
 
 ## Building
 
-Open a terminal, **navigate to the root directory of your cloned repo**, and run this command to install all required dependencies:
+Once you have the necessary development tools installed:
+
+1. Open a terminal
+2. Navigate to the root directory of your cloned repo
+3. Run the following command:
 
 ```
 $ composer install
 ```
 
-With this command, will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will also trigger `gulp build` which will generate all the assets you need to run Postleaf.
-
-```
-$ gulp build
-```
+Composer will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will trigger `gulp build` which will generate all the assets you need to run Postleaf.
 
 ## Using Gulp
 
