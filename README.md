@@ -59,14 +59,16 @@ Available tasks
     build:prune    Prune unused files from vendor packages.
     build:scripts  Build scripts. [jshint, clean:scripts]
     build:styles   Build styles. [clean:styles]
-    clean          Cleans up generated files. [clean:fonts, clean:images, clean:scripts, clean:styles]
+    clean          Clean up generated files. [clean:fonts, clean:images, clean:scripts, clean:styles]
     clean:fonts    Delete generated fonts.
     clean:images   Delete generated images.
     clean:scripts  Delete generated scripts.
     clean:styles   Delete generated styles.
-    default        The default task. [watch]
+    default        Run the default task. [watch]
     help           Display this help text.
     jshint         Lint source scripts with JSHint.
+    release:clean  Delete all generated releases.
+    release:make   Generate a release.
     watch          Watch for script and style changes.
 ```
 
