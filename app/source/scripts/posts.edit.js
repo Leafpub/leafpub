@@ -79,7 +79,7 @@ $(function() {
         .on('touchstart.postleaf.panel keydown.postleaf.panel mousedown.postleaf.panel', function(event) {
             if(
                 // Is it outside the panel?
-                !$(event.target).parents().andSelf().is(panel) &&
+                !$(event.target).parents().addBack().is(panel) &&
                 // Ignore modifier keypresses
                 !(event.metaKey || event.cmdKey || event.shiftKey)
             ) {
@@ -165,7 +165,7 @@ $(function() {
         // Prevent links from loading other pages
         $(frameDoc).on('click mousedown', 'a, area', function(event) {
             // Skip [data-postleaf] elements
-            if(!$(this).parents().andSelf().is('[data-postleaf-id]')) {
+            if(!$(this).parents().addBack().is('[data-postleaf-id]')) {
                 event.preventDefault();
             }
         });
@@ -497,7 +497,7 @@ $(function() {
 
     // Shows the dropzone
     function showDropzone(event) {
-        var zone = $(event.target).parents().andSelf();
+        var zone = $(event.target).parents().addBack();
 
         // Show it
         $('.dropzone').prop('hidden', false);
