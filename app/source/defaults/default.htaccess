@@ -8,8 +8,3 @@ RewriteRule ^backups/ - [F]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
-
-# PHP (depending on your server, you may need to configure these values in php.ini)
-php_value upload_max_filesize 50M
-php_value post_max_size 70M
-php_value max_input_time 900
