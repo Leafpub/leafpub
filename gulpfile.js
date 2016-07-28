@@ -4,18 +4,17 @@ var gulp = require('gulp-help')(require('gulp')),
     autoprefixer = require('gulp-autoprefixer'),
     cleanCSS = require('gulp-clean-css'),
     del = require('del'),
-    fs = require('fs'),
+    fs = require('fs-extra'),
     imageop = require('gulp-image-optimization'),
     jshint = require('gulp-jshint'),
-    mkdirp = require('mkdirp'),
-    ncp = require('ncp'),
     notify = require('gulp-notify'),
     path = require('path'),
     preprocess = require('gulp-preprocess'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),
-    watch = require('gulp-watch');
+    watch = require('gulp-watch'),
+    zip = require('gulp-zip');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Config
@@ -344,51 +343,52 @@ gulp.task('release:make', 'Generate a release.', function() {
     del.sync(target);
 
     // Create dist directory
-    mkdirp(dist, function(err) {
-        if(err) return console.error(err);
+    fs.mkdirsSync(dist);
 
-        // Copy app/ to dist/postleaf-<version>/
-        ncp(path.join(__dirname, 'app'), target, function(err) {
-            if(err) return console.error(err);
+    // Copy app/ to dist/postleaf-<version>/
+    fs.copySync(path.join(__dirname, 'app'), target);
 
-            // Copy license and installation instructions
-            ncp(path.join(__dirname, 'LICENSE.md'), path.join(target, 'LICENSE.md'));
-            ncp(path.join(__dirname, 'INSTALL.md'), path.join(target, 'INSTALL.md'));
+    // Copy license and installation instructions
+    fs.copySync(path.join(__dirname, 'LICENSE.md'), path.join(target, 'LICENSE.md'));
+    fs.copySync(path.join(__dirname, 'INSTALL.md'), path.join(target, 'INSTALL.md'));
 
-            // Inject version number into runtime.php
-            try {
-                fs.writeFileSync(
-                    path.join(target, 'source/runtime.php'),
-                    fs.readFileSync(path.join(target, 'source/runtime.php'))
-                        .toString()
-                        .replace('{{version}}', config.version)
-                );
-            } catch(err) {
-                return console.error(err);
-            }
+    // Inject version number into runtime.php
+    try {
+        fs.writeFileSync(
+            path.join(target, 'source/runtime.php'),
+            fs.readFileSync(path.join(target, 'source/runtime.php'))
+                .toString()
+                .replace('{{version}}', config.version)
+        );
+    } catch(err) {
+        return console.error(err);
+    }
 
-            // Delete .htaccess, database.php
-            del.sync(path.join(target, '.htaccess'));
-            del.sync(path.join(target, 'database.php'));
+    // Delete .htaccess, database.php
+    del.sync(path.join(target, '.htaccess'));
+    del.sync(path.join(target, 'database.php'));
 
-            // Empty backups, content/cache, content/themes, content/uploads
-            del.sync(path.join(target, 'backups/*'));
-            del.sync(path.join(target, 'content/cache/*'));
-            del.sync(path.join(target, 'content/themes/*'));
-            del.sync(path.join(target, 'content/uploads/*'));
+    // Empty backups, content/cache, content/themes, content/uploads
+    del.sync(path.join(target, 'backups/*'));
+    del.sync(path.join(target, 'content/cache/*'));
+    del.sync(path.join(target, 'content/themes/*'));
+    del.sync(path.join(target, 'content/uploads/*'));
 
-            // Prune source/images, source/scripts, and source/styles
-            del.sync(path.join(target, 'source/images/**'));
-            del.sync(path.join(target, 'source/scripts/**'));
-            del.sync(path.join(target, 'source/styles/**'));
+    // Prune source/images, source/scripts, and source/styles
+    del.sync(path.join(target, 'source/images/**'));
+    del.sync(path.join(target, 'source/scripts/**'));
+    del.sync(path.join(target, 'source/styles/**'));
 
-            // Little message to celebrate
-            console.log(
-                '\nPostleaf ' + config.version + ' has been released! 🎉\n\n' +
-                'Location: ' + target + '\n'
-            );
-        });
-    });
+    // Create zip
+    gulp.src(path.join(target, '**'))
+        .pipe(zip('postleaf-' + config.version + '.zip'))
+        .pipe(gulp.dest(dist));
+
+    // Little message to celebrate
+    console.log(
+        '\nPostleaf ' + config.version + ' has been released! 🎉\n\n' +
+        'Location: ' + target + '\n'
+    );
 });
 
 // Clean releases
