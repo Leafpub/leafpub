@@ -1,0 +1,112 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Transitions
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Make sure transitions don't fire before the page is loaded
+.preload * {
+    transition: none !important;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Anchors
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+a:focus {
+    outline: none;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Forms
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+form label {
+    color: #999;
+}
+
+.form-control,
+form label,
+.form-control .inner-addon {
+    transition:
+        border-color $postleaf-transition-speed,
+        color $postleaf-transition-speed;
+}
+
+.has-danger label {
+    color: $brand-danger;
+}
+
+.has-success label {
+    color: $brand-success;
+}
+
+.has-warning label {
+    color: $brand-warning;
+}
+
+// Remove shadows from iOS inputs
+input[type="date"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+textarea {
+    -webkit-appearance: none;
+}
+
+// Checkboxes & radios
+.checkbox,
+.radio {
+    input[type="checkbox"],
+    input[type="radio"] {
+        font-size: 1.2em;
+        margin-right: .2em;
+    }
+}
+
+// Inputs containing code
+input.code,
+textarea.code {
+    font-family: $font-family-monospace;
+    font-weight: 300;
+}
+
+// Use custom form styles for select elements
+select.form-control:not([size]):not([multiple]) {
+    @extend .custom-select;
+    height: 2.35rem;
+}
+
+.btn {
+    transition:
+        background-color $postleaf-transition-speed,
+        border-color $postleaf-transition-speed,
+        color $postleaf-transition-speed;
+    // Remove focus outline
+    &:focus,
+    &.focus,
+    &:active:focus,
+    &:active.focus,
+    &.active:focus,
+    &.active.focus {
+        outline: none;
+    }
+}
+
+// Black/white buttons at 50% opacity
+.btn-translucent-dark {
+    @include button-variant(white, rgba(black, .5), transparent);
+    &:hover {
+        background-color: rgba(black, .6);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Dropdowns
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.dropdown-item {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

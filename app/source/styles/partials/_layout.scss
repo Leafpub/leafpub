@@ -1,0 +1,49 @@
+// Top toolbar
+.top-toolbar {
+    @include make-row();
+    position: relative;
+    border-bottom: solid 1px #ddd;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    user-select: none;
+    line-height: 2rem;
+    h1 {
+        font-size: 1.3rem;
+        line-height: inherit;
+        margin: 0;
+        @include text-truncate;
+        i {
+            color: $text-muted;
+            margin: 0 .5rem;
+        }
+    }
+    .btn i {
+        transform: scale(1.2);
+    }
+}
+
+.top-toolbar-section {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .top-toolbar,
+    .top-toolbar-section {
+        padding-top: .3rem;
+        padding-bottom: .3rem;
+    }
+}
+
+// Main container
+.main-container {
+    @extend .container-fluid;
+    position: relative;
+}
+
+// Stretch containers (automatically resized in lib.js)
+.stretch-down {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}

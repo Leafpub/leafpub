@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{meta_title}}</title>
+        <meta name="description" content="{{meta_description}}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700%7CLato:700">
+        <style>
+            html {
+                padding: 0;
+                margin: 0;
+            }
+            body {
+                font-size: 20px;
+                font-family: Lora, serif;
+                font-weight: 300;
+                color: #333;
+                padding: 2rem;
+                line-height: 1.6;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .title {
+                font-family: Lato, sans-serif;
+                font-size: 3rem;
+                font-weight: 700;
+                line-height: 1.25;
+                margin: 0 0 2rem 0;
+            }
+            @media screen and (max-width: 600px) {
+                body {
+                    font-size: 18px;
+                    padding: .5rem;
+                }
+                .title {
+                    font-size: 2rem;
+                }
+            }
+            a {
+                color: #09d;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            blockquote {
+                border-left: solid 5px #eee;
+                padding-left: 2rem;
+                margin: 0 0 1.5rem 0;
+            }
+            code {
+                font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+                background-color: #eee;
+                border-radius: 4px;
+                padding: 2px 4px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                font-family: Lato, sans-serif;
+                font-weight: 700;
+                margin: 0 0 .5em 0;
+            }
+            hr {
+                border: none;
+                border-top: solid 1px #ddd;
+                margin-bottom: 2rem;
+            }
+            img {
+                max-width: 100%;
+            }
+            ol, ul {
+                line-height: 1.8;
+                list-style-position: inside;
+                padding: 0;
+                margin: 0 0 1.5rem 1.5rem;
+            }
+            p {
+                margin: 0 0 1.5rem 0;
+            }
+
+            /* Mandatory editor alignment classes */
+            .align-left {
+                text-align: left;
+            }
+            .align-center {
+                text-align: center;
+            }
+            .align-right {
+                text-align: right;
+            }
+            .align-justify {
+                text-align: justify;
+            }
+            img.align-left,
+            [data-embed].align-left {
+                float: left;
+                margin-right: 1em;
+            }
+            img.align-center,
+            [data-embed].align-center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            img.align-right,
+            [data-embed].align-right {
+                float: right;
+                margin-left: 1em;
+            }
+
+            /* Hide outlines */
+            body [data-postleaf-type="post-content"],
+            body [data-postleaf-type="post-title"] {
+                outline: none;
+            }
+        </style>
+        {{postleaf_head}}
+    </head>
+    <body>
+        {{#post}}
+            <div class="container">
+                <h1 class="title">{{title editable="true"}}</h1>
+                <div class="content">
+                    {{content editable="true"}}
+                </div>
+            </div>
+        {{/post}}
+        {{postleaf_foot}}
+    </body>
+</html>

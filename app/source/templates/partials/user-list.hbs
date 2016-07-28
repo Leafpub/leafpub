@@ -1,0 +1,36 @@
+{{#each users}}
+    <a
+        class="user-list-item col-xl-2 col-lg-3 col-md-3 col-sm-4 col-xs-6"
+        href="{{admin_url 'users/'}}{{encode slug}}"
+        data-slug="{{slug}}"
+        data-url="{{author_url}}"
+    >
+        <div class="avatar">
+            {{#if avatar}}
+                <img class="avatar-image" src="{{url avatar}}">
+            {{else}}
+                <i class="avatar-image fa fa-user"></i>
+            {{/if}}
+        </div>
+        <div class="name">
+            {{name}}
+            {{#is slug @user.slug}}
+                <span class="tag tag-success">
+                    <i class="fa fa-user"></i>
+                </span>
+            {{/is}}
+        </div>
+        <div class="role">
+            {{#is role 'owner'}}{{L 'owner'}}{{/is}}
+            {{#is role 'admin'}}{{L 'administrator'}}{{/is}}
+            {{#is role 'editor'}}{{L 'editor'}}{{/is}}
+            {{#is role 'author'}}{{L 'author'}}{{/is}}
+        </div>
+    </a>
+{{else}}
+    <div class="user-list-none valign">
+        <div class="valign-middle">
+            {{L 'no_users'}}
+        </div>
+    </div>
+{{/each}}

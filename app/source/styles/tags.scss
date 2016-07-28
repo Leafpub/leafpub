@@ -1,0 +1,75 @@
+@import "partials/variables";
+
+.tag-list {
+    position: relative;
+    height: 100%;
+    // margin-left: -$grid-gutter-width / 2;
+    // margin-right: -$grid-gutter-width / 2;
+    user-select: none;
+}
+
+.tag-list-none {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+}
+
+.tag-list-item {
+    position: relative;
+    border-bottom: solid 1px #ddd;
+    border-left: solid 0 transparent;
+    background-color: white;
+    padding: 1rem 1.5rem;
+    color: $body-color;
+    overflow: hidden;
+    transition:
+        border $postleaf-transition-speed,
+        padding $postleaf-transition-speed,
+        background-color $postleaf-transition-speed;
+    display: block;
+    .name {
+        margin-bottom: .3rem;
+        @include text-truncate;
+    }
+    .description {
+        font-size: .9rem;
+        color: $text-muted;
+        @include text-truncate;
+    }
+    .cover {
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        vertical-align: middle;
+        margin-right: .25rem;
+        display: inline-block;
+    }
+    .tag {
+        float: right;
+        font-size: .8rem;
+        margin-top: .1rem;
+        margin-left: .5rem;
+    }
+    &:hover {
+        background-color: #f8f8f8;
+        color: inherit;
+        text-decoration: none;
+    }
+    &:focus {
+        color: inherit;
+        text-decoration: none;
+    }
+    &.selected {
+        background-color: #f2f2f2;
+        border-left: solid .5rem $postleaf-blue;
+        padding-right: 1rem;
+    }
+}
+
+// Fix sticky hovers in iOS
+.ios .tag-list-item:hover:not(.selected) {
+    background-color: inherit;
+}

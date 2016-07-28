@@ -1,0 +1,46 @@
+// Alertable plugin
+.alertable {
+    position: fixed;
+    z-index: 9999;
+    // top: vertically centered by script
+    left: calc(50% - 12.5rem);
+    width: 25rem;
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 0 0 2.5rem rgba(black, .1);
+    padding: 1.5rem;
+    margin: 0 auto;
+}
+
+.alertable-overlay {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(black, .3);
+}
+
+.alertable-message {
+    margin-bottom: 1rem;
+}
+
+.alertable-prompt {
+    margin-bottom: 1rem;
+}
+
+.alertable-buttons {
+    text-align: right;
+}
+
+.alertable button {
+    margin-left: .25rem;
+}
+
+@include media-breakpoint-down(xs) {
+    .alertable {
+        left: 4%;
+        width: 92%;
+    }
+}

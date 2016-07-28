@@ -1,0 +1,10 @@
+// Vertical alignment
+.valign {
+    display: table;
+    width: 100%;
+    height: 100%;
+    .valign-middle {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}

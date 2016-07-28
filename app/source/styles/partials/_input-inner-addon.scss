@@ -1,0 +1,118 @@
+/*
+
+    Inner Input Addons - allows input addons inside text controls
+
+    Addon on left:
+
+        <div class="inner-addon-group">
+            <span class="inner-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control">
+        </div>
+
+    Addon on right:
+
+        <div class="inner-addon-group">
+            <input type="text" class="form-control">
+            <span class="inner-addon"><i class="fa fa-check text-success"></i></span>
+        </div>
+
+    Addons on left and right:
+
+        <div class="inner-addon-group">
+            <span class="inner-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control">
+            <a href="#" class="inner-addon"><i class="fa fa-remove"></i></a>
+        </div>
+
+    Tips:
+
+        - Works with form-control-sm and form-control-lg controls
+        - Works with loaders
+
+ */
+
+.inner-addon-group {
+    position: relative;
+
+    // Form controls
+    .form-control:not(:first-child) {
+        padding-left: 34px;
+    }
+    .form-control:not(:last-child) {
+        padding-right: 34px;
+    }
+
+    // Small form controls
+    .form-control-sm:not(:first-child) {
+        padding-left: 28px;
+    }
+    .form-control-sm:not(:last-child) {
+        padding-right: 28px;
+    }
+
+    // Large form controls
+    .form-control-lg:not(:first-child) {
+        padding-left: 40px;
+    }
+    .form-control-lg:not(:last-child) {
+        padding-right: 40px;
+    }
+
+    // Addons
+    .inner-addon {
+        color: lighten($input-color, 30%);
+        font-size: 1em;
+        line-height: 2em;
+        position: absolute;
+        top: 0;
+        margin: 2px 12px;
+    }
+    .inner-addon:first-child {
+        left: 0;
+    }
+    .inner-addon:last-child {
+        right: 0;
+    }
+
+    // Links/file inputs
+    label.inner-addon,
+    a.inner-addon i {
+        color: $link-color;
+        text-decoration: none;
+        cursor: pointer;
+        transition: $postleaf-transition-speed color;
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+
+    // Small addons
+    .inner-addon-sm {
+        font-size: .8em;
+        margin: 3px 10px;
+    }
+
+    // Large addons
+    .inner-addon-lg {
+        font-size: 1.2em;
+        margin: 5px 15px;
+    }
+
+    // Link addons
+    a.inner-addon {
+        color: $text-muted;
+        text-decoration: none;
+    }
+}
+
+// Modifiers
+.has-warning .inner-addon-group .inner-addon {
+    color: $brand-warning;
+}
+
+.has-danger .inner-addon-group .inner-addon {
+    color: $brand-danger;
+}
+.has-success .inner-addon-group .inner-addon {
+    color: $brand-success;
+}

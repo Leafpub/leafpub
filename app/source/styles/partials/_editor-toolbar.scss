@@ -1,0 +1,94 @@
+// Editor toolbar
+.editor-toolbar {
+    position: relative;
+    width: 100%;
+    background: white;
+    border-bottom: solid 1px #eee;
+    padding: .25rem .25rem;
+    user-select: none;
+    // Clearfix for floated btn-group
+    &::after {
+        content: ' ';
+        display: table;
+        clear: both;
+    }
+    // Float the save group to keep it on the right
+    .btn-group:last-child {
+        float: right;
+    }
+    .btn-group {
+        margin: .25rem;
+    }
+    .btn {
+        i {
+            width: 1em;
+            transform: scale(1);
+        }
+        &.on {
+            color: $postleaf-blue;
+        }
+    }
+
+    // Dropdown buttons
+    .dropdown-btn {
+        @extend .btn;
+        @extend .btn-secondary;
+        position: relative;
+        padding: 0;
+        display: inline-block;
+        .dropdown-toggle {
+            @include button-size($btn-padding-y, $btn-padding-x, 1rem, $border-radius);
+            position: relative;
+            padding-right: $btn-padding-x * .75;
+            display: block;
+        }
+        i {
+            width: .8em;
+        }
+    }
+    .btn-group .dropdown-btn {
+        float: left;
+    }
+
+    // Dropdown menus
+    .dropdown-menu {
+        .dropdown-item {
+            i {
+                width: 1.2em;
+                color: $gray-light;
+                margin-right: .5rem;
+            }
+            // On state
+            &.on,
+            &.on i {
+                color: $postleaf-blue;
+            }
+            // Hover state supercedes on state
+            &:hover,
+            &:hover i {
+                color: $dropdown-link-hover-color;
+            }
+        }
+    }
+
+    // Formatters
+    [data-editor="heading1"] { font-size: 1.3rem; line-height: 1.4; }
+    [data-editor="heading2"] { font-size: 1.2rem; line-height: 1.4; }
+    [data-editor="heading3"] { font-size: 1.1rem; line-height: 1.4; }
+    [data-editor="heading4"] { font-size: 1rem; line-height: 1.4; }
+    [data-editor="heading5"] { font-size: .9rem; line-height: 1.4; }
+    [data-editor="heading6"] { font-size: .8rem; line-height: 1.4; }
+    [data-editor="preformatted"] { font-family: $font-family-monospace; }
+    [data-editor="blockquote"] { font-style: italic; }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .editor-toolbar .btn {
+        padding: .25rem .5rem;
+    }
+
+    .editor-toolbar .dropdown-btn .dropdown-toggle {
+        padding: 0;
+    }
+}

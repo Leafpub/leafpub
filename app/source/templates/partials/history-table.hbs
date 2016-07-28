@@ -1,0 +1,63 @@
+{{#if history}}
+    <table class="table history-table">
+        {{#each history}}
+            <tr>
+                <td>
+                    {{date rev_date format="%d %b %Y @ %H:%M"}}
+                    <br>
+                    <small class="text-muted">
+                        {{#admin_author post_data.author}}
+                            {{#if avatar}}
+                                <img class="avatar" src="{{url avatar}}">
+                            {{/if}}
+                            {{name}}
+                        {{else}}
+                            {{post_data.author}}
+                        {{/admin_author}}
+
+                        {{#if initial}}
+                            &middot; {{L 'initial_version'}}
+                        {{/if}}
+                    </small>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-secondary"
+                        data-view-history="{{id}}"
+                        data-url="{{admin_url 'posts/'}}{{encode post_data.slug}}/history/{{encode id}}"
+                    >
+                        <i class="fa fa-external-link"></i>
+                    </a>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-secondary"
+                        data-delete-history="{{id}}"
+                        data-confirm="{{L 'delete_this_revision'}}"
+                    >
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-warning"
+                        data-restore-history="{{id}}"
+                    >
+                        <i class="fa fa-undo"></i>
+                    </button>
+                    <i class="loader loader-sm" hidden></i>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+{{else}}
+    <div class="history-none valign">
+        <div class="valign-middle">
+            <i class="fa fa-clock-o"></i>
+            {{L 'no_history'}}
+        </div>
+    </div>
+{{/if}}

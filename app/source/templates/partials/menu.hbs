@@ -1,0 +1,51 @@
+{{!-- Main menu --}}
+<nav class="main-menu">
+    {{!-- Logo --}}
+    <a aria-label="Postleaf" href="{{url}}" title="{{@settings.title}}" data-toggle="tooltip">
+        <img src="{{url 'source/assets/img/logo-color.svg'}}" alt="Logo">
+    </a>
+
+    {{!-- Menu items --}}
+    {{#admin_menu}}
+        {{#each items}}
+            <a href="{{link}}" title="{{title}}" data-toggle="tooltip" class="{{#if current}}current {{/if}}{{#if class}}{{class}}{{/if}}">
+                {{#if avatar}}
+                    <img src="{{url avatar}}" alt="{{L 'avatar'}}"></i>
+                {{else}}
+                    <i class="{{icon}}"></i>
+                {{/if}}
+            </a>
+        {{/each}}
+    {{/admin_menu}}
+</nav>
+
+{{!-- Mobile menu --}}
+<nav class="mobile-menu">
+    <div class="mobile-menu-header">
+        {{!-- Logo --}}
+        <a class="mobile-menu-logo" href="{{blog_url}}">
+            <img src="{{url 'source/assets/img/logo-color.svg'}}" alt="Logo">
+        </a>
+        {{!-- Navicon --}}
+        <span class="mobile-menu-toggle" href="#">
+            <i class="fa fa-navicon"></i>
+        </span>
+        {{!-- Title --}}
+        <div class="mobile-menu-title">{{title}}</div>
+    </div>
+    <div class="mobile-menu-items">
+        {{!-- Menu items --}}
+        {{#admin_menu}}
+            {{#each items}}
+                <a href="{{link}}" class="{{#if current}}current {{/if}}{{#if class}}{{class}}{{/if}}">
+                    {{#if avatar}}
+                        <img src="{{url avatar}}" alt="{{L 'avatar'}}"></i>
+                    {{else}}
+                        <i class="{{icon}}"></i>
+                    {{/if}}
+                    <span class="description">{{title}}</span>
+                </a>
+            {{/each}}
+        {{/admin_menu}}
+    </div>
+</nav>

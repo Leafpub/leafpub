@@ -1,0 +1,114 @@
+@import "partials/variables";
+
+.editor {
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.editor-frame {
+    border: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: opacity .25s;
+    opacity: 1;
+    &.fade-out {
+        opacity: 0;
+    }
+}
+
+.post-image {
+    position: relative;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: $border-radius;
+    // Enable hardware acceleration to prevent slow tabbing in the settings form
+    transform: translate3d(0, 0, 0);
+    .controls {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        .btn {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.settings-panel .checkbox {
+    .tag {
+        font-weight: 300;
+        font-size: 1rem;
+    }
+}
+
+.history-table {
+    tr:first-child td {
+        border-top: none;
+    }
+    td,
+    th {
+        vertical-align: middle;
+    }
+    .avatar {
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    .loader {
+        padding: 0 1.2rem;
+    }
+}
+
+.history-none {
+    text-align: center;
+    font-size: 1.2rem;
+    border: dashed 2px #ddd;
+    border-radius: $border-radius-large;
+    color: $text-muted;
+    padding: 4rem 1rem;
+    i {
+        font-size: 5rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+}
+
+.dropzone {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(white, .9);
+    padding: 2rem;
+    .dropzone-target {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $body-color;
+        border: solid .5rem $body-color;
+        border-radius: $border-radius-large;
+        text-align: center;
+        transition:
+            $postleaf-transition-speed font-size,
+            $postleaf-transition-speed color,
+            $postleaf-transition-speed border-color;
+        &.active {
+            font-size: 2.5rem;
+            color: $postleaf-blue;
+            border-color: $postleaf-blue;
+        }
+        &:first-child {
+            height: calc(30% - 1rem);
+            margin-bottom: 1rem;
+        }
+        &:last-child {
+            height: 70%;
+        }
+    }
+}

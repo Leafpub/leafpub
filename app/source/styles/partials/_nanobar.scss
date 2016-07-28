@@ -1,0 +1,8 @@
+// Nanobar plugin
+.nanobar {
+    height: 5px;
+    overflow: hidden;
+    .bar {
+        background-color: $postleaf-blue;
+    }
+}

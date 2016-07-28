@@ -1,0 +1,31 @@
+{{> header}}
+
+<form class="login-form" autocomplete="off">
+    <div class="text-xs-center m-b-2">
+        <a href="https://www.postleaf.org/" target="_blank">
+            <img class="logo" src="{{url 'source/assets/img/logo-color.svg'}}">
+        </a>
+    </div>
+
+    <div class="form-group">
+        <label for="password">{{L 'new_password'}}</label>
+        <input type="password" name="password" id="password" class="form-control" autofocus>
+    </div>
+
+    <div class="form-group">
+        <label for="verify-password">{{L 'verify_password'}}</label>
+        <input type="password" name="verify-password" id="verify-password" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <input type="hidden" name="username" value="{{@request.get.username}}">
+        <input type="hidden" name="token" value="{{@request.get.token}}">
+        <button class="btn btn-primary btn-block" type="submit">
+            {{L 'reset_password'}}
+        </button>
+    </div>
+
+    <div class="form-message text-warning text-xs-center m-t-2" hidden></div>
+</form>
+
+{{> footer}}

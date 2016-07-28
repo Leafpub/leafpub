@@ -1,0 +1,20 @@
+.se-preview {
+    background: #f2f2f2;
+    border-radius: $border-radius;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    .se-title {
+        font-size: 1.2rem;
+        color: $postleaf-blue;
+        @include text-truncate;
+    }
+    .se-url {
+        font-size: .9rem;
+        line-height: 1.8;
+        color: $postleaf-green;
+        @include text-truncate;
+    },
+    .se-description {
+        @include text-truncate;
+    }
+}

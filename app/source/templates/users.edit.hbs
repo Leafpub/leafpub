@@ -1,0 +1,189 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-lg-4 col-sm-6">
+            <h1>
+                {{#is @user.role 'in' 'owner,admin'}}
+                    <a href="{{admin_url 'users'}}">{{L 'users'}}</a>
+                    <i class="fa fa-angle-right"></i>
+                {{/is}}
+                {{#is @template 'users.new'}}
+                    {{L 'new_user'}}
+                {{else}}
+                    {{user.name}}
+                {{/is}}
+            </h1>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+            {{#is @template 'users.edit'}}
+            <div class="btn-group m-r-1">
+                <button type="button" class="open btn btn-secondary" data-url="{{author_url user.slug}}">
+                    <i class="fa fa-external-link"></i>
+                </button>
+                <button type="button" class="delete btn btn-secondary" data-confirm="{{L 'delete_this_user'}}" {{#is user.role 'owner'}} disabled{{/is}}>
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            {{/is}}
+            <button type="button" class="submit btn btn-primary">
+                {{L 'save'}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container stretch-down">
+    <div class="row">
+        {{!-- Cover --}}
+        <div
+            class="cover"
+            {{#if user.cover}}
+                {{#if this}}style="background-image:url('{{url user.cover}}');"{{/if}}
+            {{/if}}
+        >
+            {{!-- Avatar --}}
+            <div class="avatar">
+                <img class="image" src="{{url user.avatar}}"{{#unless user.avatar}} hidden{{/unless}}>
+                <i class="none fa fa-user"{{#if user.avatar}} hidden{{/if}}></i>
+                {{!-- Avatar upload button --}}
+                <label class="upload-avatar">
+                    <i class="fa fa-fw fa-camera"></i>
+                    <input type="file" accept="image/*" style="display: none;">
+                </label>
+            </div>
+            {{!-- Cover upload button --}}
+            <div class="cover-controls">
+                <label class="upload-cover btn btn-translucent-dark">
+                    <i class="fa fa-fw fa-camera"></i>
+                    <input type="file" accept="image/*" style="display: none;">
+                </label>
+                <button type="button" class="remove-cover btn btn-translucent-dark"{{#unless user.cover}} hidden{{/unless}}>
+                    <i class="fa fa-fw fa-remove"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Form --}}
+    <form class="user-form" autocomplete="off">
+        <div class="row">
+            <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+                {{!-- User --}}
+                <div class="form-group m-t-2">
+                    <label for="name">{{L 'name'}}</label>
+                    <input class="form-control" type="text" name="name" id="name" value="{{user.name}}" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="email">{{L 'email'}}</label>
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-envelope-o"></i></span>
+                        <input class="form-control" type="email" name="email" id="email" value="{{user.email}}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="username">{{L 'username'}}</label>
+                            <div class="inner-addon-group">
+                                <span class="inner-addon"><i class="fa fa-user"></i></span>
+                                <input class="form-control" type="text" name="username" id="username" value="{{user.slug}}">
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- Only show role to owners and admins --}}
+                    {{#is @user.role 'in' 'owner,admin'}}
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="role">{{L 'role'}}</label>
+                            <select class="form-control" name="role" id="role">
+                                {{#is user.role 'owner'}}
+                                    {{!-- The owner role cannot be changed  --}}
+                                    <option value="owner"{{#is user.role 'owner'}} selected{{/is}}>{{L 'owner'}}</option>
+                                {{else}}
+                                    {{!-- All other roles are interchangeable --}}
+                                    <option value="author"{{#is user.role 'author'}} selected{{/is}}>{{L 'author'}}</option>
+                                    <option value="editor"{{#is user.role 'editor'}} selected{{/is}}>{{L 'editor'}}</option>
+                                    <option value="admin"{{#is user.role 'admin'}} selected{{/is}}>{{L 'administrator'}}</option>
+                                {{/is}}
+                            </select>
+                        </div>
+                    </div>
+                    {{/is}}
+                </div>
+
+                {{!-- Password --}}
+                <h3 class="m-t-3">
+                    {{#is @template 'users.new'}}
+                        {{L 'password'}}
+                    {{else}}
+                        {{L 'change_password'}}
+                    {{/is}}
+                </h3>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="password">
+                                {{#is @template 'users.new'}}
+                                    {{L 'password'}}
+                                {{else}}
+                                    {{L 'new_password'}}
+                                {{/is}}
+                            </label>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="verify-password">{{L 'verify_password'}}</label>
+                            <input class="form-control" type="password" name="verify-password" id="verify-password">
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- About --}}
+                <h3 class="m-t-3">{{L 'about'}}</h3>
+                <div class="form-group">
+                    <label for="website">{{L 'website'}}</label>
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-link"></i></span>
+                        <input class="form-control" type="url" name="website" id="website" value="{{user.website}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="location">{{L 'location'}}</label>
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-map-marker"></i></span>
+                        <input class="form-control" type="text" name="location" id="location" value="{{user.location}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bio">
+                        {{L 'bio'}}
+                    </label>
+                    <div class="tag-cover">
+                        <span class="tag tag-default tag-tr tag-outside">{{L 'markdown'}}</span>
+                        <textarea class="form-control" name="bio" id="bio" rows="6">{{user.bio}}</textarea>
+                    </div>
+                    <small class="text-muted">
+                        {{L 'share_a_sentence_or_two_about_yourself'}}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="user" value="{{user.slug}}">
+        <input type="hidden" name="avatar" value="{{user.avatar}}">
+        <input type="hidden" name="cover" value="{{user.cover}}">
+        {{!-- Allow forms to be submitted with `enter` --}}
+        <button type="submit" hidden></button>
+    </form>
+</div>
+
+{{> footer}}

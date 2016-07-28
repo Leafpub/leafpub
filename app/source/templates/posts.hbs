@@ -1,0 +1,89 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-lg-4 col-sm-6">
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-search"></i></span>
+                <input
+                    class="post-search form-control"
+                    type="search"
+                    placeholder="{{L 'search'}}"
+                    autofocus>
+            </div>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+            <div class="btn-group m-r-1">
+                <button type="button" class="edit btn btn-secondary" disabled>
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button type="button" class="open btn btn-secondary" disabled>
+                    <i class="fa fa-external-link"></i>
+                </button>
+                <button type="button" class="delete btn btn-secondary" disabled data-confirm="{{L 'delete_the_selected_posts'}}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <a href="{{admin_url 'posts/new'}}" class="btn btn-success">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container">
+    <div class="row">
+        {{!-- Post list --}}
+        <div class="col-md-5">
+            <div class="post-list stretch-down">
+                {{> post-list}}
+            </div>
+        </div>
+        {{!-- Post preview --}}
+        <div class="col-md-7 hidden-sm-down">
+            <div class="preview stretch-down">
+                {{!-- No posts selected --}}
+                <div class="preview-panel preview-none">
+                    <div class="valign">
+                        <div class="valign-middle">
+                            {{L 'no_posts_selected'}}
+                        </div>
+                    </div>
+                </div>
+                {{!-- One post selected --}}
+                <div class="preview-panel preview-one" hidden>
+                    <div class="preview-frame-wrap">
+                        <iframe class="preview-frame" src="{{url}}" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                {{!-- Multiple posts selected --}}
+                <div class="preview-panel preview-multiple" hidden>
+                    <div class="valign">
+                        <div class="valign-middle">
+                            <i class="fa fa-files-o"></i>
+                            <div class="m-y-2">
+                                {{{L '{n}_posts_selected' n="<span class="num-selected"></span>"}}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{!-- Loader --}}
+                <div class="preview-panel preview-loader" hidden>
+                    <div class="valign">
+                        <div class="valign-middle">
+                            <i class="loader"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}}

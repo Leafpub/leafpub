@@ -1,0 +1,48 @@
+{{#if backups}}
+    <table class="table backups-table">
+        {{#each backups}}
+            <tr>
+                <td>
+                    {{filename}}<br>
+                    <small class="text-muted">
+                        {{date date format="%d %b %Y"}} &middot;
+                        {{number (math size '/' 1000000)}}MB
+                    </small>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-secondary" data-download-backup="{{filename}}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-secondary"
+                        data-delete-backup="{{filename}}"
+                        data-confirm="{{L 'delete_this_backup'}}"
+                    >
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-warning"
+                        data-restore-backup="{{filename}}"
+                        data-confirm="{{L 'restoring_a_backup_will_overwrite_all_of_your_data...'}}"
+                    >
+                        <i class="fa fa-undo"></i>
+                    </button>
+                    <i class="loader loader-sm" hidden></i>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+{{else}}
+    <div class="backups-table-none valign">
+        <div class="valign-middle">
+            <i class="fa fa-archive"></i>
+            {{L 'no_backups'}}
+        </div>
+    </div>
+{{/if}}

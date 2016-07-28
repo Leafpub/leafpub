@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}} &middot; {{@settings.title}}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-title" content="Postleaf">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1, minimal-ui">
+    {{!-- Postleaf meta data --}}
+    <meta name="postleaf:language" data-cancel="{{L 'cancel'}}" data-ok="{{L 'ok'}}">
+    {{#if redirect}}
+    <meta name="postleaf:redirect" content="{{redirect}}">
+    {{/if}}
+    <meta name="postleaf:template" content="{{@template}}">
+    <meta name="postleaf:url" data-base="{{url}}" data-admin="{{admin_url}}">
+    {{!-- App icons --}}
+    {{#either @settings.favicon 'source/assets/img/logo-color.png'}}
+    <link rel="apple-touch-icon" href="{{url this}}">
+    <link rel="shortcut icon" href="{{url this}}">
+    {{/either}}
+    {{!-- Styles --}}
+    <link rel="stylesheet" href="{{url 'source/assets/css/lib.css'}}?v={{@postleaf.version}}">
+    {{admin_styles}}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300">
+</head>
+<body class="admin{{#if body_class}} {{body_class}}{{/if}} preload">

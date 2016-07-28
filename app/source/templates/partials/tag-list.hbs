@@ -1,0 +1,27 @@
+{{#each tags}}
+    <a
+        class="tag-list-item"
+        href="{{admin_url 'tags/'}}{{encode slug}}"
+        data-slug="{{slug}}"
+        data-url="{{tag_url}}"
+    >
+        <span class="post-count tag tag-default">
+            {{number (post_count tag=slug status=null ignore_pages=false end_date=null)}}
+        </span>
+        <div class="name">
+            {{name}}
+        </div>
+        <div class="description">
+            {{#if cover}}
+                <span class="cover" style="background-image: url('{{url cover}}');"></span>
+            {{/if}}
+            {{text (markdown description)}}
+        </div>
+    </a>
+{{else}}
+    <div class="tag-list-none valign">
+        <div class="valign-middle">
+            {{L 'no_tags'}}
+        </div>
+    </div>
+{{/each}}

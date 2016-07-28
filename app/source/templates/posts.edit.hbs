@@ -1,0 +1,492 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="row">
+        <div class="editor-toolbar" hidden>
+            {{!-- Undo/redo --}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" data-editor="undo"><i class="fa fa-undo"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="redo"><i class="fa fa-repeat"></i></button>
+            </div>
+
+            {{!-- Bold, italic, underline --}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" data-editor="bold"><i class="fa fa-bold"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="italic"><i class="fa fa-italic"></i></button>
+                {{!-- Format dropdown --}}
+                <div class="dropdown-btn">
+                    <span class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-font"></i>
+                    </span>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-editor="underline">
+                            <i class="fa fa-underline"></i>{{L 'underline'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="strikethrough">
+                            <i class="fa fa-strikethrough"></i>{{L 'strikethrough'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="subscript">
+                            <i class="fa fa-subscript"></i>{{L 'subscript'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="superscript">
+                            <i class="fa fa-superscript"></i>{{L 'superscript'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="code">
+                            <i class="fa fa-code"></i>{{L 'code'}}
+                        </button>
+
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" data-editor="removeFormat">
+                            <i class="fa fa-eraser"></i>{{L 'clear_formatting'}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Alignment, lists --}}
+            <div class="btn-group">
+                {{!-- Paragraph dropdown --}}
+                <div class="dropdown-btn">
+                    <span class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-paragraph"></i>
+                    </span>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-editor="heading1">{{L 'heading_1'}}</button>
+                        <button class="dropdown-item" data-editor="heading2">{{L 'heading_2'}}</button>
+                        <button class="dropdown-item" data-editor="heading3">{{L 'heading_3'}}</button>
+                        <button class="dropdown-item" data-editor="heading4">{{L 'heading_4'}}</button>
+                        <button class="dropdown-item" data-editor="heading5">{{L 'heading_5'}}</button>
+                        <button class="dropdown-item" data-editor="heading6">{{L 'heading_6'}}</button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" data-editor="paragraph">
+                            <i class="fa fa-paragraph"></i>{{L 'paragraph'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="preformatted">
+                            <i class="fa fa-keyboard-o"></i>{{L 'preformatted'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="blockquote">
+                            <i class="fa fa-quote-right"></i>{{L 'blockquote'}}
+                        </button>
+                    </div>
+                </div>
+
+                {{!-- Alignment dropdown --}}
+                <div class="dropdown-btn">
+                    <span class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-align-left"></i>
+                    </span>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-editor="alignLeft">
+                            <i class="fa fa-align-left"></i>{{L 'align_left'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="alignCenter">
+                            <i class="fa fa-align-center"></i>{{L 'align_center'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="alignRight">
+                            <i class="fa fa-align-right"></i>{{L 'align_right'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="alignJustify">
+                            <i class="fa fa-align-justify"></i>{{L 'justify'}}
+                        </button>
+                    </div>
+                </div>
+
+                {{!-- List dropdown --}}
+                <div class="dropdown-btn">
+                    <span class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-list-ul"></i>
+                    </span>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-editor="unorderedList">
+                            <i class="fa fa-list-ul"></i>{{L 'bulleted_list'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="orderedList">
+                            <i class="fa fa-list-ol"></i>{{L 'numbered_list'}}
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" data-editor="indent">
+                            <i class="fa fa-indent"></i>{{L 'increase_indent'}}
+                        </button>
+                        <button class="dropdown-item" data-editor="outdent">
+                            <i class="fa fa-outdent"></i>{{L 'decrease_indent'}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Link, image, embed --}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" data-editor="link"><i class="fa fa-link"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="image"><i class="fa fa-picture-o"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="embed"><i class="fa fa-cube"></i></button>
+            </div>
+
+            {{!-- Zen mode, settings --}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen"><i class="fa fa-leaf"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="settings"><i class="fa fa-cog"></i></button>
+            </div>
+
+            {{!-- Save --}}
+            <div class="btn-group">
+                <button type="button" class="btn {{#is post.status 'draft'}}btn-warning{{else}}btn-primary{{/is}}" data-editor="save">{{L 'save'}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Editor --}}
+<div class="editor stretch-down">
+    {{!-- Loader --}}
+    <div class="editor-loader valign" hidden>
+        <div class="valign-middle text-xs-center">
+            <i class="loader loader-xl"></i>
+        </div>
+    </div>
+
+    {{!-- Editor frame --}}
+    <iframe
+        class="editor-frame"
+        data-src="{{frame_src}}"
+        data-default-title="{{@settings.default_title}}"
+        data-default-content="{{markdown @settings.default_content}}"
+        data-unsaved-changes="{{L 'your_changes_have_not_been_saved_yet'}}"
+        hidden
+    ></iframe>
+</div>
+
+{{!-- Dropzone --}}
+<div class="dropzone" hidden>
+    <div class="dropzone-target valign" data-target="post-image">
+        <div class="valign-middle">{{L 'set_post_image'}}</div>
+    </div>
+    <div class="dropzone-target valign" data-target="content">
+        <div class="valign-middle">{{L 'insert_into_post'}}</div>
+    </div>
+</div>
+
+{{!-- Link panel --}}
+<div class="link-panel panel panel-right">
+    <form class="link-form" autocomplete="off" novalidate>
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <h3>{{L 'link'}}</h3>
+        <div class="form-group">
+            <label for="link-href">{{L 'url'}}</label>
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-link"></i></span>
+                <input class="form-control" type="url" name="href" id="link-href">
+                <label class="inner-addon upload-file">
+                    <i class="fa fa-upload"></i>
+                    <input type="file" style="display: none;">
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="link-title">{{L 'title'}}</label>
+            <input class="form-control" type="text" name="title" id="link-title">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="new-window" id="link-new-window">
+                {{L 'open_in_a_new_window'}}
+            </label>
+        </div>
+        <div class="form-group m-t-2">
+            <button class="btn btn-secondary unlink pull-right" type="button"><i class="fa fa-unlink"></i></button>
+            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
+            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+        </div>
+    </form>
+</div>
+
+{{!-- Image panel --}}
+<div class="image-panel panel panel-right">
+    <form class="image-form" autocomplete="off" novalidate>
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <h3>{{L 'image'}}</h3>
+        <div class="form-group">
+            <label for="image-src">{{L 'source'}}</label>
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-picture-o"></i></span>
+                <input class="form-control" type="url" name="src" id="image-src">
+                <label class="inner-addon upload-image">
+                    <i class="fa fa-camera"></i>
+                    <input type="file" accept="image/*" style="display: none;">
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="image-alt">{{L 'description'}}</label>
+            <input class="form-control" type="text" name="alt" id="image-alt">
+        </div>
+        <div class="form-group">
+            <label for="image-href">{{L 'url'}}</label>
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-link"></i></span>
+                <input class="form-control" type="url" name="href" id="image-href">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{{L 'alignment'}}</label>
+            <div class="radio">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" class="image-align-none" name="align" value="none">
+                        <i class="fa fa-ban"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="image-align-left" name="align" value="left">
+                        <i class="fa fa-align-left"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="image-align-center" name="align" value="center">
+                        <i class="fa fa-align-center"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="image-align-right" name="align" value="right">
+                        <i class="fa fa-align-right"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="image-width">{{L 'width'}}</label>
+                    <input class="form-control" type="number" name="width" id="image-width" min="0">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="image-height">{{L 'height'}}</label>
+                    <input class="form-control" type="number" name="height" id="image-height" min="0">
+                </div>
+            </div>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="constrain" id="image-constrain" checked>
+                {{L 'constrain_proportions'}}
+            </label>
+        </div>
+        <div class="form-group m-t-2">
+            <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
+            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+        </div>
+    </form>
+</div>
+
+{{!-- Embed panel --}}
+<div class="embed-panel panel panel-right">
+    <form class="embed-form" autocomplete="off">
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <h3>{{L 'embed'}}</h3>
+        <div class="form-group">
+            <label for="embed-code">{{L 'code'}}</label>
+            <div class="tag-cover">
+                <textarea class="form-control code" name="code" id="embed-code" rows="6" spellcheck="false"></textarea>
+                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+            </div>
+            <small class="text-muted">{{L 'paste_embed_code_here'}}</small>
+        </div>
+        <div class="form-group">
+            <label>{{L 'alignment'}}</label>
+            <div class="radio">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" class="embed-align-none" name="align" value="none">
+                        <i class="fa fa-ban"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="embed-align-left" name="align" value="left">
+                        <i class="fa fa-align-left"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="embed-align-center" name="align" value="center">
+                        <i class="fa fa-align-center"></i>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" class="embed-align-right" name="align" value="right">
+                        <i class="fa fa-align-right"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group m-t-2">
+            <button class="btn btn-secondary delete-embed pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
+            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+        </div>
+    </form>
+</div>
+
+{{!-- Settings panel --}}
+<div class="settings-panel panel panel-right">
+    <form class="settings-form" autocomplete="off">
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <h3>{{L 'post'}}</h3>
+
+        {{!-- Tabs --}}
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#settings" role="tab" data-toggle="tab">
+                    <i class="fa fa-file-text-o hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'settings'}}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#meta" role="tab" data-toggle="tab">
+                    <i class="fa fa-info hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'meta_data'}}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#history" role="tab" data-toggle="tab">
+                    <i class="fa fa-clock-o hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'history'}}</span>
+                </a>
+            </li>
+        </ul>
+
+        {{!-- Tab panes --}}
+        <div class="tab-content">
+            {{!-- Settings --}}
+            <div class="tab-pane active" id="settings" role="tabpanel">
+                <div class="form-group">
+                    <label for="slug">{{L 'slug'}}</label>
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-link"></i></span>
+                        <input class="form-control" type="text" name="slug" id="slug" value="{{post.slug}}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="pub-date">{{L 'date'}}</label>
+                            <div class="inner-addon-group">
+                                <span class="inner-addon"><i class="fa fa-calendar-o"></i></span>
+                                <input class="form-control" type="text" name="pub-date" id="pub-date" value="{{date post.pub_date format="%d %b %Y"}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="pub-time">{{L 'time'}}</label>
+                            <div class="inner-addon-group">
+                                <span class="inner-addon"><i class="fa fa-clock-o"></i></span>
+                                <input class="form-control" type="text" name="pub-time" id="pub-time" value="{{date post.pub_date format="%H:%M"}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image">{{L 'image'}}</label>
+                    <input type="hidden" name="image" id="image" value="{{post.image}}">
+                    <div class="post-image card"{{#if post.image}} style="background-image: url('{{url post.image}}');"{{/if}}>
+                        <div class="controls">
+                            <label class="upload-post-image btn btn-translucent-dark">
+                                <i class="fa fa-fw fa-camera"></i>
+                                <input type="file" accept="image/*" style="display: none;">
+                            </label>
+                            <button type="button" class="remove-post-image btn btn-translucent-dark"{{#unless post.image}} hidden{{/unless}}>
+                                <i class="fa fa-fw fa-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="tags">{{L 'tags'}}</label>
+                    <input class="form-control" type="text" name="tags" id="tags"
+                        data-all-tags="{{json_encode all_tags}}"
+                        data-post-tags="{{json_encode post_tags}}"
+                        data-can-create-tags="{{can_create_tags}}"
+                    >
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="author">{{L 'author'}}</label>
+                        <select class="form-control" name="author" id="author">
+                        {{#is @user.role 'in' 'owner,admin,editor'}}
+                            {{!-- Owners, admins, and editors can post as anyone --}}
+                            {{#each authors}}
+                            <option value="{{slug}}"
+                                {{#is @template 'posts.new'}}
+                                    {{#is slug @user.slug}}selected{{/is}}
+                                {{else}}
+                                    {{#is slug ../post.author}}selected{{/is}}
+                                {{/is}}
+                            >{{name}}</option>
+                            {{/each}}
+                        {{else}}
+                            {{!-- Non owners, admins, and editors can only post as themselves --}}
+                            <option value="{{@user.slug}}" selected>{{@user.name}}</option>
+                        {{/is}}
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="status">{{L 'status'}}</label>
+                        <select class="form-control" name="status" id="status">
+                            <option value="published"{{#is post.status 'published'}} selected{{/is}}>{{L 'published'}}</option>
+                            <option value="draft"{{#is post.status 'draft'}} selected{{/is}}>{{L 'draft'}}</option>
+                        </select>
+                    </div>
+                </div>
+                {{!-- Only show featured and page options to owners, admins, and editor --}}
+                {{#is @user.role 'in' 'owner,admin,editor'}}
+                <div class="checkbox m-t-2">
+                    <label>
+                        <input type="checkbox" name="featured" id="featured" value="on"{{#is post.featured}} checked{{/is}}>
+                        <span class="tag tag-success">{{L 'feature_this_post'}}</span>
+                    </label>
+                </div>
+                <div class="checkbox m-t-1">
+                    <label>
+                        <input type="checkbox" name="page" id="page" value="on"{{#is post.page}} checked{{/is}}>
+                        <span class="tag tag-primary">{{L 'turn_this_post_into_a_page'}}</span>
+                    </label>
+                </div>
+                {{/is}}
+            </div>
+
+            {{!-- Meta --}}
+            <div class="tab-pane" id="meta" role="tabpanel">
+                <div class="form-group">
+                    <label for="meta-title">{{L 'meta_title'}}</label>
+                    <input class="form-control" type="text" name="meta-title" id="meta-title" value="{{post.meta_title}}" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="meta-description">{{L 'meta_description'}}</label>
+                    <textarea class="form-control" name="meta-description" id="meta-description" rows="4">{{post.meta_description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>{{L 'search_engine_preview'}}</label>
+                    <div class="se-preview">
+                        <div class="se-title"></div>
+                        <div class="se-url">
+                            {{post_url '/'}}<span class="se-slug">{{post.slug}}</span>
+                        </div>
+                        <div class="se-description"></div>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- History --}}
+            <div class="tab-pane" id="history" role="tabpanel">
+                <div class="history">
+                    {{> history-table}}
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="post" value="{{post.slug}}">
+        {{!-- Allow forms to be submitted with `enter` --}}
+        <button type="submit" hidden></button>
+    </form>
+</div>
+
+{{> footer}}

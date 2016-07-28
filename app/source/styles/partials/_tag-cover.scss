@@ -1,0 +1,73 @@
+/*
+
+    Tag Covers - allows you to easily position tags over an element
+
+    Top right tag on the inside of the cover:
+
+        <div class="tag-cover">
+            <span class="tag tag-primary tag-tr">Markdown</span>
+            <textarea></textarea>
+        </div>
+
+    Top right tag on the outside of the cover:
+
+        <div class="tag-cover">
+            <span class="tag tag-primary tag-tr tag-outside">Markdown</span>
+            <textarea></textarea>
+        </div>
+
+    Available positions:
+
+        Top left - `tag-tl`
+        Top right - `tag-tr`
+        Bottom left - `tag-bl`
+        Bottom right - `tag-br`
+
+    By default, tag are positioned inside the container. Use the `tag-outside` class to
+    position tags outside the cover.
+
+ */
+
+.tag-cover {
+    position: relative;
+    font-weight: 300;
+    .tag {
+        position: absolute;
+        // Top left
+        &.tag-tl {
+            left: .5em;
+            top: .5em;
+            &.tag-outside {
+                left: 0;
+                top: -2em;
+            }
+        }
+        // Top right
+        &.tag-tr {
+            right: .5em;
+            top: .5em;
+            &.tag-outside {
+                right: 0;
+                top: -2em;
+            }
+        }
+        // Bottom left
+        &.tag-bl {
+            left: .5em;
+            bottom: .5em;
+            &.tag-outside {
+                left: 0;
+                bottom: -2em;
+            }
+        }
+        // Bottom right
+        &.tag-br {
+            right: .5em;
+            bottom: .5em;
+            &.tag-outside {
+                right: 0;
+                bottom: -2em;
+            }
+        }
+    }
+}

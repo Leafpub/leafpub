@@ -1,0 +1,79 @@
+@import "partials/variables";
+$user-cover-blur: 35px;
+$user-avatar-size: 8rem;
+
+.cover {
+    position: relative;
+    height: 200px;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    -webkit-transform: translateZ(0); // enable hardware acceleration in iOS
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: inherit;
+        filter: blur($user-cover-blur);
+    }
+    .cover-controls {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        .btn {
+            margin: 0;
+        }
+        .btn i {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.avatar {
+    position: absolute;
+    top: calc(50% - #{$user-avatar-size / 2});
+    left: calc(50% - #{$user-avatar-size / 2});
+    width: $user-avatar-size;
+    height: $user-avatar-size;
+    .image,
+    .none {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba($postleaf-black, .25);
+        border: solid .2rem rgba(black, .05);
+        text-align: center;
+        line-height: $user-avatar-size;
+        font-size: $user-avatar-size - 2rem;
+        color: white;
+    }
+    .upload-avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        line-height: $user-avatar-size;
+        border-radius: 50%;
+        background: rgba(black, .5);
+        text-align: center;
+        color: white;
+        font-size: 2rem;
+        opacity: 0;
+        transition: opacity $postleaf-transition-speed;
+        cursor: pointer;
+    }
+    &:hover {
+        .upload-avatar {
+            opacity: 1;
+        }
+    }
+}
+
+.user-form {
+    padding: 2rem .5rem;
+}

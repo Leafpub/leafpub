@@ -1,0 +1,17 @@
+{{#if @user}}
+<div class="locater-overlay" hidden></div>
+<div class="locater" hidden>
+    <div class="form-group">
+        <div class="inner-addon-group">
+            <span class="inner-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control locater-input" placeholder="{{L 'search'}}">
+        </div>
+    </div>
+    <div class="locater-results"></div>
+</div>
+{{/if}}
+
+<script src="{{url 'source/assets/js/lib.min.js'}}?v={{@postleaf.version}}"></script>
+{{admin_scripts}}
+</body>
+</html>

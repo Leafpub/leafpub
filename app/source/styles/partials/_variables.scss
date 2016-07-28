@@ -1,0 +1,73 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Variables
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$postleaf-blue: #09d;
+$postleaf-green: #8cc152;
+$postleaf-black: #252525;
+
+$postleaf-transition-speed: .2s;
+
+// Locater
+$postleaf-locater-width: 35rem;
+$postleaf-locater-width-xs: 90%;
+
+// Font awesome path
+$fa-font-path: '../font';
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Bootstrap variables
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// The basics
+$body-color: #333;
+$font-size-root: 15px;
+$font-family-sans-serif: "Open Sans", "Helvetica Neue", sans-serif;
+$font-family-monospace:  "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$text-muted: #aaa;
+
+// Brand
+$brand-primary: $postleaf-blue;
+$brand-success: $postleaf-green;
+$brand-info: #40c9ff;
+$brand-warning: #ff851b;
+$brand-danger: #ff4136;
+
+// States
+$state-success-bg: $brand-success;
+$state-success-text: white;
+$state-info-bg: $brand-info;
+$state-info-text: white;
+$state-warning-bg: $brand-warning;
+$state-warning-text: white;
+$state-danger-bg: $brand-danger;
+$state-danger-text: white;
+
+// Border radius
+$border-radius: 3px;
+$border-radius-large: 5px;
+$border-radius-small: 2px;
+
+// Forms
+$input-border-color: #ddd;
+$input-border-focus: $postleaf-blue;
+
+// Buttons
+$btn-secondary-color: #888;
+$btn-secondary-border: #ddd;
+
+// Alerts
+$alert-border-width: 0;
+
+// Dropdowns
+$dropdown-link-hover-color: white;
+$dropdown-link-hover-bg: $postleaf-blue;
+
+
+// Tooltips
+$tooltip-bg: $postleaf-black;
+$tooltip-opacity: 1;
+
+// Bootstrap vars and mixins
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";

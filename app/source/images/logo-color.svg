@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="55px" height="55px" viewBox="0 0 55 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>App Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="App-Icon" transform="translate(-8.000000, -8.000000)">
+            <path d="M42.7273163,52.758863 L27.3829423,52.758863 L27.3829423,62.4503342 L42.7273163,62.4503342 C53.574225,62.4503342 62.4489684,53.5755907 62.4489684,42.7286821 L62.4489684,8 L27.7216521,8 C16.8747434,8 8,16.8747434 8,27.7230178 L8,62.4503342 L17.6914711,62.4503342 L17.6914711,27.7230178 C17.6914711,22.2244464 22.2230807,17.6914711 27.7216521,17.6914711 L52.7574973,17.6914711 L52.7574973,42.7286821 C52.7574973,48.2258877 48.2258877,52.758863 42.7273163,52.758863" id="Logo-outer" fill="#008AC4"></path>
+            <path d="M27,27.3400756 L27,42.6844496 L42.344374,42.6844496 C42.4918767,42.6844496 42.6830839,42.4932425 42.6830839,42.3457398 L42.6830839,27 L27.3387098,27 C27.1912072,27 27,27.1912072 27,27.3400756" id="Logo-inner" fill="#B5CD42"></path>
+        </g>
+    </g>
+</svg>

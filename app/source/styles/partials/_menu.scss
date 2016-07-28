@@ -1,0 +1,186 @@
+// Menu variables
+$postleaf-main-menu-width: 4rem;
+$postleaf-mobile-menu-height: 2.75rem;
+
+// Pad the body unless it has the `no-menu` class
+body:not(.no-menu) {
+    padding-left: $postleaf-main-menu-width;
+}
+
+// Main menu
+.main-menu {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $postleaf-main-menu-width;
+    background: $postleaf-black;
+    color: white;
+    padding: .4rem 0 4rem 0;
+    overflow-y: auto;
+    user-select: none;
+    a {
+        text-align: center;
+        font-size: 1.6rem;
+        color: white;
+        transition: color $postleaf-transition-speed;
+        padding: .4rem;
+        display: block;
+        &:hover,
+        &:focus {
+            color: $postleaf-blue;
+        }
+        &.current {
+            color: $postleaf-blue;
+        }
+        &:first-child {
+            // Let the logo breathe
+            margin-bottom: .25rem;
+        }
+    }
+    img {
+        width: 2.2rem;
+        height: auto;
+    }
+    .edit-profile {
+        position: fixed;
+        bottom: 0;
+        width: $postleaf-main-menu-width;
+        background: $postleaf-black;
+        padding: .4rem .4rem .8rem .4rem;
+        overflow: hidden;
+        img {
+            border-radius: 50%;
+        }
+    }
+}
+
+// Mobile menu
+.mobile-menu {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    user-select: none;
+    display: none;
+}
+
+.mobile-menu-header {
+    position: relative;
+    z-index: 1002;
+    height: $postleaf-mobile-menu-height;
+    background: $postleaf-black;
+    color: white;
+    @include clearfix;
+}
+
+.mobile-menu-logo {
+    float: left;
+    height: $postleaf-mobile-menu-height;
+    padding: .4rem .6rem;
+    img {
+        height: 100%;
+    }
+}
+
+.mobile-menu-title {
+    @include text-truncate;
+    line-height: $postleaf-mobile-menu-height;
+    text-align: center;
+    margin: 0 3rem;
+}
+
+.mobile-menu-toggle {
+    float: right;
+    height: $postleaf-mobile-menu-height;
+    font-size: 1.2rem;
+    color: white;
+    transition: color $postleaf-transition-speed;
+    padding: .45rem .8rem;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        color: inherit;
+    }
+}
+
+.mobile-menu-items {
+    position: fixed;
+    z-index: 1001;
+    top: $postleaf-mobile-menu-height;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($postleaf-black, .97);
+    padding: .4rem 0;
+    display: none;
+    overflow-y: auto;
+    &.on {
+        display: block;
+    }
+}
+
+.mobile-menu-items a {
+    color: white;
+    transition: color $postleaf-transition-speed;
+    height: 6rem;
+    padding: 1rem .2rem;
+    font-size: .75rem;
+    display: block;
+    width: 25%;
+    text-align: center;
+    float: left;
+    i {
+        font-size: 2.5rem;
+        margin-bottom: .4rem;
+        display: block;
+    }
+    img {
+        width: 2.5rem;
+        height: auto;
+        margin-bottom: .4rem;
+    }
+    .description {
+        display: block;
+        @include text-truncate;
+        color: $gray-light;
+        transition: color $postleaf-transition-speed;
+    }
+    &:hover,
+    &:focus,
+    &:hover .description,
+    &:focus .description {
+        color: $postleaf-blue;
+        text-decoration: none;
+    }
+    &.current,
+    &.current .description {
+        color: $postleaf-blue;
+    }
+}
+
+.mobile-menu-items .edit-profile {
+    img {
+        border-radius: 50%;
+    }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    // Switch to top padding
+    body:not(.no-menu) {
+        padding-left: 0;
+        padding-top: $postleaf-mobile-menu-height;
+    }
+
+    // Swap menus
+    .main-menu {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+}

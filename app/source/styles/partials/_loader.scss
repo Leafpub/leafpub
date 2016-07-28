@@ -1,0 +1,54 @@
+/*
+
+    Loaders - simple loader utility
+
+    Basic loader (inherits 1em text size):
+
+        <i class="loader"></i>
+
+    Loader on dark background:
+
+        <i class="loader loader-dark"></i>
+
+    Loaders with specific sizes:
+
+        <i class="loader loader-xs"></i>
+        <i class="loader loader-sm"></i>
+        <i class="loader loader-md"></i>
+        <i class="loader loader-lg"></i>
+        <i class="loader loader-xl"></i>
+
+ */
+
+.loader {
+    display: inline-block;
+    background-image: url(../img/loader-light.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    vertical-align: middle;
+    font-size: inherit;
+    height: 1em;
+    width: 1em;
+    &.loader-dark {
+        background-image: url(../img/loader-dark.gif);
+    }
+    &.loader-xs {
+        font-size: 16px;
+    }
+    &.loader-sm {
+        font-size: 24px;
+    }
+    &.loader-md {
+        font-size: 32px;
+    }
+    &.loader-lg {
+        font-size: 48px;
+    }
+    &.loader-xl {
+        font-size: 64px;
+    }
+    &.loader-xxl {
+        font-size: 96px;
+    }
+}

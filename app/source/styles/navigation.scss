@@ -1,0 +1,74 @@
+@import "partials/variables";
+
+.navigation-form {
+    padding: 2rem 1rem 0 1rem;
+}
+
+.navigation-list-item,
+.add-form {
+    display: table;
+    width: 100%;
+    padding-bottom: 1rem;
+    &.sortable-chosen {
+        opacity: 1;
+    }
+    &.sortable-ghost {
+        opacity: 0;
+    }
+    .nav-col {
+        vertical-align: middle;
+        padding: 0 .25rem;
+        display: table-cell;
+        &:first-child {
+            width: 2rem;
+        }
+        &:nth-child(2) {
+            width: 33%;
+        }
+        &:nth-child(3) {
+            width: auto;
+        }
+        &:last-child {
+            width: 2rem;
+        }
+    }
+    .handle {
+        color: $text-muted;
+        font-size: 1.1rem;
+        cursor: move;
+    }
+}
+
+.add-form {
+    border-radius: $border-radius;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    .nav-col {
+        &:nth-child(3) {
+            width: 22%;
+        }
+        &nth-child(4) {
+            width: auto;
+        }
+    }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .navigation-form {
+        padding: 1.5rem .5rem;
+    }
+
+    .add-form {
+        padding: 1rem;
+        display: block;
+        .nav-col:nth-child(n) {
+            width: 100%;
+            display: block;
+            margin-bottom: .5rem;
+        }
+        .nav-col:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

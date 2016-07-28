@@ -1,0 +1,22 @@
+{
+    "require": {
+        "zordius/lightncandy": "dev-master",
+        "firebase/php-jwt": "^3.0",
+        "slim/slim": "^3.0",
+        "abeautifulsite/simpleimage": "^2.6",
+        "erusev/parsedown": "^1.6",
+        "tinymce/tinymce": "^4.3"
+    },
+    "config": {
+        "vendor-dir": "app/source/vendor"
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "gulp build"
+        ],
+        "post-install-cmd": [
+            "npm install",
+            "gulp build"
+        ]
+    }
+}

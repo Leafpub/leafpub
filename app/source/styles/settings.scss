@@ -1,0 +1,85 @@
+@import "partials/variables";
+
+.settings-form {
+    padding: 2rem 1rem;
+}
+
+.nav-tabs {
+    margin-bottom: 4rem;
+}
+
+.cover {
+    position: relative;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: $border-radius;
+    .controls {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        .btn {
+            margin-bottom: 0;
+        }
+        .btn i {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.logo,
+.favicon {
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    .controls {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        .btn {
+            margin-bottom: 0;
+        }
+        .btn i {
+            transform: scale(1.2);
+        }
+    }
+}
+
+// Backups table
+.backups-table {
+    td,
+    th {
+        vertical-align: middle;
+    }
+    .loader {
+        padding: 0 1.2rem;
+    }
+}
+
+.backups-table-none {
+    text-align: center;
+    font-size: 1.2rem;
+    border: dashed 2px #ddd;
+    border-radius: $border-radius-large;
+    color: $text-muted;
+    padding: 4rem 1rem;
+    i {
+        font-size: 5rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .settings-form {
+        padding: 1.5rem .5rem;
+    }
+
+    .nav-tabs {
+        margin-bottom: 2rem;
+    }
+}

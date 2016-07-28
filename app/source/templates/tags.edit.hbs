@@ -1,0 +1,121 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-lg-4 col-sm-6">
+            <h1>
+                <a href="{{admin_url 'tags'}}">{{L 'tags'}}</a>
+                <i class="fa fa-angle-right"></i>
+                {{#is @template 'tags.new'}}
+                    {{L 'new_tag'}}
+                {{else}}
+                    {{tag.name}}
+                {{/is}}
+            </h1>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+            {{#is @template 'tags.edit'}}
+            <div class="btn-group m-r-1">
+                <button type="button" class="open btn btn-secondary" data-url="{{tag_url tag.slug}}">
+                    <i class="fa fa-external-link"></i>
+                </button>
+                <button type="button" class="delete btn btn-secondary" data-confirm="{{L 'delete_this_tag'}}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            {{/is}}
+            <button type="button" class="submit btn btn-primary">
+                {{L 'save'}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container stretch-down">
+    <div class="row">
+        {{!-- Cover --}}
+        <div
+            class="cover"
+            {{#if tag.cover}}
+                {{#if this}}style="background-image:url('{{url tag.cover}}');"{{/if}}
+            {{/if}}
+        >
+            <div class="name">
+                {{#if tag.name}}
+                    {{tag.name}}
+                {{/if}}
+            </div>
+            {{!-- Cover upload button --}}
+            <div class="cover-controls">
+                <label class="upload-cover btn btn-translucent-dark">
+                    <i class="fa fa-fw fa-camera"></i>
+                    <input type="file" accept="image/*" style="display: none;">
+                </label>
+                <button type="button" class="remove-cover btn btn-translucent-dark"{{#unless tag.cover}} hidden{{/unless}}>
+                    <i class="fa fa-fw fa-remove"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Form --}}
+    <form class="tag-form" autocomplete="off">
+        <div class="row">
+            <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+                {{!-- Tag --}}
+                <div class="form-group m-t-2">
+                    <label for="name">{{L 'name'}}</label>
+                    <input class="form-control" type="text" name="name" id="name" value="{{tag.name}}" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="description">{{L 'description'}}</label>
+                    <div class="tag-cover">
+                        <span class="tag tag-default tag-tr tag-outside">{{L 'markdown'}}</span>
+                        <textarea class="form-control" name="description" id="description" rows="4">{{tag.description}}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="slug">{{L 'slug'}}</label>
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-link"></i></span>
+                        <input class="form-control" type="text" name="slug" id="slug" value="{{tag.slug}}">
+                    </div>
+                </div>
+
+                {{!-- Meta data --}}
+                <h3 class="m-t-3">{{L 'meta_data'}}</h3>
+                <div class="form-group">
+                    <label for="meta-title">{{L 'meta_title'}}</label>
+                    <input class="form-control" type="text" name="meta-title" id="meta-title" value="{{tag.meta_title}}" autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="meta-description">{{L 'meta_description'}}</label>
+                    <textarea class="form-control" name="meta-description" id="meta-description" rows="4">{{tag.meta_description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>{{L 'search_engine_preview'}}</label>
+                    <div class="se-preview">
+                        <div class="se-title"></div>
+                        <div class="se-url">
+                            {{tag_url '/'}}<span class="se-slug">{{tag.slug}}</span>
+                        </div>
+                        <div class="se-description"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="tag" value="{{tag.slug}}">
+        <input type="hidden" name="cover" value="{{tag.cover}}">
+        {{!-- Allow forms to be submitted with `enter` --}}
+        <button type="submit" hidden></button>
+    </form>
+</div>
+
+{{> footer}}

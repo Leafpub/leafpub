@@ -1,0 +1,86 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-xs-6">
+            <h1>
+                {{L 'navigation'}}
+            </h1>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-xs-6 text-xs-right">
+            <button type="button" class="submit btn btn-primary">
+                {{L 'save'}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container stretch-down">
+    {{!-- Nav items --}}
+    <form class="navigation-form" autocomplete="off">
+        <div class="navigation-list">
+            {{#each navigation}}
+                {{> navigation-item}}
+            {{/each}}
+        </div>
+        {{!-- Allow forms to be submitted with `enter` --}}
+        <button type="submit" hidden></button>
+    </form>
+
+    {{!-- Template for nav items --}}
+    <div class="navigation-template" hidden>
+        {{> navigation-item}}
+    </div>
+
+    {{!-- Add --}}
+    <form class="add-form">
+        <div class="nav-col hidden-xs-down"></div>
+        <div class="nav-col">
+            <input class="add-label form-control" type="text" placeholder="{{L 'label'}}">
+        </div>
+        <div class="nav-col">
+            <select class="add-format form-control">
+                <option value="%" data-placeholder="http://">
+                    {{L 'url'}}
+                </option>
+                <option value="/{{@settings.frag_author}}/%" data-placeholder="{{L 'username'}}" data-formatter="slug">
+                    {{L 'author'}}
+                </option>
+                <option value="/{{#is @settings.homepage}}{{@settings.frag_blog}}{{/is}}" data-placeholder="">
+                    {{L 'blog'}}
+                </option>
+                <option value="/{{@settings.frag_feed}}" data-placeholder="">
+                    {{L 'feed'}}
+                </option>
+                <option value="/" data-placeholder="">
+                    {{L 'homepage'}}
+                </option>
+                <option value="/%" data-formatter="slug" data-placeholder="{{L 'slug'}}">
+                    {{L 'post'}}
+                </option>
+                <option value="/{{@settings.frag_tag}}/%" data-placeholder="{{L 'slug'}}" data-formatter="slug">
+                    {{L 'tag'}}
+                </option>
+                <option value="/{{@settings.frag_search}}/%" data-placeholder="{{L 'search'}}" data-formatter="encode">
+                    {{L 'search'}}
+                </option>
+            </select>
+        </div>
+        <div class="nav-col">
+            <input class="add-link form-control" type="text">
+        </div>
+        <div class="nav-col text-sm-left text-xs-right">
+            <button class="add btn btn-success" type="submit">
+                <i class="fa fa-fw fa-plus"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+{{> footer}}

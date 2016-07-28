@@ -1,0 +1,49 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-lg-4 col-sm-6">
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-search"></i></span>
+                <input
+                    class="tag-search form-control"
+                    type="search"
+                    placeholder="{{L 'search'}}"
+                    autofocus>
+            </div>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+            <div class="btn-group m-r-1">
+                <button type="button" class="edit btn btn-secondary" disabled>
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button type="button" class="open btn btn-secondary" disabled>
+                    <i class="fa fa-external-link"></i>
+                </button>
+                <button type="button" class="delete btn btn-secondary" disabled data-confirm="{{L 'delete_the_selected_tags'}}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <a href="{{admin_url 'tags/new'}}" class="btn btn-success">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container">
+    <div class="row">
+        {{!-- Tag list --}}
+        <div class="tag-list stretch-down">
+            {{> tag-list}}
+        </div>
+    </div>
+</div>
+
+{{> footer}}

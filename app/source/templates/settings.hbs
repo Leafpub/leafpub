@@ -1,0 +1,237 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-xs-6">
+            <h1>
+                {{L 'settings'}}
+            </h1>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-xs-6 text-xs-right">
+            <button type="button" class="submit btn btn-primary">
+                {{L 'save'}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container stretch-down">
+    <form class="settings-form" autocomplete="off">
+        {{!-- Tabs --}}
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#general" role="tab" data-toggle="tab">
+                    <i class="fa fa-cog hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'general'}}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#advanced" role="tab" data-toggle="tab">
+                    <i class="fa fa-code hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'advanced'}}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#backups" role="tab" data-toggle="tab">
+                    <i class="fa fa-archive hidden-sm-up"></i>
+                    <span class="hidden-xs-down">{{L 'backups'}}</span>
+                </a>
+            </li>
+        </ul>
+
+        {{!-- Tab panes --}}
+        <div class="row">
+            <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+                <div class="tab-content">
+                    {{!-- General --}}
+                    <div class="tab-pane active" id="general" role="tabpanel">
+                        {{!-- Title --}}
+                        <div class="form-group">
+                            <label for="title">{{L 'title'}}</label>
+                            <input class="form-control" type="text" name="title" id="title" value="{{@settings.title}}">
+                        </div>
+                        {{!-- Tagline --}}
+                        <div class="form-group">
+                            <label for="tagline">{{L 'tagline'}}</label>
+                            <input class="form-control" type="text" name="tagline" id="tagline" value="{{@settings.tagline}}">
+                        </div>
+                        {{!-- Custom homepage --}}
+                        <div class="form-group">
+                            <label for="homepage">{{L 'custom_homepage'}}</label>
+                            <select class="form-control" name="homepage" id="homepage">
+                                <option value=""{{#is this.slug @settings.homepage}} selected{{/is}}>{{L 'none'}}</option>
+                                {{#each pages}}
+                                <option value="{{this.slug}}"{{#is this.slug @settings.homepage}} selected{{/is}}>{{this.title}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{!-- Theme --}}
+                                <div class="form-group">
+                                    <label for="theme">{{L 'theme'}}</label>
+                                    <select class="form-control" name="theme" id="theme">
+                                        {{#each themes}}
+                                        <option value="{{this.dir}}"{{#is this.dir @settings.theme}} selected{{/is}}>{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                {{!-- Posts per page --}}
+                                <div class="form-group">
+                                    <label for="posts-per-page">{{L 'posts_per_page'}}</label>
+                                    <input class="form-control" type="number" name="posts-per-page" id="posts-per-page" value="{{@settings.posts_per_page}}">
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- Cover photo --}}
+                        <div class="form-group">
+                            <label>{{L 'cover_photo'}}</label>
+                            <input type="hidden" name="cover" value="{{@settings.cover}}">
+                            <div class="cover card"{{#if @settings.cover}} style="background-image: url('{{url @settings.cover}}');"{{/if}}>
+                                <div class="controls">
+                                    <label class="upload-cover btn btn-translucent-dark">
+                                        <i class="fa fa-fw fa-camera"></i>
+                                        <input type="file" accept="image/*" style="display: none;">
+                                    </label>
+                                    <button type="button" class="remove-cover btn btn-translucent-dark"{{#unless @settings.cover}} hidden{{/unless}}>
+                                        <i class="fa fa-fw fa-remove"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {{!-- Logo --}}
+                            <div class="col-sm-6">
+                                <label>{{L 'logo'}}</label>
+                                <input type="hidden" name="logo" value="{{@settings.logo}}">
+                                <div class="logo card card-block"{{#if @settings.logo}} style="background-image: url('{{url @settings.logo}}');"{{/if}}>
+                                    <div class="controls">
+                                        <label class="upload-logo btn btn-translucent-dark">
+                                            <i class="fa fa-fw fa-camera"></i>
+                                            <input type="file" accept="image/*" style="display: none;">
+                                        </label>
+                                        <button type="button" class="remove-logo btn btn-translucent-dark"{{#unless @settings.logo}} hidden{{/unless}}>
+                                            <i class="fa fa-fw fa-remove"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {{!-- Favicon --}}
+                            <div class="col-sm-6">
+                                <label>{{L 'favicon'}}</label>
+                                <input type="hidden" name="favicon" value="{{@settings.favicon}}">
+                                <div class="favicon card card-block"{{#if @settings.favicon}} style="background-image: url('{{url @settings.favicon}}');"{{/if}}>
+                                    <div class="controls">
+                                        <label class="upload-favicon btn btn-translucent-dark">
+                                            <i class="fa fa-fw fa-camera"></i>
+                                            <input type="file" accept="image/*" style="display: none;">
+                                        </label>
+                                        <button type="button" class="remove-favicon btn btn-translucent-dark"{{#unless @settings.favicon}} hidden{{/unless}}>
+                                            <i class="fa fa-fw fa-remove"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{!-- Advanced --}}
+                    <div class="tab-pane" id="advanced" role="tabpanel">
+                        {{!-- Locale --}}
+                        <h3>{{L 'locale'}}</h3>
+                        {{!-- Language --}}
+                        <div class="form-group">
+                            <label for="language">{{L 'language'}}</label>
+                            <select class="form-control" name="language" id="language">
+                                {{#each languages}}
+                                <option value="{{this.code}}"{{#is this.code @settings.language}} selected{{/is}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{!-- Timezone --}}
+                        <div class="form-group">
+                            <label for="timezone">{{L 'time_zone'}}</label>
+                            <select class="form-control" name="timezone" id="timezone">
+                                {{#each timezones}}
+                                <option value="{{this.code}}"{{#is this.code @settings.timezone}} selected{{/is}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{!-- Editor --}}
+                        <h3 class="m-t-3">{{L 'editor'}}</h3>
+                        {{!-- Default title --}}
+                        <div class="form-group">
+                            <label for="default-title">{{L 'default_title'}}</label>
+                            <input class="form-control" type="text" name="default-title" id="default-title" value="{{@settings.default_title}}">
+                        </div>
+                        {{!-- Default content --}}
+                        <div class="form-group">
+                            <label for="default-content">{{L 'default_content'}}</label>
+                            <div class="tag-cover">
+                                <span class="tag tag-default tag-tr tag-outside">{{L 'markdown'}}</span>
+                                <textarea class="form-control" name="default-content" id="default-content" rows="6">{{@settings.default_content}}</textarea>
+                            </div>
+                        </div>
+                        {{!-- Custom code --}}
+                        <h3 class="m-t-3">{{L 'custom_code'}}</h3>
+                        {{!-- Head code --}}
+                        <div class="form-group">
+                            <label for="head-code">{{L 'inject_this_code_into_postleaf_head'}}</label>
+                            <div class="tag-cover">
+                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                                <textarea class="form-control code" name="head-code" id="head-code" rows="6" spellcheck="false">{{@settings.head_code}}</textarea>
+                            </div>
+                        </div>
+                        {{!-- Foot code --}}
+                        <div class="form-group">
+                            <label for="foot-code">{{L 'inject_this_code_into_postleaf_foot'}}</label>
+                            <div class="tag-cover">
+                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                                <div class="tag-cover">
+                                    <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                                    <textarea class="form-control code" name="foot-code" id="foot-code" rows="6" spellcheck="false">{{@settings.foot_code}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        {{!-- Version --}}
+                        <div class="form-group m-t-3 text-xs-center text-muted">
+                            Postleaf {{version}}
+                        </div>
+                    </div>
+
+                    {{!-- Backups --}}
+                    <div class="tab-pane" id="backups" role="tabpanel">
+                        {{! -- Create backup --}}
+                        <h3>{{L 'create_backup'}}</h3>
+                        <p>
+                            {{L 'postleaf_can_create_a_backup_of_your_entire_website...'}}
+                        </p>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="button" data-create-backup>
+                                {{L 'backup_now'}}
+                            </button>
+                            <i class="loader loader-md create-backup-loader" hidden></i>
+                        </div>
+                        {{! -- Available backups --}}
+                        <h3 class="m-t-3">{{L 'available_backups'}}</h3>
+                        <div class="available-backups m-t-2">
+                            {{> backups-table}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{!-- Allow forms to be submitted with `enter` --}}
+        <button type="submit" hidden></button>
+    </form>
+</div>
+
+{{> footer}}

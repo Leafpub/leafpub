@@ -1,0 +1,12 @@
+# Files
+.DS_Store
+.htaccess
+npm-debug.log
+
+# Folders
+/app/database.php
+/app/source/assets
+/app/source/vendor
+/design
+/dist
+/node_modules

@@ -1,0 +1,82 @@
+.locater-overlay {
+    position: fixed;
+    z-index: 2500;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(black, .3);
+}
+
+.locater {
+    position: fixed;
+    z-index: 2501;
+    top: 0;
+    left: 50%;
+    margin-left: -$postleaf-locater-width / 2;
+    width: $postleaf-locater-width;
+    background: white;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    box-shadow: 0 0 2.5rem rgba(black, .2);
+    padding: 1rem;
+    .form-group {
+        margin-bottom: 0;
+    }
+}
+
+.locater-results {
+    position: relative;
+    max-height: 30vh;
+    border: solid 1px $input-border-color;
+    border-radius: $border-radius;
+    margin-top: 1rem;
+    overflow-y: auto;
+    a {
+        @include text-truncate;
+        position: relative;
+        color: $body-color;
+        display: block;
+        padding: .5rem .5rem .5rem 2rem;
+        i,
+        .avatar {
+            position: absolute;
+            top: .75rem;
+            left: .5rem;
+            color: #ccc;
+            width: 1.2em;
+            height: 1.2em
+        }
+        .avatar {
+            border-radius: 50%;
+        }
+        small {
+            color: $text-muted;
+        }
+        &:hover,
+        &:focus {
+            background-color: #f2f2f2;
+            text-decoration: none;
+        }
+        &.active {
+            background-color: $postleaf-blue;
+            color: white;
+            text-decoration: none;
+            i,
+            small {
+                color: white;
+            }
+        }
+    }
+    &:empty {
+        display: none;
+    }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .locater {
+        width: $postleaf-locater-width-xs;
+        margin-left: -$postleaf-locater-width-xs / 2;
+    }
+}

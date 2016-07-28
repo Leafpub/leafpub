@@ -1,0 +1,60 @@
+.panel {
+    position: fixed;
+    z-index: 1500;
+    top: 0;
+    bottom: 0;
+    width: 30rem;
+    background: white;
+    border-left: solid 1px #eee;
+    box-shadow: -.5rem 0 5rem rgba(black, .05);
+    padding: 2rem 2rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    visibility: hidden;
+    transition: all $postleaf-transition-speed;
+    &.panel-right {
+        right: 0;
+        left: auto;
+        transform: translate3d(100%, 0, 0);
+    }
+    &.panel-left {
+        right: auto;
+        left: 0;
+        transform: translate3d(-100%, 0, 0);
+    }
+    &.active {
+        visibility: visible;
+        transform: translate3d(0, 0, 0);
+        transition-delay: 0s;
+    }
+    .close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.2rem;
+        color: $gray-light;
+        transition: color $postleaf-transition-speed;
+        &:hover {
+            color: $gray;
+        }
+    }
+    h3 {
+        font-weight: 300;
+        margin-bottom: 2rem;
+    }
+    .nav-tabs {
+        margin-bottom: 1rem;
+    }
+}
+
+// SM breakpoint
+@include media-breakpoint-down(xs) {
+    .panel {
+        width: 100%;
+        padding: 1rem;
+        .close {
+            top: .5rem;
+            right: .5rem;
+        }
+    }
+}

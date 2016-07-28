@@ -1,0 +1,51 @@
+@import "partials/variables";
+$tag-cover-blur: 35px;
+
+.cover {
+    position: relative;
+    height: 200px;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    -webkit-transform: translateZ(0); // enable hardware acceleration in iOS
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: inherit;
+        filter: blur($tag-cover-blur);
+    }
+    .cover-controls {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        .btn {
+            margin: 0;
+        }
+        .btn i {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.name {
+    position: relative;
+    top: 0;
+    left: 0;
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 1px rgba(black, .5), 0 -1px 0 rgba(black, .25);
+    line-height: 200px;
+    text-align: center;
+    padding: 0 2rem;
+    @include text-truncate;
+}
+
+.tag-form {
+    padding: 2rem .5rem;
+}

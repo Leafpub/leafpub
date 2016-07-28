@@ -1,0 +1,81 @@
+@import "partials/variables";
+$user-list-item-image-size: 8rem;
+
+.user-list {
+    height: 100%;
+    padding: 2rem 1rem;
+    user-select: none;
+}
+
+.user-list-none {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+}
+
+.user-list-item {
+    position: relative;
+    text-align: center;
+    border-radius: $border-radius-large;
+    border: solid 2px white;
+    padding: 1rem;
+    padding-top: $user-list-item-image-size + 1.75rem;
+    transition:
+        color $postleaf-transition-speed,
+        background-color $postleaf-transition-speed;
+    .avatar {
+        position: absolute;
+        top: 1rem;
+        left: calc(50% - #{$user-list-item-image-size} / 2);
+        width: $user-list-item-image-size;
+        height: $user-list-item-image-size;
+        overflow: hidden;
+        img,
+        i {
+            background: $gray-light;
+            width: $user-list-item-image-size;
+            height: $user-list-item-image-size;
+            line-height: $user-list-item-image-size;
+            font-size: $user-list-item-image-size - 2rem;
+            color: white;
+            border-radius: 50%;
+        }
+    }
+    .name {
+        font-weight: bold;
+        @include text-truncate;
+    }
+    .role {
+        font-size: .9rem;
+        color: $text-muted;
+        @include text-truncate;
+        transition: color $postleaf-transition-speed;
+    }
+    &:hover {
+        background-color: #f2f2f2;
+    }
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+    &.selected {
+        background-color: $postleaf-blue;
+        color: white;
+        .role {
+            color: white;
+        }
+    }
+}
+
+// Fix sticky hovers in iOS
+.ios .user-list-item:hover:not(.selected) {
+    background-color: inherit;
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .user-list {
+        padding: 1rem 0;
+    }
+}

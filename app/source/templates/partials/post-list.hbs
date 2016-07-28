@@ -1,0 +1,37 @@
+{{#each posts}}
+    <a
+        class="post-list-item"
+        href="{{admin_url 'posts/'}}{{encode slug}}"
+        data-slug="{{slug}}"
+        data-url="{{post_url}}?preview"
+    >
+        {{#is status 'draft'}}
+            <span class="tag tag-warning">{{L 'draft'}}</span>
+        {{/is}}
+        {{#is page}}
+            <span class="tag tag-primary">{{L 'page'}}</span>
+        {{/is}}
+        {{#is featured}}
+            <span class="tag tag-success">{{L 'featured'}}</span>
+        {{/is}}
+        <div class="title">
+            {{title}}
+        </div>
+        <div class="description">
+            {{#admin_author author}}
+                {{#if avatar}}
+                    <img class="avatar" src="{{url avatar}}">
+                {{/if}}
+            {{/admin_author}}
+            <span class="date">
+                {{date format="%B %e, %Y"}}
+            </span>
+        </div>
+    </a>
+{{else}}
+    <div class="post-list-none valign">
+        <div class="valign-middle">
+            {{L 'no_posts'}}
+        </div>
+    </div>
+{{/each}}

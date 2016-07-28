@@ -1,0 +1,11 @@
+{{#each items}}
+    <a href="{{link}}">
+        {{#if avatar}}
+            <img class="avatar" src="{{url avatar}}" alt="{{L 'avatar'}}">
+        {{else}}
+            <i class="{{icon}}"></i>
+        {{/if}}
+        {{title}}
+        {{#if description}}<br><small>{{description}}</small>{{/if}}
+    </a>
+{{/each}}

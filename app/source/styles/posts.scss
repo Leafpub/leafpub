@@ -1,0 +1,145 @@
+@import "partials/variables";
+
+.post-list {
+    position: relative;
+    height: 100%;
+    border-right: solid 1px #ddd;
+    margin-left: -$grid-gutter-width / 2;
+    margin-right: -$grid-gutter-width / 2;
+    user-select: none;
+}
+
+.post-list-none {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+}
+
+.post-list-item {
+    position: relative;
+    border-bottom: solid 1px #ddd;
+    border-left: solid 0 transparent;
+    background-color: white;
+    padding: 1rem 1.5rem;
+    color: $body-color;
+    overflow: hidden;
+    transition:
+        border $postleaf-transition-speed,
+        padding $postleaf-transition-speed,
+        background-color $postleaf-transition-speed;
+    display: block;
+    .title {
+        margin-bottom: .3rem;
+        @include text-truncate;
+    }
+    .description {
+        font-size: .9rem;
+        color: $text-muted;
+        @include text-truncate;
+    }
+    .avatar {
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: .25rem;
+    }
+    .date {
+        margin-right: .25rem;
+    }
+    .tag {
+        float: right;
+        font-size: .8rem;
+        margin-top: .1rem;
+        margin-left: .5rem;
+    }
+    .featured {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: white;
+        text-align: center;
+        line-height: 2rem;
+        width: 2rem;
+        height: 2rem;
+        background: $postleaf-blue;
+        border-radius: 50%;
+    }
+    &:hover {
+        background-color: #f8f8f8;
+        color: inherit;
+        text-decoration: none;
+    }
+    &:focus {
+        color: inherit;
+        text-decoration: none;
+    }
+    &.selected {
+        background-color: #f2f2f2;
+        border-left: solid .5rem $postleaf-blue;
+        padding-right: 1rem;
+    }
+}
+
+// Fix sticky hovers in iOS
+.ios .post-list-item:hover:not(.selected) {
+    background-color: inherit;
+}
+
+// Post preview
+.preview {
+    margin-left: -$grid-gutter-width / 2;
+    margin-right: -$grid-gutter-width / 2;
+    user-select: none;
+}
+
+.preview-panel {
+    height: 100%;
+}
+
+.preview-none,
+.preview-multiple {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+    i {
+        color: lighten($text-muted, 18%);
+        font-size: 8rem;
+    }
+}
+
+.preview-one {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    .preview-frame-wrap {
+        width: 100%;
+        height: 100%;
+        width: 200%;
+        height: 200%;
+        transform: scale(0.5);
+        transform-origin: 0 0;
+    }
+    .preview-frame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+.preview-loader {
+    text-align: center;
+    font-size: 5rem;
+}
+
+// SM breakpoint
+@include media-breakpoint-down(sm) {
+    .post-list {
+        border-right: none;
+    }
+}
