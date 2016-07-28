@@ -13,8 +13,7 @@ var gulp = require('gulp-help')(require('gulp')),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),
-    watch = require('gulp-watch'),
-    zip = require('gulp-zip');
+    watch = require('gulp-watch');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Config
@@ -378,11 +377,6 @@ gulp.task('release:make', 'Generate a release.', function() {
     del.sync(path.join(target, 'source/images/**'));
     del.sync(path.join(target, 'source/scripts/**'));
     del.sync(path.join(target, 'source/styles/**'));
-
-    // Create zip
-    gulp.src(path.join(target, '**'))
-        .pipe(zip('postleaf-' + config.version + '.zip'))
-        .pipe(gulp.dest(dist));
 
     // Little message to celebrate
     console.log(
