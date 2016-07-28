@@ -19,7 +19,7 @@ You can safely delete this file (INSTALL.md) anytime.
 
 Licensed under the terms of the GNU GPLv3. See LICENSE.MD for details.
 
-©2016 A Beautiful Site, LLC.
+©2016 A Beautiful Site, LLC
 
 ## Support
 
