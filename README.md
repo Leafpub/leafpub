@@ -89,7 +89,7 @@ Postleaf is maintained under the [Semantic Versioning guidelines](http://semver.
 
 ©2016 A Beautiful Site, LLC
 
-This software is copyrighted. You may use it under the terms of the GNU GPLv3 or later. See LICENSE.MD for licensing details.
+This software is copyrighted. You may use it under the terms of the GNU GPLv3 or later. See LICENSE.md for licensing details.
 
 All code is copyright 2016 A Beautiful Site, LLC except where noted. Third-party libraries are copyrighted and licensed by their respective owners.
 
