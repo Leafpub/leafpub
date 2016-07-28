@@ -13,7 +13,7 @@ Created by [Cory LaViska](https://twitter.com/claviska)
 2. Open a web browser and navigation to your domain.
 3. The installer will take care of the rest.
 
-You can safely delete this file (INSTALL.txt) anytime.
+You can safely delete this file (INSTALL.md) anytime.
 
 ## License
 
