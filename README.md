@@ -2,7 +2,7 @@
 
 **Simple, beautiful publishing.**
 
-Created by Cory LaViska.
+Created by [Cory LaViska](https://twitter.com/claviska)
 
 - Website: [postleaf.org](https://www.postleaf.org/)
 - Twitter: [@postleafapp](https://twitter.com/postleafapp)
