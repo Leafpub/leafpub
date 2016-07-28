@@ -9,6 +9,8 @@ Created by [Cory LaViska](https://twitter.com/claviska)
 
 This software is dedicated to my daughter, Sophia. Chase your dreams, little tanuki. 💙💚
 
+![Screenshots](https://www.postleaf.org/content/uploads/2016/07/homepage-splash.png)
+
 ## Requirements
 
 - PHP 5.5+
