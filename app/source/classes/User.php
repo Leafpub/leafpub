@@ -103,6 +103,7 @@ class User extends Postleaf {
                     name = :name,
                     email = :email,
                     password = :password,
+                    reset_token = :reset_token,
                     role = :role,
                     bio = :bio,
                     cover = :cover,
@@ -114,6 +115,7 @@ class User extends Postleaf {
             $st->bindParam(':name', $properties['name']);
             $st->bindParam(':email', $properties['email']);
             $st->bindParam(':password', $properties['password']);
+            $st->bindParam(':reset_token', $properties['reset_token']);
             $st->bindParam(':role', $properties['role']);
             $st->bindParam(':bio', $properties['bio']);
             $st->bindParam(':cover', $properties['cover']);
