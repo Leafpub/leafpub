@@ -431,7 +431,7 @@ class Postleaf {
 
     // Returns the subfolder that Postleaf is running from
     public static function subfolder() {
-        return mb_substr(self::path(), mb_strlen($_SERVER['DOCUMENT_ROOT']));
+        return mb_substr(self::path(), mb_strlen(realpath($_SERVER['DOCUMENT_ROOT'])));
     }
 
     // Returns Postleaf's base URL, optionally concatenating additional folders
