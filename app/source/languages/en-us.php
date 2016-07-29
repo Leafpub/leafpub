@@ -97,7 +97,7 @@ return [
     'image' => 'Image',
     'in_{n}_days' => 'in {n} days',
     'in_{n}_hours' => 'in {n} hours',
-    'in_{n}_minutes' => 'in_{n}_minutes',
+    'in_{n}_minutes' => 'in {n} minutes',
     'in_{n}_months' => 'in {n} months',
     'in_{n}_weeks' => 'in {n} weeks',
     'in_{n}_years' => 'in {n} years',
