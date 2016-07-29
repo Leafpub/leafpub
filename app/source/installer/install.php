@@ -1,7 +1,7 @@
 <?php
 namespace Postleaf;
 require_once(dirname(dirname(__DIR__)) . '/source/runtime.php');
-error_reporting(0);
+error_reporting(E_ALL & ~E_NOTICE);
 
 use Exception,
     PDO;
