@@ -81,7 +81,7 @@ return [
     'feature_this_post' => 'Diesen Post hervorheben',
     'featured' => 'Hervorgehoben',
     'feed' => 'Feed',
-    'full_name' => 'Name'
+    'full_name' => 'Name',
     'general' => 'Generell',
     'heading_1' => 'Überschrift 1',
     'heading_2' => 'Überschrift 2',
