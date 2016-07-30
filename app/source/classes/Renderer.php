@@ -110,7 +110,7 @@ class Renderer extends Postleaf {
         $special_vars = array_merge((array) $special_vars, [
             'cookies' => $_COOKIE,
             'postleaf' => [
-                'version' => POSTLEAF_VERSION
+                'version' => POSTLEAF_VERSION === '{{version}}' ? 'dev' : POSTLEAF_VERSION
             ],
             'request' => [
                 'get' => $_GET,

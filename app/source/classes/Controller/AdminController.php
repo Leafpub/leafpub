@@ -385,7 +385,6 @@ class AdminController extends Controller {
             'languages' => Language::getAll(),
             'timezones' => $timezones,
             'themes' => Theme::getAll(),
-            'version' => POSTLEAF_VERSION === '{{version}}' ? 'dev' : POSTLEAF_VERSION,
             'redirect' => Admin::url()
         ]);
 
