@@ -1,6 +1,10 @@
 {
     "require": {
         "php": ">=5.5",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo_mysql": "*",
         "zordius/lightncandy": "dev-master",
         "firebase/php-jwt": "^3.0",
         "slim/slim": "^3.0",
