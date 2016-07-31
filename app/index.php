@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 namespace Postleaf;
-require __DIR__ . '/source/runtime.php':
+require __DIR__ . '/source/runtime.php';
 
 // Initialize the app and session
 Postleaf::run();
