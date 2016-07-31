@@ -1,6 +1,6 @@
 {
   "name": "postleaf",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "private": true,
   "devDependencies": {
     "del": "^2.2.0",
