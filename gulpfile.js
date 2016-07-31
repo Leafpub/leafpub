@@ -5,7 +5,7 @@ var gulp = require('gulp-help')(require('gulp')),
     cleanCSS = require('gulp-clean-css'),
     del = require('del'),
     fs = require('fs-extra'),
-    imageop = require('gulp-image-optimization'),
+    imagemin = require('gulp-imagemin'),
     jshint = require('gulp-jshint'),
     notify = require('gulp-notify'),
     path = require('path'),
@@ -61,11 +61,7 @@ function buildFonts(source, target, base) {
 // Optimizes images in source and outputs them in target
 function buildImages(source, target) {
     return gulp.src(source)
-        .pipe(imageop({
-            optimizationLevel: 5,
-            progressive: true,
-            interlaced: true
-        }))
+        .pipe(imagemin())
         .pipe(gulp.dest(target))
         .pipe(notify({
             title: 'Postleaf',
