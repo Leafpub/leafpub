@@ -15,6 +15,10 @@ Created by [Cory LaViska](https://twitter.com/claviska)
 
 You can safely delete this file (INSTALL.md) anytime.
 
+## Updating
+
+To update from a previous version, simply replace `index.php` and the `source` folder with the new versions.
+
 ## License
 
 Licensed under the terms of the GNU GPLv3. See LICENSE.MD for details.
