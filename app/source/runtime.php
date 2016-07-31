@@ -10,11 +10,6 @@ $loader = require_once __DIR__ . '/vendor/autoload.php';
 $loader->setPsr4('Postleaf\\', __DIR__ . '/classes');
 $loader->register();
 
-// Check PHP version
-if(version_compare(PHP_VERSION, '5.5.0') < 0) {
-    exit('Postleaf requires PHP 5.5 or above.');
-}
-
 // Check for GD extension
 if(!extension_loaded('gd')) {
     exit('Postleaf requires the GD extension.');
