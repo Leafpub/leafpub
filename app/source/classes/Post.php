@@ -695,7 +695,9 @@ class Post extends Postleaf {
         if($options['editable'] || $options['preview']) {
             $html = str_replace(
                 '<!--{{postleaf_head}}-->',
-                '<!--{{postleaf_head}}--><base href="' . htmlspecialchars(Postleaf::url()) . '">',
+                '<!--{{postleaf_head}}--><base href="' .
+                    // The base should always end with a slash
+                    htmlspecialchars(rtrim(Postleaf::url(), '/')) . '/">',
                 $html
             );
         }
