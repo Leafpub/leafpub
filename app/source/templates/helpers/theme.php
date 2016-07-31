@@ -231,7 +231,7 @@ return [
 
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
-            // Inject base tag, Postleaf data, and editor stylesheet
+            // Inject Postleaf data and editor stylesheet
             $html .=
                 '<!--{{postleaf_head}}-->' .
                 '<script>window.postleaf = true;</script>' .
