@@ -52,7 +52,9 @@ var Editor;
         // Merge TinyMCE settings
         settings = {
             browser_spellcheck: true,
-            document_base_url: Postleaf.url(),
+            // Document base URL must end with slash per the TinyMCE docs. This is especially
+            // important for sites running in a subfolder, otherwise the URLs will be incorrect.
+            document_base_url: Postleaf.url().replace(/\/$/, '') + '/',
             element_format: 'html',
             entity_encoding: 'raw',
             extended_valid_elements: 'i[class],iframe[*],script[*]',
