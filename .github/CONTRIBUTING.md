@@ -6,7 +6,7 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ## Using the issue tracker
 
-[The issue tracker](https://github.com/claviska/postleaf-app/issues) is the preferred channel for [bug reports](#bug-reports) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
+[The issue tracker](https://github.com/postleaf/postleaf/issues) is the preferred channel for [bug reports](#bug-reports) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
 
 * Please **do not** use the issue tracker for personal support requests. [The Postleaf Community Forum](https://community.postleaf.org/) is a better place to get help.
 
