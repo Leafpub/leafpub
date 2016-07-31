@@ -21,7 +21,7 @@ class Language extends Postleaf {
         }
 
         // Load it
-        self::$language = (array) include($file);
+        self::$language = (array) include $file;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ class Language extends Postleaf {
         $iterator = new \DirectoryIterator(self::path('source/languages'));
         foreach($iterator as $file) {
             if($file->isFile() && $file->getExtension() === 'php') {
-                $lang = include($file->getPathname());
+                $lang = include $file->getPathname();
                 if(isset($lang['language_code']) && isset($lang['language_name'])) {
                     $languages[] = [
                         'name' => $lang['language_name'],

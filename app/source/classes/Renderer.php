@@ -17,7 +17,7 @@ class Renderer extends Postleaf {
         foreach((array) $helpers as $helper) {
             $path = self::path("/source/templates/helpers/$helper.php");
             if(file_exists($path)) {
-                $array = array_merge($array, include($path));
+                $array = array_merge($array, include $path);
             }
         }
 

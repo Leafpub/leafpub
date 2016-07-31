@@ -30,7 +30,7 @@ class Database extends Postleaf {
         if(!$config) {
             $file = self::path('database.php');
             if(file_exists($file)) {
-                $config = include($file);
+                $config = include $file;
             } else {
                 throw new \Exception('Database not configured', self::NOT_CONFIGURED);
             }
