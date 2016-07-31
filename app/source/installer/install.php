@@ -27,7 +27,8 @@ if(empty($_REQUEST['db-prefix'])) $_REQUEST['db-prefix'] = 'postleaf_';
 
 // Check for errors
 $invalid = [];
-foreach(['name', 'email', 'username', 'password', 'db-user', 'db-password', 'db-database'] as $field) {
+// Note: we don't check for a database password since some dev environments leave it blank
+foreach(['name', 'email', 'username', 'password', 'db-user', 'db-database'] as $field) {
     if(empty($_REQUEST[$field])) $invalid[] = $field;
 }
 if(count($invalid)) {
