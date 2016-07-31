@@ -30,7 +30,7 @@ Postleaf uses Composer and NPM to manage dependencies and Gulp as its task runne
 - [Node](https://nodejs.org/en/)
 - [Gulp](http://gulpjs.com/) (Install using `npm install -g gulp-cli`)
 
-Please read through our [contributing guidelines](https://github.com/claviska/postleaf-app/blob/master/CONTRIBUTING.md).
+Please read through our [contributing guidelines](https://github.com/postleaf/postleaf/blob/master/.github/CONTRIBUTING.md).
 
 ## Building
 
