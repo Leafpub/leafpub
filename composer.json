@@ -1,5 +1,6 @@
 {
     "require": {
+        "php": ">=5.5",
         "zordius/lightncandy": "dev-master",
         "firebase/php-jwt": "^3.0",
         "slim/slim": "^3.0",
