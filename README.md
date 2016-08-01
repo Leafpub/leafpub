@@ -76,6 +76,18 @@ Available tasks
 
 For development, use `gulp watch` to automatically compile Sass/JavaScript as you work.
 
+## Testing
+
+You can run Postleaf on PHP's built in web server using the following command:
+
+```
+php -S localhost:8080 -t app
+```
+
+Then open http://localhost:8080 in your browser.
+
+**Note:** You might need to use `127.0.0.1` instead of `localhost` in your database config!
+
 ## Versioning
 
 Postleaf is maintained under the [Semantic Versioning guidelines](http://semver.org/) and we adhere to them as closely as possible.
