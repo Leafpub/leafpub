@@ -206,57 +206,98 @@ Setting::add('title', 'A Postleaf Blog');
 Setting::add('password_min_length', '8');
 
 // Insert owner
-User::add($_REQUEST['username'], [
-    'name' => $_REQUEST['name'],
-    'email' => $_REQUEST['email'],
-    'password' => $_REQUEST['password'],
-    'role' => 'owner'
-]);
+try {
+    User::add($_REQUEST['username'], [
+        'name' => $_REQUEST['name'],
+        'email' => $_REQUEST['email'],
+        'password' => $_REQUEST['password'],
+        'role' => 'owner'
+    ]);
+} catch(Exception $e) {
+    // Cleanup database.php so we can try again
+    unlink($db_pathname);
 
-// Insert initial tag
-Tag::add('getting-started', [
-    'name' => 'Getting Started',
-    'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!'
-]);
+    switch($e->getCode()) {
+        case User::INVALID_SLUG:
+            $invalid = ['username'];
+            $message = 'This username is reserved and cannot be used.';
+            break;
+        default:
+            $invalid = null;
+            $message = 'Unable to create the owner user: ' . $e->getMessage();
+    }
+
+    exit(json_encode([
+        'success' => false,
+        'invalid' => $invalid,
+        'message' => $message
+    ]));
+}
+
+// Insert default tag
+try {
+    Tag::add('getting-started', [
+        'name' => 'Getting Started',
+        'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!'
+    ]);
+} catch(Exception $e) {
+    // Cleanup database.php so we can try again
+    unlink($db_pathname);
+
+    exit(json_encode([
+        'success' => false,
+        'message' => 'Unable to insert default tags: ' . $e->getMessage()
+    ]));
+}
 
 // Insert initial posts
-Post::add('welcome-to-postleaf', [
-    'pub_date' => date('Y-m-d H:i:s'),
-    'author' => $_REQUEST['username'],
-    'title' => 'Welcome to Postleaf',
-    'content' => file_get_contents(Postleaf::path('source/defaults/post.welcome.html')),
-    'image' => 'source/assets/img/leaves.jpg',
-    'status' => 'published',
-    'tags' => ['getting-started'],
-    'featured' => true
-]);
-Post::add('the-editor', [
-    'pub_date' => date('Y-m-d H:i:s'),
-    'author' => $_REQUEST['username'],
-    'title' => 'The Editor',
-    'content' => file_get_contents(Postleaf::path('source/defaults/post.editor.html')),
-    'image' => 'source/assets/img/sunflower.jpg',
-    'status' => 'published',
-    'tags' => ['getting-started']
-]);
-Post::add('themes-and-plugins', [
-    'pub_date' => date('Y-m-d H:i:s'),
-    'author' => $_REQUEST['username'],
-    'title' => 'Themes & Plugins',
-    'content' => file_get_contents(Postleaf::path('source/defaults/post.themes.html')),
-    'image' => 'source/assets/img/autumn.jpg',
-    'status' => 'published',
-    'tags' => ['getting-started']
-]);
-Post::add('help-and-support', [
-    'pub_date' => date('Y-m-d H:i:s'),
-    'author' => $_REQUEST['username'],
-    'title' => 'Help & Support',
-    'content' => file_get_contents(Postleaf::path('source/defaults/post.support.html')),
-    'image' => 'source/assets/img/ladybug.jpg',
-    'status' => 'published',
-    'tags' => ['getting-started']
-]);
+try {
+    Post::add('welcome-to-postleaf', [
+        'pub_date' => date('Y-m-d H:i:s'),
+        'author' => $_REQUEST['username'],
+        'title' => 'Welcome to Postleaf',
+        'content' => file_get_contents(Postleaf::path('source/defaults/post.welcome.html')),
+        'image' => 'source/assets/img/leaves.jpg',
+        'status' => 'published',
+        'tags' => ['getting-started'],
+        'featured' => true
+    ]);
+    Post::add('the-editor', [
+        'pub_date' => date('Y-m-d H:i:s'),
+        'author' => $_REQUEST['username'],
+        'title' => 'The Editor',
+        'content' => file_get_contents(Postleaf::path('source/defaults/post.editor.html')),
+        'image' => 'source/assets/img/sunflower.jpg',
+        'status' => 'published',
+        'tags' => ['getting-started']
+    ]);
+    Post::add('themes-and-plugins', [
+        'pub_date' => date('Y-m-d H:i:s'),
+        'author' => $_REQUEST['username'],
+        'title' => 'Themes & Plugins',
+        'content' => file_get_contents(Postleaf::path('source/defaults/post.themes.html')),
+        'image' => 'source/assets/img/autumn.jpg',
+        'status' => 'published',
+        'tags' => ['getting-started']
+    ]);
+    Post::add('help-and-support', [
+        'pub_date' => date('Y-m-d H:i:s'),
+        'author' => $_REQUEST['username'],
+        'title' => 'Help & Support',
+        'content' => file_get_contents(Postleaf::path('source/defaults/post.support.html')),
+        'image' => 'source/assets/img/ladybug.jpg',
+        'status' => 'published',
+        'tags' => ['getting-started']
+    ]);
+} catch(Exception $e) {
+    // Cleanup database.php so we can try again
+    unlink($db_pathname);
+
+    exit(json_encode([
+        'success' => false,
+        'message' => 'Unable to insert default posts: ' . $e->getMessage()
+    ]));
+}
 
 // Log the owner in
 Session::login($_REQUEST['username'], $_REQUEST['password']);
