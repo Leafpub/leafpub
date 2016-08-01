@@ -70,12 +70,22 @@ if(Postleaf::isInstalled()) {
 
                     <!-- Database -->
                     <h4 class="m-t-3">Database</h4>
-                    <div class="form-group">
-                        <label for="db-host">Host</label>
-                        <input type="text" class="form-control" name="db-host" id="db-host" placeholder="localhost">
-                        <small class="text-muted">
-                            MySQL and MariaDB are supported
-                        </small>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="db-host">Host</label>
+                                <input type="text" class="form-control" name="db-host" id="db-host" placeholder="localhost">
+                                <small class="text-muted">
+                                    MySQL and MariaDB are supported
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="db-post">Port</label>
+                                <input type="number" class="form-control" name="db-port" id="db-port" min="0" placeholder="3306">
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="db-user">User</label>

@@ -22,6 +22,7 @@ $_REQUEST['db-prefix'] = preg_replace('/[^A-Za-z_-]/', '_', $_REQUEST['db-prefix
 // Set defaults for missing fields
 if(empty($_REQUEST['db-host'])) $_REQUEST['db-host'] = 'localhost';
 if(empty($_REQUEST['db-prefix'])) $_REQUEST['db-prefix'] = 'postleaf_';
+if(empty($_REQUEST['db-port'])) $_REQUEST['db-port'] = '3306';
 
 // Check for errors
 $invalid = [];
@@ -150,6 +151,7 @@ if(!file_exists(Postleaf::path('.htaccess'))) {
 $db_pathname = Postleaf::path('database.php');
 $db_config = file_get_contents(Postleaf::path('source/defaults/default.database.php'));
 $db_config = str_replace('{{host}}', $_REQUEST['db-host'], $db_config);
+$db_config = str_replace('{{port}}', $_REQUEST['db-port'], $db_config);
 $db_config = str_replace('{{database}}', $_REQUEST['db-database'], $db_config);
 $db_config = str_replace('{{user}}', $_REQUEST['db-user'], $db_config);
 $db_config = str_replace('{{password}}', $_REQUEST['db-password'], $db_config);

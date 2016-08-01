@@ -44,7 +44,12 @@ class Database extends Postleaf {
         // Connect to the database
         try {
             self::$database = new PostleafPDO(
-                'mysql:host=' . $config['host'] . ';dbname=' . $config['database'] . ';charset=utf8mb4',
+                (
+                    "mysql:host={$config[host]};" .
+                    "port={$config[port]};" .
+                    "dbname={$config[database]};" .
+                    "charset=utf8mb4"
+                ),
                 $config['user'],
                 $config['password'],
                 $pdo_options,
