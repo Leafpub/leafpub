@@ -3,7 +3,9 @@ namespace Postleaf;
 
 define('POSTLEAF_VERSION', '{{version}}');
 define('POSTLEAF_DEV', !!preg_match('/\.dev$/', $_SERVER['HTTP_HOST']));
-error_reporting(POSTLEAF_DEV ? E_ALL & ~E_NOTICE : 0);
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', POSTLEAF_DEV ? 1 : 0);
+ini_set('log_errors', 1);
 
 // Autoloader
 $loader = require_once __DIR__ . '/vendor/autoload.php';

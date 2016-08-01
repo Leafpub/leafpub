@@ -1,7 +1,8 @@
 <?php
 namespace Postleaf;
 require_once dirname(dirname(__DIR__)) . '/source/runtime.php';
-error_reporting(E_ALL & ~E_NOTICE);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 // Deny if already installed or the request is invalid
 if(Postleaf::isInstalled() || $_REQUEST['cmd'] !== 'install') {
