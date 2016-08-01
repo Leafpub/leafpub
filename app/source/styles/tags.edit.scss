@@ -4,7 +4,7 @@ $tag-cover-blur: 35px;
 .cover {
     position: relative;
     height: 200px;
-    background-color: #eee;
+    background-color: #888;
     background-size: cover;
     background-position: center;
     overflow: hidden;
@@ -32,7 +32,7 @@ $tag-cover-blur: 35px;
     }
 }
 
-.name {
+.cover-name {
     position: relative;
     top: 0;
     left: 0;

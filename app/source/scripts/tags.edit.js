@@ -125,7 +125,7 @@ $(function() {
 
     // Update name while typing
     $('#name').on('change keyup paste', function() {
-        $('.name').text(this.value);
+        $('.cover-name').text(this.value);
     });
 
     // Update search engine preview
