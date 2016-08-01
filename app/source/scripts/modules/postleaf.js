@@ -7,7 +7,7 @@ $(function() {
     'use strict';
 
     Postleaf = {
-        // Postleaf meta data
+        // Postleaf metadata
         redirect: $('meta[name="postleaf:redirect"]').attr('content'),
         template: $('meta[name="postleaf:template"]').attr('content'),
 
