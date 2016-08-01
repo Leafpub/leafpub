@@ -3,9 +3,6 @@ namespace Postleaf;
 require_once dirname(dirname(__DIR__)) . '/source/runtime.php';
 error_reporting(E_ALL & ~E_NOTICE);
 
-use Exception,
-    PDO;
-
 // Deny if already installed or the request is invalid
 if(Postleaf::isInstalled() || $_REQUEST['cmd'] !== 'install') {
     header('HTTP/1.0 403 Forbidden');
@@ -63,9 +60,9 @@ try {
         'prefix' => $_REQUEST['db-prefix']
     ], [
         // Set a shorter timeout in case the host is entered incorrectly
-        PDO::ATTR_TIMEOUT => 5
+        \PDO::ATTR_TIMEOUT => 5
     ]);
-} catch(Exception $e) {
+} catch(\Exception $e) {
     switch($e->getCode()) {
         case Database::AUTH_ERROR:
             $message = 'The database rejected this user or password. Make sure the user exists and has access to the specified database.';
@@ -168,7 +165,7 @@ if(!file_put_contents($db_pathname, $db_config)) {
 // Initialize database tables
 try {
     Database::resetTables();
-} catch(Exception $e) {
+} catch(\Exception $e) {
     // Cleanup database.php so we can try again
     unlink($db_pathname);
 
@@ -213,7 +210,7 @@ try {
         'password' => $_REQUEST['password'],
         'role' => 'owner'
     ]);
-} catch(Exception $e) {
+} catch(\Exception $e) {
     // Cleanup database.php so we can try again
     unlink($db_pathname);
 
@@ -240,7 +237,7 @@ try {
         'name' => 'Getting Started',
         'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!'
     ]);
-} catch(Exception $e) {
+} catch(\Exception $e) {
     // Cleanup database.php so we can try again
     unlink($db_pathname);
 
@@ -289,7 +286,7 @@ try {
         'status' => 'published',
         'tags' => ['getting-started']
     ]);
-} catch(Exception $e) {
+} catch(\Exception $e) {
     // Cleanup database.php so we can try again
     unlink($db_pathname);
 
