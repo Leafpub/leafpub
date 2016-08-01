@@ -2,7 +2,8 @@
 $(function() {
     'use strict';
 
-    var progress = new Nanobar();
+    var progress = new Nanobar(),
+        redirect = $('.login-form').attr('data-redirect');
 
     // Tooltip
     $('[data-toggle="tooltip"]').tooltip({
@@ -60,7 +61,7 @@ $(function() {
                 }
 
                 // Redirect to a custom URL or to the main admin page
-                location.href = Postleaf.redirect ? Postleaf.redirect : Postleaf.adminUrl();
+                location.href = redirect ? redirect : Postleaf.adminUrl();
             } else {
                 // Show errors
                 Postleaf.highlightErrors(form, res.invalid);

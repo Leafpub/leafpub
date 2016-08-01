@@ -22,8 +22,9 @@ $(function() {
         })
         .done(function(res) {
             if(res.success) {
-                // Redirect
-                location.href = Postleaf.redirect;
+                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
+                    style: 'success'
+                });
             } else {
                 // Show errors
                 Postleaf.highlightErrors(form, res.invalid);

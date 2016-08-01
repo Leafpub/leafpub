@@ -2,7 +2,8 @@
 $(function() {
     'use strict';
 
-    var progress = new Nanobar(),
+    var request,
+        progress = new Nanobar(),
         user = $('input[name="user"]').val();
 
     // Submit
@@ -15,20 +16,32 @@ $(function() {
 
         event.preventDefault();
 
+        // Don't submit if another request is pending
+        if(request) return;
+
         // Show progress
         progress.go(50);
         Postleaf.highlightErrors(form);
 
         // Send request
-        $.ajax({
+        request = $.ajax({
             url: url,
             type: type,
             data: $(form).serialize()
         })
         .done(function(res) {
             if(res.success) {
-                // Redirect
-                location.href = Postleaf.redirect;
+                // Prevent resubmissions
+                $(form).off('submit').on('submit', function(event) {
+                    event.preventDefault();
+                });
+
+                // Show feedback and redirect
+                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
+                    style: 'success'
+                }).then(function() {
+                    location.href = Postleaf.adminUrl('users');
+                });
             } else {
                 // Show errors
                 Postleaf.highlightErrors(form, res.invalid);
@@ -36,7 +49,7 @@ $(function() {
             }
         })
         .always(function() {
-            // Hide progress
+            request = null;
             progress.go(100);
         });
     });
@@ -48,8 +61,7 @@ $(function() {
 
     // Delete
     $('.delete').on('click', function() {
-        var user = $('input[name="user"]').val(),
-            confirm = $(this).attr('data-confirm');
+        var confirm = $(this).attr('data-confirm');
 
         // Confirmation
         $.alertable.confirm(confirm).then(function() {
@@ -69,7 +81,7 @@ $(function() {
 
                 // Redirect
                 if(res.success) {
-                    location.href = Postleaf.redirect;
+                    location.href = Postleaf.adminUrl('users');
                 }
             })
             .always(function() {

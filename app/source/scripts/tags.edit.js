@@ -2,7 +2,8 @@
 $(function() {
     'use strict';
 
-    var progress = new Nanobar(),
+    var request,
+        progress = new Nanobar(),
         tag = $('input[name="tag"]').val();
 
     function updateSearchEnginePreview() {
@@ -29,21 +30,32 @@ $(function() {
 
         event.preventDefault();
 
+        // Don't submit if another request is pending
+        if(request) return;
+
         // Show progress
         progress.go(50);
         Postleaf.highlightErrors(form);
 
         // Send request
-        $.ajax({
+        request = $.ajax({
             url: url,
             type: type,
             data: $(this).serialize()
         })
         .done(function(res) {
-            // Handle response
             if(res.success) {
-                // Redirect
-                location.href = Postleaf.redirect;
+                // Prevent resubmissions
+                $(form).off('submit').on('submit', function(event) {
+                    event.preventDefault();
+                });
+
+                // Show feedback and redirect
+                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
+                    style: 'success'
+                }).then(function() {
+                    location.href = Postleaf.adminUrl('tags');
+                });
             } else {
                 // Show errors
                 Postleaf.highlightErrors(form, res.invalid);
@@ -51,7 +63,7 @@ $(function() {
             }
         })
         .always(function() {
-            // Hide progress
+            request = null;
             progress.go(100);
         });
     });
@@ -78,7 +90,7 @@ $(function() {
             .done(function(res) {
                 if(res.success) {
                     // Redirect
-                    location.href = Postleaf.redirect;
+                    location.href = Postleaf.adminUrl('tags');
                 } else {
                     // Show error
                     $.alertable.alert(res.message);

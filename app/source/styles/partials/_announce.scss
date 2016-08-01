@@ -1,0 +1,31 @@
+.announce {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 1rem;
+    background: $brand-primary;
+    color: white;
+    text-align: center;
+    pointer-events: none;
+    &.announce-info {
+        background-color: $brand-info;
+    }
+    &.announce-success {
+        background-color: $brand-success;
+    }
+    &.announce-warning {
+        background-color: $brand-warning;
+    }
+    &.announce-danger {
+        background-color: $brand-danger;
+    }
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .announce {
+        padding: .75rem;
+    }
+}

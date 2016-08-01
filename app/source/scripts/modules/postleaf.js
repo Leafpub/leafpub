@@ -8,7 +8,6 @@ $(function() {
 
     Postleaf = {
         // Postleaf metadata
-        redirect: $('meta[name="postleaf:redirect"]').attr('content'),
         template: $('meta[name="postleaf:template"]').attr('content'),
 
         // Returns the admin URL optionally concatenating a path
@@ -17,6 +16,40 @@ $(function() {
             return path ?
                 url.replace(/\/$/, '') + '/' + path.replace(/^\//, '') :
                 url;
+        },
+
+        // Shows feedback that gets automatically hidden after a moment. Return a deferred object.
+        announce: function(message, options) {
+            var defer = $.Deferred(),
+                div = $('<div>'),
+                transitionIn,
+                transitionOut;
+
+            options = $.extend({}, {
+                style: 'info',
+                showSpeed: 500,
+                hideSpeed: 500,
+                hideDelay: 750
+            }, options);
+
+            $('.announce').remove();
+            $('body').append(
+                $(div)
+                .addClass('announce announce-' + options.style)
+                .text(message)
+                .hide()
+            );
+
+            $(div).velocity('transition.perspectiveDownIn', options.showSpeed, function() {
+                setTimeout(function() {
+                    $(div).velocity('transition.perspectiveDownOut', options.hideSpeed, function() {
+                        $(div).remove();
+                        defer.resolve();
+                    });
+                }, options.hideDelay);
+            });
+
+            return defer;
         },
 
         // Highlights form errors

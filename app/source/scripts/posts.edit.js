@@ -8,6 +8,7 @@ $(function() {
         contentEditor,
         cleanState,
         dropTimeout,
+        request,
         zenMode = Cookies.get('zen') === 'true',
         ready = false,
         canCreateTags = $('#tags').attr('data-can-create-tags') === 'true',
@@ -418,12 +419,15 @@ $(function() {
                 type === 'POST' ? 'api/posts' : 'api/posts/' + encodeURIComponent(post)
             );
 
+        // Don't save if another request is pending
+        if(request) return;
+
         // Show progress
         progress.go(50);
         Postleaf.highlightErrors('.settings-form');
 
         // Send request
-        $.ajax({
+        request = $.ajax({
             url: url,
             type: type,
             data: {
@@ -432,20 +436,26 @@ $(function() {
             }
         })
         .done(function(res) {
-            // Redirect on success
             if(res.success) {
-                // Remove save confirmatino
-                window.onbeforeunload = null;
-                // Redirect
-                location.href = Postleaf.redirect;
+                // Show feedback
+                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
+                    style: 'success'
+                }).then(function() {
+                    // Remove save confirmation and redirect
+                    window.onbeforeunload = null;
+                    location.href = Postleaf.adminUrl('posts');
+                });
             } else {
                 // Show errors
                 Postleaf.highlightErrors('.settings-form', res.invalid);
                 $.alertable.alert(res.message);
+                request = null;
             }
         })
+        .fail(function() {
+            request = null;
+        })
         .always(function() {
-            // Hide progress
             progress.go(100);
         });
     }

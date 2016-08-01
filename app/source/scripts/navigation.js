@@ -47,7 +47,9 @@ $(function() {
             })
             .done(function(res) {
                 if(res.success) {
-                    location.href = Postleaf.redirect;
+                    Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
+                        style: 'success'
+                    });
                 } else {
                     $.alertable.alert(res.message);
                 }

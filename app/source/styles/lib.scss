@@ -43,6 +43,7 @@
 @import "bootstrap/scss/utilities";
 
 // Postleaf overrides and custom partials
+@import "partials/announce";
 @import "partials/overrides";
 @import "partials/menu";
 @import "partials/layout";

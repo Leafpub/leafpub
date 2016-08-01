@@ -128,7 +128,6 @@ class AdminController extends Controller {
             'styles' => 'posts.edit.css',
             'post' => [],
             'history' => false,
-            'redirect' => Admin::url('posts'),
             'authors' => User::getNames(),
             'all_tags' => Tag::getNames(),
             'post_tags' => [],
@@ -162,7 +161,6 @@ class AdminController extends Controller {
             'styles' => 'posts.edit.css',
             'post' => $post,
             'history' => History::getAll($post['slug']),
-            'redirect' => Admin::url('posts'),
             'authors' => User::getNames(),
             'all_tags' => Tag::getNames(),
             'post_tags' => $post['tags'],
@@ -226,8 +224,7 @@ class AdminController extends Controller {
             'title' => Language::term('new_tag'),
             'scripts' => 'tags.edit.min.js',
             'styles' => 'tags.edit.css',
-            'tag' => [],
-            'redirect' => Admin::url('tags')
+            'tag' => []
         ]);
 
         return $response->write($html);
@@ -249,8 +246,7 @@ class AdminController extends Controller {
             'title' => Language::term('edit_tag'),
             'scripts' => 'tags.edit.min.js',
             'styles' => 'tags.edit.css',
-            'tag' => $tag,
-            'redirect' => Admin::url('tags')
+            'tag' => $tag
         ]);
 
         return $response->write($html);
@@ -273,8 +269,7 @@ class AdminController extends Controller {
             'title' => Language::term('navigation'),
             'scripts' => 'navigation.min.js',
             'styles' => 'navigation.css',
-            'navigation' => json_decode(Setting::get('navigation'), true),
-            'redirect' => Admin::url()
+            'navigation' => json_decode(Setting::get('navigation'), true)
         ]);
 
         return $response->write($html);
@@ -314,8 +309,7 @@ class AdminController extends Controller {
             'title' => Language::term('new_user'),
             'scripts' => 'users.edit.min.js',
             'styles' => 'users.edit.css',
-            'user' => [],
-            'redirect' => Admin::url('users')
+            'user' => []
         ]);
 
         return $response->write($html);
@@ -384,8 +378,7 @@ class AdminController extends Controller {
             'backups' => Backup::getAll(),
             'languages' => Language::getAll(),
             'timezones' => $timezones,
-            'themes' => Theme::getAll(),
-            'redirect' => Admin::url()
+            'themes' => Theme::getAll()
         ]);
 
         return $response->write($html);
