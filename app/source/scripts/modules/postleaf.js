@@ -26,7 +26,7 @@ $(function() {
                 transitionOut;
 
             options = $.extend({}, {
-                style: 'info',
+                style: 'primary',
                 showSpeed: 500,
                 hideSpeed: 500,
                 hideDelay: 750
