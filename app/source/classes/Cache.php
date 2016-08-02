@@ -47,6 +47,7 @@ class Cache extends Postleaf {
         // Loop through the cache directory and flush matching files
         $iterator = new \DirectoryIterator(self::path('content/cache'));
         foreach($iterator as $file) {
+            if($file->getFilename() === '.gitignore') continue;
             if($file->isFile()) {
                 // If a prefix is specified and the file doesn't have it, don't delete it
                 if(
