@@ -199,9 +199,9 @@ class APIController extends Controller {
         // To feature a post, turn it into a page, or make it sticky you must be owner, admin, or
         // editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
-            $properties['featured'] = false;
-            $properties['page'] = false;
-            $properties['sticky'] = false;
+            unset($properties['featured']);
+            unset($properties['page']);
+            unset($properties['sticky']);
         }
 
         // Create tags that don't exist yet
