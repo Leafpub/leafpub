@@ -12,16 +12,24 @@ class Language extends Postleaf {
 
     // Loads the language pack from file and stores it in a static variable for quick access
     protected static function load($language = 'en-us') {
-        // Get path to requested language pack
-        $file = self::path('source/languages/' . $language . '.php');
-
-        // Does it exist?
-        if(!file_exists($file)) {
-            throw new \Exception('Language pack not found: ' . $language . '.php');
+        // Load the en-us pack first since it's the default. We do this so missing terms from other
+        // language packs will fallback to the English equivalent.
+        $default = self::path('source/languages/en-us.php');
+        if(file_exists($default)) {
+            self::$language = (array) include $default;
+        } else {
+            throw new \Exception('Language pack not found: ' . basename($default) . '.php');
         }
 
-        // Load it
-        self::$language = (array) include $file;
+        // Load the specified language pack
+        if($language !== 'en-us') {
+            $file = self::path('source/languages/' . $language . '.php');
+            if(file_exists($file)) {
+                self::$language = array_merge(self::$language, (array) include $file);
+            } else {
+                throw new \Exception('Language pack not found: ' . basename($language) . '.php');
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
