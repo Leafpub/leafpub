@@ -45,6 +45,7 @@ $(function() {
         $('#author').val(data.author);
         $('#status').val(data.status);
         $('#featured').prop('checked', parseInt(data.featured) === 1);
+        $('#sticky').prop('checked', parseInt(data.sticky) === 1);
         $('#page').prop('checked', parseInt(data.page) === 1);
         $('#meta-title').val(data.meta_title);
         $('#meta-description').val(data.meta_description);
@@ -485,6 +486,7 @@ $(function() {
             author: $('#author').val(),
             status: $('#status').val(),
             featured: $('#featured').prop('checked'),
+            sticky: $('#sticky').prop('checked'),
             page: $('#page').prop('checked'),
             meta_title: $('#meta-title').val(),
             meta_description: $('#meta-description').val()

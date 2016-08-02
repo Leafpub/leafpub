@@ -173,6 +173,7 @@ return [
         $class = 'post';
         if($post['type'] === 'page') $class .= ' page';
         if($post['featured']) $class .= ' post-featured';
+        if($post['sticky']) $class .= ' post-sticky';
         if($post['image']) $class .= ' post-image';
         foreach((array) $post['tags'] as $tag) {
             $class .= ' tag-' . $tag;

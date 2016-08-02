@@ -154,6 +154,7 @@ class APIController extends Controller {
             'status' => null,
             'ignore_featured' => false,
             'ignore_pages' => false,
+            'ignore_sticky' => false,
             'items_per_page' => 50,
             'end_date' => null,
             'page' => (int) $params['page'],
@@ -195,10 +196,12 @@ class APIController extends Controller {
             return $response->withStatus(403);
         }
 
-        // To feature a post or turn it into a page, you must be owner, admin, or editor
+        // To feature a post, turn it into a page, or make it sticky you must be owner, admin, or
+        // editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
             $properties['featured'] = false;
             $properties['page'] = false;
+            $properties['sticky'] = false;
         }
 
         // Create tags that don't exist yet
@@ -926,6 +929,7 @@ class APIController extends Controller {
             'status' => null,
             'ignore_featured' => false,
             'ignore_pages' => false,
+            'ignore_sticky' => false,
             'ignore_posts' => false,
             'items_per_page' => 5,
             'page' => 1,

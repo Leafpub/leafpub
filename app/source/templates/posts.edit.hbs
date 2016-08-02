@@ -446,6 +446,12 @@
                 </div>
                 <div class="checkbox m-t-1">
                     <label>
+                        <input type="checkbox" name="sticky" id="sticky" value="on"{{#is post.sticky}} checked{{/is}}>
+                        <span class="tag tag-info">{{L 'make_this_post_sticky'}}</span>
+                    </label>
+                </div>
+                <div class="checkbox m-t-1">
+                    <label>
                         <input type="checkbox" name="page" id="page" value="on"{{#is post.page}} checked{{/is}}>
                         <span class="tag tag-primary">{{L 'turn_this_post_into_a_page'}}</span>
                     </label>

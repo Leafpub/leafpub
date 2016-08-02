@@ -111,6 +111,7 @@ class AdminController extends Controller {
                 'status' => null,
                 'ignore_featured' => false,
                 'ignore_pages' => false,
+                'ignore_sticky' => false,
                 'items_per_page' => 50,
                 'end_date' => null
             ], $pagination),

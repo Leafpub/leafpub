@@ -44,6 +44,7 @@ class Post extends Postleaf {
         $post['id'] = (int) $post['id'];
         $post['page'] = (int) $post['page'];
         $post['featured'] = (int) $post['featured'];
+        $post['sticky'] = (int) $post['sticky'];
 
         // Append tags
         $post['tags'] = self::getTags($post['id']);
@@ -131,8 +132,8 @@ class Post extends Postleaf {
         // Status must be `published` or `draft`
         if($properties['status'] !== 'draft') $properties['status'] = 'published';
 
-        // Page and featured must be 1 or 0
-        foreach(['page', 'featured'] as $key) {
+        // Page, featured, and sticky must be 1 or 0
+        foreach(['page', 'featured', 'sticky'] as $key) {
             $properties[$key] = filter_var($properties[$key], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
@@ -151,7 +152,8 @@ class Post extends Postleaf {
                     meta_description = :meta_description,
                     status = :status,
                     page = :page,
-                    featured = :featured
+                    featured = :featured,
+                    sticky = :sticky
             ');
             $st->bindParam(':slug', $slug);
             $st->bindParam(':pub_date', $properties['pub_date']);
@@ -164,6 +166,7 @@ class Post extends Postleaf {
             $st->bindParam(':status', $properties['status']);
             $st->bindParam(':page', $properties['page']);
             $st->bindParam(':featured', $properties['featured']);
+            $st->bindParam(':sticky', $properties['sticky']);
             $st->execute();
             $post_id = (int) self::$database->lastInsertId();
             if($post_id <= 0) return false;
@@ -188,6 +191,7 @@ class Post extends Postleaf {
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
             'ignore_featured' => false,
+            'ignore_sticky' => false,
             'ignore_pages' => true,
             'start_date' => null,
             'tag' => null
@@ -212,6 +216,7 @@ class Post extends Postleaf {
             $status = implode(',', (array) $options['status']);
         }
         if($options['ignore_featured']) $sql .= ' AND featured != 1';
+        if($options['ignore_sticky']) $sql .= ' AND sticky != 1';
         if($options['ignore_pages']) $sql .= ' AND page != 1';
         if($options['start_date']) $sql .= ' AND pub_date >= :start_date';
         if($options['end_date']) $sql .= ' AND pub_date <= :end_date';
@@ -280,7 +285,8 @@ class Post extends Postleaf {
                 SELECT
                     id, slug, created, pub_date,
                     (SELECT slug FROM __users WHERE id = __posts.author) AS author,
-                    title, content, image, meta_title, meta_description, status, page, featured
+                    title, content, image, meta_title, meta_description, status, page,
+                    featured, sticky
                 FROM __posts
                 WHERE slug = :slug
             ');
@@ -307,6 +313,7 @@ class Post extends Postleaf {
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
             'ignore_featured' => false,
+            'ignore_sticky' => false,
             'ignore_pages' => true,
             'start_date' => null,
             'tag' => null
@@ -317,7 +324,8 @@ class Post extends Postleaf {
             SELECT
                 id, slug, pub_date AS date,
                 (SELECT slug FROM __users WHERE id = __posts.author) AS author,
-                title, content, image, meta_title, meta_description, status, page, featured
+                title, content, image, meta_title, meta_description, status, page,
+                featured, sticky
             FROM __posts
             WHERE 1 = 1
         ';
@@ -337,6 +345,7 @@ class Post extends Postleaf {
             $status = implode(',', (array) $options['status']);
         }
         if($options['ignore_featured']) $sql .= ' AND featured != 1';
+        if($options['ignore_sticky']) $sql .= ' AND sticky != 1';
         if($options['ignore_pages']) $sql .= ' AND page != 1';
         if($options['start_date']) $sql .= ' AND pub_date >= :start_date';
         if($options['end_date']) $sql .= ' AND pub_date <= :end_date';
@@ -389,6 +398,7 @@ class Post extends Postleaf {
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
             'ignore_featured' => false,
+            'ignore_sticky' => false,
             'ignore_pages' => true,
             'ignore_posts' => false,
             'items_per_page' => 10,
@@ -406,7 +416,8 @@ class Post extends Postleaf {
             SELECT
                 id, slug, created, pub_date,
                 (SELECT slug FROM __users WHERE id = __posts.author) AS author,
-                title, content, image, meta_title, meta_description, status, page, featured
+                title, content, image, meta_title, meta_description, status, page,
+                featured, sticky
         ';
         if($is_fulltext) {
             $select_sql .= ',
@@ -432,6 +443,7 @@ class Post extends Postleaf {
             $status = implode(',', (array) $options['status']);
         }
         if($options['ignore_featured']) $where_sql .= ' AND featured != 1';
+        if($options['ignore_sticky']) $where_sql .= ' AND sticky != 1';
         if($options['ignore_posts']) $where_sql .= ' AND page = 1';
         if($options['ignore_pages']) $where_sql .= ' AND page != 1';
         if($options['start_date']) $where_sql .= ' AND pub_date >= :start_date';
@@ -449,7 +461,7 @@ class Post extends Postleaf {
         if($is_fulltext) {
             $order_sql = ' ORDER BY (title_score * 1.5 + content_score) DESC';
         } else {
-            $order_sql = ' ORDER BY featured DESC, pub_date DESC, id DESC';
+            $order_sql = ' ORDER BY sticky DESC, pub_date DESC, id DESC';
         }
 
         // Generate limit SQL
@@ -520,6 +532,7 @@ class Post extends Postleaf {
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
             'ignore_featured' => false,
+            'ignore_sticky' => false,
             'ignore_pages' => true,
             'max' => 5,
             'start_date' => null,
@@ -540,7 +553,8 @@ class Post extends Postleaf {
                 __posts.meta_description,
                 __posts.status,
                 __posts.page,
-                __posts.featured
+                __posts.featured,
+                __posts.sticky
             FROM __posts
             LEFT JOIN __users
                 ON __users.id = __posts.author
@@ -564,6 +578,7 @@ class Post extends Postleaf {
             $status = implode(',', (array) $options['status']);
         }
         if($options['ignore_featured']) $sql .= ' AND featured != 1';
+        if($options['ignore_sticky']) $sql .= ' AND sticky != 1';
         if($options['ignore_pages']) $sql .= ' AND page != 1';
         if($options['start_date']) $sql .= ' AND __posts.pub_date >= :start_date';
         if($options['end_date']) $sql .= ' AND __posts.pub_date <= :end_date';
@@ -743,8 +758,8 @@ class Post extends Postleaf {
         // Status must be `published` or `draft`
         if($properties['status'] !== 'draft') $properties['status'] = 'published';
 
-        // Page and featured must be 1 or 0
-        foreach(['page', 'featured'] as $key) {
+        // Page, featured, and sticky must be 1 or 0
+        foreach(['page', 'featured', 'sticky'] as $key) {
             $post[$key] = filter_var($post[$key], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
@@ -783,7 +798,8 @@ class Post extends Postleaf {
                     meta_description = :meta_description,
                     status = :status,
                     page = :page,
-                    featured = :featured
+                    featured = :featured,
+                    sticky = :sticky
                 WHERE slug = :original_slug
             ');
             $st->bindParam(':slug', $post['slug']);
@@ -797,6 +813,7 @@ class Post extends Postleaf {
             $st->bindParam(':status', $post['status']);
             $st->bindParam(':page', $post['page']);
             $st->bindParam(':featured', $post['featured']);
+            $st->bindParam(':sticky', $post['sticky']);
             $st->bindParam(':original_slug', $slug);
             $st->execute();
         } catch(\PDOException $e) {

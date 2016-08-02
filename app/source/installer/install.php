@@ -261,7 +261,7 @@ try {
         'image' => 'source/assets/img/leaves.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
-        'featured' => true
+        'sticky' => true
     ]);
     Post::add('the-editor', [
         'pub_date' => '2016-07-27 22:50:00',

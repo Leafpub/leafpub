@@ -47,6 +47,7 @@ CREATE TABLE `__posts` (
   `status` enum('published','draft') NOT NULL DEFAULT 'published',
   `page` tinyint(4) NOT NULL,
   `featured` tinyint(4) NOT NULL,
+  `sticky` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`) USING BTREE,
   KEY `pub_date` (`pub_date`),
