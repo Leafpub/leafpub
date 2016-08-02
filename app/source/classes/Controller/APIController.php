@@ -708,7 +708,7 @@ class APIController extends Controller {
     // Settings
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // api/settings/update
+    // POST api/settings/update
     public function updateSettings($request, $response, $args) {
         $params = $request->getParams();
 
@@ -732,7 +732,8 @@ class APIController extends Controller {
             'language' => $params['language'],
             'timezone' => $params['timezone'],
             'head_code' => $params['head-code'],
-            'foot_code' => $params['foot-code']
+            'foot_code' => $params['foot-code'],
+            'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off'
         ];
 
         // Update settings
@@ -743,6 +744,17 @@ class APIController extends Controller {
         // Send response
         return $response->withJson([
             'success' => true
+        ]);
+    }
+
+    // DELETE api/settings/cache
+    public function deleteCache($request, $response, $args) {
+        Cache::flush();
+
+        // Send response
+        return $response->withJson([
+            'success' => true,
+            'message' => Language::term('cache_has_been_cleared')
         ]);
     }
 

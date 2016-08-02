@@ -193,6 +193,7 @@ Setting::add('frag_feed', 'feed');
 Setting::add('frag_page', 'page');
 Setting::add('frag_search', 'search');
 Setting::add('frag_tag', 'tag');
+Setting::add('hbs_cache', 'on');
 Setting::add('head_code', '');
 Setting::add('homepage', '');
 Setting::add('language', 'en-us');

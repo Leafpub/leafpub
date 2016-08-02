@@ -84,6 +84,7 @@ $app->group("/api", function() {
 
     // Settings
     $this->post('/settings', 'Postleaf\Controller\APIController:updateSettings');
+    $this->delete('/settings/cache', 'Postleaf\Controller\APIController:deleteCache');
 
     // Backups
     $this->post('/backup', 'Postleaf\Controller\APIController:addBackup');

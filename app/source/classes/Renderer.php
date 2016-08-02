@@ -45,24 +45,16 @@ class Renderer extends Postleaf {
             throw new \Exception("Template missing: $template_file");
         }
 
-        // Get last modified times of the theme directory and partials directory (if one exists) to
-        // detect template changes. We have to check both directories since the mtime only changes
-        // when a file in that particular directory is modified. This check is negligible in terms
-        // of performance, but adds a huge level of convenience and helps keeps the cache folder
-        // clean.
-        if(is_dir("$template_dir/partials")) {
-            // If there's a partials directory, hash both mtimes
-            $hash = md5(filemtime($template_dir) . filemtime("$template_dir/partials"));
-        } else {
-            // If not, just hash the template dir mtime
-            $hash = md5(filemtime($template_dir));
-        }
-
         // Generate cache filename
-        $cache_file = "hbs.$template_name.$theme_slug.$hash.php";
+        $cache_file = "hbs.$template_name.$theme_slug.php";
 
-        // Does a cached template exist?
-        if(!Cache::get($cache_file) || POSTLEAF_DEV) {
+        // Does a cached template exist or is caching disabled?
+        //
+        // Note: even if caching is disabled, a cache file will still be generated as it's used to
+        // render the template. However, when caching is disabled the template will be recompiled
+        // on every request, regardless of whether or not a cache file exists.
+        //
+        if(!Cache::get($cache_file) || Setting::get('hbs_cache') !== 'on') {
             // Compile the template
             try {
                 $output = '<?php ' . \LightnCandy\LightnCandy::compile($source, [

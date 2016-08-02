@@ -201,6 +201,21 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{!-- Caching --}}
+                        <h3 class="m-t-3">{{L 'cache'}}</h3>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="hbs-cache" value="on"{{#is @settings.hbs_cache 'on'}} checked{{/is}}>
+                                    {{L 'cache_templates_for_faster_rendering'}} ⚡️<br>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button data-clear-cache class="btn btn-primary" type="button">{{L 'clear_cache'}}</button>
+                        </div>
+
                         {{!-- Version --}}
                         <div class="form-group m-t-3 text-xs-center text-muted">
                             Postleaf {{@postleaf.version}}

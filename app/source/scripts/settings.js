@@ -160,6 +160,21 @@ $(function() {
         $('.remove-favicon').prop('hidden', true);
     });
 
+    // Clear cache
+    $('[data-clear-cache]').on('click', function() {
+        progress.go(50);
+        $.ajax({
+            url: Postleaf.url('api/settings/cache'),
+            type: 'DELETE'
+        })
+        .done(function(res) {
+            Postleaf.announce(res.message);
+        })
+        .always(function() {
+            progress.go(100);
+        });
+    });
+
     // Create backup
     $('[data-create-backup]').on('click', function() {
         // Show the loader and disable the button
