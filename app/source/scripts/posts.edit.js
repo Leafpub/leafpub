@@ -420,7 +420,7 @@ $(function() {
             );
 
         // Don't save if another request is pending
-        if(request) return;
+        if(request || !ready) return;
 
         // Show progress
         progress.go(50);
@@ -437,6 +437,8 @@ $(function() {
         })
         .done(function(res) {
             if(res.success) {
+                ready = false;
+
                 // Show feedback
                 Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
                     style: 'success'
@@ -449,14 +451,11 @@ $(function() {
                 // Show errors
                 Postleaf.highlightErrors('.settings-form', res.invalid);
                 $.alertable.alert(res.message);
-                request = null;
             }
-        })
-        .fail(function() {
-            request = null;
         })
         .always(function() {
             progress.go(100);
+            request = null;
         });
     }
 
