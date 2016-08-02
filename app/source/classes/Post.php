@@ -676,6 +676,9 @@ class Post extends Postleaf {
             if(!$post) return false;
         }
 
+        // Get the author
+        $author = User::get($post['author']);
+
         // Make sure pub date is a valid date format
         $post['pub_date'] = self::parseDate($post['pub_date']);
 
@@ -702,7 +705,37 @@ class Post extends Postleaf {
                     'title'=> !empty($post['meta_title']) ? $post['meta_title'] : $post['title'],
                     'description' => !empty($post['meta_description']) ?
                         $post['meta_description'] :
-                        self::getChars(strip_tags($post['content']), 160)
+                        self::getChars(strip_tags($post['content']), 160),
+                    // JSON linked data (schema.org)
+                    'ld_json' => [
+                        '@context' => 'https://schema.org',
+                        '@type' => 'Article',
+                        'publisher' => [
+                            '@type' => 'Organization',
+                            'name' => Setting::get('title'),
+                            'logo' => empty(Setting::get('logo')) ? null : parent::url(Setting::get('logo'))
+                        ],
+                        'author' => [
+                            '@type' => 'Person',
+                            'name' => $author['name'],
+                            'description' => strip_tags(self::markdownToHtml($author['bio'])),
+                            'image' => empty($author['avatar']) ? null : parent::url($author['avatar']),
+                            'sameAs' => empty($author['website']) ? null : [$author['website']],
+                        ],
+                        'url' => Post::url($post['slug']),
+                        // Try meta title, fallback to title
+                        'headline' => !empty($post['meta_title']) ?
+                            $post['meta_title'] :
+                            $post['title'],
+                        // Try meta description, fallback to content excerpt
+                        'description' =>
+                            !empty($post['meta_description']) ?
+                                $post['meta_description'] :
+                                self::getWords(strip_tags($post['content']), 50),
+                        'image' => empty($post['image']) ? null : parent::url($post['image']),
+                        'datePublished' => self::strftime('%FT%TZ', strtotime($post['pub_date'])),
+                        'dateModified' => self::strftime('%FT%TZ', strtotime($post['pub_date']))
+                    ]
                 ]
             ],
             'helpers' => ['theme', 'url', 'utility'],

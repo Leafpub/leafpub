@@ -278,7 +278,20 @@ class Tag extends Postleaf {
             'special_vars' => [
                 'meta' => [
                     'title'=> !empty($tag['meta_title']) ? $tag['meta_title'] : $tag['name'],
-                    'description' => !empty($tag['meta_description']) ? $tag['meta_description'] : $tag['description']
+                    'description' => !empty($tag['meta_description']) ? $tag['meta_description'] : $tag['description'],
+                    // JSON linked data (schema.org)
+                    'ld_json' => [
+                        '@context' => 'https://schema.org',
+                        '@type' => 'Series',
+                        'publisher' => Setting::get('title'),
+                        'url' => self::url($tag['slug']),
+                        'image' => empty($tag['cover']) ? null : parent::url($tag['cover']),
+                        'name' => $tag['name'],
+                        // Try meta description, fallback to description
+                        'description' => !empty($tag['meta_description']) ?
+                            $tag['meta_description'] :
+                            strip_tags(self::markdownToHtml($tag['description'])),
+                    ]
                 ]
             ],
             'helpers' => ['url', 'utility', 'theme']

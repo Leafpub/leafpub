@@ -37,8 +37,17 @@ class Blog extends Postleaf {
             'special_vars' => [
                 'meta' => [
                     'title'=> Setting::get('title'),
-                    'tagline' => Setting::get('tagline')
-                ]
+                    'tagline' => Setting::get('tagline'),
+                    // JSON linked data (schema.org)
+                    'ld_json' => [
+                        '@context' => 'https://schema.org',
+                        '@type' => 'Website',
+                        'publisher' => Setting::get('title'),
+                        'url' => parent::url(),
+                        'image' => empty(Setting::get('cover')) ? null : parent::url(Setting::get('cover')),
+                        'description' => Setting::get('tagline')
+                    ]
+                ],
             ],
             'helpers' => ['url', 'utility', 'theme']
         ]);

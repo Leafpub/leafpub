@@ -414,7 +414,17 @@ class User extends Postleaf {
             'special_vars' => [
                 'meta' => [
                     'title'=> $author['name'],
-                    'description' => self::getChars($author['bio'], 160)
+                    'description' => self::getChars($author['bio'], 160),
+                    // JSON linked data (schema.org)
+                    'ld_json' => [
+                        '@context' => 'https://schema.org',
+                        '@type' => 'Person',
+                        'name' => $author['name'],
+                        'description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'url' => self::url($author['slug']),
+                        'image' => empty($author['avatar']) ? null : parent::url($author['avatar']),
+                        'sameAs' => empty($author['website']) ? null : [$author['website']]
+                    ]
                 ]
             ],
             'helpers' => ['url', 'utility', 'theme']

@@ -260,6 +260,14 @@ return [
         // Inject head code
         $html .= \Postleaf\Setting::get('head_code');
 
+        // Inject JSON linked data (schema.org)
+        if(isset($options['data']['meta']['ld_json'])) {
+            $html .=
+                "<script type=\"application/ld+json\">" .
+                json_encode($options['data']['meta']['ld_json'], JSON_PRETTY_PRINT) .
+                "</script>";
+        }
+
         // Return raw HTML
         return new \LightnCandy\SafeString($html);
     },

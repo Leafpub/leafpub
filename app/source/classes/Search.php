@@ -52,7 +52,18 @@ class Search extends Postleaf {
             'special_vars' => [
                 'meta' => [
                     'title'=> $meta_title,
-                    'description' => null
+                    'description' => null,
+                    // JSON linked data (schema.org)
+                    'ld_json' => [
+                        '@context' => 'http://schema.org',
+                        '@type' => 'WebSite',
+                        'url' => parent::url(),
+                        'potentialAction' => [
+                            '@type' => 'SearchAction',
+                            'target' => self::url($query),
+                            'query-input' => $query
+                        ]
+                    ]
                 ]
             ],
             'helpers' => ['url', 'utility', 'theme']
