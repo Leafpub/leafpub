@@ -6,6 +6,29 @@ namespace Postleaf;
 
 class History extends Postleaf {
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Private methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Normalize data types for certain fields
+    private static function normalize($revision) {
+        // Cast to integer
+        $revision['id'] = (int) $revision['id'];
+        $revision['initial'] = (int) $revision['initial'];
+
+        // Convert dates from UTC to local
+        $revision['rev_date'] = self::utcToLocal($revision['rev_date']);
+
+        // Decode JSON data
+        $revision['post_data'] = json_decode($revision['post_data'], true);
+
+        return $revision;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Public methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     // Get a history item
     public static function get($id) {
         try {
@@ -24,11 +47,7 @@ class History extends Postleaf {
             return false;
         }
 
-        // Normalize fields
-        $revision['initial'] = (int) $revision['initial'];
-        $revision['post_data'] = json_decode($revision['post_data'], true);
-
-        return $revision;
+        return self::normalize($revision);
     }
 
     // Get all history for the specified post
@@ -50,8 +69,7 @@ class History extends Postleaf {
 
         // Normalize fields
         foreach($revisions as $key => $value) {
-            $revisions[$key]['initial'] = (int) $revisions[$key]['initial'];
-            $revisions[$key]['post_data'] = json_decode($revisions[$key]['post_data'], true);
+            $revisions[$key] = self::normalize($value);
         }
 
         return $revisions;
@@ -62,7 +80,7 @@ class History extends Postleaf {
         $post = Post::get($slug);
         if(!$post) return false;
         $post_id = $post['id'];
-        $rev_date = date('Y-m-d H:i:s');
+        $rev_date = self::localToUtc(date('Y-m-d H:i:s')); // convert to UTC
         $post_data = json_encode($post);
         $initial = $initial ? 1 : 0;
 

@@ -28,6 +28,21 @@ class User extends Postleaf {
         UNABLE_TO_ASSIGN_POSTS = 11;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Private methods
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Normalize data types for certain fields
+    private static function normalize($user) {
+        // Cast to integer
+        $user['id'] = (int) $user['id'];
+
+        // Convert dates from UTC to local
+        $user['created'] = self::utcToLocal($user['created']);
+
+        return $user;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -226,7 +241,8 @@ class User extends Postleaf {
             return false;
         }
 
-        return $user;
+        // Normalize fields
+        return self::normalize($user);
     }
 
     // Converts a user slug to an ID
@@ -322,10 +338,17 @@ class User extends Postleaf {
             $st->bindParam(':offset', $offset, PDO::PARAM_INT);
             $st->bindParam(':count', $count, PDO::PARAM_INT);
             $st->execute();
-            return $st->fetchAll(PDO::FETCH_ASSOC);
+            $users = $st->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
             return false;
         }
+
+        // Normalize fields
+        foreach($users as $key => $value) {
+            $users[$key] = self::normalize($value);
+        }
+
+        return $users;
     }
 
     // Returns an array of all user names and corresponding slugs

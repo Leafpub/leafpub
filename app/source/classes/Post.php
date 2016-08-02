@@ -46,6 +46,10 @@ class Post extends Postleaf {
         $post['featured'] = (int) $post['featured'];
         $post['sticky'] = (int) $post['sticky'];
 
+        // Convert dates from UTC to local
+        $post['created'] = self::utcToLocal($post['created']);
+        $post['pub_date'] = self::utcToLocal($post['pub_date']);
+
         // Append tags
         $post['tags'] = self::getTags($post['id']);
 
@@ -105,8 +109,8 @@ class Post extends Postleaf {
             throw new \Exception('Post already exists: ' . $slug, self::ALREADY_EXISTS);
         }
 
-        // Parse publish date format
-        $properties['pub_date'] = self::parseDate($properties['pub_date']);
+        // Parse publish date format and convert to UTC
+        $properties['pub_date'] = self::localToUtc(self::parseDate($properties['pub_date']));
 
         // Translate author slug to ID
         $properties['author'] = User::getId($properties['author']);
@@ -197,6 +201,10 @@ class Post extends Postleaf {
             'tag' => null
         ], (array) $options);
 
+        // Convert dates to UTC
+        if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
+        if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
+
         // Build count query
         $sql = 'SELECT COUNT(*) FROM __posts WHERE 1 = 1';
 
@@ -224,8 +232,8 @@ class Post extends Postleaf {
         // Fetch results
         try {
             $st = self::$database->prepare($sql);
-            if($options['start_date']) $st->bindParam(':start_date', $options['start_date']);
-            if($options['end_date']) $st->bindParam(':end_date', $options['end_date']);
+            if($options['start_date']) $st->bindParam(':start_date', $start_date);
+            if($options['end_date']) $st->bindParam(':end_date', $end_date);
             if($options['author']) $st->bindParam(':author', $options['author']);
             if($options['tag']) $st->bindParam(':tag', $options['tag']);
             if($options['status']) $st->bindParam(':status', $status);
@@ -319,6 +327,10 @@ class Post extends Postleaf {
             'tag' => null
         ], (array) $options);
 
+        // Convert dates to UTC
+        if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
+        if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
+
         // Build query
         $sql = '
             SELECT
@@ -371,8 +383,8 @@ class Post extends Postleaf {
             if($options['author']) $st->bindParam(':author', $options['author']);
             if($options['tag']) $st->bindParam(':tag', $options['tag']);
             if($options['status']) $st->bindParam(':status', $status);
-            if($options['start_date']) $st->bindParam(':start_date', $options['start_date']);
-            if($options['end_date']) $st->bindParam(':end_date', $options['end_date']);
+            if($options['start_date']) $st->bindParam(':start_date', $start_date);
+            if($options['end_date']) $st->bindParam(':end_date', $end_date);
             $st->execute();
             $post = $st->fetch(\PDO::FETCH_ASSOC);
             if(!$post) return false;
@@ -407,6 +419,10 @@ class Post extends Postleaf {
             'start_date' => null,
             'tag' => null
         ], (array) $options);
+
+        // Convert dates to UTC
+        if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
+        if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
 
         // If there's a query of > 3 chars, make it a fulltext search
         $is_fulltext = mb_strlen($options['query']) > 3;
@@ -479,8 +495,8 @@ class Post extends Postleaf {
             $st = self::$database->prepare($count_sql);
             $st->bindParam(':query', $query);
             if($options['status']) $st->bindParam(':status', $status);
-            if($options['start_date']) $st->bindParam(':start_date', $options['start_date']);
-            if($options['end_date']) $st->bindParam(':end_date', $options['end_date']);
+            if($options['start_date']) $st->bindParam(':start_date', $start_date);
+            if($options['end_date']) $st->bindParam(':end_date', $end_date);
             if($options['author']) $st->bindParam(':author', $options['author']);
             if($options['tag']) $st->bindParam(':tag', $options['tag']);
             $st->execute();
@@ -506,8 +522,8 @@ class Post extends Postleaf {
             $st->bindParam(':count', $count, \PDO::PARAM_INT);
             $st->bindParam(':query', $query);
             if($options['status']) $st->bindParam(':status', $status);
-            if($options['start_date']) $st->bindParam(':start_date', $options['start_date']);
-            if($options['end_date']) $st->bindParam(':end_date', $options['end_date']);
+            if($options['start_date']) $st->bindParam(':start_date', $start_date);
+            if($options['end_date']) $st->bindParam(':end_date', $end_date);
             if($options['author']) $st->bindParam(':author', $options['author']);
             if($options['tag']) $st->bindParam(':tag', $options['tag']);
             $st->execute();
@@ -538,6 +554,13 @@ class Post extends Postleaf {
             'start_date' => null,
             'tag' => null
         ], (array) $options);
+
+        // Convert dates to UTC
+        if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
+        if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
+
+        // If there's a query of > 3 chars, make it a fulltext search
+        $is_fulltext = mb_strlen($options['query']) > 3;
 
         // Build query
         $sql = '
@@ -604,8 +627,8 @@ class Post extends Postleaf {
             if($options['author']) $st->bindParam(':author', $options['author']);
             if($options['tag']) $st->bindParam(':tag', $options['tag']);
             if($options['status']) $st->bindParam(':status', $status);
-            if($options['start_date']) $st->bindParam(':start_date', $options['start_date']);
-            if($options['end_date']) $st->bindParam(':end_date', $options['end_date']);
+            if($options['start_date']) $st->bindParam(':start_date', $start_date);
+            if($options['end_date']) $st->bindParam(':end_date', $end_date);
             $st->execute();
             $posts = $st->fetchAll(\PDO::FETCH_ASSOC);
             if(!$posts) return false;
@@ -621,7 +644,7 @@ class Post extends Postleaf {
         return $posts;
     }
 
-    // Tells whether or not a post is visible to the public
+    // Tells whether or not a post is e to the public
     public static function isVisible($post_or_slug) {
         // Get the post
         $post = is_string($post_or_slug) ? Post::get($post_or_slug) : $post_or_slug;
@@ -629,10 +652,12 @@ class Post extends Postleaf {
 
         // Make sure pub date is a valid date format
         $post['pub_date'] = self::parseDate($post['pub_date']);
+        $pub_date = new \DateTime($post['pub_date']);
+        $pub_date->setTimeZone(new \DateTimeZone('UTC'));
 
         // Is it in the future?
-        $now = new \DateTime('now', new \DateTimeZone('UTC'));
-        $pub_date = new \DateTime($post['pub_date'], new \DateTimeZone('UTC'));
+        $now = new \DateTime('now');
+        $now->setTimeZone(new \DateTimeZone('UTC'));
         if($pub_date > $now) return false;
 
         // Is is published?
@@ -712,7 +737,7 @@ class Post extends Postleaf {
                 '<!--{{postleaf_head}}-->',
                 '<!--{{postleaf_head}}--><base href="' .
                     // The base should always end with a slash
-                    htmlspecialchars(rtrim(Postleaf::url(), '/')) . '/">',
+                    htmlspecialchars(rtrim(self::url(), '/')) . '/">',
                 $html
             );
         }
@@ -731,8 +756,8 @@ class Post extends Postleaf {
         // Merge options
         $post = array_merge($post, $properties);
 
-        // Parse publish date format
-        $post['pub_date'] = self::parseDate($post['pub_date']);
+        // Parse publish date format and convert to UTC
+        $post['pub_date'] = self::localToUtc(self::parseDate($post['pub_date']));
 
         // Translate author slug to ID
         $post['author'] = User::getId($post['author']);

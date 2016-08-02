@@ -28,6 +28,9 @@ class Upload extends Postleaf {
         $upload['width'] = (int) $upload['width'];
         $upload['height'] = (int) $upload['height'];
 
+        // Convert dates from UTC to local
+        $upload['created'] = self::utcToLocal($upload['created']);
+
         return $upload;
     }
 

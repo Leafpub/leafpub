@@ -25,6 +25,9 @@ class Tag extends Postleaf {
         // Cast to integer
         $tag['id'] = (int) $tag['id'];
 
+        // Convert dates from UTC to local
+        $tag['created'] = self::utcToLocal($tag['created']);
+
         return $tag;
     }
 
