@@ -440,9 +440,9 @@ $(function() {
                 ready = false;
 
                 // Show feedback
-                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
-                    style: 'success'
-                }).then(function() {
+                Postleaf.announce(
+                    $('meta[name="postleaf:language"]').attr('data-changes-saved')
+                ).then(function() {
                     // Remove save confirmation and redirect
                     window.onbeforeunload = null;
                     location.href = Postleaf.adminUrl('posts');

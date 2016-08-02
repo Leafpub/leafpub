@@ -47,9 +47,9 @@ $(function() {
             })
             .done(function(res) {
                 if(res.success) {
-                    Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
-                        style: 'success'
-                    });
+                    Postleaf.announce(
+                        $('meta[name="postleaf:language"]').attr('data-changes-saved')
+                    );
                 } else {
                     $.alertable.alert(res.message);
                 }

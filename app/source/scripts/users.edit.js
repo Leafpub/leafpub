@@ -37,9 +37,9 @@ $(function() {
                 });
 
                 // Show feedback and redirect
-                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'), {
-                    style: 'success'
-                }).then(function() {
+                Postleaf.announce(
+                    $('meta[name="postleaf:language"]').attr('data-changes-saved')
+                ).then(function() {
                     location.href = Postleaf.adminUrl('users');
                 });
             } else {
