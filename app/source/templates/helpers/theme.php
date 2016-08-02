@@ -182,7 +182,7 @@ return [
         return $class;
     },
 
-    // Handles the output for {{postleaf_head}}
+    // Handles the output for {{postleaf_foot}}
     'postleaf_foot' => function($options) {
         $html = '';
 
