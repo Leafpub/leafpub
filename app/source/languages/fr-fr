@@ -29,7 +29,7 @@ return [
     'all_finished' => 'Terminé!',
     'an_hour_ago' => 'il y a une heure',
     'analytics' => 'Analytique',
-    'author' => 'Autheur',
+    'author' => 'Auteur',
     'available_backups' => 'Restauration disponibles',
     'avatar' => 'Avatar',
     'backup_now' => 'Restaurer maintenant',
@@ -295,5 +295,5 @@ return [
     'thousands_separator' => ',',
 
     'language_code' => 'fr-fr',
-    'language_name' => 'French (FR)'
+    'language_name' => 'Français (FR)'
 ];
