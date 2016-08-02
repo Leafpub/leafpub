@@ -19,9 +19,15 @@ You can safely delete this file (INSTALL.md) anytime.
 
 To update from a previous version, simply replace `index.php` and the `source` folder with the new versions.
 
+**Important:** If you're updating from 1.0.0-beta3 or below, update your database first using the following statement (you may have to adjust the `postleaf_` prefix):
+
+```
+ALTER TABLE `postleaf_posts` ADD `sticky` TINYINT NOT NULL AFTER `featured`;
+```
+
 ## License
 
-Licensed under the terms of the GNU GPLv3. See LICENSE.MD for details.
+Licensed under the terms of the GNU GPLv3. See LICENSE.md for details.
 
 ©2016 A Beautiful Site, LLC
 
