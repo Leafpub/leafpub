@@ -254,7 +254,7 @@ try {
 // Insert initial posts
 try {
     Post::add('welcome-to-postleaf', [
-        'pub_date' => date('Y-m-d H:i:s'),
+        'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Welcome to Postleaf',
         'content' => file_get_contents(Postleaf::path('source/defaults/post.welcome.html')),
@@ -264,7 +264,7 @@ try {
         'featured' => true
     ]);
     Post::add('the-editor', [
-        'pub_date' => date('Y-m-d H:i:s'),
+        'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'The Editor',
         'content' => file_get_contents(Postleaf::path('source/defaults/post.editor.html')),
@@ -273,7 +273,7 @@ try {
         'tags' => ['getting-started']
     ]);
     Post::add('themes-and-plugins', [
-        'pub_date' => date('Y-m-d H:i:s'),
+        'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Themes & Plugins',
         'content' => file_get_contents(Postleaf::path('source/defaults/post.themes.html')),
@@ -282,7 +282,7 @@ try {
         'tags' => ['getting-started']
     ]);
     Post::add('help-and-support', [
-        'pub_date' => date('Y-m-d H:i:s'),
+        'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Help & Support',
         'content' => file_get_contents(Postleaf::path('source/defaults/post.support.html')),
