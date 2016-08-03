@@ -22,7 +22,10 @@ $(function() {
         })
         .done(function(res) {
             if(res.success) {
-                Postleaf.announce($('meta[name="postleaf:language"]').attr('data-changes-saved'));
+                Postleaf.announce(
+                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                    { style: 'success' }
+                );
             } else {
                 // Show errors
                 Postleaf.highlightErrors(form, res.invalid);
@@ -168,7 +171,9 @@ $(function() {
             type: 'DELETE'
         })
         .done(function(res) {
-            Postleaf.announce(res.message);
+            Postleaf.announce(res.message, {
+                style: 'info'
+            });
         })
         .always(function() {
             progress.go(100);

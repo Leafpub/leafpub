@@ -476,7 +476,8 @@ $(function() {
 
                 // Show feedback
                 Postleaf.announce(
-                    $('meta[name="postleaf:language"]').attr('data-changes-saved')
+                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                    { style: 'success' }
                 ).then(function() {
                     // Remove save confirmation and redirect
                     window.onbeforeunload = null;
