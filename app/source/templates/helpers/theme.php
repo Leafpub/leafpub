@@ -199,7 +199,7 @@ return [
         }
 
         // Inject foot code
-        $html .= \Postleaf\Setting::get('foot_code');
+        $html .= "\n" . \Postleaf\Setting::get('foot_code');
 
         // Inject admin toolbar if the user is logged in and the post isn't editable or a preview
         if(
@@ -258,14 +258,30 @@ return [
         }
 
         // Inject head code
-        $html .= \Postleaf\Setting::get('head_code');
+        $html .= "\n" . \Postleaf\Setting::get('head_code');
 
         // Inject JSON linked data (schema.org)
         if(isset($options['data']['meta']['ld_json'])) {
             $html .=
-                "<script type=\"application/ld+json\">" .
+                "\n<script type=\"application/ld+json\">" .
                 json_encode($options['data']['meta']['ld_json'], JSON_PRETTY_PRINT) .
                 "</script>";
+        }
+
+        // Inject Open Graph data
+        if(is_array($options['data']['meta']['open_graph'])) {
+            foreach($options['data']['meta']['open_graph'] as $key => $value) {
+                if($value === null) continue;
+                $html .= "\n<meta property=\"" . htmlspecialchars($key) . "\" content=\"" . htmlspecialchars($value) . "\">";
+            }
+        }
+
+        // Inject Twitter Card data
+        if(is_array($options['data']['meta']['twitter_card'])) {
+            foreach($options['data']['meta']['twitter_card'] as $key => $value) {
+                if($value === null) continue;
+                $html .= "\n<meta name=\"" . htmlspecialchars($key) . "\" content=\"" . htmlspecialchars($value) . "\">";
+            }
         }
 
         // Return raw HTML

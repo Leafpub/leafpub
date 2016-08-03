@@ -292,6 +292,32 @@ class Tag extends Postleaf {
                         'description' => !empty($tag['meta_description']) ?
                             $tag['meta_description'] :
                             strip_tags(self::markdownToHtml($tag['description'])),
+                    ],
+                    // Open Graph
+                    'open_graph' => [
+                        'og:type' => 'website',
+                        'og:site_name' => Setting::get('title'),
+                        'og:title' => !empty($tag['meta_title']) ?
+                            $tag['meta_title'] :
+                            $tag['name'] . ' &middot; ' . Setting::get('title'),
+                        'og:description' => !empty($tag['meta_description']) ?
+                            $tag['meta_description'] : $tag['description'],
+                        'og:url' => self::url($tag['slug']),
+                        'og:image' => !empty($tag['cover']) ?
+                            parent::url($tag['cover']) : null
+                    ],
+                    // Twitter Card
+                    'twitter_card' => [
+                        'twitter:card' => !empty($tag['cover']) ?
+                            'summary_large_image' : 'summary',
+                        'twitter:title' => !empty($tag['meta_title']) ?
+                            $tag['meta_title'] :
+                            $tag['name'] . ' &middot; ' . Setting::get('title'),
+                        'twitter:description' => !empty($tag['meta_description']) ?
+                            $tag['meta_description'] : $tag['description'],
+                        'twitter:url' => self::url($tag['slug']),
+                        'twitter:image' => !empty($tag['cover']) ?
+                            parent::url($tag['cover']) : null
                     ]
                 ]
             ],

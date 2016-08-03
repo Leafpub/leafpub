@@ -63,6 +63,28 @@ class Search extends Postleaf {
                             'target' => self::url($query),
                             'query-input' => $query
                         ]
+                    ],
+                    // Open Graph
+                    'open_graph' => [
+                        'og:type' => 'website',
+                        'og:site_name' => Setting::get('title'),
+                        'og:title' => 'Search &middot; ' . Setting::get('title'),
+                        'og:description' => !empty($query) ?
+                            'Search results for “' . htmlspecialchars($query) . '”' : null,
+                        'og:url' => self::url($query),
+                        'og:image' => !empty(Setting::get('cover')) ?
+                            parent::url(Setting::get('cover')) : null
+                    ],
+                    // Twitter Card
+                    'twitter_card' => [
+                        'twitter:card' => !empty(Setting::get('cover')) ?
+                            'summary_large_image' : 'summary',
+                        'twitter:title' => 'Search &middot; ' . Setting::get('title'),
+                        'twitter:description' => !empty($query) ?
+                            'Search results for “' . htmlspecialchars($query) . '”' : null,
+                        'twitter:url' => self::url($query),
+                        'twitter:image' => !empty(Setting::get('cover')) ?
+                            parent::url(Setting::get('cover')) : null
                     ]
                 ]
             ],

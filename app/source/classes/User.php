@@ -422,8 +422,30 @@ class User extends Postleaf {
                         'name' => $author['name'],
                         'description' => strip_tags(self::markdownToHtml($author['bio'])),
                         'url' => self::url($author['slug']),
-                        'image' => empty($author['avatar']) ? null : parent::url($author['avatar']),
-                        'sameAs' => empty($author['website']) ? null : [$author['website']]
+                        'image' => !empty($author['avatar']) ?
+                            parent::url($author['avatar']) : null,
+                        'sameAs' => !empty($author['website']) ?
+                            [$author['website']] : null
+                    ],
+                    // Open Graph
+                    'open_graph' => [
+                        'og:type' => 'profile',
+                        'og:site_name' => Setting::get('title'),
+                        'og:title' => $author['name'] . ' &middot; ' . Setting::get('title'),
+                        'og:description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'og:url' => self::url($author['slug']),
+                        'og:image' => !empty($author['avatar']) ?
+                            parent::url($author['avatar']) : null
+                    ],
+                    // Twitter Card
+                    'twitter_card' => [
+                        'twitter:card' => !empty($author['cover']) ?
+                            'summary_large_image' : 'summary',
+                        'twitter:title' => $author['name'] . ' &middot; ' . Setting::get('title'),
+                        'twitter:description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'twitter:url' => self::url($author['slug']),
+                        'twitter:image' => !empty($author['cover']) ?
+                            parent::url($author['cover']) : null
                     ]
                 ]
             ],

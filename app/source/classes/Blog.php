@@ -44,8 +44,29 @@ class Blog extends Postleaf {
                         '@type' => 'Website',
                         'publisher' => Setting::get('title'),
                         'url' => parent::url(),
-                        'image' => empty(Setting::get('cover')) ? null : parent::url(Setting::get('cover')),
+                        'image' => !empty(Setting::get('cover')) ?
+                            parent::url(Setting::get('cover')) : null,
                         'description' => Setting::get('tagline')
+                    ],
+                    // Open Graph
+                    'open_graph' => [
+                        'og:type' => 'website',
+                        'og:site_name' => Setting::get('title'),
+                        'og:title' => Setting::get('title'),
+                        'og:description' => Setting::get('tagline'),
+                        'og:url' => parent::url(),
+                        'og:image' => !empty(Setting::get('cover')) ?
+                            parent::url(Setting::get('cover')) : null
+                    ],
+                    // Twitter Card
+                    'twitter_card' => [
+                        'twitter:card' => !empty(Setting::get('cover')) ?
+                            'summary_large_image' : 'summary',
+                        'twitter:title' => Setting::get('title'),
+                        'twitter:description' => Setting::get('tagline'),
+                        'twitter:url' => parent::url(),
+                        'twitter:image' => !empty(Setting::get('cover')) ?
+                            parent::url(Setting::get('cover')) : null
                     ]
                 ],
             ],
