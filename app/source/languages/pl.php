@@ -155,7 +155,7 @@ return [
     'paragraph' => 'Akapit',
     'password_reset' => 'Odzyskiwanie hasła',
     'password' => 'Hasło',
-    'paste_embed_code_here' => 'Wklej tu kod umieszczania',
+    'paste_embed_code_or_url_here' => 'Wklej tu kod umieszczania',
     'please_login_again_to_complete_your_request' => 'Zaloguj się ponownie, aby ukończyć żądanie',
     'plugins' => 'Wtyczki',
     'post' => 'Post',

@@ -1108,10 +1108,33 @@ $(function() {
 
             // Insert the embed
             if(code.length) {
-                contentEditor.embed('insert', {
-                    code: code,
-                    align: align
-                });
+                // Is this a URL? If so, attempt to grab the embed code using the oEmbed library
+                if(code.match(/^https?:\/\//i)) {
+                    progress.go(50);
+                    $.ajax({
+                        url: Postleaf.url('api/oembed'),
+                        type: 'GET',
+                        data: {
+                            url: code
+                        }
+                    })
+                    .done(function(res) {
+                        // Insert the resulting embed code if one was provided
+                        contentEditor.embed('insert', {
+                            code: res.code || code,
+                            align: align
+                        });
+                    })
+                    .always(function() {
+                        progress.go(100);
+                    })
+                } else {
+                    // Insert as-is
+                    contentEditor.embed('insert', {
+                        code: code,
+                        align: align
+                    });
+                }
             } else {
                 contentEditor.embed('remove');
             }

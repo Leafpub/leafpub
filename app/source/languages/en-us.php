@@ -161,7 +161,7 @@ return [
     'paragraph' => 'Paragraph',
     'password_reset' => 'Password Reset',
     'password' => 'Password',
-    'paste_embed_code_here' => 'Paste embed code here',
+    'paste_embed_code_or_url_here' => 'Paste embed code or URL here',
     'please_login_again_to_complete_your_request' => 'Please login again to complete your request',
     'plugins' => 'Plugins',
     'post' => 'Post',

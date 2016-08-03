@@ -155,7 +155,7 @@ return [
     'paragraph' => 'Paragraph',
     'password_reset' => 'Passwortzurücksetzung',
     'password' => 'Passwort',
-    'paste_embed_code_here' => 'Einbindungs-Code hier einfügen',
+    'paste_embed_code_or_url_here' => 'Einbindungs-Code hier einfügen',
     'please_login_again_to_complete_your_request' => 'Bitte erneut einloggen um Anfrage abzuschließen',
     'plugins' => 'Plugins',
     'post' => 'Post',

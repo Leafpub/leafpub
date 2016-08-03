@@ -17,6 +17,11 @@ if(version_compare(PHP_VERSION, '5.5.0') < 0) {
     exit('Postleaf requires PHP 5.5 or above.');
 }
 
+// Check for curl extension
+if(!extension_loaded('curl')) {
+    exit('Postleaf requires the curl extension.');
+}
+
 // Check for GD extension
 if(!extension_loaded('gd')) {
     exit('Postleaf requires the GD extension.');

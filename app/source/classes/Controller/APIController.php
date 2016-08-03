@@ -1085,4 +1085,27 @@ class APIController extends Controller {
         ]);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Utilities
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // GET api/oembed
+    public function getOembed($request, $response, $args) {
+        $params = $request->getParams();
+
+        // Fetch the embed code from the provider
+        $embera = new \Embera\Embera();
+        $code = $embera->autoEmbed($params['url']);
+        if($embera->hasErrors()) {
+            return $response->withJson([
+                'success' => false
+            ]);
+        }
+
+        return $response->withJson([
+            'success' => true,
+            'code' => $code
+        ]);
+    }
+
 }

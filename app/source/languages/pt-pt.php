@@ -155,7 +155,7 @@ return [
     'paragraph' => 'Parágrafo',
     'password_reset' => 'Restabelecer a sua palavra-passe',
     'password' => 'Palavra-passe',
-    'paste_embed_code_here' => 'Copiar o código para inserir aquí',
+    'paste_embed_code_or_url_here' => 'Copiar o código para inserir aquí',
     'please_login_again_to_complete_your_request' => 'Inicie a sua sessão novamente para confirmar o seu pedido',
     'plugins' => 'Plugins',
     'post' => 'Publicação',

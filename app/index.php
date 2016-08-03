@@ -97,6 +97,9 @@ $app->group("/api", function() {
 
     // Uploads
     $this->post('/uploads', 'Postleaf\Controller\APIController:addUpload');
+
+    // Utilities
+    $this->get('/oembed', 'Postleaf\Controller\APIController:getOembed');
 })->add('Postleaf\Middleware:requireAuth');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

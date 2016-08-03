@@ -155,7 +155,7 @@ return [
     'paragraph' => 'Paragraf',
     'password_reset' => 'Tilbakestill passord',
     'password' => 'Passord',
-    'paste_embed_code_here' => 'Lim inn innbyggingskode her',
+    'paste_embed_code_or_url_here' => 'Lim inn innbyggingskode her',
     'please_login_again_to_complete_your_request' => 'Logg inn igjen for å fullføre din forespørsel',
     'plugins' => 'Programtillegg',
     'post' => 'Post',

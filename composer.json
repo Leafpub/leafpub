@@ -1,6 +1,7 @@
 {
     "require": {
         "php": ">=5.5",
+        "ext-curl": "*",
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
@@ -10,7 +11,8 @@
         "slim/slim": "^3.0",
         "abeautifulsite/simpleimage": "^2.6",
         "erusev/parsedown": "^1.6",
-        "tinymce/tinymce": "^4.3"
+        "tinymce/tinymce": "^4.3",
+        "mpratt/embera": "^1.9"
     },
     "config": {
         "vendor-dir": "app/source/vendor"

@@ -155,7 +155,7 @@ return [
 	'paragraph' => '段落',
 	'password_reset' => 'パスワードをリセット',
 	'password' => 'パスワード',
-	'paste_embed_code_here' => '埋め込みコードをここにペーストする',
+	'paste_embed_code_or_url_here' => '埋め込みコードをここにペーストする',
 	'please_login_again_to_complete_your_request' => '再度ログインしてからリクエストを完了してください。',
 	'plugins' => 'プラグイン',
 	'post' => '投稿',
