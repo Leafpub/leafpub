@@ -10,3 +10,6 @@ npm-debug.log
 /design
 /dist
 /node_modules
+
+# PHPStorm garbage
+.idea/

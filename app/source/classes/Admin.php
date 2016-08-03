@@ -4,13 +4,18 @@
 //
 namespace Postleaf;
 
+/**
+ * Class Admin
+ * @package Postleaf
+ */
 class Admin extends Postleaf {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Returns an array of default and registered toolbar items
+    /**
+     * @param $template
+     * @param $data
+     * @return array
+     */
     public static function getAdminToolbarItems($template, $data) {
         $items = [];
 
@@ -69,7 +74,10 @@ class Admin extends Postleaf {
         return $items;
     }
 
-    // Returns an array of default and registered menu items
+    /**
+     * Returns an array of default and registered menu items
+     * @return array
+     */
     public static function getMenuItems() {
         $items = [];
 
@@ -112,24 +120,19 @@ class Admin extends Postleaf {
                 'link' => Admin::url('navigation'),
                 'icon' => 'fa fa-map'
             ];
-        }
 
-        // Users
-        if(Session::isRole(['owner', 'admin'])) {
             $items[] = [
                 'title' => Language::term('users'),
                 'link' => Admin::url('users'),
                 'icon' => 'fa fa-user'
             ];
-        }
 
-        // Settings
-        if(Session::isRole(['owner', 'admin'])) {
             $items[] = [
                 'title' => Language::term('settings'),
                 'link' => Admin::url('settings'),
                 'icon' => 'fa fa-cog'
             ];
+
         }
 
         // Logout
@@ -142,7 +145,13 @@ class Admin extends Postleaf {
         return $items;
     }
 
-    // Renders an admin page
+    /**
+     * Renders an admin page
+     * @param $template
+     * @param null $data
+     * @return mixed
+     * @throws \Exception
+     */
     public static function render($template, $data = null) {
         return Renderer::render([
             'template' => self::path("source/templates/$template.hbs"),
@@ -152,7 +161,11 @@ class Admin extends Postleaf {
         ]);
     }
 
-    // Returns an admin URL
+    /**
+     * Returns an admin URL
+     * @param null $path
+     * @return string
+     */
     public static function url($path = null) {
         return parent::url(Setting::get('frag_admin'), $path);
     }
