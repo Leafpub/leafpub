@@ -193,7 +193,8 @@ return [
                 '<!--{{postleaf_foot}}-->' .
                 '<script src="' . htmlspecialchars(
                     \Postleaf\Postleaf::url(
-                        'source/vendor/tinymce/tinymce/tinymce.min.js?v=' . POSTLEAF_VERSION
+                        'source/vendor/tinymce/tinymce/tinymce.min.js?v=' .
+                        $options['data']['postleaf']['version']
                     )
                 ) . '"></script>';
         }
@@ -237,7 +238,10 @@ return [
                 '<!--{{postleaf_head}}-->' .
                 '<script>window.postleaf = true;</script>' .
                 '<link rel="stylesheet" href="' . htmlspecialchars(
-                    \Postleaf\Postleaf::url('source/assets/css/editor.css?v=' . POSTLEAF_VERSION)
+                    \Postleaf\Postleaf::url(
+                        'source/assets/css/editor.css?v=' .
+                        $options['data']['postleaf']['version']
+                    )
                 ) . '">';
         }
 
@@ -251,7 +255,8 @@ return [
                 '<link rel="stylesheet" href="' .
                 htmlspecialchars(
                     \Postleaf\Postleaf::url(
-                        'source/assets/css/admin-toolbar.css?v=' . POSTLEAF_VERSION
+                        'source/assets/css/admin-toolbar.css?v=' .
+                        $options['data']['postleaf']['version']
                     )
                 ) .
                 '">';
