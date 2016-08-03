@@ -1096,7 +1096,7 @@ class APIController extends Controller {
         // Fetch the embed code from the provider
         $embera = new \Embera\Embera();
         $code = $embera->autoEmbed($params['url']);
-        if($embera->hasErrors()) {
+        if($embera->hasErrors() || $code === $params['url']) {
             return $response->withJson([
                 'success' => false
             ]);
