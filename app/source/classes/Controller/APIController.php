@@ -178,6 +178,7 @@ class APIController extends Controller {
     private function addUpdatePost($action, $request, $response, $args) {
         $params = $request->getParams();
         $properties = $params['properties'];
+        $slug = $action === 'add' ? $properties['slug'] : $args['slug'];
 
         // If you're not an owner, admin, or editor then you can only add/update your own posts
         if(
@@ -218,9 +219,9 @@ class APIController extends Controller {
         // Update the post
         try {
             if($action === 'add') {
-                Post::add($properties['slug'], $properties);
+                Post::add($slug, $properties);
             } else {
-                Post::update($params['post'], $properties);
+                Post::update($slug, $properties);
             }
         } catch(\Exception $e) {
             switch($e->getCode()) {
@@ -438,6 +439,7 @@ class APIController extends Controller {
     // Private method to handle add and update
     private function addUpdateTag($action, $request, $response, $args) {
         $params = $request->getParams();
+        $slug = $action === 'add' ? $params['slug'] : $args['slug'];
 
         // To add/update tags, you must be an owner, admin, or editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
@@ -446,7 +448,7 @@ class APIController extends Controller {
 
         // Create tag array
         $tag = [
-            'slug' => $params['slug'],
+            'slug' => $slug,
             'name' => $params['name'],
             'description' => $params['description'],
             'meta_title' => $params['meta-title'],
@@ -457,9 +459,9 @@ class APIController extends Controller {
         // Add/update the tag
         try {
             if($action === 'add') {
-                Tag::add($params['slug'], $tag);
+                Tag::add($slug, $tag);
             } else {
-                Tag::update($params['tag'], $tag);
+                Tag::update($slug, $tag);
             }
         } catch(\Exception $e) {
             // Handle errors
@@ -586,10 +588,11 @@ class APIController extends Controller {
     // Private method to handle add and update
     private function addUpdateUser($action, $request, $response, $args) {
         $params = $request->getParams();
+        $slug = $action === 'add' ? $params['username'] : $args['slug'];
 
         // To add/update a user, you must be an owner or admin. Users are also allowed to update
         // their own profiles.
-        if(!Session::isRole(['owner', 'admin']) && $params['user'] !== Session::user('slug')) {
+        if(!Session::isRole(['owner', 'admin']) && $slug !== Session::user('slug')) {
             return $response->withStatus(403);
         }
 
@@ -604,7 +607,7 @@ class APIController extends Controller {
 
         // Create user array
         $user = [
-            'slug' => $params['username'],
+            'slug' => $slug,
             'name' => $params['name'],
             'email' => $params['email'],
             'role' => $params['role'],
@@ -620,9 +623,9 @@ class APIController extends Controller {
         // Add/update the user
         try {
             if($action === 'add') {
-                User::add($params['username'], $user);
+                User::add($slug, $user);
             } else {
-                User::update($params['user'], $user);
+                User::update($slug, $user);
             }
         } catch(\Exception $e) {
             // Handle errors
