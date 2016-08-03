@@ -310,7 +310,8 @@ class AdminController extends Controller {
             'title' => Language::term('new_user'),
             'scripts' => 'users.edit.min.js',
             'styles' => 'users.edit.css',
-            'user' => []
+            'user' => [],
+            'redirect' => Admin::url('users')
         ]);
 
         return $response->write($html);
