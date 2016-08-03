@@ -286,8 +286,9 @@ class Tag extends Postleaf {
                         'publisher' => Setting::get('title'),
                         'url' => self::url($tag['slug']),
                         'image' => empty($tag['cover']) ? null : parent::url($tag['cover']),
-                        'name' => $tag['name'],
-                        // Try meta description, fallback to description
+                        'name' => !empty($tag['meta_description']) ?
+                            $tag['meta_title'] :
+                            $tag['name'],
                         'description' => !empty($tag['meta_description']) ?
                             $tag['meta_description'] :
                             strip_tags(self::markdownToHtml($tag['description'])),
