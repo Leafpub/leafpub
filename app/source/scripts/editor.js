@@ -277,6 +277,13 @@ var Editor;
                         instance.options.keyup.call(instance, event);
                     }, false);
                 }
+
+                // Paste callback
+                if(instance.options.paste) {
+                    instance.editor.on('paste', function(event) {
+                        instance.options.paste.call(instance, event);
+                    });
+                }
             },
             init_instance_callback: function() {
                 instance.cleanState = instance.editor.getContent();

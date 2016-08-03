@@ -240,6 +240,40 @@ $(function() {
                 if($(event.target).is('img')) showPanel('.image-panel');
                 if($(event.target).is('[data-embed]')) showPanel('.embed-panel');
             },
+            paste: function(event) {
+                var clipboardData = event.clipboardData || window.clipboardData,
+                    pastedData = clipboardData.getData('Text');
+
+                // Check for anything that looks the beginning of a URL
+                if(pastedData.match(/^https?:\/\//i)) {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    // Fetch the provider's oEmbed code
+                    progress.go(50);
+                    $.ajax({
+                        url: Postleaf.url('api/oembed'),
+                        type: 'GET',
+                        data: {
+                            url: pastedData
+                        }
+                    })
+                    .done(function(res) {
+                        if(res.code) {
+                            // A provider was found, insert the embed code
+                            contentEditor.embed('insert', {
+                                code: res.code
+                            });
+                        } else {
+                            // No provider was found, insert the raw paste data
+                            contentEditor.insertContent(pastedData);
+                        }
+                    })
+                    .always(function() {
+                        progress.go(100);
+                    });
+                }
+            },
             ready: function() {
                 contentEditor = this;
                 makeReady();
