@@ -1108,8 +1108,9 @@ $(function() {
 
             // Insert the embed
             if(code.length) {
-                // Is this a URL? If so, attempt to grab the embed code using the oEmbed library
+                // Check for anything that looks the beginning of a URL
                 if(code.match(/^https?:\/\//i)) {
+                    // Fetch the provider's oEmbed code
                     progress.go(50);
                     $.ajax({
                         url: Postleaf.url('api/oembed'),
@@ -1119,15 +1120,19 @@ $(function() {
                         }
                     })
                     .done(function(res) {
-                        // Insert the resulting embed code if one was provided
-                        contentEditor.embed('insert', {
-                            code: res.code || code,
-                            align: align
-                        });
+                        if(res.code) {
+                            // A provider was found, insert the embed code
+                            contentEditor.embed('insert', {
+                                code: res.code
+                            });
+                        } else {
+                            // No provider was found, insert the raw paste data
+                            contentEditor.insertContent(code);
+                        }
                     })
                     .always(function() {
                         progress.go(100);
-                    })
+                    });
                 } else {
                     // Insert as-is
                     contentEditor.embed('insert', {
