@@ -760,12 +760,16 @@ class Post extends Postleaf {
                         'twitter:card' => !empty($post['image']) ?
                             'summary_large_image' :
                             'summary',
+                        'twitter:site' => !empty(Setting::get('twitter')) ?
+                            '@' . Setting::get('twitter') : null,
                         'twitter:title' => !empty($post['meta_title']) ?
                             $post['meta_title'] :
                             $post['title'],
                         'twitter:description' => !empty($post['meta_description']) ?
                             $post['meta_description'] :
                             self::getWords(strip_tags($post['content']), 50),
+                        'twitter:creator' => !empty($author['twitter']) ?
+                            '@' . $author['twitter'] : null,
                         'twitter:url' => self::url($post['slug']),
                         'twitter:image' => !empty($post['image']) ?
                             parent::url($post['image']) :

@@ -204,6 +204,7 @@ Setting::add('tagline', 'Go forth and create!');
 Setting::add('theme', 'range');
 Setting::add('timezone', 'America/New_York');
 Setting::add('title', 'A Postleaf Blog');
+Setting::add('twitter', '');
 Setting::add('password_min_length', '8');
 
 // Insert owner

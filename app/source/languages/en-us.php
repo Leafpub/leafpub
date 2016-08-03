@@ -219,6 +219,7 @@ return [
     'title' => 'Title',
     'to_reset_your_password_visit_this_address' => 'To reset your password, visit this address:',
     'turn_this_post_into_a_page' => 'Turn this post into a page',
+    'twitter' => 'Twitter',
     'unable_to_backup_database' => 'Unable to backup database',
     'unable_to_create_backup_file' => 'Unable to create backup file',
     'unable_to_create_directory_{dir}' => 'Unable to create directory {dir}',

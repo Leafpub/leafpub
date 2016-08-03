@@ -79,6 +79,8 @@ class Search extends Postleaf {
                     'twitter_card' => [
                         'twitter:card' => !empty(Setting::get('cover')) ?
                             'summary_large_image' : 'summary',
+                        'twitter:site' => !empty(Setting::get('twitter')) ?
+                            '@' . Setting::get('twitter') : null,
                         'twitter:title' => 'Search &middot; ' . Setting::get('title'),
                         'twitter:description' => !empty($query) ?
                             'Search results for “' . htmlspecialchars($query) . '”' : null,

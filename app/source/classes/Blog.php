@@ -62,6 +62,8 @@ class Blog extends Postleaf {
                     'twitter_card' => [
                         'twitter:card' => !empty(Setting::get('cover')) ?
                             'summary_large_image' : 'summary',
+                        'twitter:site' => !empty(Setting::get('twitter')) ?
+                            '@' . Setting::get('twitter') : null,
                         'twitter:title' => Setting::get('title'),
                         'twitter:description' => Setting::get('tagline'),
                         'twitter:url' => parent::url(),

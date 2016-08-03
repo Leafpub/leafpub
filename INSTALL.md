@@ -23,6 +23,8 @@ To update from a previous version, simply replace `index.php` and the `source` f
 
 ```
 ALTER TABLE `postleaf_posts` ADD `sticky` TINYINT NOT NULL AFTER `featured`;
+ALTER TABLE `postleaf_users` ADD `twitter` VARCHAR(191) NOT NULL AFTER `avatar`;
+
 ```
 
 ## License

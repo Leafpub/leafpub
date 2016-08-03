@@ -112,6 +112,11 @@ $(function() {
         }
     });
 
+    // Remove @ from Twitter handle
+    $('#twitter').on('change', function() {
+        this.value = this.value.replace(/@/g, '');
+    });
+
     // Upload avatar
     $('.upload-avatar').on('change', 'input[type="file"]', function(event) {
         var input = this;

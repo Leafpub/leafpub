@@ -156,11 +156,22 @@
                         <input class="form-control" type="url" name="website" id="website" value="{{user.website}}">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="location">{{L 'location'}}</label>
-                    <div class="inner-addon-group">
-                        <span class="inner-addon"><i class="fa fa-map-marker"></i></span>
-                        <input class="form-control" type="text" name="location" id="location" value="{{user.location}}">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="location">{{L 'location'}}</label>
+                            <div class="inner-addon-group">
+                                <span class="inner-addon"><i class="fa fa-map-marker"></i></span>
+                                <input class="form-control" type="text" name="location" id="location" value="{{user.location}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="twitter">{{L 'twitter'}}</label>
+                        <div class="inner-addon-group">
+                            <span class="inner-addon"><i class="fa fa-twitter"></i></span>
+                            <input class="form-control" type="text" name="twitter" id="twitter" value="{{user.twitter}}">
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

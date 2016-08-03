@@ -310,6 +310,8 @@ class Tag extends Postleaf {
                     'twitter_card' => [
                         'twitter:card' => !empty($tag['cover']) ?
                             'summary_large_image' : 'summary',
+                        'twitter:site' => !empty(Setting::get('twitter')) ?
+                            '@' . Setting::get('twitter') : null,
                         'twitter:title' => !empty($tag['meta_title']) ?
                             $tag['meta_title'] :
                             $tag['name'] . ' &middot; ' . Setting::get('title'),

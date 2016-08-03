@@ -43,6 +43,11 @@ $(function() {
         $('.settings-form').submit();
     });
 
+    // Remove @ from Twitter handle
+    $('#twitter').on('change', function() {
+        this.value = this.value.replace(/@/g, '');
+    });
+
     // Upload cover
     $('.upload-cover').on('change', 'input[type="file"]', function(event) {
         var input = this;

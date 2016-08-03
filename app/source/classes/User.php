@@ -95,8 +95,12 @@ class User extends Postleaf {
         $properties['bio'] = (string) $properties['bio'];
         $properties['cover'] = (string) $properties['cover'];
         $properties['avatar'] = (string) $properties['avatar'];
+        $properties['twitter'] = (string) $properties['twitter'];
         $properties['location'] = (string) $properties['location'];
         $properties['website'] = (string) $properties['website'];
+
+        // Remove @ from Twitter handle
+        $properties['twitter'] = preg_replace('/@/', '', $properties['twitter']);
 
         // Role must be owner, admin, or editor
         if(!in_array($properties['role'], ['owner', 'admin', 'editor', 'author'])) {
@@ -123,6 +127,7 @@ class User extends Postleaf {
                     bio = :bio,
                     cover = :cover,
                     avatar = :avatar,
+                    twitter = :twitter,
                     location = :location,
                     website = :website
             ');
@@ -135,6 +140,7 @@ class User extends Postleaf {
             $st->bindParam(':bio', $properties['bio']);
             $st->bindParam(':cover', $properties['cover']);
             $st->bindParam(':avatar', $properties['avatar']);
+            $st->bindParam(':twitter', $properties['twitter']);
             $st->bindParam(':location', $properties['location']);
             $st->bindParam(':website', $properties['website']);
             $st->execute();
@@ -229,7 +235,7 @@ class User extends Postleaf {
             $st = self::$database->prepare('
                 SELECT
                     id, slug, created, name, email, password, reset_token, role, bio, cover,
-                    avatar, location, website
+                    avatar, twitter, location, website
                 FROM __users
                 WHERE slug = :slug
             ');
@@ -272,7 +278,7 @@ class User extends Postleaf {
         $select_sql = '
             SELECT
                 id, slug, created, name, email, password, reset_token, role, bio, cover, avatar,
-                location, website
+                twitter, location, website
             FROM __users
         ';
 
@@ -441,8 +447,12 @@ class User extends Postleaf {
                     'twitter_card' => [
                         'twitter:card' => !empty($author['cover']) ?
                             'summary_large_image' : 'summary',
+                        'twitter:site' => !empty(Setting::get('twitter')) ?
+                            '@' . Setting::get('twitter') : null,
                         'twitter:title' => $author['name'] . ' &middot; ' . Setting::get('title'),
                         'twitter:description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'twitter:creator' => !empty($author['twitter']) ?
+                            '@' . $author['twitter'] : null,
                         'twitter:url' => self::url($author['slug']),
                         'twitter:image' => !empty($author['cover']) ?
                             parent::url($author['cover']) : null
@@ -498,8 +508,12 @@ class User extends Postleaf {
         $user['bio'] = (string) $user['bio'];
         $user['cover'] = (string) $user['cover'];
         $user['avatar'] = (string) $user['avatar'];
+        $user['twitter'] = (string) $user['twitter'];
         $user['location'] = (string) $user['location'];
         $user['website'] = (string) $user['website'];
+
+        // Remove @ from Twitter handle
+        $user['twitter'] = preg_replace('/@/', '', $user['twitter']);
 
         // Role must be owner, admin, or editor
         if(!in_array($user['role'], ['owner', 'admin', 'editor', 'author'])) {
@@ -552,6 +566,7 @@ class User extends Postleaf {
                     bio = :bio,
                     cover = :cover,
                     avatar = :avatar,
+                    twitter = :twitter,
                     location = :location,
                     website = :website
                 WHERE slug = :original_slug
@@ -565,6 +580,7 @@ class User extends Postleaf {
             $st->bindParam(':bio', $user['bio']);
             $st->bindParam(':cover', $user['cover']);
             $st->bindParam(':avatar', $user['avatar']);
+            $st->bindParam(':twitter', $user['twitter']);
             $st->bindParam(':location', $user['location']);
             $st->bindParam(':website', $user['website']);
             $st->bindParam(':original_slug', $slug);

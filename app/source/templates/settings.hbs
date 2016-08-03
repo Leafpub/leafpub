@@ -61,16 +61,32 @@
                             <label for="tagline">{{L 'tagline'}}</label>
                             <input class="form-control" type="text" name="tagline" id="tagline" value="{{@settings.tagline}}">
                         </div>
-                        {{!-- Custom homepage --}}
-                        <div class="form-group">
-                            <label for="homepage">{{L 'custom_homepage'}}</label>
-                            <select class="form-control" name="homepage" id="homepage">
-                                <option value=""{{#is this.slug @settings.homepage}} selected{{/is}}>{{L 'none'}}</option>
-                                {{#each pages}}
-                                <option value="{{this.slug}}"{{#is this.slug @settings.homepage}} selected{{/is}}>{{this.title}}</option>
-                                {{/each}}
-                            </select>
+
+                        <div class="row">
+                            {{!-- Custom homepage --}}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="homepage">{{L 'custom_homepage'}}</label>
+                                    <select class="form-control" name="homepage" id="homepage">
+                                        <option value=""{{#is this.slug @settings.homepage}} selected{{/is}}>{{L 'none'}}</option>
+                                        {{#each pages}}
+                                        <option value="{{this.slug}}"{{#is this.slug @settings.homepage}} selected{{/is}}>{{this.title}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            {{!-- Twitter --}}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="twitter">{{L 'twitter'}}</label>
+                                    <div class="inner-addon-group">
+                                        <span class="inner-addon"><i class="fa fa-twitter"></i></span>
+                                        <input class="form-control" type="text" name="twitter" id="twitter" value="{{@settings.twitter}}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="row">
                             <div class="col-sm-6">
                                 {{!-- Theme --}}
