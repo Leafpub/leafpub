@@ -268,7 +268,7 @@ class APIController extends Controller {
         // If you're not an owner, admin, or editor then you can only delete your own posts
         if(
             Session::isRole(['owner', 'admin', 'editor']) ||
-            Post::get($slug)['author'] === Session::user('slug')
+            Post::get($args['slug'])['author'] === Session::user('slug')
         ) {
             return $response->withJson([
                 'success' => Post::delete($args['slug'])
