@@ -362,7 +362,11 @@ class APIController extends Controller {
         // Get the history item and the affected post so we can verify privileges
         $history = History::get($args['id']);
         $post = Post::get($history['slug']);
-        if(!$history || !$post) continue;
+        if(!$history || !$post) {
+            return $response->withJson([
+                'success' => false
+            ]);
+        }
 
         // If you're not an owner, admin, or editor then you can only delete history that belongs to
         // your own own post
