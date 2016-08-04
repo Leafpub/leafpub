@@ -288,5 +288,5 @@ return [
     'thousands_separator' => ',',
 
     'language_code' => 'it-it',
-    'language_name' => 'Italiano (Italia)'
+    'language_name' => 'Italiano (IT)'
 ];
