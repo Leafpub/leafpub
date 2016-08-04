@@ -46,6 +46,8 @@ $ composer install
 
 Composer will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will trigger `gulp build` which will generate all the assets you need to run Postleaf.
 
+**Important:** You'll also need to add [the default theme](https://github.com/Postleaf/range) to `content/themes/range/` manually. This will happen automatically once Postleaf is out of beta.
+
 ## Using Gulp
 
 From the root directory, you can use `gulp help` to see all available tasks:
