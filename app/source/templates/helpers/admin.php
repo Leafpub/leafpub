@@ -50,7 +50,9 @@ return [
             if(preg_match('/^(http:|https:|mailto:|\/\/:)/i', $script)) {
                 $src = $script;
             } else {
-                $src = self::url('source/assets/js', $script) . '?v=' . POSTLEAF_VERSION;
+                $src =
+                    self::url('source/assets/js', $script) . '?v=' .
+                    $options['data']['postleaf']['version'];
             }
             $html .= '<script src="' . htmlspecialchars($src) . '"></script>';
         }
@@ -65,7 +67,9 @@ return [
         $html = '';
 
         foreach((array) $options['_this']['styles'] as $style) {
-            $href = self::url('source/assets/css', $style) . '?v=' . POSTLEAF_VERSION;
+            $href =
+                self::url('source/assets/css', $style) . '?v=' .
+                $options['data']['postleaf']['version'];
             $html .= '<link rel="stylesheet" href="' . htmlspecialchars($href) . '">';
         }
 

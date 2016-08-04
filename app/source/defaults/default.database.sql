@@ -124,6 +124,7 @@ CREATE TABLE `__users` (
   `bio` text NOT NULL,
   `cover` text NOT NULL,
   `avatar` text NOT NULL,
+  `twitter` VARCHAR(191) NOT NULL,
   `location` text NOT NULL,
   `website` text NOT NULL,
   PRIMARY KEY (`id`),

@@ -41,7 +41,7 @@ $(function() {
                     $('meta[name="postleaf:language"]').attr('data-changes-saved'),
                     { style: 'success' }
                 ).then(function() {
-                    location.href = Postleaf.adminUrl('users');
+                    location.href = $('.user-form').attr('data-redirect');
                 });
             } else {
                 // Show errors
@@ -82,7 +82,7 @@ $(function() {
 
                 // Redirect
                 if(res.success) {
-                    location.href = Postleaf.adminUrl('users');
+                    location.href = $('.user-form').attr('data-redirect');
                 }
             })
             .always(function() {
