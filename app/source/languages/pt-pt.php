@@ -283,5 +283,5 @@ return [
     'decimal_separator' => ',',
     'thousands_separator' => '.',
     'language_code' => 'pt-PT',
-    'language_name' => 'Português (Portugal)'
+    'language_name' => 'Português (PT)'
 ];
