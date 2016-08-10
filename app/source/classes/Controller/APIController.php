@@ -62,7 +62,7 @@ class APIController extends Controller {
 
         // Generate and set a password reset token
         User::update($user['slug'], [
-            'reset_token' => $token = Postleaf::generateToken(50)
+            'reset_token' => $token = Postleaf::randomBytes(50)
         ]);
 
         // Send the user an email

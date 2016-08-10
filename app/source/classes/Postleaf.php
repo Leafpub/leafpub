@@ -87,19 +87,6 @@ class Postleaf {
         return round(pow(1000, $base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
-    // Generates a cryptographically secure token
-    public static function generateToken($bytes = 128) {
-        if(function_exists('random_bytes')) {
-            // PHP 7+
-            $token = bin2hex(random_bytes($bytes));
-        } else {
-            // PHP < 7
-            $token = bin2hex(openssl_random_pseudo_bytes($bytes));
-        }
-
-        return $token;
-    }
-
     // Returns no more than $num characters from $string, breaking at word
     public static function getChars($string, $num) {
         // Remove line breaks

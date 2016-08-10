@@ -179,7 +179,7 @@ try {
 }
 
 // Insert default settings
-Setting::add('auth_key', Postleaf::generateToken(32)); // create a unique and secure auth key
+Setting::add('auth_key', Postleaf::randomBytes(32)); // create a unique and secure auth key
 Setting::add('allowed_upload_types', 'pdf,doc,docx,ppt,pptx,pps,ppsx,odt,xls,xlsx,psd,txt,md,csv,jpg,jpeg,png,gif,ico,svg,mp3,m4a,ogg,wav,mp4,m4v,mov,wmv,avi,mpg,ogv,3gp,3g2');
 Setting::add('cover', 'source/assets/img/leaves.jpg');
 Setting::add('default_content', 'Start writing here...');
