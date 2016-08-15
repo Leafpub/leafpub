@@ -40,6 +40,60 @@ return [
         return \Postleaf\Postleaf::strftime($format, strtotime($date));
     },
 
+    // Compares two dates
+    'date_compare' => function() {
+        $args = func_get_args();
+        $options = end($args);
+
+        switch(count($args) - 1) {
+            // One date
+            case 1:
+                $left = new \DateTime($args[0]);
+                $operator = '==';
+                $right = new \DateTime('now');
+                break;
+
+            // Two dates
+            case 2:
+                $left = new \DateTime($args[0]);
+                $operator = '==';
+                $right = new \DateTime($args[1]);
+                break;
+
+            // Two dates and an operator
+            case 3:
+                $left = new \DateTime($args[0]);
+                $operator = $args[1];
+                $right = new \DateTime($args[2]);
+        }
+
+        // Compare values
+        switch(strtolower($operator)) {
+            case '>':
+                $compare = $left > $right;
+                break;
+            case '>=':
+                $compare = $left >= $right;
+                break;
+            case '<':
+                $compare = $left < $right;
+                break;
+            case '<=':
+                $compare = $left <= $right;
+                break;
+                break;
+            default:
+                $compare = $left == $right;
+                break;
+        }
+
+        if($compare) {
+            return $options['fn']();
+        } else {
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
+    },
+
     // Uses the first truthy argument passed in
     'either' => function() {
         $args = func_get_args();

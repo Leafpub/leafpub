@@ -178,6 +178,7 @@ return [
     'restoring_a_backup_will_overwrite_all_of_your_data...' => 'Restoring a backup will overwrite all of your data and content. This cannot be undone, so make sure you backup any unsaved changes first. Enter your password to continue.',
     'role' => 'Role',
     'save' => 'Save',
+    'scheduled' => 'Scheduled',
     'search_engine_preview' => 'Search Engine Preview',
     'search_results_for_{query}' => 'Search results for “{query}”',
     'search' => 'Search',
