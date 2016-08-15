@@ -1,4 +1,4 @@
-?php
+<?php
 return [
     '{n}_days_ago' => '{n} dagen geleden',
     '{n}_hours_ago' => '{n} uren geleden',
