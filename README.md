@@ -41,7 +41,7 @@ Once you have the necessary development tools installed:
 3. Run the following command:
 
 ```
-$ composer install
+composer install
 ```
 
 Composer will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will trigger `gulp build` which will generate all the assets you need to run Postleaf.
