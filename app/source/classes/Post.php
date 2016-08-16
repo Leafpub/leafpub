@@ -559,9 +559,6 @@ class Post extends Postleaf {
         if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
         if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
 
-        // If there's a query of > 3 chars, make it a fulltext search
-        $is_fulltext = mb_strlen($options['query']) > 3;
-
         // Build query
         $sql = '
             SELECT
