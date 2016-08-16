@@ -351,6 +351,28 @@ return [
         return max(1, ceil($num_words / $words_per_minute));
     },
 
+    // Gets recent posts
+    'recent_posts' => function($options) {
+        // Get count (defaults to 5)
+        $count = (int) $options['hash']['count'];
+        if($count < 1) $count = 5;
+
+        // Get recent posts
+        $posts = \Postleaf\Post::getMany([
+            'items_per_page' => $count,
+            'author' => $options['hash']['author'],
+            'tag' => $options['hash']['tag']
+        ]);
+
+        // Were any posts found?
+        if(count($posts)) {
+            return $options['fn'](['posts' => $posts]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
+    },
+
     // Gets suggested posts
     'suggested_posts' => function($slug, $options = null) {
         if(!$options) {
