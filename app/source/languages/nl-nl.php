@@ -154,7 +154,7 @@ return [
     'save' => 'Opslaan',
     'scheduled' => 'Gepland',
     'search_engine_preview' => 'Zoekmachine voorvertroning',
-    'search_results_for_{query}' => Zoekresultaten voor “{query}”',
+    'search_results_for_{query}' => 'Zoekresultaten voor “{query}”',
     'search' => 'Zoeken',
     'select' => 'Selecteren',
     'set_post_image' => 'Bericht foto plaatsen',
