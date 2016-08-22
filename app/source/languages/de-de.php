@@ -7,6 +7,9 @@ return [
     'a_post_already_exists_at_the_url_you_entered' => 'Es existiert bereits ein Post unter der eingegebenen URL',
     'a_tag_already_exists_at_the_slug_you_entered' => 'Es existiert bereits ein Schlagwort unter dem eingegebenen Rohling',	// slug
     'about' => 'Über',
+    'add_embed' => 'externes Medium einbinden',
+    'add_image' => 'Bild hinzufügen',
+    'add_link' => 'Link hinzufügen',
     'administrator' => 'Administrator',
     'advanced' => 'Fortgeschritten',
     'align_center' => 'Zentrieren',
@@ -68,6 +71,7 @@ return [
     'feature_this_post' => 'Diesen Post hervorheben',
     'featured' => 'Hervorgehoben',
     'feed' => 'Feed',
+    'font_format' => 'Schriftformatierung',
     'full_name' => 'Name',
     'general' => 'Generell',
     'heading_1' => 'Überschrift 1',
@@ -96,6 +100,7 @@ return [
     'label' => 'Aufschrift',
     'language' => 'Sprache',
     'link' => 'Link',
+    'lists' => 'Listen',
     'locale' => 'Locale',	// locale
     'location' => 'prt',
     'login' => 'Login',
@@ -212,6 +217,7 @@ return [
     'your_changes_have_not_been_saved_yet' => 'Ungespeicherte Änderungen',
     'your_password_is_incorrect' => 'Ihr Passwort ist inkorrekt',	// Sie oder du?
     'your_password' => 'Ihr Passwort',	// Sie oder du?
+    'zen_mode' => 'Zen Mode',
 
     'january' => 'Januar',
     'february' => 'Februar',
