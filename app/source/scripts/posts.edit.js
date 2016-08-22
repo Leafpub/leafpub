@@ -752,7 +752,12 @@ $(function() {
     $('[data-editor]').on('click', function() {
         runCommand($(this).attr('data-editor'));
     });
-
+    
+    $('.editor-toolbar [data-toggle="tooltip"]').tooltip({
+        trigger: 'hover',
+        placement: 'bottom'
+    });
+    
     // Keyboard shortcuts
     $(document).on('keydown', function(event) {
         var cmd = event.metaKey || event.ctrlKey;
