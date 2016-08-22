@@ -8,16 +8,16 @@
         <div class="editor-toolbar" hidden>
             {{!-- Undo/redo --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="undo"><i class="fa fa-undo"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="redo"><i class="fa fa-repeat"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="undo" data-editor="undo"><i class="fa fa-undo"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="redo" data-editor="redo"><i class="fa fa-repeat"></i></button>
             </div>
 
             {{!-- Bold, italic, underline --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="bold"><i class="fa fa-bold"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="italic"><i class="fa fa-italic"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="bold" data-editor="bold"><i class="fa fa-bold"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="italic" data-editor="italic"><i class="fa fa-italic"></i></button>
                 {{!-- Format dropdown --}}
-                <div class="dropdown-btn">
+                <div class="dropdown-btn" title data-toggle="tooltip" data-original-title="format">
                     <span class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-font"></i>
                     </span>
@@ -74,7 +74,7 @@
                 </div>
 
                 {{!-- Alignment dropdown --}}
-                <div class="dropdown-btn">
+                <div class="dropdown-btn" title data-toggle="tooltip" data-original-title="alignment">
                     <span class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-align-left"></i>
                     </span>
@@ -95,7 +95,7 @@
                 </div>
 
                 {{!-- List dropdown --}}
-                <div class="dropdown-btn">
+                <div class="dropdown-btn" title data-toggle="tooltip" data-original-title="lists">
                     <span class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-list-ul"></i>
                     </span>
@@ -119,15 +119,15 @@
 
             {{!-- Link, image, embed --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="link"><i class="fa fa-link"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="image"><i class="fa fa-picture-o"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="embed"><i class="fa fa-cube"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="link" data-editor="link"><i class="fa fa-link"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="image" data-editor="image"><i class="fa fa-picture-o"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="embed" data-editor="embed"><i class="fa fa-cube"></i></button>
             </div>
 
             {{!-- Zen mode, settings --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen"><i class="fa fa-leaf"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="settings"><i class="fa fa-cog"></i></button>
+                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" title data-toggle="tooltip" data-original-title="zen-mode" data-editor="zen"><i class="fa fa-leaf"></i></button>
+                <button type="button" class="btn btn-secondary" title data-toggle="tooltip" data-original-title="settings" data-editor="settings"><i class="fa fa-cog"></i></button>
             </div>
 
             {{!-- Save --}}
