@@ -158,7 +158,12 @@ $(function() {
             });
         }, 300);
     });
-
+    
+    $('.top-toolbar-section [data-toggle="tooltip"]').tooltip({
+        trigger: 'hover',
+        placement: 'bottom'
+    });
+    
     // Edit
     $('.edit').on('click', function() {
         var url = $('.post-list').selectable('getElements', true)[0].getAttribute('href');
