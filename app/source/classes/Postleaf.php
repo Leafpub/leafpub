@@ -25,7 +25,7 @@ class Postleaf {
             switch($e->getCode()) {
                 case Database::NOT_CONFIGURED:
                     // Database isn't configured, launch the installer
-                    header('Location: ' . self::url('source/installer'));
+                    header('Location: ' . self::url('source/installer/'));
                     exit();
                     break;
                 default:
