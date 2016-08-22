@@ -8,14 +8,14 @@
         <div class="editor-toolbar" hidden>
             {{!-- Undo/redo --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="undo"><i class="fa fa-undo"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="redo"><i class="fa fa-repeat"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="undo" title="{{L 'undo'}}"><i class="fa fa-undo"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="redo" title="{{L 'redo'}}"><i class="fa fa-repeat"></i></button>
             </div>
 
             {{!-- Bold, italic, underline --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="bold"><i class="fa fa-bold"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="italic"><i class="fa fa-italic"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="bold" title="{{L 'bold'}}"><i class="fa fa-bold"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="italic" title="{{L 'italic'}}"><i class="fa fa-italic"></i></button>
                 {{!-- Format dropdown --}}
                 <div class="dropdown-btn">
                     <span class="dropdown-toggle" data-toggle="dropdown">
@@ -119,15 +119,15 @@
 
             {{!-- Link, image, embed --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="link"><i class="fa fa-link"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="image"><i class="fa fa-picture-o"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="embed"><i class="fa fa-cube"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="link" title="{{L 'link'}}"><i class="fa fa-link"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="image" title="{{L 'image'}}"><i class="fa fa-picture-o"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="embed" title="{{L 'embed'}}"><i class="fa fa-cube"></i></button>
             </div>
 
             {{!-- Zen mode, settings --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen"><i class="fa fa-leaf"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="settings"><i class="fa fa-cog"></i></button>
+                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen" title="{{L 'zen_mode'}}"><i class="fa fa-leaf"></i></button>
+                <button type="button" class="btn btn-secondary" data-editor="settings" title="{{L 'settings'}}"><i class="fa fa-cog"></i></button>
             </div>
 
             {{!-- Save --}}
