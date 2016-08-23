@@ -56,6 +56,7 @@ if(!Postleaf::isValidEmail($_REQUEST['email'])) {
 try {
     Database::connect([
         'host' => $_REQUEST['db-host'],
+        'port' => $_REQUEST['db-port'],
         'database' => $_REQUEST['db-database'],
         'user' => $_REQUEST['db-user'],
         'password' => $_REQUEST['db-password'],
