@@ -423,8 +423,7 @@ class Postleaf {
 
     // Returns Postleaf's base URL, optionally concatenating additional folders
     public static function url() {
-        // Get protocol and hostname
-        $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+        // Get the hostname
         $hostname = $_SERVER['HTTP_HOST'];
 
         // Determine if Postleaf is running from a subfolder
@@ -450,7 +449,7 @@ class Postleaf {
         $path = ltrim($path, '/');
 
         // Generate the URL
-        return "$protocol://$hostname/$path";
+        return "//$hostname/$path";
     }
 
     // Convert a UTC date string to local time
