@@ -97,7 +97,7 @@ return [
     'language' => 'Sprache',
     'link' => 'Link',
     'locale' => 'Locale',	// locale
-    'location' => 'prt',
+    'location' => 'Ort',
     'login' => 'Login',
     'logo' => 'Logo',
     'logout' => 'Logout',
