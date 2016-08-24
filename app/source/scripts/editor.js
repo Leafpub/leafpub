@@ -41,6 +41,28 @@ var Editor;
             }
         }
 
+        // Removes data-mce-* attributes from every element in an HTML string
+        function removeDataMceAttributes(html) {
+            var parser = new DOMParser(),
+                doc = parser.parseFromString(html, 'text/html'),
+                matches = doc.body.querySelectorAll('*'),
+                attribs,
+                i, j;
+
+            // Loop through each element
+            for(i = 0; i < matches.length; i++) {
+                // Get a list of attributes and remove ones that start with data-mce-
+                attribs = matches[i].attributes;
+                for(j = 0; j < attribs.length; j++) {
+                    if(attribs[j].name.match(/^data-mce-/)) {
+                        matches[i].removeAttribute(attribs[j].name);
+                    }
+                }
+            }
+
+            return doc.body.innerHTML;
+        }
+
         // Set properties
         instance.element = element;
         instance.options = $.extend({}, {
@@ -179,7 +201,12 @@ var Editor;
                         i;
 
                     for(i = 0; i < matches.length; i++) {
-                        matches[i].setAttribute('data-embed', matches[i].innerHTML);
+                        matches[i].setAttribute(
+                            'data-embed',
+                            // Remove data-mce-* from pasted embed blocks
+                            // See https://github.com/Postleaf/postleaf/issues/7
+                            removeDataMceAttributes(matches[i].innerHTML)
+                        );
                         matches[i].setAttribute('contenteditable', false);
                     }
 
