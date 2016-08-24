@@ -197,7 +197,7 @@ $(function() {
                     // Remove deleted item
                     if(res.success) {
                         $(item).remove();
-                        $('.tag-list').selectable('change');
+                        $('.post-list').selectable('change');
                         updatePreview();
                     }
                 })
