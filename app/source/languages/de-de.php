@@ -204,7 +204,7 @@ return [
     'user' => 'Benutzer',
     'username' => 'Benutzername',
     'users' => 'Benutzer',
-    'verify_password' => 'Kennwort verifizieren',
+    'verify_password' => 'Passwort wiederholen',
     'website' => 'Webseite',
     'what_would_you_like_to_be_called' => 'Wie möchtest du genannt werden?',
     'width' => 'Breite',
