@@ -147,6 +147,7 @@ return [
     'restoring_a_backup_will_overwrite_all_of_your_data...' => 'Eine Wiederherstellung eines Backups überschreibt alle Daten und Inhalte. Dies kann nicht rückgängig gemacht werden. Stellen Sie daher sicher, dass alle ungesicherten Änderungen gesichert werden. Geben Sie Ihr Kennwort ein um fortzufahren.',		// Sie oder du?
     'role' => 'Rolle',
     'save' => 'Speichern',
+    'scheduled' => 'Geplant',
     'search_engine_preview' => 'Suchmaschinenvorschau',
     'search_results_for_{query}' => 'Suchergebnisse für “{query}”',
     'search' => 'Suche',
