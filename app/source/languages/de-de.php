@@ -101,7 +101,7 @@ return [
     'login' => 'Login',
     'logo' => 'Logo',
     'logout' => 'Logout',
-    'lost_your_password' => 'Passwort veloren?',
+    'lost_your_password' => 'Passwort vergessen?',
     'markdown' => 'Markdown',
     'meta_description' => 'Metabeschreibung',
     'meta_title' => 'Metatitel',
