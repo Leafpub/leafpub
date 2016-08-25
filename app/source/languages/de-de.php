@@ -93,7 +93,7 @@ return [
     'invalid_username' => 'Ungültiger Benutzername',
     'italic' => 'Kursiv',
     'justify' => 'Bündig',
-    'label' => 'Aufschrift',
+    'label' => 'Beschriftung',
     'language' => 'Sprache',
     'link' => 'Link',
     'locale' => 'Locale',	// locale
