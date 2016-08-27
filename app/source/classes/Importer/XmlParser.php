@@ -21,6 +21,7 @@ class XmlParser {
         if (extension_loaded('simplexml')){
             $this->parseWithSimpleXml();
         } else {
+        	// Do we need parsing via xml_parser_create?
             $this->parseWithXML();
         }
         return array(
