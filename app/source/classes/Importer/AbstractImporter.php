@@ -8,7 +8,7 @@ use Postleaf\Post,
     Postleaf\User;
     
 abstract class AbstractImporter {
-    protected $_user, $_tags, $_content, $_media; // arrays
+    protected $_user, $_tags, $_content, $_media, $_post_tags; // arrays
     protected $_loadMediaFiles = false; // boolean
     protected $_fileToParse; // String
     
