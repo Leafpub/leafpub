@@ -27,7 +27,7 @@ class Ghost extends AbstractImporter {
         'slug' => 'slug',
         'html' => 'content',
         'image' => 'image',
-        'author' => 'author',
+        'author_id' => 'author',
         'meta_title' => 'meta_title',
         'meta_description' => 'meta_description',
         'page' => 'page',
@@ -55,44 +55,51 @@ class Ghost extends AbstractImporter {
         $pt = $data->db[0]->data->post_tags;
         
         foreach ($users as $u){
+            $u = get_object_vars($u);
             $user = array();
-            foreach($userKeys as $source => $target){
+            foreach($this->userKeys as $source => $target){
                 $user[$target] = $u[$source];
             }
-            $this->_users[] = $user;
+            $this->_user[] = $user;
         }
         
         foreach ($posts as $p){
+            $p = get_object_vars($p);
             $post = array();
-            foreach($postKeys as $source => $target){
+            foreach($this->postKeys as $source => $target){
                 $post[$target] = $p[$source];
             }
             $this->_posts[] = $post;
         }
         
         foreach($media as $m){
+            $m = get_object_vars($m);
             $medium = array();
-            foreach($mediaKeys as $source => $target){
+            foreach($this->mediaKeys as $source => $target){
                 $medium[$target] = $m[$source];
             }
             $this->_media[] = $medium;
         }
         
         foreach ($tags as $t){
+            $t = get_object_vars($t);
             $tag = array();
-            foreach($tagKeys as $source => $target){
+            foreach($this->tagKeys as $source => $target){
                 $tag[$target] = $t[$source];
             }
             $this->_tags[] = $tag;
         }
         
         foreach ($pt as $p_t){
+            $p_t = get_object_vars($p_t);
             $t_p = array();
-            foreach($ptKeys as $source => $target){
+            foreach($this->ptKeys as $source => $target){
                 $t_p[$target] = $p_t[$source];
             }
             $this->_post_tags[] = $tag;
         }
+        
+        var_dump($this->_user, $this->_post_tags, $this->_posts, $this->_tags);
     }
 }
 ?>
