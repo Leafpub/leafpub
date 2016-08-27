@@ -12,6 +12,7 @@ class XmlParser {
     private $media = array();
     private $post_tags = array();
     private $namespaces = array();
+    private $oldUrl;
     
     public function __construct($file){
         $this->file = $file;
@@ -30,7 +31,8 @@ class XmlParser {
             'categories' => $this->categories,
             'media' => $this->media,
             'posts' => $this->posts,
-            'post_tags' => $this->post_tags
+            'post_tags' => $this->post_tags,
+            'oldUrl' => $this->oldUrl
         );
     }
     
@@ -55,6 +57,9 @@ class XmlParser {
 		$parser = simplexml_import_dom( $dom );
 		unset( $dom );
         
+        $base_url = $parser->xpath('/rss/channel/wp:base_site_url');
+		$this->oldUrl = (string) trim($base_url[0]);
+		
         $this->namespaces = $parser->getDocNamespaces();
         
         // 1. authors/users
