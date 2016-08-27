@@ -60,7 +60,7 @@ class Ghost extends AbstractImporter {
             foreach($this->userKeys as $source => $target){
                 $user[$target] = $u[$source];
             }
-            $this->_user[] = $user;
+            $this->_user[$u['slug']] = $user;
         }
         
         foreach ($posts as $p){
@@ -69,7 +69,9 @@ class Ghost extends AbstractImporter {
             foreach($this->postKeys as $source => $target){
                 $post[$target] = $p[$source];
             }
-            $this->_posts[] = $post;
+            //$post['author'] = $this->_user[$p['author_id']]['slug'];
+            $this->filterContent($post['content']);
+            $this->_posts[$p['slug']] = $post;
         }
         
         foreach($media as $m){
@@ -87,7 +89,7 @@ class Ghost extends AbstractImporter {
             foreach($this->tagKeys as $source => $target){
                 $tag[$target] = $t[$source];
             }
-            $this->_tags[] = $tag;
+            $this->_tags[$t['slug']] = $tag;
         }
         
         foreach ($pt as $p_t){
@@ -99,7 +101,7 @@ class Ghost extends AbstractImporter {
             $this->_post_tags[] = $tag;
         }
         
-        var_dump($this->_user, $this->_post_tags, $this->_posts, $this->_tags);
+        //var_dump($this->_user, $this->_post_tags, $this->_posts, $this->_tags);
     }
 }
 ?>
