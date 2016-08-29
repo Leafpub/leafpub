@@ -653,7 +653,7 @@ var Editor;
                     href: options.href || '',
                     target: options.target || '',
                     title: options.title || '',
-                    rel: (options.href.indexOf(Postleaf.url('/')) > 0 && options.target) ? '' : 'noopener'
+                    rel: options.target ? 'noopener' : ''
                 });
             } else if(cmd === 'remove') {
                 editor.execCommand('unlink');
