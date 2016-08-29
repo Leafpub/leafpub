@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "830acc18cab4b18528ece580ad0db302",
-    "content-hash": "e592442b62cff5ebfcd6764a098fa11c",
+    "hash": "32722b255265379e22661d58e3e22616",
+    "content-hash": "7fa2133fb74eea52835d32d15d262ec3",
     "packages": [
         {
             "name": "abeautifulsite/simpleimage",
@@ -307,16 +307,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
             "require": {
@@ -344,6 +344,7 @@
                 }
             ],
             "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
             "keywords": [
                 "http",
                 "http-message",
@@ -352,7 +353,7 @@
                 "request",
                 "response"
             ],
-            "time": "2015-05-04 20:22:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "slim/slim",
@@ -426,16 +427,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.4.1",
+            "version": "4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "1fe6087b3b1194f5d4e1bd5e5d725262fe1fbbf0"
+                "reference": "351593db2412674e7be21db0d5f2e0c16bfe946d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/1fe6087b3b1194f5d4e1bd5e5d725262fe1fbbf0",
-                "reference": "1fe6087b3b1194f5d4e1bd5e5d725262fe1fbbf0",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/351593db2412674e7be21db0d5f2e0c16bfe946d",
+                "reference": "351593db2412674e7be21db0d5f2e0c16bfe946d",
                 "shasum": ""
             },
             "type": "component",
@@ -468,7 +469,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2016-07-26 09:51:16"
+            "time": "2016-08-25 13:51:28"
         },
         {
             "name": "zordius/lightncandy",
@@ -476,12 +477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "81ee3eb8e6c26295ae808e6895dc5e5747633628"
+                "reference": "df28163a3d64cad1b9b61a8ccd3a8042d89deb57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/81ee3eb8e6c26295ae808e6895dc5e5747633628",
-                "reference": "81ee3eb8e6c26295ae808e6895dc5e5747633628",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/df28163a3d64cad1b9b61a8ccd3a8042d89deb57",
+                "reference": "df28163a3d64cad1b9b61a8ccd3a8042d89deb57",
                 "shasum": ""
             },
             "require": {
@@ -491,6 +492,11 @@
                 "phpunit/phpunit": "4.0.17"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.0-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "LightnCandy\\": "src"
@@ -515,7 +521,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-07-18 06:51:41"
+            "time": "2016-08-24 10:18:47"
         }
     ],
     "packages-dev": [],
@@ -528,6 +534,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.5",
+        "ext-curl": "*",
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
