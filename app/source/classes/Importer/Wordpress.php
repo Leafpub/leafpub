@@ -51,7 +51,7 @@ class Wordpress extends AbstractImporter {
 		unset( $dom );
         
         $base_url = $parser->xpath('/rss/channel/wp:base_site_url');
-		$this->oldUrl = (string) trim($base_url[0]);
+		$this->_oldBlogUrl = (string) trim($base_url[0]);
 		
         $this->namespaces = $parser->getDocNamespaces();
         
@@ -125,9 +125,9 @@ class Wordpress extends AbstractImporter {
     private function handlePost($item){
         $post = array(
 		    'title' => (string) $item->title,
-		    'pub_date' => (string) $item->post_date
+		    'pub_date' => date('Y-m-d H:i:s', strtotime((string) $item->pubDate))
 		);
-
+		
 		$dc = $item->children('http://purl.org/dc/elements/1.1/');
 		$post['author'] = (string) $dc->creator; //Should we insert the author/user id here? $this->users[(string) $dc->creator]['id'];
 
@@ -136,7 +136,7 @@ class Wordpress extends AbstractImporter {
 			
 		$wp = $item->children($this->namespaces['wp']);
 		$post['id'] = (int) $wp->post_id;
-		$post['created'] = (string) $wp->post_date;
+		$post['created'] = (string) $wp->post_date; // In Post::add created will overwritten
 		$post['slug'] = (string) $wp->post_name;
 		
 		$post['status'] = (string) $wp->status == 'publish' ? 'published' : (string) $wp->status;
