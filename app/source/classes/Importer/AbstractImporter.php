@@ -41,8 +41,7 @@ abstract class AbstractImporter {
     // In this abstract class this function filters all img tags and sets the correct img src path
     // In the ImporterClasses this function could be extended to strip Wordpress shortcode tags
     protected function filterContent($content){
-        $filteredContent = strtr($content, array($this->_oldBlogUrl => '/'));
-        return $filteredContent;   
+        return str_replace($this->_oldBlogUrl, '/', $content);
     }
     
     // parseFile fills our protected arrays with data.
