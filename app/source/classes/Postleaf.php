@@ -226,35 +226,10 @@ class Postleaf {
         ];
     }
 
-    // Parses a date/time string. If an @ symbol is present, the date/time will be split and parsed
-    // separately which makes the format more flexible. If the date/time can't be parsed, the
-    // current time will be used instead. Outputs a date/time string in the specified format.
-    public static function parseDate($date, $format = '%Y-%m-%d %H:%M:%S') {
-        // Check for @
-        if(mb_strstr($date, '@')) {
-            // Parse date/time separately
-            $date = explode('@', $date);
-
-            // Parse date
-            $date[0] = strtotime($date[0]);
-            if(!$date[0]) $date[0] = time();
-
-            // Parse time
-            $date[1] = strtotime($date[1]);
-            if(!$date[1]) $date[1] = time();
-
-            // Get YYYY-MM-DD HH:MM:SS format
-            $date = date('Y-m-d ', $date[0]) . date('H:i:s', $date[1]);
-
-            // Convert to desired format
-            return self::strftime($format, strtotime($date));
-        } else {
-            // Parse date/time as one string
-            $parsed_date = strtotime($date);
-            if(!$parsed_date) $parsed_date = time();
-            // Convert to desired format
-            return self::strftime($format, $parsed_date);
-        }
+    // Parses a string and outputs the corresponding date in YYYY-MM-DD HH:MM:SS format. If a valid
+    // date/time can't be parsed, the current date/time will be used instead.
+    public static function parseDate($date) {
+        return date('Y-m-d H:i:s', strtotime($date) ?: time());
     }
 
     // Returns Postleaf's base path, optionally concatenating additional folders
