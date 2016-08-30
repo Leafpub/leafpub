@@ -652,7 +652,8 @@ var Editor;
                 editor.execCommand('mceInsertLink', false, {
                     href: options.href || '',
                     target: options.target || '',
-                    title: options.title || ''
+                    title: options.title || '',
+                    rel: options.target ? 'noopener' : ''
                 });
             } else if(cmd === 'remove') {
                 editor.execCommand('unlink');
