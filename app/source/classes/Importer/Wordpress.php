@@ -153,6 +153,7 @@ class Wordpress extends AbstractImporter {
 			if ( isset($att['nicename'] ))
 				if ($att['domain'] == 'post_tag'){
 					$this->_post_tags[(int) $wp->post_id][] = $this->tags[(string) $c]['id'];
+					$post['tags'][] = (string) $c;
 				} elseif ($att['domain'] == 'category'){
 					//Save the Cat ID.	
 				}
