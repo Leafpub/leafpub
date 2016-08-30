@@ -514,7 +514,7 @@ $(function() {
             title: titleEditor ? titleEditor.getContent() : null,
             content: contentEditor ? contentEditor.getContent() : null,
             slug: $('#slug').val() || Postleaf.slug(titleEditor.getContent()),
-            pub_date: $('#pub-date').val() + ' @ ' + $('#pub-time').val(),
+            pub_date: $('#pub-date').val() + ' ' + $('#pub-time').val(),
             image: $('#image').val(),
             tags: tags,
             tag_data: tagData,

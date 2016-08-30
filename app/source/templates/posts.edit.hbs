@@ -367,19 +367,13 @@
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label for="pub-date">{{L 'date'}}</label>
-                            <div class="inner-addon-group">
-                                <span class="inner-addon"><i class="fa fa-calendar-o"></i></span>
-                                <input class="form-control" type="text" name="pub-date" id="pub-date" value="{{date post.pub_date format="%d %b %Y"}}">
-                            </div>
+                            <input class="form-control" type="date" name="pub-date" id="pub-date" value="{{date post.pub_date format="%Y-%m-%d"}}" placeholder="{{date format="%Y-%m-%d"}}">
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label for="pub-time">{{L 'time'}}</label>
-                            <div class="inner-addon-group">
-                                <span class="inner-addon"><i class="fa fa-clock-o"></i></span>
-                                <input class="form-control" type="text" name="pub-time" id="pub-time" value="{{date post.pub_date format="%H:%M"}}">
-                            </div>
+                            <input class="form-control" type="time" name="pub-time" id="pub-time" value="{{date post.pub_date format="%H:%M"}}" placeholder="{{date format="%H:%M"}}">
                         </div>
                     </div>
                 </div>
