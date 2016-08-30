@@ -12,11 +12,6 @@ class Wordpress extends AbstractImporter {
             throw new \Exception(Language::term('Extension simplexml needs to be installed!'));
         }
         
-        foreach($this->_posts as $post){
-            $filteredContent = $this->filterContent($post['content']);
-            $post['content'] = $filteredContent;
-        }
-        
         return array(
             'user' => $this->_user,
             'posts' => $this->_posts,
@@ -52,7 +47,7 @@ class Wordpress extends AbstractImporter {
         
         $base_url = $parser->xpath('/rss/channel/wp:base_site_url');
 		$this->_oldBlogUrl = (string) trim($base_url[0]);
-		
+
         $this->namespaces = $parser->getDocNamespaces();
         
         // 1. authors/users
@@ -132,7 +127,7 @@ class Wordpress extends AbstractImporter {
 		$post['author'] = (string) $dc->creator; //Should we insert the author/user id here? $this->users[(string) $dc->creator]['id'];
 
 		$content = $item->children('http://purl.org/rss/1.0/modules/content/');
-		$post['content'] = (string) $content->encoded; // --> CONTENT FILTERING!
+		$post['content'] = $this->filterContent((string) $content->encoded); // --> CONTENT FILTERING!
 			
 		$wp = $item->children($this->namespaces['wp']);
 		$post['id'] = (int) $wp->post_id;
@@ -192,7 +187,7 @@ class Wordpress extends AbstractImporter {
     
     protected function filterContent($content){
         $filteredContent = parent::filterContent($content);
-
+		return strtr($filteredContent, array('/wp-content', 'content'));
     }
 }
 ?>
