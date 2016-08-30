@@ -52,7 +52,9 @@ abstract class AbstractImporter {
         $this->_tags;
         $this->_posts;
         $this->_post_tags;
-        //$this->_media;
+        if ($this->_loadMediaFiles){
+            //$this->_media;
+        }
     }
 }
 ?>
