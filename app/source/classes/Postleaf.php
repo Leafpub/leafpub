@@ -10,7 +10,7 @@ class Postleaf {
     // Properties
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected static $database, $language, $settings;
+    protected static $database, $language, $listeners, $settings;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Initialization method
@@ -69,6 +69,21 @@ class Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Dispatches an event
+    public static function dispatchEvent($event, $data = null) {
+        // Loop through all listeners
+        foreach((array) self::$listeners as $listener) {
+            // Look for a matching event
+            if($listener['event'] === $event) {
+                if(is_callable($listener['callback'])) {
+                    $result = $listener['callback']($data);
+                    // Prevent future events if the callback returns false
+                    if($result === false) break;
+                }
+            }
+        }
+    }
 
     // Returns the file extension of $filename (lowercase, without a dot)
     public static function fileExtension($filename) {
@@ -199,6 +214,51 @@ class Postleaf {
             Language::term('decimal_separator'),
             Language::term('thousands_separator')
         );
+    }
+
+    // Removes one or more event listeners
+    //
+    //  By event:     Postleaf::off('post.save')
+    //  By namespace: Postleaf::off('/namespace')
+    //  By both:      Postleaf::off('post.save/namespace')
+    //
+    public static function off($event) {
+        // Separate namespace from event
+        $options = explode('/', $event, 2);
+        $event = $options[0] ?: null;
+        $namespace = $options[1] ?: null;
+
+        // Loop through listeners
+        foreach(self::$listeners as $key => $value) {
+            if($event && $namespace) {
+                $off = $event === $value['event'] && $namespace === $value['namespace'];
+            } elseif($namespace) {
+                $off = $namespace === $value['namespace'];
+            } elseif($event) {
+                $off = $event === $value['event'];
+            }
+
+            if($off) {
+                unset(self::$listeners[$key]);
+            }
+        }
+    }
+
+    // Adds an event listener
+    //
+    //  No namespace:   Postleaf::on('post.save', $callback)
+    //  With namespace: Postleaf::on('post.save/namespace', $callback)
+    //
+    public static function on($event, $callback) {
+        // Separate namespace from event
+        $options = explode('/', $event, 2);
+
+        // Attach the listener
+        self::$listeners[] = [
+            'event' => $options[0],
+            'namespace' => $options[1] ?: null,
+            'callback' => $callback
+        ];
     }
 
     // Generates an array of pagination data
