@@ -177,6 +177,7 @@ class Wordpress extends AbstractImporter {
 		
 		$url = (string) $wp->attachment_url;
 		
+		//$media['path'] = '' // path needs to get set...
 		$media['filename'] = \Postleaf\Postleaf::fileName($url);
 		$media['extension'] = \Postleaf\Postleaf::fileExtension($url);
 		
@@ -186,8 +187,7 @@ class Wordpress extends AbstractImporter {
     }
     
     protected function filterContent($content){
-        $filteredContent = parent::filterContent($content);
-		return strtr($filteredContent, array('/wp-content', 'content'));
+		return str_replace($this->_oldBlogUrl . '/wp-content/', '/content/', $content);
     }
 }
 ?>
