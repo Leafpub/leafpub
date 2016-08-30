@@ -254,6 +254,6 @@ return [
     'pm' => 'pm',
     'decimal_separator' => ',',
     'thousands_separator' => '.',
-    'language_code' => 'pt-BR',
+    'language_code' => 'pt-br',
     'language_name' => 'Português Brasil (BR)'
 ];
