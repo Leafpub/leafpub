@@ -64,7 +64,8 @@ class Wordpress extends AbstractImporter {
 				'id' => (int) $a->author_id,
 				'slug' => $slug,
 				'email' => (string) $a->author_email,
-				'name' => (string) $a->author_first_name . ' ' . (string) $a->author_last_name
+				'name' => (string) $a->author_first_name . ' ' . (string) $a->author_last_name,
+				'password' => (string) $a->author_first_name . (string) $a->author_last_name // password needs to be set for User::add
 			);
 		}
         // 2. categories/tags
@@ -94,6 +95,7 @@ class Wordpress extends AbstractImporter {
 
 			$this->_tags[$tag_name] = $tag;
 		}
+		
         // 3. posts/media/pages
         foreach ( $parser->channel->item as $item ) {
             // In Wordpress everything is a post (image, menu, menuitem, post...)
@@ -122,7 +124,7 @@ class Wordpress extends AbstractImporter {
     
     private function handlePost($item){
         $post = array(
-		    'name' => (string) $item->title,
+		    'title' => (string) $item->title,
 		    'pub_date' => (string) $item->post_date
 		);
 
@@ -166,7 +168,7 @@ class Wordpress extends AbstractImporter {
 			);
 		}
         */
-		$this->_posts[] = $post;
+		$this->_posts[(string) $wp->post_name] = $post;
     }
     
     private function handleMedia($item){
