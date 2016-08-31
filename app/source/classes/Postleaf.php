@@ -27,7 +27,6 @@ class Postleaf {
                     // Database isn't configured, launch the installer
                     header('Location: ' . self::url('source/installer/'));
                     exit();
-                    break;
                 default:
                     $title = 'Database Error';
                     $message = 'Unable to connect to the database: ' . $e->getMessage();
