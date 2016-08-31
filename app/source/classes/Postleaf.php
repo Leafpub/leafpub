@@ -70,7 +70,7 @@ class Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Dispatches an event
-    public static function dispatchEvent($event, $data = null) {
+    public static function dispatchEvent($event, &$data = null) {
         // Run the callback for all listeners of this event
         foreach((array) self::$listeners[$event] as $listener) {
             if(is_callable($listener['callback'])) {
