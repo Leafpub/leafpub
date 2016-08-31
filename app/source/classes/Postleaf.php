@@ -252,11 +252,13 @@ class Postleaf {
     public static function on($event, $callback) {
         // Separate namespace from event
         $options = explode('/', $event, 2);
+        $event = $options[0];
+        $namespace = $options[1];
 
         // Attach the listener
         self::$listeners[] = [
-            'event' => $options[0],
-            'namespace' => $options[1] ?: null,
+            'event' => $event,
+            'namespace' => $namespace ?: null,
             'callback' => $callback
         ];
     }
