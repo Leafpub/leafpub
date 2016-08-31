@@ -72,15 +72,10 @@ class Postleaf {
 
     // Dispatches an event
     public static function dispatchEvent($event, $data = null) {
-        // Loop through all listeners
-        foreach((array) self::$listeners as $listener) {
-            // Look for a matching event
-            if($listener['event'] === $event) {
-                if(is_callable($listener['callback'])) {
-                    $result = $listener['callback']($data);
-                    // Prevent future events if the callback returns false
-                    if($result === false) break;
-                }
+        // Run the callback for all listeners of this event
+        foreach((array) self::$listeners[$event] as $listener) {
+            if(is_callable($listener['callback'])) {
+                $listener['callback']($data);
             }
         }
     }
@@ -224,23 +219,31 @@ class Postleaf {
     //
     public static function off($event) {
         // Separate namespace from event
-        $options = explode('/', $event, 2);
+        $options = explode('#', $event, 2);
         $event = $options[0] ?: null;
         $namespace = $options[1] ?: null;
 
-        // Loop through listeners
-        foreach(self::$listeners as $key => $value) {
-            if($event && $namespace) {
-                $off = $event === $value['event'] && $namespace === $value['namespace'];
-            } elseif($namespace) {
-                $off = $namespace === $value['namespace'];
-            } elseif($event) {
-                $off = $event === $value['event'];
+        if($event && $namespace) {
+            // Remove listeners for this event with this namespace
+            self::$listeners[$event] = array_filter(
+                (array) self::$listeners[$event],
+                function($listener) use($namespace) {
+                    return $listener['namespace'] !== $namespace;
+                }
+            );
+        } elseif($namespace) {
+            // Remove listeners for all events with this namespace
+            foreach((array) self::$listeners as $key => $value) {
+                self::$listeners[$key] = array_filter(
+                    (array) self::$listeners[$key],
+                    function($listener) use($namespace) {
+                        return $listener['namespace'] !== $namespace;
+                    }
+                );
             }
-
-            if($off) {
-                unset(self::$listeners[$key]);
-            }
+        } elseif($event) {
+            // Remove all listeners for this event
+            unset(self::$listeners[$event]);
         }
     }
 
@@ -251,13 +254,12 @@ class Postleaf {
     //
     public static function on($event, $callback) {
         // Separate namespace from event
-        $options = explode('/', $event, 2);
+        $options = explode('#', $event, 2);
         $event = $options[0];
         $namespace = $options[1];
 
         // Attach the listener
-        self::$listeners[] = [
-            'event' => $event,
+        self::$listeners[$event][] = [
             'namespace' => $namespace ?: null,
             'callback' => $callback
         ];
