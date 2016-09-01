@@ -2,9 +2,9 @@
 
 namespace Postleaf;
 
-use Postleaf\Mailer\Mail;
-use Postleaf\Mailer\MailerException;
-use Postleaf\Mailer\MailerInterface;
+use Postleaf\Mailer\Mail\Mail,
+    Postleaf\Mailer\MailerException,
+    Postleaf\Mailer\Bridge\MailerInterface;
 
 class Mailer extends Postleaf
 {
@@ -14,7 +14,7 @@ class Mailer extends Postleaf
     static private $mailers = [
         'default' => [
             'name' => 'php mailer',
-            'class' => 'Postleaf\Mailer\MailMailer'
+            'class' => 'Postleaf\Mailer\Bridge\MailMailer'
         ]
     ];
 
@@ -36,6 +36,10 @@ class Mailer extends Postleaf
         $mailerClass = self::getMailerClass(Setting::get('mailer'));
         /** @var MailerInterface $mailer */
         $mailer = new $mailerClass();
+
+        if (!($mailer instanceof MailerInterface)) {
+            throw new MailerException("Mailer {$mailerClass} must implement MailerInterface");
+        }
 
         return $mailer->send($mail);
     }

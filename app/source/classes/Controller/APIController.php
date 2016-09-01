@@ -23,7 +23,9 @@ use Postleaf\Admin,
     Postleaf\Upload,
     Postleaf\User,
     Postleaf\Mailer,
-    Postleaf\Mailer\Mail;
+    Postleaf\Mailer\Mail\MailFactory,
+    Postleaf\Mailer\Mail\AddressFactory,
+    Postleaf\Mailer\MailerException;
 
 class APIController extends Controller {
 
@@ -69,8 +71,8 @@ class APIController extends Controller {
 
         // Send the user an email
         try {
-            $mail = Mail::create([
-                'to' => Mailer\Address::create($user['email']),
+            $mail = MailFactory::create([
+                'to' => AddressFactory::create($user['email']),
                 'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
                 'message' =>
                     Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
@@ -79,10 +81,10 @@ class APIController extends Controller {
                     Language::term('to_reset_your_password_visit_this_address') . ' ' .
                     Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
                                '&token=' . rawurlencode($token)),
-                'from' => Mailer\Address::create('postleaf@' . $_SERVER['HTTP_HOST'], 'Postleaf')
+                'from' => AddressFactory::create('postleaf@' . $_SERVER['HTTP_HOST'], 'Postleaf')
             ]);
             Mailer::sendEmail($mail);
-        } catch (Mailer\MailerException $error) {
+        } catch (MailerException $error) {
             return $response->withJson([
                 'success' => false,
                 'message' => $error->getMessage()

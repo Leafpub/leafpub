@@ -1,9 +1,10 @@
 <?php
 
-namespace Postleaf\Mailer;
+namespace Postleaf\Mailer\Bridge;
 
-interface MailerInterface
-{
+use Postleaf\Mailer\Mail\Mail;
+
+interface MailerInterface {
 
     /**
      * @param Mail $mail
