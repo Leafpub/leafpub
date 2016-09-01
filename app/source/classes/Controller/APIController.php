@@ -21,7 +21,9 @@ use Postleaf\Admin,
     Postleaf\Tag,
     Postleaf\Theme,
     Postleaf\Upload,
-    Postleaf\User;
+    Postleaf\User,
+    Postleaf\Mailer,
+    Postleaf\Mailer\Mail;
 
 class APIController extends Controller {
 
@@ -66,18 +68,27 @@ class APIController extends Controller {
         ]);
 
         // Send the user an email
-        Postleaf::sendEmail([
-            'to' => $user['email'],
-            'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
-            'message' =>
-                Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
-                $user['name'] . ' — ' . $user['slug'] . "\n\n" .
-                Language::term('if_this_was_sent_in_error_you_can_ignore_this_message') . "\n\n" .
-                Language::term('to_reset_your_password_visit_this_address') . ' ' .
-                Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
-                '&token=' . rawurlencode($token)),
-            'from' => 'Postleaf <postleaf@' . $_SERVER['HTTP_HOST'] . '>'
-        ]);
+        try {
+            $mail = Mail::create([
+                'to' => Mailer\Address::create($user['email']),
+                'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
+                'message' =>
+                    Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
+                    $user['name'] . ' — ' . $user['slug'] . "\n\n" .
+                    Language::term('if_this_was_sent_in_error_you_can_ignore_this_message') . "\n\n" .
+                    Language::term('to_reset_your_password_visit_this_address') . ' ' .
+                    Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
+                               '&token=' . rawurlencode($token)),
+                'from' => Mailer\Address::create('postleaf@' . $_SERVER['HTTP_HOST'], 'Postleaf')
+            ]);
+            Mailer::sendEmail($mail);
+        } catch (Mailer\MailerException $error) {
+            return $response->withJson([
+                'success' => false,
+                'message' => $error->getMessage()
+            ]);
+        }
+
 
         // Send response
         return $response->withJson([
@@ -743,6 +754,7 @@ class APIController extends Controller {
             'default_content' => $params['default-content'],
             'language' => $params['language'],
             'timezone' => $params['timezone'],
+            'mailer' => $params['mailer'],
             'head_code' => $params['head-code'],
             'foot_code' => $params['foot-code'],
             'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off'

@@ -21,7 +21,8 @@ use Postleaf\Admin,
     Postleaf\Tag,
     Postleaf\Theme,
     Postleaf\Upload,
-    Postleaf\User;
+    Postleaf\User,
+    Postleaf\Mailer;
 
 class AdminController extends Controller {
 
@@ -372,6 +373,15 @@ class AdminController extends Controller {
             ];
         }
 
+        // Get mailers
+        $mailers = [];
+        foreach (Mailer::getMailers() as $mailerName => $mailer) {
+            $mailers[] = [
+                'tag'  => $mailerName,
+                'name' => $mailer['name'],
+            ];
+        }
+
         $html = Admin::render('settings', [
             'title' => Language::term('settings'),
             'scripts' => 'settings.min.js',
@@ -380,6 +390,7 @@ class AdminController extends Controller {
             'backups' => Backup::getAll(),
             'languages' => Language::getAll(),
             'timezones' => $timezones,
+            'mailers' => $mailers,
             'themes' => Theme::getAll()
         ]);
 

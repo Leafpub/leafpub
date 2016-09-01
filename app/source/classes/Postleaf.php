@@ -328,16 +328,6 @@ class Postleaf {
         return preg_replace('/-+/', '-', $filename);
     }
 
-    // Sends an email (currently a wrapper for mail(), but can be extended later)
-    public static function sendEmail($options) {
-        return mail(
-            $options['to'],
-            $options['subject'],
-            $options['message'],
-            'From: ' . $options['from']
-        );
-    }
-
     // Translates any string into a Postleaf slug. This function may return an empty string if no
     // valid characters are passed in.
     public static function slug($string) {
