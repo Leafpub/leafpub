@@ -169,6 +169,17 @@ class Postleaf {
         ]);
     }
 
+    // Returns true if the website is being served over HTTPS
+    public static function isSsl() {
+        // Some servers (e.g. Cloud9) don't populate $_SERVER[HTTPS], so we have to check the value
+        // of $_SERVER[REQUEST_SCHEME] instead.
+        if($_SERVER['REQUEST_SCHEME'] === 'https') return true;
+
+        // Other servers will populate $_SERVER[HTTPS] when SSL is on. IIS is unique because the
+        // value will be 'off' when SSL is not enabled.
+        return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    }
+
     // Returns true if $email is a valid email address
     public static function isValidEmail($email) {
         return !!filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -461,6 +472,9 @@ class Postleaf {
 
     // Returns Postleaf's base URL, optionally concatenating additional folders
     public static function url() {
+        // Determine protocol
+        $protocol = self::isSsl() ? 'https' : 'http';
+
         // Get the hostname
         $hostname = $_SERVER['HTTP_HOST'];
 
@@ -487,7 +501,7 @@ class Postleaf {
         $path = ltrim($path, '/');
 
         // Generate the URL
-        return "//$hostname/$path";
+        return "$protocol://$hostname/$path";
     }
 
     // Convert a UTC date string to local time
