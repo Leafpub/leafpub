@@ -95,7 +95,17 @@ class Post extends Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Adds a post
-    public static function add($slug, $properties) {
+    public static function add($slug, $post) {
+        // Dispatch post.add
+        $event_data = [
+            'slug' => $slug,
+            'post' => $post
+        ];
+        Postleaf::dispatchEvent('post.add', $event_data);
+
+        // Accept event changes
+        $post = $event_data['post'];
+
         // Enforce slug syntax
         $slug = self::slug($slug);
 
@@ -110,35 +120,35 @@ class Post extends Postleaf {
         }
 
         // Parse publish date format and convert to UTC
-        $properties['pub_date'] = self::localToUtc(self::parseDate($properties['pub_date']));
+        $post['pub_date'] = self::localToUtc(self::parseDate($post['pub_date']));
 
         // Translate author slug to ID
-        $properties['author'] = User::getId($properties['author']);
-        if(!$properties['author']) {
+        $post['author'] = User::getId($post['author']);
+        if(!$post['author']) {
             throw new \Exception('Invalid user.', self::INVALID_USER);
         }
 
         // Empty title defaults to settings.default_title
-        if(empty($properties['title'])) {
-            $properties['title'] = Setting::get('default_title');
+        if(empty($post['title'])) {
+            $post['title'] = Setting::get('default_title');
         }
 
         // Empty content defaults to settings.default_content
-        if(empty($properties['content'])) {
-            $properties['content'] = Setting::get('default_content');
+        if(empty($post['content'])) {
+            $post['content'] = Setting::get('default_content');
         }
 
         // Don't allow null properties
-        $properties['image'] = (string) $properties['image'];
-        $properties['meta_title'] = (string) $properties['meta_title'];
-        $properties['meta_description'] = (string) $properties['meta_description'];
+        $post['image'] = (string) $post['image'];
+        $post['meta_title'] = (string) $post['meta_title'];
+        $post['meta_description'] = (string) $post['meta_description'];
 
         // Status must be `published` or `draft`
-        if($properties['status'] !== 'draft') $properties['status'] = 'published';
+        if($post['status'] !== 'draft') $post['status'] = 'published';
 
         // Page, featured, and sticky must be 1 or 0
         foreach(['page', 'featured', 'sticky'] as $key) {
-            $properties[$key] = filter_var($properties[$key], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+            $post[$key] = filter_var($post[$key], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
         try {
@@ -160,17 +170,17 @@ class Post extends Postleaf {
                     sticky = :sticky
             ');
             $st->bindParam(':slug', $slug);
-            $st->bindParam(':pub_date', $properties['pub_date']);
-            $st->bindParam(':author', $properties['author']);
-            $st->bindParam(':title', $properties['title']);
-            $st->bindParam(':content', $properties['content']);
-            $st->bindParam(':image', $properties['image']);
-            $st->bindParam(':meta_title', $properties['meta_title']);
-            $st->bindParam(':meta_description', $properties['meta_description']);
-            $st->bindParam(':status', $properties['status']);
-            $st->bindParam(':page', $properties['page']);
-            $st->bindParam(':featured', $properties['featured']);
-            $st->bindParam(':sticky', $properties['sticky']);
+            $st->bindParam(':pub_date', $post['pub_date']);
+            $st->bindParam(':author', $post['author']);
+            $st->bindParam(':title', $post['title']);
+            $st->bindParam(':content', $post['content']);
+            $st->bindParam(':image', $post['image']);
+            $st->bindParam(':meta_title', $post['meta_title']);
+            $st->bindParam(':meta_description', $post['meta_description']);
+            $st->bindParam(':status', $post['status']);
+            $st->bindParam(':page', $post['page']);
+            $st->bindParam(':featured', $post['featured']);
+            $st->bindParam(':sticky', $post['sticky']);
             $st->execute();
             $post_id = (int) self::$database->lastInsertId();
             if($post_id <= 0) return false;
@@ -179,10 +189,17 @@ class Post extends Postleaf {
         }
 
         // Set post tags
-        self::setTags($post_id, $properties['tags']);
+        self::setTags($post_id, $post['tags']);
 
         // Create the initial revision
         History::add($slug, true);
+
+        // Dispatch post.added
+        $event_data = [
+            'slug' => $slug,
+            'post' => $post
+        ];
+        Postleaf::dispatchEvent('post.added', $event_data);
 
         return $post_id;
     }
@@ -246,6 +263,12 @@ class Post extends Postleaf {
 
     // Deletes a post
     public static function delete($slug) {
+        // Dispatch post.delete
+        $event_data = [
+            'slug' => $slug
+        ];
+        Postleaf::dispatchEvent('post.delete', $event_data);
+
         // If this post is the custom homepage, update settings
         if($slug === Setting::get('homepage')) {
             Setting::update('homepage', '');
@@ -268,10 +291,18 @@ class Post extends Postleaf {
             $st = self::$database->prepare('DELETE FROM __posts WHERE slug = :slug');
             $st->bindParam(':slug', $slug);
             $st->execute();
-            return $st->rowCount() > 0;
+            if($st->rowCount() === 0) return false;
         } catch(\PDOException $e) {
             return false;
         }
+
+        // Dispatch post.deleted
+        $event_data = [
+            'slug' => $slug
+        ];
+        Postleaf::dispatchEvent('post.deleted', $event_data);
+
+        return true;
     }
 
     // Tells whether a post exists
@@ -288,6 +319,13 @@ class Post extends Postleaf {
 
     // Gets a single post. Returns an array on success, false if not found.
     public static function get($slug) {
+        // Dispatch post.retrieve
+        $event_data = [
+            'slug' => $slug
+        ];
+        Postleaf::dispatchEvent('post.retrieve', $event_data);
+
+        // Retrieve the post
         try {
             $st = self::$database->prepare('
                 SELECT
@@ -308,6 +346,12 @@ class Post extends Postleaf {
 
         // Normalize fields
         $post = self::normalize($post);
+
+        // Dispatch post.retrieved
+        $event_data = [
+            'post' => $post
+        ];
+        Postleaf::dispatchEvent('post.retrieved', $event_data);
 
         return $post;
     }
@@ -404,6 +448,15 @@ class Post extends Postleaf {
     // If a query is specified, this method will perform a full text search with basic scoring, very
     // similar to the solution recommended here: http://stackoverflow.com/a/600915/567486
     public static function getMany($options = null, &$pagination = null) {
+        // Dispatch posts.retrieve
+        $event_data = [
+            'options' => $options
+        ];
+        Postleaf::dispatchEvent('posts.retrieve', $event_data);
+
+        // Accept event changes
+        $options = $event_data['options'];
+
         // Merge options with defaults
         $options = array_merge([
             'author' => null,
@@ -536,6 +589,12 @@ class Post extends Postleaf {
         foreach($posts as $key => $value) {
             $posts[$key] = self::normalize($value);
         }
+
+        // Dispatch posts.retrieved
+        $event_data = [
+            'posts' => $posts
+        ];
+        Postleaf::dispatchEvent('posts.retrieved', $event_data);
 
         return $posts;
     }
@@ -672,6 +731,17 @@ class Post extends Postleaf {
             $post = self::get($slug_or_post);
             if(!$post) return false;
         }
+
+        // Dispatch posts.render
+        $event_data = [
+            'post' => $post,
+            'options' => $options
+        ];
+        Postleaf::dispatchEvent('posts.render', $event_data);
+
+        // Accept event changes
+        $post = $event_data['post'];
+        $options = $event_data['options'];
 
         // Get the author
         $author = User::get($post['author']);
@@ -819,6 +889,14 @@ class Post extends Postleaf {
             );
         }
 
+        // Dispatch posts.rendered
+        $event_data = [
+            'post' => $post,
+            'options' => $options,
+            'html' => $html
+        ];
+        Postleaf::dispatchEvent('posts.rendered', $event_data);
+
         return $html;
     }
 
@@ -832,6 +910,16 @@ class Post extends Postleaf {
 
         // Merge options
         $post = array_merge($post, $properties);
+
+        // Dispatch post.update
+        $event_data = [
+            'slug' => $slug,
+            'post' => $post
+        ];
+        Postleaf::dispatchEvent('post.update', $event_data);
+
+        // Accept event changes
+        $post = $event_data['post'];
 
         // Parse publish date format and convert to UTC
         $post['pub_date'] = self::localToUtc(self::parseDate($post['pub_date']));
@@ -927,6 +1015,13 @@ class Post extends Postleaf {
 
         // Create a revision
         History::add($post['slug']);
+
+        // Dispatch post.updated
+        $event_data = [
+            'slug' => $slug,
+            'properties' => $properties
+        ];
+        Postleaf::dispatchEvent('post.updated', $event_data);
 
         return true;
     }

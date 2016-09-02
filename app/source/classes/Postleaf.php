@@ -10,7 +10,7 @@ class Postleaf {
     // Properties
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected static $database, $language, $settings;
+    protected static $database, $language, $listeners, $settings;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Initialization method
@@ -27,7 +27,6 @@ class Postleaf {
                     // Database isn't configured, launch the installer
                     header('Location: ' . self::url('source/installer/'));
                     exit();
-                    break;
                 default:
                     $title = 'Database Error';
                     $message = 'Unable to connect to the database: ' . $e->getMessage();
@@ -69,6 +68,16 @@ class Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Dispatches an event
+    public static function dispatchEvent($event, &$data = null) {
+        // Run the callback for all listeners of this event
+        foreach((array) self::$listeners[$event] as $listener) {
+            if(is_callable($listener['callback'])) {
+                $listener['callback']($data);
+            }
+        }
+    }
 
     // Returns the file extension of $filename (lowercase, without a dot)
     public static function fileExtension($filename) {
@@ -160,6 +169,17 @@ class Postleaf {
         ]);
     }
 
+    // Returns true if the website is being served over HTTPS
+    public static function isSsl() {
+        // Some servers (e.g. Cloud9) don't populate $_SERVER[HTTPS], so we have to check the value
+        // of $_SERVER[REQUEST_SCHEME] instead.
+        if($_SERVER['REQUEST_SCHEME'] === 'https') return true;
+
+        // Other servers will populate $_SERVER[HTTPS] when SSL is on. IIS is unique because the
+        // value will be 'off' when SSL is not enabled.
+        return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    }
+
     // Returns true if $email is a valid email address
     public static function isValidEmail($email) {
         return !!filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -199,6 +219,60 @@ class Postleaf {
             Language::term('decimal_separator'),
             Language::term('thousands_separator')
         );
+    }
+
+    // Removes one or more event listeners
+    //
+    //  By event:     Postleaf::off('post.save')
+    //  By namespace: Postleaf::off('/namespace')
+    //  By both:      Postleaf::off('post.save/namespace')
+    //
+    public static function off($event) {
+        // Separate namespace from event
+        $options = explode('#', $event, 2);
+        $event = $options[0] ?: null;
+        $namespace = $options[1] ?: null;
+
+        if($event && $namespace) {
+            // Remove listeners for this event with this namespace
+            self::$listeners[$event] = array_filter(
+                (array) self::$listeners[$event],
+                function($listener) use($namespace) {
+                    return $listener['namespace'] !== $namespace;
+                }
+            );
+        } elseif($namespace) {
+            // Remove listeners for all events with this namespace
+            foreach((array) self::$listeners as $key => $value) {
+                self::$listeners[$key] = array_filter(
+                    (array) self::$listeners[$key],
+                    function($listener) use($namespace) {
+                        return $listener['namespace'] !== $namespace;
+                    }
+                );
+            }
+        } elseif($event) {
+            // Remove all listeners for this event
+            unset(self::$listeners[$event]);
+        }
+    }
+
+    // Adds an event listener
+    //
+    //  No namespace:   Postleaf::on('post.save', $callback)
+    //  With namespace: Postleaf::on('post.save/namespace', $callback)
+    //
+    public static function on($event, $callback) {
+        // Separate namespace from event
+        $options = explode('#', $event, 2);
+        $event = $options[0];
+        $namespace = $options[1];
+
+        // Attach the listener
+        self::$listeners[$event][] = [
+            'namespace' => $namespace ?: null,
+            'callback' => $callback
+        ];
     }
 
     // Generates an array of pagination data
@@ -398,6 +472,9 @@ class Postleaf {
 
     // Returns Postleaf's base URL, optionally concatenating additional folders
     public static function url() {
+        // Determine protocol
+        $protocol = self::isSsl() ? 'https' : 'http';
+
         // Get the hostname
         $hostname = $_SERVER['HTTP_HOST'];
 
@@ -424,7 +501,7 @@ class Postleaf {
         $path = ltrim($path, '/');
 
         // Generate the URL
-        return "//$hostname/$path";
+        return "$protocol://$hostname/$path";
     }
 
     // Convert a UTC date string to local time
