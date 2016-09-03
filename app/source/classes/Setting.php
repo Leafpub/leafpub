@@ -79,6 +79,11 @@ class Setting extends Postleaf {
         ];
         Postleaf::dispatchEvent('setting.update', $event_data);
         
+        // Should it be possible to edit the settings via an event?
+        /*
+        $name = $event_data['name'];
+        $value = $event_data['value'];
+        */
         // Update the database
         try {
             $st = self::$database->prepare('
