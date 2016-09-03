@@ -15,7 +15,7 @@ class Setting extends Postleaf {
 
     // Adds a setting
     public static function add($name, $value) {
-       // We're firing no setting.add event here.
+       // We don't fire a setting.add event here.
        
        return self::update($name, $value);
     }
