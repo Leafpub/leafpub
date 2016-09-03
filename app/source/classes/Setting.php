@@ -15,7 +15,9 @@ class Setting extends Postleaf {
 
     // Adds a setting
     public static function add($name, $value) {
-        return self::update($name, $value);
+       // We're firing no setting.add event here.
+       
+       return self::update($name, $value);
     }
 
     // Gets a single setting
@@ -30,6 +32,12 @@ class Setting extends Postleaf {
 
     // Delete a setting
     public static function delete($name) {
+        // Dispatch setting.delete
+        $event_data = [
+            'name' => $name
+        ];
+        Postleaf::dispatchEvent('setting.delete', $event_data);
+        
         // Delete from the database
         try {
             $st = self::$database->prepare('DELETE FROM __settings WHERE name = :name');
@@ -41,6 +49,12 @@ class Setting extends Postleaf {
 
         unset(self::$settings[$name]);
 
+        // Dispatch setting.delete
+        $event_data = [
+            'name' => $name
+        ];
+        Postleaf::dispatchEvent('setting.deleted', $event_data);
+        
         return true;
     }
 
@@ -58,6 +72,13 @@ class Setting extends Postleaf {
 
     // Update a setting
     public static function update($name, $value) {
+        // Dispatch post.update
+        $event_data = [
+            'name' => $name,
+            'value' => $value
+        ];
+        Postleaf::dispatchEvent('setting.update', $event_data);
+        
         // Update the database
         try {
             $st = self::$database->prepare('
@@ -72,7 +93,14 @@ class Setting extends Postleaf {
         }
         // Update cache
         self::$settings[$name] = $value;
-
+        
+        // Dispatch post.update
+        $event_data = [
+            'name' => $name,
+            'value' => $value
+        ];
+        Postleaf::dispatchEvent('setting.updated', $event_data);
+        
         return true;
     }
 
