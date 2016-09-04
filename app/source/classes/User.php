@@ -51,12 +51,12 @@ class User extends Postleaf {
         // Dispatch user.add
         $event_data = [
             'slug' => $slug,
-            'properties' => $properties
+            'user' => $properties
         ];
         Postleaf::dispatchEvent('user.add', $event_data);
 
         // Accept event changes
-        $properties = $event_data['properties'];
+        $user = $event_data['user'];
         
         // Enforce slug syntax
         $slug = self::slug($slug);
@@ -72,20 +72,20 @@ class User extends Postleaf {
         }
 
         // Must have a name
-        if(!mb_strlen($properties['name'])) {
+        if(!mb_strlen($user['name'])) {
             throw new Exception('No name specified', self::INVALID_NAME);
         }
 
         // Must have a valid email address
-        if(!self::isValidEmail($properties['email'])) {
+        if(!self::isValidEmail($user['email'])) {
             throw new Exception(
-                'Invalid email address: ' . $properties['email'],
+                'Invalid email address: ' . $user['email'],
                 self::INVALID_EMAIL
             );
         }
 
         // Must have a long enough password
-        if(mb_strlen($properties['password']) < Setting::get('password_min_length')) {
+        if(mb_strlen($user['password']) < Setting::get('password_min_length')) {
             throw new Exception(
                 'Passwords must be at least ' . Setting::get('password_min_length') . ' characters long',
                 self::PASSWORD_TOO_SHORT
@@ -93,7 +93,7 @@ class User extends Postleaf {
         }
 
         // Cannot create an owner if one already exists
-        if($properties['role'] === 'owner' && self::getOwner()) {
+        if($user['role'] === 'owner' && self::getOwner()) {
             throw new Exception(
                 'The owner role cannot be revoked or reassigned',
                 self::CANNOT_CHANGE_OWNER
@@ -101,25 +101,25 @@ class User extends Postleaf {
         }
 
         // Don't allow null properties
-        $properties['reset_token'] = (string) $properties['reset_token'];
-        $properties['bio'] = (string) $properties['bio'];
-        $properties['cover'] = (string) $properties['cover'];
-        $properties['avatar'] = (string) $properties['avatar'];
-        $properties['twitter'] = (string) $properties['twitter'];
-        $properties['location'] = (string) $properties['location'];
-        $properties['website'] = (string) $properties['website'];
+        $user['reset_token'] = (string) $user['reset_token'];
+        $user['bio'] = (string) $user['bio'];
+        $user['cover'] = (string) $user['cover'];
+        $user['avatar'] = (string) $user['avatar'];
+        $user['twitter'] = (string) $user['twitter'];
+        $user['location'] = (string) $user['location'];
+        $user['website'] = (string) $user['website'];
 
         // Remove @ from Twitter handle
-        $properties['twitter'] = preg_replace('/@/', '', $properties['twitter']);
+        $user['twitter'] = preg_replace('/@/', '', $user['twitter']);
 
         // Role must be owner, admin, or editor
-        if(!in_array($properties['role'], ['owner', 'admin', 'editor', 'author'])) {
-            $properties['role'] = 'author';
+        if(!in_array($user['role'], ['owner', 'admin', 'editor', 'author'])) {
+            $user['role'] = 'author';
         }
 
         // Hash the password
-        $properties['password'] = password_hash($properties['password'], PASSWORD_DEFAULT);
-        if($properties['password'] === false) {
+        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+        if($user['password'] === false) {
             throw new Exception('Invalid password', self::INVALID_PASSWORD);
         }
 
@@ -142,17 +142,17 @@ class User extends Postleaf {
                     website = :website
             ');
             $st->bindParam(':slug', $slug);
-            $st->bindParam(':name', $properties['name']);
-            $st->bindParam(':email', $properties['email']);
-            $st->bindParam(':password', $properties['password']);
-            $st->bindParam(':reset_token', $properties['reset_token']);
-            $st->bindParam(':role', $properties['role']);
-            $st->bindParam(':bio', $properties['bio']);
-            $st->bindParam(':cover', $properties['cover']);
-            $st->bindParam(':avatar', $properties['avatar']);
-            $st->bindParam(':twitter', $properties['twitter']);
-            $st->bindParam(':location', $properties['location']);
-            $st->bindParam(':website', $properties['website']);
+            $st->bindParam(':name', $user['name']);
+            $st->bindParam(':email', $user['email']);
+            $st->bindParam(':password', $user['password']);
+            $st->bindParam(':reset_token', $user['reset_token']);
+            $st->bindParam(':role', $user['role']);
+            $st->bindParam(':bio', $user['bio']);
+            $st->bindParam(':cover', $user['cover']);
+            $st->bindParam(':avatar', $user['avatar']);
+            $st->bindParam(':twitter', $user['twitter']);
+            $st->bindParam(':location', $user['location']);
+            $st->bindParam(':website', $user['website']);
             $st->execute();
             $success = ($st->rowCount() > 0);
         } catch(PDOException $e) {
@@ -162,7 +162,7 @@ class User extends Postleaf {
         // Dispatch user.added
         $event_data = [
             'slug' => $slug,
-            'properties' => $properties
+            'user' => $user
         ];
         Postleaf::dispatchEvent('user.added', $event_data);
         
@@ -551,12 +551,12 @@ class User extends Postleaf {
          // Dispatch post.update
         $event_data = [
             'slug' => $slug,
-            'properties' => $properties
+            'user' => $properties
         ];
         Postleaf::dispatchEvent('user.update', $event_data);
 
         // Accept event changes
-        $properties = $event_data['properties'];
+        $properties = $event_data['user'];
         
         // The owner role cannot be revoked or reassigned
         if(
