@@ -77,13 +77,24 @@ class Session extends Postleaf {
 
     // Logs the user in and sets the token cookie
     public static function login($username, $password) {
+        // Dispatch session.login
+        $event_data = [
+            'user' => $username,
+        ];
+        Postleaf::dispatchEvent('session.login', $event_data);
+        
         if(User::verifyPassword($username, $password)) {
             // Store user data
             self::$user = User::get($username);
 
             // Create the token
             self::createJWT($username);
-
+            // Dispatch session.loggedin
+            $event_data = [
+                'user' => self::$username,
+            ];
+            Postleaf::dispatchEvent('session.loggedin', $event_data);
+        
             return true;
         } else {
             return false;
@@ -92,6 +103,12 @@ class Session extends Postleaf {
 
     // Logs the user out and destroys the token cookie
     public static function logout() {
+        // Dispatch session.logout
+        $event_data = [
+            'user' => self::$username,
+        ];
+        Postleaf::dispatchEvent('session.logout', $event_data);
+        
         self::$user = null;
         self::destroyJWT();
         return true;
