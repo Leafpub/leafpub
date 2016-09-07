@@ -96,16 +96,6 @@ class Post extends Postleaf {
 
     // Adds a post
     public static function add($slug, $post) {
-        // Dispatch post.add
-        $event_data = [
-            'slug' => $slug,
-            'post' => $post
-        ];
-        Postleaf::dispatchEvent('post.add', $event_data);
-
-        // Accept event changes
-        $post = $event_data['post'];
-
         // Enforce slug syntax
         $slug = self::slug($slug);
 
@@ -194,13 +184,6 @@ class Post extends Postleaf {
         // Create the initial revision
         History::add($slug, true);
 
-        // Dispatch post.added
-        $event_data = [
-            'slug' => $slug,
-            'post' => $post
-        ];
-        Postleaf::dispatchEvent('post.added', $event_data);
-
         return $post_id;
     }
 
@@ -263,12 +246,6 @@ class Post extends Postleaf {
 
     // Deletes a post
     public static function delete($slug) {
-        // Dispatch post.delete
-        $event_data = [
-            'slug' => $slug
-        ];
-        Postleaf::dispatchEvent('post.delete', $event_data);
-
         // If this post is the custom homepage, update settings
         if($slug === Setting::get('homepage')) {
             Setting::update('homepage', '');
@@ -296,12 +273,6 @@ class Post extends Postleaf {
             return false;
         }
 
-        // Dispatch post.deleted
-        $event_data = [
-            'slug' => $slug
-        ];
-        Postleaf::dispatchEvent('post.deleted', $event_data);
-
         return true;
     }
 
@@ -319,12 +290,6 @@ class Post extends Postleaf {
 
     // Gets a single post. Returns an array on success, false if not found.
     public static function get($slug) {
-        // Dispatch post.retrieve
-        $event_data = [
-            'slug' => $slug
-        ];
-        Postleaf::dispatchEvent('post.retrieve', $event_data);
-
         // Retrieve the post
         try {
             $st = self::$database->prepare('
@@ -346,12 +311,6 @@ class Post extends Postleaf {
 
         // Normalize fields
         $post = self::normalize($post);
-
-        // Dispatch post.retrieved
-        $event_data = [
-            'post' => $post
-        ];
-        Postleaf::dispatchEvent('post.retrieved', $event_data);
 
         return $post;
     }
@@ -448,15 +407,6 @@ class Post extends Postleaf {
     // If a query is specified, this method will perform a full text search with basic scoring, very
     // similar to the solution recommended here: http://stackoverflow.com/a/600915/567486
     public static function getMany($options = null, &$pagination = null) {
-        // Dispatch posts.retrieve
-        $event_data = [
-            'options' => $options
-        ];
-        Postleaf::dispatchEvent('posts.retrieve', $event_data);
-
-        // Accept event changes
-        $options = $event_data['options'];
-
         // Merge options with defaults
         $options = array_merge([
             'author' => null,
@@ -589,12 +539,6 @@ class Post extends Postleaf {
         foreach($posts as $key => $value) {
             $posts[$key] = self::normalize($value);
         }
-
-        // Dispatch posts.retrieved
-        $event_data = [
-            'posts' => $posts
-        ];
-        Postleaf::dispatchEvent('posts.retrieved', $event_data);
 
         return $posts;
     }
@@ -731,17 +675,6 @@ class Post extends Postleaf {
             $post = self::get($slug_or_post);
             if(!$post) return false;
         }
-
-        // Dispatch posts.render
-        $event_data = [
-            'post' => $post,
-            'options' => $options
-        ];
-        Postleaf::dispatchEvent('posts.render', $event_data);
-
-        // Accept event changes
-        $post = $event_data['post'];
-        $options = $event_data['options'];
 
         // Get the author
         $author = User::get($post['author']);
@@ -889,14 +822,6 @@ class Post extends Postleaf {
             );
         }
 
-        // Dispatch posts.rendered
-        $event_data = [
-            'post' => $post,
-            'options' => $options,
-            'html' => $html
-        ];
-        Postleaf::dispatchEvent('posts.rendered', $event_data);
-
         return $html;
     }
 
@@ -910,16 +835,6 @@ class Post extends Postleaf {
 
         // Merge options
         $post = array_merge($post, $properties);
-
-        // Dispatch post.update
-        $event_data = [
-            'slug' => $slug,
-            'post' => $post
-        ];
-        Postleaf::dispatchEvent('post.update', $event_data);
-
-        // Accept event changes
-        $post = $event_data['post'];
 
         // Parse publish date format and convert to UTC
         $post['pub_date'] = self::localToUtc(self::parseDate($post['pub_date']));
@@ -1015,13 +930,6 @@ class Post extends Postleaf {
 
         // Create a revision
         History::add($post['slug']);
-
-        // Dispatch post.updated
-        $event_data = [
-            'slug' => $slug,
-            'properties' => $properties
-        ];
-        Postleaf::dispatchEvent('post.updated', $event_data);
 
         return true;
     }
