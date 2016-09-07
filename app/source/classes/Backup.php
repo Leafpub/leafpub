@@ -4,6 +4,10 @@
 //
 namespace Postleaf;
 
+/**
+ * Class Backup
+ * @package Postleaf
+ */
 class Backup extends Postleaf {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +29,12 @@ class Backup extends Postleaf {
     // Private methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Fetch a database table and convert it to JSON
+    /**
+     * Fetch a database table and convert it to JSON
+     * @param $table
+     * @return bool
+     * @throws \PDOException
+     */
     private static function dbToJson($table) {
         try {
             $st = self::$database->prepare("SELECT * FROM __$table");
@@ -38,12 +47,21 @@ class Backup extends Postleaf {
         return json_encode($result, JSON_PRETTY_PRINT);
     }
 
-    // Returns an array of all known database table names
+    /**
+     * Returns an array of all known database table names
+     * @return array
+     */
     private static function getTableNames() {
         return ['history', 'post_tags', 'posts', 'settings', 'tags', 'uploads', 'users'];
     }
 
-    // Truncates a database table and restores values from JSON
+    /**
+     * Truncates a database table and restores values from JSON
+     * @param $table
+     * @param $json
+     * @return bool
+     * @throws \PDOException
+     */
     private static function jsonToDb($table, $json) {
         // Decode it
         $rows = json_decode($json, true);
@@ -86,7 +104,11 @@ class Backup extends Postleaf {
     // Public methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Creates a backup file
+    /**
+     * Creates a backup file
+     * @return array
+     * @throws \Exception
+     */
     public static function create() {
         $tmp_dir = self::path('backups/create-' . uniqid());
 
@@ -192,13 +214,21 @@ class Backup extends Postleaf {
         ];
     }
 
-    // Deletes the specified backup file
+    /**
+     * Deletes the specified backup file
+     * @param $filename
+     * @return bool
+     */
     public static function delete($filename) {
         $pathname = self::path('backups', $filename);
         return file_exists($pathname) ? unlink($pathname) : false;
     }
 
-    // Gets a backup file
+    /**
+     * Gets a backup file
+     * @param $filename
+     * @return array|bool
+     */
     public static function get($filename) {
         $pathname = self::path('backups', $filename);
         if(!file_exists($pathname)) return false;
@@ -211,7 +241,10 @@ class Backup extends Postleaf {
         ];
     }
 
-    // Gets an array of all available backups
+    /**
+     * Gets an array of all available backups
+     * @return array
+     */
     public static function getAll() {
         if(!file_exists(self::path('backups'))) return [];
 
@@ -236,7 +269,11 @@ class Backup extends Postleaf {
         return $backups;
     }
 
-    // Restores content and data to the specified backup file
+    /**
+     * Restores content and data to the specified backup file
+     * @param $file
+     * @throws \Exception
+     */
     public static function restore($file) {
         $content_dir = self::path('content');
         $tmp_dir = self::path('backups/restore-' . uniqid());
