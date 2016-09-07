@@ -432,23 +432,25 @@
                 </div>
                 {{!-- Only show featured and page options to owners, admins, and editor --}}
                 {{#is @user.role 'in' 'owner,admin,editor'}}
-                <div class="checkbox m-t-2">
-                    <label>
-                        <input type="checkbox" name="featured" id="featured" value="on"{{#is post.featured}} checked{{/is}}>
-                        <span class="tag tag-success">{{L 'feature_this_post'}}</span>
-                    </label>
-                </div>
-                <div class="checkbox m-t-1">
-                    <label>
-                        <input type="checkbox" name="sticky" id="sticky" value="on"{{#is post.sticky}} checked{{/is}}>
-                        <span class="tag tag-info">{{L 'make_this_post_sticky'}}</span>
-                    </label>
-                </div>
-                <div class="checkbox m-t-1">
-                    <label>
-                        <input type="checkbox" name="page" id="page" value="on"{{#is post.page}} checked{{/is}}>
-                        <span class="tag tag-primary">{{L 'turn_this_post_into_a_page'}}</span>
-                    </label>
+                <div class="row m-t-2">
+                    <div class="col-xs-4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="featured" id="featured" value="on"{{#is post.featured}} checked{{/is}}>
+                            <span class="tag tag-success">{{L 'featured'}}</span>
+                        </label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="sticky" id="sticky" value="on"{{#is post.sticky}} checked{{/is}}>
+                            <span class="tag tag-info">{{L 'sticky'}}</span>
+                        </label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="page" id="page" value="on"{{#is post.page}} checked{{/is}}>
+                            <span class="tag tag-primary">{{L 'page'}}</span>
+                        </label>
+                    </div>
                 </div>
                 {{/is}}
             </div>
