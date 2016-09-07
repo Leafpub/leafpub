@@ -1,5 +1,3 @@
-Thanks for contributing to Postleaf! 💙💚
-
 ### Pull Request Summary
 
 Tell us why you’re submitting this PR.
