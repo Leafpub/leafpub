@@ -268,6 +268,9 @@ return [
     'am' => 'am',
     'pm' => 'pm',
 
+    'mail' => 'Sending e-mails',
+    'mailer' => 'Mailer',
+
     'decimal_separator' => '.',
     'thousands_separator' => ',',
 

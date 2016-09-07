@@ -207,6 +207,7 @@ Setting::add('timezone', 'America/New_York');
 Setting::add('title', 'A Postleaf Blog');
 Setting::add('twitter', '');
 Setting::add('password_min_length', '8');
+Setting::add('mailer', 'default');
 
 // Insert owner
 try {

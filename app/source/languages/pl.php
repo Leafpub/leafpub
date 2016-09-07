@@ -263,6 +263,9 @@ return [
     'am' => 'am',
     'pm' => 'pm',
 
+    'mail' => 'Wysyłanie e-maili',
+    'mailer' => 'Mailer',
+
     'decimal_separator' => ',',
     'thousands_separator' => ' ',
 
