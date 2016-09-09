@@ -3,6 +3,9 @@
 // Postleaf\Postleaf: base class for the Postleaf API
 //
 namespace Postleaf;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+//use Postleaf\Subscribers\Application;
 
 class Postleaf {
 
@@ -10,7 +13,7 @@ class Postleaf {
     // Properties
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected static $database, $language, $listeners, $settings;
+    protected static $database, $language, $listeners, $settings, $dispatcher;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Initialization method
@@ -63,6 +66,11 @@ class Postleaf {
 
         // Set timezone
         date_default_timezone_set(Setting::get('timezone'));
+        
+        // Create the Symfony EventDispatcher and add the Application subscriber
+        self::$dispatcher = new EventDispatcher();
+        self::addSubscriber(new \Postleaf\Subscribers\Application());
+        self::addSubscriber(new \Postleaf\Subscribers\Post());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,13 +78,16 @@ class Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Dispatches an event
-    public static function dispatchEvent($event, &$data = null) {
+    public static function dispatchEvent($eventName, $event) {
         // Run the callback for all listeners of this event
+        /*
         foreach((array) self::$listeners[$event] as $listener) {
             if(is_callable($listener['callback'])) {
                 $listener['callback']($data);
             }
         }
+        */
+        self::$dispatcher->dispatch($eventName, $event);
     }
 
     // Returns the file extension of $filename (lowercase, without a dot)
@@ -274,7 +285,12 @@ class Postleaf {
             'callback' => $callback
         ];
     }
-
+    
+    // Replaces Postleaf::on
+    public static function addSubscriber(EventSubscriberInterface $event){
+        self::$dispatcher->addSubscriber($event);
+    }
+    
     // Generates an array of pagination data
     public static function paginate($total_items, $items_per_page = 10, $current_page = 1) {
         // Items per page must be at least one

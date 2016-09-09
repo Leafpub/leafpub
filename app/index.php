@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 namespace Postleaf;
+use Postleaf\Events\Application\Startup;
+
 require __DIR__ . '/source/runtime.php';
 
 // Initialize the app and session
@@ -213,6 +215,10 @@ $container['errorHandler'] = function($container) {
         ]));
     };
 };
+
+// Create startup event and dispatch...
+$startup = new Events\Application\Startup($app);
+Postleaf::dispatchEvent(Events\Application\Startup::NAME, $startup);
 
 // Run it!
 $app->run();
