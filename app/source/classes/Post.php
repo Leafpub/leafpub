@@ -832,7 +832,9 @@ class Post extends Postleaf {
         if(!$post) {
             throw new \Exception('Post not found: ' . $slug, self::NOT_FOUND);
         }
-
+        
+        $properties['pub_date'] = (str_replace('@ ', '',$properties['pub_date']));
+        
         // Merge options
         $post = array_merge($post, $properties);
 
