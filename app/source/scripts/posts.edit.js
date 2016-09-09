@@ -590,10 +590,17 @@ $(function() {
         .toggleClass('btn-warning', draft);
     }
 
-    // Tooltip
-    $('.editor-toolbar').find('[title]').tooltip({
+    // Tooltips
+    $('.editor-toolbar').find('[title]')
+    .tooltip({
         trigger: 'hover',
         placement: 'bottom'
+    })
+    .on('show.bs.tooltip', function(event) {
+        // Don't show tooltips on touch-enabled devices
+        if('ontouchstart' in document.documentElement) {
+            event.preventDefault();
+        }
     });
 
     // Watch for unsaved changes

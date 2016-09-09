@@ -68,7 +68,7 @@
                                 <div class="form-group">
                                     <label for="homepage">{{L 'custom_homepage'}}</label>
                                     <select class="form-control" name="homepage" id="homepage">
-                                        <option value=""{{#is this.slug @settings.homepage}} selected{{/is}}>{{L 'none'}}</option>
+                                        <option value="">{{L 'none'}}</option>
                                         {{#each pages}}
                                         <option value="{{this.slug}}"{{#is this.slug @settings.homepage}} selected{{/is}}>{{this.title}}</option>
                                         {{/each}}

@@ -36,7 +36,7 @@ class Tag extends Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Adds a tag
-    public static function add($slug, $properties) {
+    public static function add($slug, $tag) {
         // Enforce slug syntax
         $slug = self::slug($slug);
 
@@ -51,15 +51,15 @@ class Tag extends Postleaf {
         }
 
         // Must have a name
-        if(!mb_strlen($properties['name'])) {
+        if(!mb_strlen($tag['name'])) {
             throw new \Exception('No name specified', self::INVALID_NAME);
         }
 
         // Don't allow null properties
-        $properties['description'] = (string) $properties['description'];
-        $properties['cover'] = (string) $properties['cover'];
-        $properties['meta_title'] = (string) $properties['meta_title'];
-        $properties['meta_description'] = (string) $properties['meta_description'];
+        $tag['description'] = (string) $tag['description'];
+        $tag['cover'] = (string) $tag['cover'];
+        $tag['meta_title'] = (string) $tag['meta_title'];
+        $tag['meta_description'] = (string) $tag['meta_description'];
 
         try {
             // Create the tag
@@ -74,11 +74,11 @@ class Tag extends Postleaf {
                     meta_description = :meta_description
             ');
             $st->bindParam(':slug', $slug);
-            $st->bindParam(':name', $properties['name']);
-            $st->bindParam(':description', $properties['description']);
-            $st->bindParam(':cover', $properties['cover']);
-            $st->bindParam(':meta_title', $properties['meta_title']);
-            $st->bindParam(':meta_description', $properties['meta_description']);
+            $st->bindParam(':name', $tag['name']);
+            $st->bindParam(':description', $tag['description']);
+            $st->bindParam(':cover', $tag['cover']);
+            $st->bindParam(':meta_title', $tag['meta_title']);
+            $st->bindParam(':meta_description', $tag['meta_description']);
             $st->execute();
             return $st->rowCount() > 0;
         } catch(\PDOException $e) {
