@@ -275,6 +275,7 @@ class Postleaf {
     //
     public static function on($event, $callback) {
         // Separate namespace from event
+        /*
         $options = explode('#', $event, 2);
         $event = $options[0];
         $namespace = $options[1];
@@ -284,6 +285,17 @@ class Postleaf {
             'namespace' => $namespace ?: null,
             'callback' => $callback
         ];
+        */
+        /**
+         * $callback could be:
+         * 
+         * - a function
+         * - array($listenerInstance, 'functionName')
+         * - 'Class::functionName'
+         * 
+         * $callback has to be a PHP Callable
+         * */
+        self::$dispatcher->addListener($event, $callback);
     }
     
     // Replaces Postleaf::on
