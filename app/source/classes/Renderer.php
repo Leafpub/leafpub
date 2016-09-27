@@ -113,6 +113,7 @@ class Renderer extends Postleaf {
                 'method' => $_SERVER['REQUEST_METHOD'],
                 'referer' => $_SERVER['HTTP_REFERER'],
                 'time' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']),
+                'uri' => $_SERVER['REQUEST_URI'],
                 'user_agent' => $_SERVER['HTTP_USER_AGENT']
             ],
             'settings' => Setting::getAll(),
