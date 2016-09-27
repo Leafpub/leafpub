@@ -140,6 +140,9 @@ $app->group("/$frags->admin", function() {
 
     // Settings
     $this->get('/settings', 'Postleaf\Controller\AdminController:settings');
+    
+    // Uploads
+    $this->get('/uploads', 'Postleaf\Controller\AdminController:uploads');
 })->add('Postleaf\Middleware:requireAuth');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +193,7 @@ $app->get('/{post}', 'Postleaf\Controller\ThemeController:post');
 // Not found handler
 $container['notFoundHandler'] = function($container) {
     return function($request, $response) use ($container) {
-        return $response->withStatus(404)->write(Error::render());
+        return $response->withStatus(404)->write(Error::render(array('uri' => $request->getUri(), 'target' => $request->getRequestTarget())));
     };
 };
 
@@ -216,3 +219,35 @@ $container['errorHandler'] = function($container) {
 
 // Run it!
 $app->run();
+/*
+$x = \Postleaf\Importer\ImportFactory::factory('wordpress', '/home/ubuntu/workspace/app/content/uploads/import.xml');
+$data = $x->parseFile();
+
+foreach($data['user'] as $slug => $ds){
+    try {
+        echo 'Adding User ' . $slug . ' </br>';
+        //User::add($slug, $ds);
+    } catch (\Exception $e){
+        echo($e->getMessage());
+        
+    }
+}
+
+foreach($data['tags'] as $slug => $ds){
+    try {
+        echo 'Adding Tag ' . $slug . ' </br>';
+        //Tag::add($slug, $ds);
+    } catch (\Exception $e){
+        echo($e->getMessage());
+    }
+}
+
+foreach($data['posts'] as $slug => $ds){
+    try {
+        echo 'Adding Post ' . $slug . ' </br>';
+        Post::add($slug, $ds);
+    } catch (\Exception $e){
+        echo($e->getMessage());
+    }
+}
+*/

@@ -11,11 +11,11 @@ class Error extends Postleaf {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Renders the error page
-    public static function render() {
+    public static function render($reqData) {
         // Render it
         return Renderer::render([
             'template' => Theme::getPath('error.hbs'),
-            'data' => null,
+            'data' => array('reqUri' => $reqData['uri'], 'reqTarget' => $reqData['target']),
             'special_vars' => [
                 'meta' => [
                     'title' => Language::term('not_found'),
