@@ -51,7 +51,7 @@ class Upload extends Postleaf {
         $filename = self::safeFilename($filename);
 
         // Get filename without extension
-        $filename_without_extension = substr(self::fileName($filename), 0, 95);
+        $filename_without_extension = substr(self::fileName($filename), 0, 93);
         // Get extension
         $extension = self::fileExtension($filename);
         
