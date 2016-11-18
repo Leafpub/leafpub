@@ -4,8 +4,8 @@
     position: relative;
     height: 100%;
     border-right: solid 1px #ddd;
-    margin-left: -$grid-gutter-width / 2;
-    margin-right: -$grid-gutter-width / 2;
+    margin-left: -$grid-gutter-widths / 2;
+    margin-right: -$grid-gutter-widths / 2;
     user-select: none;
 }
 
@@ -89,8 +89,8 @@
 
 // Post preview
 .preview {
-    margin-left: -$grid-gutter-width / 2;
-    margin-right: -$grid-gutter-width / 2;
+    margin-left: -$grid-gutter-widths / 2;
+    margin-right: -$grid-gutter-widths / 2;
     user-select: none;
 }
 
