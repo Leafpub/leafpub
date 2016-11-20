@@ -219,7 +219,7 @@ return [
     'your_changes_have_not_been_saved_yet' => 'Zmiany nie zostały jeszcze zapisane!',
     'your_password_is_incorrect' => 'Niepoprawne hasło',
     'your_password' => 'Twoje hasło',
-    'zen_mode' =>  'Tryb zen'
+    'zen_mode' =>  'Tryb zen',
 
     'january' => 'Styczeń',
     'february' => 'Luty',
