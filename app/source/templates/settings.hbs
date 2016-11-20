@@ -217,7 +217,16 @@
                                 </div>
                             </div>
                         </div>
-
+                        {{!-- Maintenance Mode --}}
+                        <h3 class="m-t-3">{{L 'maintenance'}}</h3>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="maintenance" value="on"{{#is @settings.maintenance 'on'}} checked{{/is}}>
+                                    {{L 'maintenance'}}<br>
+                                </label>
+                            </div>
+                        </div>
                         {{!-- Caching --}}
                         <h3 class="m-t-3">{{L 'cache'}}</h3>
                         <div class="form-group">

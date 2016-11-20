@@ -40,6 +40,7 @@ $frags = (object) [
 $container = new \Slim\Container();
 $app = new \Slim\App($container);
 $app->add('Postleaf\Middleware:removeTrailingSlashes');
+$app->add('Postleaf\Middleware::maintenance');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // API routes

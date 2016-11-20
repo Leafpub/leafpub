@@ -68,4 +68,19 @@ class Middleware {
         return $next($request, $response);
     }
 
+    public static function maintenance($request, $response, $next){
+        $siteInMaintenanceMode = (Setting::get('maintenance') == 'on');
+        //var_dump($request->getRequestTarget()); exit;
+        //$allowedRoutes = array('/admin', '/admin/login', '/api/login');
+        //$tryToLogin = in_array($request->getRequestTarget(), $allowedRoutes);
+        $tryToLogin = preg_match('/login/', $request->getRequestTarget()) || preg_match('/admin/', $request->getRequestTarget());
+        if ($siteInMaintenanceMode && !$tryToLogin ){
+            if (!Session::isAuthenticated() || (Session::isAuthenticated() && !Session::isRole(array('owner', 'admin')))){
+                $html = Maintenance::render();
+                return $response->withStatus(503)->write($html);
+            }
+        }
+        return $next($request, $response);
+    }
+
 }
