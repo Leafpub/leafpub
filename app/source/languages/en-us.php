@@ -107,6 +107,8 @@ return [
     'logout' => 'Logout',
     'lost_your_password' => 'Lost your password?',
     'markdown' => 'Markdown',
+    'maintenance' => 'Maintenance Mode',
+    'maintenance_desc' => 'Site is in Maintenance Mode.</br>We\'ll be back soon, sorry for the inconvenience',
     'meta_description' => 'Meta Description',
     'meta_title' => 'Meta Title',
     'metadata' => 'Metadata',
