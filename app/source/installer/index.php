@@ -26,7 +26,7 @@ if(Leafpub::isInstalled()) {
             <div class="col-lg-4 push-lg-4 col-md-6 push-md-3 col-sm-8 push-sm-1">
                 <div class="logo text-xs-center">
                     <a href="https://www.leafpub.org/" target="_blank">
-                        <img class="logo m-t-3 m-b-2" src="../assets/img/logo-color.svg" alt="Logo" width="100" height="100">
+                        <img class="logo m-t-3 m-b-2" src="../assets/img/logo-color.png" alt="Logo" width="100" height="100">
                     </a>
                 </div>
                 <h2 class="text-xs-center">Install Leafpub</h2>
