@@ -51,7 +51,7 @@ function buildFonts(source, target, base) {
     return gulp.src(source, { base: base })
         .pipe(gulp.dest(target))
         .pipe(notify({
-            title: 'Postleaf',
+            title: 'Leafpub',
             icon: path.join(__dirname, 'app/source/images/logo-color.png'),
             message: 'Build fonts task complete.',
             onLast: true
@@ -64,7 +64,7 @@ function buildImages(source, target) {
         .pipe(imagemin())
         .pipe(gulp.dest(target))
         .pipe(notify({
-            title: 'Postleaf',
+            title: 'Leafpub',
             icon: path.join(__dirname, 'app/source/images/logo-color.png'),
             message: 'Build images task complete.',
             onLast: true
@@ -79,7 +79,7 @@ function buildScripts(source, target) {
         }))
             .on('error', function(err) {
                 notify({
-                    title: 'Postleaf',
+                    title: 'Leafpub',
                     icon: path.join(__dirname, 'app/source/images/ladybug.png'),
                     message: 'Error including scripts: ' + err
                 }).write(err);
@@ -90,7 +90,7 @@ function buildScripts(source, target) {
         }))
             .on('error', function(err) {
                 notify({
-                    title: 'Postleaf',
+                    title: 'Leafpub',
                     icon: path.join(__dirname, 'app/source/images/ladybug.png'),
                     message: 'Error minifying scripts: ' + err
                 }).write(err);
@@ -99,7 +99,7 @@ function buildScripts(source, target) {
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(target))
         .pipe(notify({
-            title: 'Postleaf',
+            title: 'Leafpub',
             icon: path.join(__dirname, 'app/source/images/logo-color.png'),
             message: 'Build scripts task complete.',
             onLast: true
@@ -118,7 +118,7 @@ function buildStyles(source, target) {
         }))
             .on('error', function(err) {
                 notify({
-                    title: 'Postleaf',
+                    title: 'Leafpub',
                     icon: path.join(__dirname, 'app/source/images/ladybug.png'),
                     message: 'Error compiling styles: ' + err
                 }).write(err);
@@ -133,7 +133,7 @@ function buildStyles(source, target) {
         }))
         .pipe(gulp.dest(target))
         .pipe(notify({
-            title: 'Postleaf',
+            title: 'Leafpub',
             icon: path.join(__dirname, 'app/source/images/logo-color.png'),
             message: 'Build styles task complete.',
             onLast: true
@@ -147,7 +147,7 @@ function lintScripts(source) {
         .pipe(jshint.reporter('jshint-stylish'))
             .on('error', function(err) {
                 notify({
-                    title: 'Postleaf',
+                    title: 'Leafpub',
                     icon: path.join(__dirname, 'app/source/images/ladybug.png'),
                     message: 'Error linting scripts: ' + err
                 }).write(err);
@@ -332,7 +332,7 @@ gulp.task('clean', 'Clean up generated files.', [
 gulp.task('release:make', 'Generate a release.', function() {
     var config = require(path.join(__dirname, 'package.json')),
         dist = path.join(__dirname, 'dist'),
-        target = path.join(dist, 'postleaf-' + config.version);
+        target = path.join(dist, 'leafpub-' + config.version);
 
     // Delete the target directory if it exists
     del.sync(target);
@@ -340,7 +340,7 @@ gulp.task('release:make', 'Generate a release.', function() {
     // Create dist directory
     fs.mkdirsSync(dist);
 
-    // Copy app/ to dist/postleaf-<version>/
+    // Copy app/ to dist/leafpub-<version>/
     fs.copySync(path.join(__dirname, 'app'), target);
 
     // Copy license and installation instructions
@@ -376,7 +376,7 @@ gulp.task('release:make', 'Generate a release.', function() {
 
     // Little message to celebrate
     console.log(
-        '\nPostleaf ' + config.version + ' has been released! 🎉\n\n' +
+        '\nLeafpub ' + config.version + ' has been released! 🎉\n\n' +
         'Location: ' + target + '\n'
     );
 });

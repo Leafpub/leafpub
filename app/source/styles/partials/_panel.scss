@@ -11,7 +11,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     visibility: hidden;
-    transition: all $postleaf-transition-speed;
+    transition: all $leafpub-transition-speed;
     &.panel-right {
         right: 0;
         left: auto;
@@ -33,7 +33,7 @@
         right: 1rem;
         font-size: 1.2rem;
         color: $gray-light;
-        transition: color $postleaf-transition-speed;
+        transition: color $leafpub-transition-speed;
         &:hover {
             color: $gray;
         }

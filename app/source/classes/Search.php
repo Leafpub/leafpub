@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Search: methods for working with search pages
+// Leafpub\Search: methods for working with search pages
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Search extends Postleaf {
+class Search extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

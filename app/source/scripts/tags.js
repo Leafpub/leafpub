@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -42,7 +42,7 @@ $(function() {
             // Load next page
             if(request) request.abort();
             request = $.ajax({
-                url: Postleaf.url('api/tags'),
+                url: Leafpub.url('api/tags'),
                 type: 'GET',
                 data: {
                     page: ++page,
@@ -83,7 +83,7 @@ $(function() {
             // Load matching tags and reset page count
             if(request) request.abort();
             request = $.ajax({
-                url: Postleaf.url('api/tags'),
+                url: Leafpub.url('api/tags'),
                 type: 'GET',
                 data: {
                     page: page = 1,
@@ -147,7 +147,7 @@ $(function() {
             $.each(tags, function(index, value) {
                 // Add deferreds to the queue
                 $.ajax({
-                    url: Postleaf.url('api/tags/' + encodeURIComponent(value)),
+                    url: Leafpub.url('api/tags/' + encodeURIComponent(value)),
                     type: 'DELETE'
                 })
                 .done(function(res) {

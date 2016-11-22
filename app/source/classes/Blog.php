@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Blog: methods for working with the blog
+// Leafpub\Blog: methods for working with the blog
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Blog extends Postleaf {
+class Blog extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

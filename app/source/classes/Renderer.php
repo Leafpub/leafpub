@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Renderer: methods for rendering handlebar templates
+// Leafpub\Renderer: methods for rendering handlebar templates
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Renderer extends Postleaf {
+class Renderer extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Private methods
@@ -101,7 +101,7 @@ class Renderer extends Postleaf {
         // Merge special variables
         $special_vars = array_merge((array) $special_vars, [
             'cookies' => $_COOKIE,
-            'postleaf' => [
+            'leafpub' => [
                 'version' => POSTLEAF_VERSION === '{{version}}' ? 'dev' : POSTLEAF_VERSION
             ],
             'request' => [

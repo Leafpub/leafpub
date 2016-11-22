@@ -1,17 +1,17 @@
 <?php
-namespace Postleaf;
+namespace Leafpub;
 require_once(dirname(dirname(__DIR__)) . '/source/runtime.php');
 
 // Deny if already installed
-if(Postleaf::isInstalled()) {
+if(Leafpub::isInstalled()) {
     header('HTTP/1.0 403 Forbidden');
     exit();
 }
 ?>
 <!DOCTYPE html>
-<html data-postleaf-error="true">
+<html data-leafpub-error="true">
 <head>
-    <title>Install Postleaf</title>
+    <title>Install Leafpub</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="noindex">
@@ -25,16 +25,16 @@ if(Postleaf::isInstalled()) {
         <div class="row">
             <div class="col-lg-4 push-lg-4 col-md-6 push-md-3 col-sm-8 push-sm-1">
                 <div class="logo text-xs-center">
-                    <a href="https://www.postleaf.org/" target="_blank">
+                    <a href="https://www.leafpub.org/" target="_blank">
                         <img class="logo m-t-3 m-b-2" src="../assets/img/logo-color.svg" alt="Logo" width="100" height="100">
                     </a>
                 </div>
-                <h2 class="text-xs-center">Install Postleaf</h2>
+                <h2 class="text-xs-center">Install Leafpub</h2>
                 <p class="text-xs-center text-muted">
                     Simple, beautiful publishing
                 </p>
 
-                <form id="installer-form" class="m-t-3" action="<?=htmlspecialchars(Postleaf::url('source/installer/install.php'))?>" autocomplete="off">
+                <form id="installer-form" class="m-t-3" action="<?=htmlspecialchars(Leafpub::url('source/installer/install.php'))?>" autocomplete="off">
                     <!-- Owner -->
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -105,7 +105,7 @@ if(Postleaf::isInstalled()) {
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="db-prefix">Table Prefix</label>
-                                <input type="text" class="form-control" name="db-prefix" id="db-prefix" placeholder="postleaf_">
+                                <input type="text" class="form-control" name="db-prefix" id="db-prefix" placeholder="leafpub_">
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,7 @@ if(Postleaf::isInstalled()) {
 
                     <div class="text-xs-center text-muted m-y-2">
                         Need help?
-                        <a href="https://community.postleaf.org/" target="_blank">community.postleaf.org</a>
+                        <a href="https://community.leafpub.org/" target="_blank">community.leafpub.org</a>
                     </div>
                 </form>
             </div>

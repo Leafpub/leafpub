@@ -2,17 +2,17 @@
 //
 // Controller for theme views
 //
-namespace Postleaf\Controller;
+namespace Leafpub\Controller;
 
-use Postleaf\Blog,
-    Postleaf\Error,
-    Postleaf\Feed,
-    Postleaf\Post,
-    Postleaf\Search,
-    Postleaf\Session,
-    Postleaf\Setting,
-    Postleaf\Tag,
-    Postleaf\User;
+use Leafpub\Blog,
+    Leafpub\Error,
+    Leafpub\Feed,
+    Leafpub\Post,
+    Leafpub\Search,
+    Leafpub\Session,
+    Leafpub\Setting,
+    Leafpub\Tag,
+    Leafpub\User;
 
 class ThemeController extends Controller {
 

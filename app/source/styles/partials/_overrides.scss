@@ -27,8 +27,8 @@ form label {
 form label,
 .form-control .inner-addon {
     transition:
-        border-color $postleaf-transition-speed,
-        color $postleaf-transition-speed;
+        border-color $leafpub-transition-speed,
+        color $leafpub-transition-speed;
 }
 
 .has-danger label {
@@ -80,9 +80,9 @@ select.form-control:not([size]):not([multiple]) {
 
 .btn {
     transition:
-        background-color $postleaf-transition-speed,
-        border-color $postleaf-transition-speed,
-        color $postleaf-transition-speed;
+        background-color $leafpub-transition-speed,
+        border-color $leafpub-transition-speed,
+        color $leafpub-transition-speed;
     // Remove focus outline
     &:focus,
     &.focus,

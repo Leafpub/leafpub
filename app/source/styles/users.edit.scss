@@ -44,7 +44,7 @@ $user-avatar-size: 8rem;
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: rgba($postleaf-black, .25);
+        background: rgba($leafpub-black, .25);
         border: solid .2rem rgba(black, .05);
         text-align: center;
         line-height: $user-avatar-size;
@@ -64,7 +64,7 @@ $user-avatar-size: 8rem;
         color: white;
         font-size: 2rem;
         opacity: 0;
-        transition: opacity $postleaf-transition-speed;
+        transition: opacity $leafpub-transition-speed;
         cursor: pointer;
     }
     &:hover {

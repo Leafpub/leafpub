@@ -16,7 +16,7 @@ return [
             $path = rtrim($path, '/') . '/?' . http_build_query($options['hash'], null, '&', PHP_QUERY_RFC3986);
         }
 
-        return \Postleaf\Admin::url($path);
+        return \Leafpub\Admin::url($path);
     },
 
     // Returns an author URL
@@ -36,12 +36,12 @@ return [
             }
         }
 
-        return \Postleaf\User::url($author, (int) $options['hash']['page']);
+        return \Leafpub\User::url($author, (int) $options['hash']['page']);
     },
 
     // Returns the blog index URL
     'blog_url' => function($path, $options = null) {
-        return \Postleaf\Blog::url($options['hash']['page']);
+        return \Leafpub\Blog::url($options['hash']['page']);
     },
 
     // Returns the feed URL
@@ -55,7 +55,7 @@ return [
         if($author) $feed_options['author'] = $author;
         if($tag) $feed_options['tag'] = $tag;
 
-        return \Postleaf\Feed::url($feed_options);
+        return \Leafpub\Feed::url($feed_options);
     },
 
     // Returns a post URL
@@ -71,7 +71,7 @@ return [
             }
         }
 
-        return \Postleaf\Post::url($slug);
+        return \Leafpub\Post::url($slug);
     },
 
     // Returns a search URL
@@ -82,7 +82,7 @@ return [
         // Empty queries get pushed to page 1
         if(!$query) $page = 1;
 
-        return \Postleaf\Search::url($query, $page);
+        return \Leafpub\Search::url($query, $page);
     },
 
     // Returns a tag URL
@@ -98,14 +98,14 @@ return [
             }
         }
 
-        return \Postleaf\Tag::url($tag, (int) $options['hash']['page']);
+        return \Leafpub\Tag::url($tag, (int) $options['hash']['page']);
     },
 
     // Returns the current theme's URL
     'theme_url' => function($path, $options = null) {
         return $options ?
-            \Postleaf\Postleaf::url('content/themes', \Postleaf\Setting::get('theme'), $path) :
-            \Postleaf\Postleaf::url('content/themes', \Postleaf\Setting::get('theme'));
+            \Leafpub\Leafpub::url('content/themes', \Leafpub\Setting::get('theme'), $path) :
+            \Leafpub\Leafpub::url('content/themes', \Leafpub\Setting::get('theme'));
     },
 
     // Returns the website's base URL
@@ -119,7 +119,7 @@ return [
         if(preg_match('/^(http:|https:|mailto:|\/\/:)/i', $path)) {
             return $path;
         } else {
-            return \Postleaf\Postleaf::url($path);
+            return \Leafpub\Leafpub::url($path);
         }
     }
 

@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Admin: methods for working with the admin panel
+// Leafpub\Admin: methods for working with the admin panel
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Admin extends Postleaf {
+class Admin extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods
@@ -16,7 +16,7 @@ class Admin extends Postleaf {
 
         // Home
         $items[] = [
-            'label' => 'Postleaf',
+            'label' => 'Leafpub',
             'link' => self::url(),
             'class' => 'pl-home'
         ];

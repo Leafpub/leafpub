@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Cache: methods for working with cache files
+// Leafpub\Cache: methods for working with cache files
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Cache extends Postleaf {
+class Cache extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Constants

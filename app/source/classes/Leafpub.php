@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Postleaf: base class for the Postleaf API
+// Leafpub\Leafpub: base class for the Leafpub API
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Postleaf {
+class Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Properties
@@ -148,17 +148,17 @@ class Postleaf {
         return explode('?', $test_url)[0] === '/';
     }
 
-    // Returns true if Postleaf has been installed
+    // Returns true if Leafpub has been installed
     public static function isInstalled() {
         // Simple check for database.php
-        return file_exists(Postleaf::path('database.php'));
+        return file_exists(Leafpub::path('database.php'));
     }
 
     // Determines whether a slug is protected (i.e. used in settings.slugs)
     public static function isProtectedSlug($slug) {
         return in_array($slug, [
             'api',      // reserved for the API
-            'postleaf', // reserved for future use
+            'leafpub', // reserved for future use
             Setting::get('frag_admin'),
             Setting::get('frag_author'),
             Setting::get('frag_blog'),
@@ -223,9 +223,9 @@ class Postleaf {
 
     // Removes one or more event listeners
     //
-    //  By event:     Postleaf::off('post.save')
-    //  By namespace: Postleaf::off('/namespace')
-    //  By both:      Postleaf::off('post.save/namespace')
+    //  By event:     Leafpub::off('post.save')
+    //  By namespace: Leafpub::off('/namespace')
+    //  By both:      Leafpub::off('post.save/namespace')
     //
     public static function off($event) {
         // Separate namespace from event
@@ -259,8 +259,8 @@ class Postleaf {
 
     // Adds an event listener
     //
-    //  No namespace:   Postleaf::on('post.save', $callback)
-    //  With namespace: Postleaf::on('post.save/namespace', $callback)
+    //  No namespace:   Leafpub::on('post.save', $callback)
+    //  With namespace: Leafpub::on('post.save/namespace', $callback)
     //
     public static function on($event, $callback) {
         // Separate namespace from event
@@ -306,10 +306,10 @@ class Postleaf {
         return date('Y-m-d H:i:s', strtotime($date) ?: time());
     }
 
-    // Returns Postleaf's base path, optionally concatenating additional folders
+    // Returns Leafpub's base path, optionally concatenating additional folders
     public static function path() {
-        // Determine the base path that Postleaf runs from. This will be the same as the document
-        // root unless Postleaf is running from a subfolder.
+        // Determine the base path that Leafpub runs from. This will be the same as the document
+        // root unless Leafpub is running from a subfolder.
         $base_path = realpath(dirname(dirname(__DIR__)));
 
         // Grab arguments and prepend base path
@@ -412,7 +412,7 @@ class Postleaf {
         );
     }
 
-    // Translates any string into a Postleaf slug. This function may return an empty string if no
+    // Translates any string into a Leafpub slug. This function may return an empty string if no
     // valid characters are passed in.
     public static function slug($string) {
         // Convert spaces and underscores to dashes
@@ -433,7 +433,7 @@ class Postleaf {
     // This is a wrapper for PHP's strftime() function. We do this instead of setting the locale
     // because:
     //
-    //  1. Not all locales are available on all systems, and it's easier to install a Postleaf
+    //  1. Not all locales are available on all systems, and it's easier to install a Leafpub
     //     language pack than additional PHP locales, and some users can't.
     //
     //  2. There are various parameters that aren't supported on all operating systems (e.g. %e and
@@ -465,12 +465,12 @@ class Postleaf {
         return strftime($format, $timestamp);
     }
 
-    // Returns the subfolder that Postleaf is running from
+    // Returns the subfolder that Leafpub is running from
     public static function subfolder() {
         return mb_substr(self::path(), mb_strlen(realpath($_SERVER['DOCUMENT_ROOT'])));
     }
 
-    // Returns Postleaf's base URL, optionally concatenating additional folders
+    // Returns Leafpub's base URL, optionally concatenating additional folders
     public static function url() {
         // Determine protocol
         $protocol = self::isSsl() ? 'https' : 'http';
@@ -478,7 +478,7 @@ class Postleaf {
         // Get the hostname
         $hostname = $_SERVER['HTTP_HOST'];
 
-        // Determine if Postleaf is running from a subfolder
+        // Determine if Leafpub is running from a subfolder
         $subfolder = self::subfolder();
 
         // Get args and prepend subfolder

@@ -13,8 +13,8 @@
     z-index: 2501;
     top: 0;
     left: 50%;
-    margin-left: -$postleaf-locater-width / 2;
-    width: $postleaf-locater-width;
+    margin-left: -$leafpub-locater-width / 2;
+    width: $leafpub-locater-width;
     background: white;
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
@@ -59,7 +59,7 @@
             text-decoration: none;
         }
         &.active {
-            background-color: $postleaf-blue;
+            background-color: $leafpub-blue;
             color: white;
             text-decoration: none;
             i,
@@ -76,7 +76,7 @@
 // XS breakpoint
 @include media-breakpoint-down(xs) {
     .locater {
-        width: $postleaf-locater-width-xs;
-        margin-left: -$postleaf-locater-width-xs / 2;
+        width: $leafpub-locater-width-xs;
+        margin-left: -$leafpub-locater-width-xs / 2;
     }
 }

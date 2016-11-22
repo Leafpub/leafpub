@@ -5,7 +5,7 @@
 return [
     // Gets an author and changes context
     'admin_author' => function($slug, $options = null) {
-        $author = \Postleaf\User::get($slug);
+        $author = \Leafpub\User::get($slug);
 
         // Do {{else}} if no author is found
         if(!$author) {
@@ -22,11 +22,11 @@ return [
     'admin_menu' => function() {
         $args = func_get_args();
         $options = end($args);
-        $items = \Postleaf\Admin::getMenuItems();
+        $items = \Leafpub\Admin::getMenuItems();
 
         // Generate `current` value for each item
         foreach($items as $key => $value) {
-            $items[$key]['current'] = \Postleaf\Postleaf::isCurrentUrl($value['link']);
+            $items[$key]['current'] = \Leafpub\Leafpub::isCurrentUrl($value['link']);
         }
 
         if(count($items)) {
@@ -52,7 +52,7 @@ return [
             } else {
                 $src =
                     self::url('source/assets/js', $script) . '?v=' .
-                    $options['data']['postleaf']['version'];
+                    $options['data']['leafpub']['version'];
             }
             $html .= '<script src="' . htmlspecialchars($src) . '"></script>';
         }
@@ -69,7 +69,7 @@ return [
         foreach((array) $options['_this']['styles'] as $style) {
             $href =
                 self::url('source/assets/css', $style) . '?v=' .
-                $options['data']['postleaf']['version'];
+                $options['data']['leafpub']['version'];
             $html .= '<link rel="stylesheet" href="' . htmlspecialchars($href) . '">';
         }
 

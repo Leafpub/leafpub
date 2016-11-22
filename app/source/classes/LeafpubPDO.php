@@ -1,10 +1,10 @@
 <?php
 //
-//  Postleaf\PostleafPDO: an extension of the PDO class that supports table prefixing
+//  Leafpub\LeafpubPDO: an extension of the PDO class that supports table prefixing
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class PostleafPDO extends \PDO {
+class LeafpubPDO extends \PDO {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Properties

@@ -11,10 +11,10 @@ a[href] {
 }
 
 // All regions
-[data-postleaf-type="post-content"],
-[data-postleaf-type="post-title"] {
+[data-leafpub-type="post-content"],
+[data-leafpub-type="post-title"] {
     min-height: 1em; // don't disappear when empty
-    transition: $postleaf-transition-speed outline-color;
+    transition: $leafpub-transition-speed outline-color;
     outline: dashed 2px transparent;
     outline-offset: 8px;
     &:hover {
@@ -29,7 +29,7 @@ a[href] {
 }
 
 // Post title regions
-[data-postleaf-type="post-title"] {
+[data-leafpub-type="post-title"] {
     // Prevent empty regions from disappearing
     min-width: 1em;
     display: inline-block;

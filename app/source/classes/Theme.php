@@ -1,12 +1,12 @@
 <?php
 //
-// Postleaf\Theme: methods for working with themes
+// Leafpub\Theme: methods for working with themes
 //
-namespace Postleaf;
+namespace Leafpub;
 
 use DirectoryIterator;
 
-class Theme extends Postleaf {
+class Theme extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

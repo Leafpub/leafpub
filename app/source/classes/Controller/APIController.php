@@ -2,26 +2,26 @@
 //
 // Controller for API endpoints
 //
-namespace Postleaf\Controller;
+namespace Leafpub\Controller;
 
-use Postleaf\Admin,
-    Postleaf\Backup,
-    Postleaf\Blog,
-    Postleaf\Cache,
-    Postleaf\Error,
-    Postleaf\Feed,
-    Postleaf\History,
-    Postleaf\Language,
-    Postleaf\Post,
-    Postleaf\Postleaf,
-    Postleaf\Renderer,
-    Postleaf\Search,
-    Postleaf\Session,
-    Postleaf\Setting,
-    Postleaf\Tag,
-    Postleaf\Theme,
-    Postleaf\Upload,
-    Postleaf\User;
+use Leafpub\Admin,
+    Leafpub\Backup,
+    Leafpub\Blog,
+    Leafpub\Cache,
+    Leafpub\Error,
+    Leafpub\Feed,
+    Leafpub\History,
+    Leafpub\Language,
+    Leafpub\Post,
+    Leafpub\Leafpub,
+    Leafpub\Renderer,
+    Leafpub\Search,
+    Leafpub\Session,
+    Leafpub\Setting,
+    Leafpub\Tag,
+    Leafpub\Theme,
+    Leafpub\Upload,
+    Leafpub\User;
 
 class APIController extends Controller {
 
@@ -62,11 +62,11 @@ class APIController extends Controller {
 
         // Generate and set a password reset token
         User::update($user['slug'], [
-            'reset_token' => $token = Postleaf::randomBytes(50)
+            'reset_token' => $token = Leafpub::randomBytes(50)
         ]);
 
         // Send the user an email
-        Postleaf::sendEmail([
+        Leafpub::sendEmail([
             'to' => $user['email'],
             'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
             'message' =>
@@ -76,7 +76,7 @@ class APIController extends Controller {
                 Language::term('to_reset_your_password_visit_this_address') . ' ' .
                 Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
                 '&token=' . rawurlencode($token)),
-            'from' => 'Postleaf <postleaf@' . $_SERVER['HTTP_HOST'] . '>'
+            'from' => 'Leafpub <leafpub@' . $_SERVER['HTTP_HOST'] . '>'
         ]);
 
         // Send response
@@ -319,7 +319,7 @@ class APIController extends Controller {
                 $post = [
                     'slug' => ':new',
                     'title' => Setting::get('default_title'),
-                    'content' => Postleaf::markdownToHtml(Setting::get('default_content')),
+                    'content' => Leafpub::markdownToHtml(Setting::get('default_content')),
                     'author' => Session::user(),
                     'pub_date' => date('Y-m-d H:i:s')
                 ];
@@ -395,10 +395,10 @@ class APIController extends Controller {
 
         // Provide a neatly formed pub_date and pub_time for the editor
         $history['post_data']['pub_time'] =
-            Postleaf::strftime('%H:%M', strtotime($history['post_data']['pub_date']));
+            Leafpub::strftime('%H:%M', strtotime($history['post_data']['pub_date']));
 
         $history['post_data']['pub_date'] =
-            Postleaf::strftime('%d %b %Y', strtotime($history['post_data']['pub_date']));
+            Leafpub::strftime('%d %b %Y', strtotime($history['post_data']['pub_date']));
 
         // Return the requested history item
         return $response->withJson([
@@ -782,7 +782,7 @@ class APIController extends Controller {
         }
 
         return Renderer::render([
-            'template' => Postleaf::path('source/templates/partials/backups-table.hbs'),
+            'template' => Leafpub::path('source/templates/partials/backups-table.hbs'),
             'data' => [
                 'backups' => Backup::getAll()
             ],
@@ -803,7 +803,7 @@ class APIController extends Controller {
             switch($e->getCode()) {
                 case Backup::UNABLE_TO_CREATE_DIRECTORY:
                     $message = Language::term('unable_to_create_directory_{dir}', [
-                        'dir' => Postleaf::path('backups')
+                        'dir' => Leafpub::path('backups')
                     ]);
                     break;
                 case Backup::UNABLE_TO_BACKUP_DATABASE:
@@ -993,7 +993,7 @@ class APIController extends Controller {
         // Render it
         try {
             $html = Renderer::render([
-                'template' => Postleaf::path('source/templates/partials/locater-items.hbs'),
+                'template' => Leafpub::path('source/templates/partials/locater-items.hbs'),
                 'helpers' => ['admin', 'url', 'utility'],
                 'data' => [
                     'items' => $items
@@ -1022,7 +1022,7 @@ class APIController extends Controller {
 
         // Loop through uploaded files
         foreach($request->getUploadedFiles()['files'] as $upload) {
-            $extension = Postleaf::fileExtension($upload->getClientFilename());
+            $extension = Leafpub::fileExtension($upload->getClientFilename());
 
             // Check for a successful upload
             if($upload->getError() !== UPLOAD_ERR_OK) {

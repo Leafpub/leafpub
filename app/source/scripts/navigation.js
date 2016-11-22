@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf, Sortable */
+/* globals Nanobar, Leafpub, Sortable */
 $(function() {
     'use strict';
 
@@ -41,14 +41,14 @@ $(function() {
 
             // Send request
             $.ajax({
-                url: Postleaf.url('api/navigation'),
+                url: Leafpub.url('api/navigation'),
                 type: 'PUT',
                 data: $(form).serialize()
             })
             .done(function(res) {
                 if(res.success) {
-                    Postleaf.announce(
-                        $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                    Leafpub.announce(
+                        $('meta[name="leafpub:language"]').attr('data-changes-saved'),
                         { style: 'success' }
                     );
                 } else {
@@ -95,7 +95,7 @@ $(function() {
         // Format the link
         switch(formatter) {
             case 'slug':
-                link = Postleaf.slug(link);
+                link = Leafpub.slug(link);
                 break;
             case 'encode':
                 // Remove slashes from search queries because they don't play nice with the server

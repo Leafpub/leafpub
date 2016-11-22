@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -10,7 +10,7 @@ $(function() {
     $('.user-form').on('submit', function(event) {
         var form = this,
             type = user === '' ? 'POST' : 'PUT',
-            url = Postleaf.url(
+            url = Leafpub.url(
                 type === 'POST' ? 'api/users' : 'api/users/' + encodeURIComponent(user)
             );
 
@@ -21,7 +21,7 @@ $(function() {
 
         // Show progress
         progress.go(50);
-        Postleaf.highlightErrors(form);
+        Leafpub.highlightErrors(form);
 
         // Send request
         request = $.ajax({
@@ -37,15 +37,15 @@ $(function() {
                 });
 
                 // Show feedback and redirect
-                Postleaf.announce(
-                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                Leafpub.announce(
+                    $('meta[name="leafpub:language"]').attr('data-changes-saved'),
                     { style: 'success' }
                 ).then(function() {
                     location.href = $('.user-form').attr('data-redirect');
                 });
             } else {
                 // Show errors
-                Postleaf.highlightErrors(form, res.invalid);
+                Leafpub.highlightErrors(form, res.invalid);
                 $.alertable.alert(res.message);
             }
         })
@@ -71,7 +71,7 @@ $(function() {
 
             // Send request
             $.ajax({
-                url: Postleaf.url('api/users/' + encodeURIComponent(user)),
+                url: Leafpub.url('api/users/' + encodeURIComponent(user)),
                 type: 'DELETE'
             })
             .done(function(res) {
@@ -99,12 +99,12 @@ $(function() {
 
     // Enforce slug syntax
     $('#username').on('change', function() {
-        this.value = Postleaf.slug(this.value);
+        this.value = Leafpub.slug(this.value);
     });
 
     // Guess username when name changes
     $('#name').on('change', function() {
-        var slug = Postleaf.slug(this.value);
+        var slug = Leafpub.slug(this.value);
 
         // Only guess if no username is present
         if($('#username').val() === '') {
@@ -123,7 +123,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             image: {
                 thumbnail: {
@@ -160,7 +160,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             files: event.target.files[0],
             progress: function(percent) {

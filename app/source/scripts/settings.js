@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -12,23 +12,23 @@ $(function() {
 
         // Show progress
         progress.go(50);
-        Postleaf.highlightErrors(form);
+        Leafpub.highlightErrors(form);
 
         // Send request
         $.ajax({
-            url: Postleaf.url('api/settings'),
+            url: Leafpub.url('api/settings'),
             type: 'POST',
             data: $(form).serialize()
         })
         .done(function(res) {
             if(res.success) {
-                Postleaf.announce(
-                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                Leafpub.announce(
+                    $('meta[name="leafpub:language"]').attr('data-changes-saved'),
                     { style: 'success' }
                 );
             } else {
                 // Show errors
-                Postleaf.highlightErrors(form, res.invalid);
+                Leafpub.highlightErrors(form, res.invalid);
                 $.alertable.alert(res.message);
             }
         })
@@ -54,7 +54,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             files: event.target.files[0],
             progress: function(percent) {
@@ -92,7 +92,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             files: event.target.files[0],
             progress: function(percent) {
@@ -130,7 +130,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             image: {
                 thumbnail: {
@@ -172,11 +172,11 @@ $(function() {
     $('[data-clear-cache]').on('click', function() {
         progress.go(50);
         $.ajax({
-            url: Postleaf.url('api/settings/cache'),
+            url: Leafpub.url('api/settings/cache'),
             type: 'DELETE'
         })
         .done(function(res) {
-            Postleaf.announce(res.message, {
+            Leafpub.announce(res.message, {
                 style: 'info'
             });
         })
@@ -193,7 +193,7 @@ $(function() {
 
         // Create the backup
         $.ajax({
-            url: Postleaf.url('api/backup'),
+            url: Leafpub.url('api/backup'),
             type: 'POST'
         })
         .done(function(res) {
@@ -224,7 +224,7 @@ $(function() {
 
             // Send the request
             $.ajax({
-                url: Postleaf.url('api/backup/' + encodeURIComponent(backup)),
+                url: Leafpub.url('api/backup/' + encodeURIComponent(backup)),
                 type: 'DELETE'
             })
             .done(function(res) {
@@ -238,7 +238,7 @@ $(function() {
 
     // Download backup
     $('.available-backups').on('click', '[data-download-backup]', function() {
-        location.href = Postleaf.url(
+        location.href = Leafpub.url(
             'api/backup/' + encodeURIComponent($(this).attr('data-download-backup'))
         );
     });
@@ -253,7 +253,7 @@ $(function() {
         $.alertable.prompt(confirm, {
             okButton:
                 '<button class="btn btn-warning" type="submit">' +
-                $('meta[name="postleaf:language"]').attr('data-ok') +
+                $('meta[name="leafpub:language"]').attr('data-ok') +
                 '</button>',
             prompt:
                 '<div class="form-group">' +
@@ -266,7 +266,7 @@ $(function() {
 
             // Send the request
             $.ajax({
-                url: Postleaf.url('api/backup/' + encodeURIComponent(backup) + '/restore'),
+                url: Leafpub.url('api/backup/' + encodeURIComponent(backup) + '/restore'),
                 type: 'POST',
                 data: {
                     password: data.password

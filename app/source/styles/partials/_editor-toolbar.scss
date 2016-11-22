@@ -25,7 +25,7 @@
             transform: scale(1);
         }
         &.on {
-            color: $postleaf-blue;
+            color: $leafpub-blue;
         }
     }
 
@@ -61,7 +61,7 @@
             // On state
             &.on,
             &.on i {
-                color: $postleaf-blue;
+                color: $leafpub-blue;
             }
             // Hover state supercedes on state
             &:hover,

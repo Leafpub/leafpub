@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Backup: methods for working with backups
+// Leafpub\Backup: methods for working with backups
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Backup extends Postleaf {
+class Backup extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Constants
@@ -110,7 +110,7 @@ class Backup extends Postleaf {
             }
         }
 
-        // Generate pathname. Ex: backups/a-postleaf-blog.2016-06-15.tar
+        // Generate pathname. Ex: backups/a-leafpub-blog.2016-06-15.tar
         $pathname = self::path(
             'backups/' .
             self::safeFilename(Setting::get('title')) .

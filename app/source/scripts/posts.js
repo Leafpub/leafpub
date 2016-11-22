@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -80,7 +80,7 @@ $(function() {
             // Load next page
             if(request) request.abort();
             request = $.ajax({
-                url: Postleaf.url('api/posts'),
+                url: Leafpub.url('api/posts'),
                 type: 'GET',
                 data: {
                     page: ++page,
@@ -121,7 +121,7 @@ $(function() {
             // Load matching posts and reset page count
             if(request) request.abort();
             request = $.ajax({
-                url: Postleaf.url('api/posts'),
+                url: Leafpub.url('api/posts'),
                 type: 'GET',
                 data: {
                     page: page = 1,
@@ -188,7 +188,7 @@ $(function() {
             $.each(posts, function(index, value) {
                 // Add deferreds to the queue
                 $.ajax({
-                    url: Postleaf.url('api/posts/' + encodeURIComponent(value)),
+                    url: Leafpub.url('api/posts/' + encodeURIComponent(value)),
                     type: 'DELETE'
                 })
                 .done(function(res) {

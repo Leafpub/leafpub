@@ -80,7 +80,7 @@
         color: $link-color;
         text-decoration: none;
         cursor: pointer;
-        transition: $postleaf-transition-speed color;
+        transition: $leafpub-transition-speed color;
         &:hover {
             color: $link-hover-color;
         }

@@ -22,8 +22,8 @@ $user-list-item-image-size: 8rem;
     padding: 1rem;
     padding-top: $user-list-item-image-size + 1.75rem;
     transition:
-        color $postleaf-transition-speed,
-        background-color $postleaf-transition-speed;
+        color $leafpub-transition-speed,
+        background-color $leafpub-transition-speed;
     .avatar {
         position: absolute;
         top: 1rem;
@@ -50,7 +50,7 @@ $user-list-item-image-size: 8rem;
         font-size: .9rem;
         color: $text-muted;
         @include text-truncate;
-        transition: color $postleaf-transition-speed;
+        transition: color $leafpub-transition-speed;
     }
     &:hover {
         background-color: #f2f2f2;
@@ -60,7 +60,7 @@ $user-list-item-image-size: 8rem;
         text-decoration: none;
     }
     &.selected {
-        background-color: $postleaf-blue;
+        background-color: $leafpub-blue;
         color: white;
         .role {
             color: white;

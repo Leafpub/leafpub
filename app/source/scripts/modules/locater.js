@@ -9,9 +9,9 @@ $(function() {
     // Hides the locater control
     function hide() {
         // Remove bindings
-        $(document).off('.postleaf.locater');
-        $('.locater-overlay').off('.postleaf.locater');
-        $('.locater-input').off('.postleaf.locater');
+        $(document).off('.leafpub.locater');
+        $('.locater-overlay').off('.leafpub.locater');
+        $('.locater-input').off('.leafpub.locater');
 
         // Hide it
         $('.locater, .locater-overlay')
@@ -102,7 +102,7 @@ $(function() {
         });
 
         // Watch for key presses
-        $(document).on('keydown.postleaf.locater', function(event) {
+        $(document).on('keydown.leafpub.locater', function(event) {
             // Escape or tab closes it
             if(event.keyCode === 9 || event.keyCode === 27) {
                 event.preventDefault();
@@ -135,12 +135,12 @@ $(function() {
         });
 
         // Close when the overlay is clicked
-        $('.locater-overlay').on('click.postleaf.locater', function() {
+        $('.locater-overlay').on('click.leafpub.locater', function() {
             hide();
         });
 
         // Watch the search field for changes
-        $('.locater-input').on('keyup.postleaf.locater', function(event) {
+        $('.locater-input').on('keyup.leafpub.locater', function(event) {
             var query = $(this).val();
 
             clearTimeout(searchTimeout);
@@ -155,7 +155,7 @@ $(function() {
 
                 // Send request
                 request = $.ajax({
-                    url: Postleaf.url('api/locater'),
+                    url: leafpub.url('api/locater'),
                     type: 'GET',
                     data: {
                         query: query

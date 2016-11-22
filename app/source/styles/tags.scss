@@ -24,9 +24,9 @@
     color: $body-color;
     overflow: hidden;
     transition:
-        border $postleaf-transition-speed,
-        padding $postleaf-transition-speed,
-        background-color $postleaf-transition-speed;
+        border $leafpub-transition-speed,
+        padding $leafpub-transition-speed,
+        background-color $leafpub-transition-speed;
     display: block;
     .name {
         margin-bottom: .3rem;
@@ -64,7 +64,7 @@
     }
     &.selected {
         background-color: #f2f2f2;
-        border-left: solid .5rem $postleaf-blue;
+        border-left: solid .5rem $leafpub-blue;
         padding-right: 1rem;
     }
 }

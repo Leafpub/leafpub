@@ -1,14 +1,14 @@
-# Contributing to Postleaf
+# Contributing to Leafpub
 
-Thanks for your help in making Postleaf better. Before you submit an issue or pull request, please read through this document.
+Thanks for your help in making Leafpub better. Before you submit an issue or pull request, please read through this document.
 
 Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue or assessing patches and features.
 
 ## Using the issue tracker
 
-[The issue tracker](https://github.com/postleaf/postleaf/issues) is the preferred channel for [bug reports](#bug-reports) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
+[The issue tracker](https://github.com/leafpub/leafpub/issues) is the preferred channel for [bug reports](#bug-reports) and [submitting pull requests](#pull-requests), but please respect the following restrictions:
 
-* Please **do not** use the issue tracker for personal support requests. [The Postleaf Community Forum](https://community.postleaf.org/) is a better place to get help.
+* Please **do not** use the issue tracker for personal support requests. [The Leafpub Community Forum](https://community.leafpub.org/) is a better place to get help.
 
 * Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
@@ -115,7 +115,7 @@ Example of well-formed CSS:
 
 ### JavaScript
 
-Postleaf doesn't have a specific JavaScript code guideline, but here are some rules that we try really hard to follow:
+Leafpub doesn't have a specific JavaScript code guideline, but here are some rules that we try really hard to follow:
 
 - Always use semicolons
 - Indent with four spaces (no tabs)
@@ -126,7 +126,7 @@ Postleaf doesn't have a specific JavaScript code guideline, but here are some ru
 
 ### PHP
 
-Postleaf doesn't have a specific PHP code guideline, but here are some rules that we try really hard to follow:
+Leafpub doesn't have a specific PHP code guideline, but here are some rules that we try really hard to follow:
 
 - Indent with four spaces (no tabs)
 - Keep it pretty. Refrain from using long lines and excesive whitespace.
@@ -139,4 +139,4 @@ This section is a work in progress. 🔨
 
 By submitting bug fixes, code, documentation, or anything else to this project, you agree to allow the developer, A Beautiful Site, LLC, to license or relicense your work under their license of choice and you agree to forfeit all copyrights, intellectual property rights, and royalties pertaining to your contribution.
 
-We want Postleaf to remain free for everyone to use, forever, so please do not submit any code or content that is licensed or copyrighted without first getting written consent from the author.
+We want Leafpub to remain free for everyone to use, forever, so please do not submit any code or content that is licensed or copyrighted without first getting written consent from the author.

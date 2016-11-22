@@ -37,7 +37,7 @@ return [
         // Determine format
         $format = isset($options['hash']['format']) ? $options['hash']['format'] : '%Y-%m-%d';
 
-        return \Postleaf\Postleaf::strftime($format, strtotime($date));
+        return \Leafpub\Leafpub::strftime($format, strtotime($date));
     },
 
     // Compares two dates
@@ -140,10 +140,10 @@ return [
 
         // Truncate it
         if($num_chars) {
-            $string = \Postleaf\Postleaf::getChars($string, $num_chars ? $num_chars : 140);
+            $string = \Leafpub\Leafpub::getChars($string, $num_chars ? $num_chars : 140);
         } else {
             // Return first n words
-            $string = \Postleaf\Postleaf::getWords($string, $num_words ? $num_words : 50);
+            $string = \Leafpub\Leafpub::getWords($string, $num_words ? $num_words : 50);
         }
 
         // We've stripped HTML tags, so return as-is
@@ -248,7 +248,7 @@ return [
 
     // Outputs localized terms from the current language pack
     'L' => function($term, $options) {
-        return \Postleaf\Language::term($term, $options['hash']);
+        return \Leafpub\Language::term($term, $options['hash']);
     },
 
     // Logs details to the screen
@@ -258,7 +258,7 @@ return [
 
     // Convert markdown to HTML
     'markdown' => function($markdown, $options) {
-        return \Postleaf\Postleaf::markdownToHtml($markdown);
+        return \Leafpub\Leafpub::markdownToHtml($markdown);
     },
 
     // Compares two values using regex
@@ -341,7 +341,7 @@ return [
         }
 
         // See Post::count() for available options
-        return \Postleaf\Post::count($options['hash']);
+        return \Leafpub\Post::count($options['hash']);
     },
 
     // Returns the correct string based on a number

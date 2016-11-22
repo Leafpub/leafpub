@@ -14,7 +14,7 @@
 // @include node_modules/@claviska/jquery-selectable/jquery.selectable.min.js
 
 // Modules
-// @include app/source/scripts/modules/postleaf.js
+// @include app/source/scripts/modules/leafpub.js
 // @include app/source/scripts/modules/locater.js
 // @include app/source/scripts/modules/reauthenticate.js
 // @include app/source/scripts/modules/shared.js

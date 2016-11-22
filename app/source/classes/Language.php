@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Language: methods for working with language packs
+// Leafpub\Language: methods for working with language packs
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Language extends Postleaf {
+class Language extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Protected methods

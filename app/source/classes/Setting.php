@@ -1,13 +1,13 @@
 <?php
 //
-// Postleaf\Settings: methods for working with settings
+// Leafpub\Settings: methods for working with settings
 //
 // Note: settings are cached in the static $settings property of the base class in order to reduce
 // superfluous database calls.
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Setting extends Postleaf {
+class Setting extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

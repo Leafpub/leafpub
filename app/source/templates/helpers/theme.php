@@ -14,11 +14,11 @@ return [
                 $author = $options['_this']['author'];
             } elseif(is_string($options['_this']['author'])) {
                 // Try this.author
-                $author = \Postleaf\User::get($options['_this']['author']);
+                $author = \Leafpub\User::get($options['_this']['author']);
             }
         } else {
             // Get the author by slug
-            $author = \Postleaf\User::get($slug);
+            $author = \Leafpub\User::get($slug);
         }
 
         // Do {{else}} if no author is found
@@ -35,7 +35,7 @@ return [
     // Output author bios as HTML instead of markdown
     'bio' => function($options) {
         return new \LightnCandy\SafeString(
-            \Postleaf\Postleaf::markdownToHtml($options['_this']['bio'])
+            \Leafpub\Leafpub::markdownToHtml($options['_this']['bio'])
         );
     },
 
@@ -45,7 +45,7 @@ return [
         $class = $options['data']['template'] . '-template';
 
         // Homepage class
-        if(\Postleaf\Postleaf::isHomepage()) {
+        if(\Leafpub\Leafpub::isHomepage()) {
             $class .= ' homepage';
         }
 
@@ -66,12 +66,12 @@ return [
         if($editable && $options['data']['meta']['editable']) {
             // If so, wrap in editable tags
             //
-            // Note that content is also being inserted into the data-postleaf-html attribute inside
+            // Note that content is also being inserted into the data-leafpub-html attribute inside
             // the div. We do this so we can grab the original markup once it's loaded into the
             // editor, as the code may have been altered by scripts.
             return new \LightnCandy\SafeString(
-                '<div data-postleaf-id="post:content" data-postleaf-type="post-content" ' .
-                'data-postleaf-html="' . htmlspecialchars($content) . '">' .
+                '<div data-leafpub-id="post:content" data-leafpub-type="post-content" ' .
+                'data-leafpub-html="' . htmlspecialchars($content) . '">' .
                 $content .
                 '</div>'
             );
@@ -84,19 +84,19 @@ return [
     // Output descriptions as HTML instead of markdown
     'description' => function($options) {
         return new \LightnCandy\SafeString(
-            \Postleaf\Postleaf::markdownToHtml($options['_this']['description'])
+            \Leafpub\Leafpub::markdownToHtml($options['_this']['description'])
         );
     },
 
     // Gets the website's navigation
     'navigation' => function($options) {
         // Decode nav from settings
-        $items = (array) json_decode(\Postleaf\Setting::get('navigation'), true);
+        $items = (array) json_decode(\Leafpub\Setting::get('navigation'), true);
 
         // Generate `slug` and `current` values for each nav item
         foreach($items as $key => $value) {
-            $items[$key]['slug'] = \Postleaf\Postleaf::slug($value['label']);
-            $items[$key]['current'] = \Postleaf\Postleaf::isCurrentUrl($value['link']);
+            $items[$key]['slug'] = \Leafpub\Leafpub::slug($value['label']);
+            $items[$key]['current'] = \Leafpub\Leafpub::isCurrentUrl($value['link']);
         }
 
         if(count($items)) {
@@ -127,7 +127,7 @@ return [
         }
 
         // Get the previous post
-        $post = \Postleaf\Post::getAdjacent($slug, [
+        $post = \Leafpub\Post::getAdjacent($slug, [
             'direction' => 'next',
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -154,7 +154,7 @@ return [
             }
         } else {
             // Get the post by slug
-            $post = \Postleaf\Post::get($slug);
+            $post = \Leafpub\Post::get($slug);
         }
 
         // Do {{else}} if no post is found
@@ -182,39 +182,39 @@ return [
         return $class;
     },
 
-    // Handles the output for {{postleaf_foot}}
-    'postleaf_foot' => function($options) {
+    // Handles the output for {{leafpub_foot}}
+    'leafpub_foot' => function($options) {
         $html = '';
 
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject TinyMCE
             $html .=
-                '<!--{{postleaf_foot}}-->' .
+                '<!--{{leafpub_foot}}-->' .
                 '<script src="' . htmlspecialchars(
-                    \Postleaf\Postleaf::url(
+                    \Leafpub\Leafpub::url(
                         'source/vendor/tinymce/tinymce/tinymce.min.js?v=' .
-                        $options['data']['postleaf']['version']
+                        $options['data']['leafpub']['version']
                     )
                 ) . '"></script>';
         }
 
         // Inject foot code
-        $html .= "\n" . \Postleaf\Setting::get('foot_code');
+        $html .= "\n" . \Leafpub\Setting::get('foot_code');
 
         // Inject admin toolbar if the user is logged in and the post isn't editable or a preview
         if(
-            \Postleaf\Session::isAuthenticated() &&
+            \Leafpub\Session::isAuthenticated() &&
             !$options['data']['meta']['editable'] &&
             !$options['data']['meta']['preview']
         ) {
             // Render it
-            $html .= \Postleaf\Renderer::render([
-                'template' => \Postleaf\Postleaf::path(
+            $html .= \Leafpub\Renderer::render([
+                'template' => \Leafpub\Leafpub::path(
                     'source/templates/partials/admin-toolbar.hbs'
                 ),
                 'data' => [
-                    'items' => \Postleaf\Admin::getAdminToolbarItems(
+                    'items' => \Leafpub\Admin::getAdminToolbarItems(
                         $options['data']['template'],
                         $options['_this']
                     )
@@ -227,43 +227,43 @@ return [
         return new \LightnCandy\SafeString($html);
     },
 
-    // Handles the output for {{postleaf_head}}
-    'postleaf_head' => function($options) {
+    // Handles the output for {{leafpub_head}}
+    'leafpub_head' => function($options) {
         $html = '';
 
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
-            // Inject Postleaf data and editor stylesheet
+            // Inject Leafpub data and editor stylesheet
             $html .=
-                '<!--{{postleaf_head}}-->' .
-                '<script>window.postleaf = true;</script>' .
+                '<!--{{leafpub_head}}-->' .
+                '<script>window.leafpub = true;</script>' .
                 '<link rel="stylesheet" href="' . htmlspecialchars(
-                    \Postleaf\Postleaf::url(
+                    \Leafpub\Leafpub::url(
                         'source/assets/css/editor.css?v=' .
-                        $options['data']['postleaf']['version']
+                        $options['data']['leafpub']['version']
                     )
                 ) . '">';
         }
 
         // Inject admin toolbar styles if the user is logged in and it's not a preview/editable post
         if(
-            \Postleaf\Session::isAuthenticated() &&
+            \Leafpub\Session::isAuthenticated() &&
             !$options['data']['meta']['editable'] &&
             !$options['data']['meta']['preview']
         ) {
             $html .=
                 '<link rel="stylesheet" href="' .
                 htmlspecialchars(
-                    \Postleaf\Postleaf::url(
+                    \Leafpub\Leafpub::url(
                         'source/assets/css/admin-toolbar.css?v=' .
-                        $options['data']['postleaf']['version']
+                        $options['data']['leafpub']['version']
                     )
                 ) .
                 '">';
         }
 
         // Inject head code
-        $html .= "\n" . \Postleaf\Setting::get('head_code');
+        $html .= "\n" . \Leafpub\Setting::get('head_code');
 
         // Inject JSON linked data (schema.org)
         if(isset($options['data']['meta']['ld_json'])) {
@@ -311,7 +311,7 @@ return [
         }
 
         // Get the previous post
-        $post = \Postleaf\Post::getAdjacent($slug, [
+        $post = \Leafpub\Post::getAdjacent($slug, [
             'direction' => 'previous',
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -358,7 +358,7 @@ return [
         if($count < 1) $count = 5;
 
         // Get recent posts
-        $posts = \Postleaf\Post::getMany([
+        $posts = \Leafpub\Post::getMany([
             'items_per_page' => $count,
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -395,7 +395,7 @@ return [
         if($count < 1) $count = 5;
 
         // Get suggested posts
-        $posts = \Postleaf\Post::getSuggested($slug, [
+        $posts = \Leafpub\Post::getSuggested($slug, [
             'max' => $count,
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -420,11 +420,11 @@ return [
                 $tag = $options['_this']['tag'];
             } elseif(isset($options['_this']['slug'])) {
                 // Try this.slug
-                $tag = \Postleaf\Tag::get($options['_this']['slug']);
+                $tag = \Leafpub\Tag::get($options['_this']['slug']);
             }
         } else {
             // Get the tag by slug
-            $tag = \Postleaf\Tag::get($slug);
+            $tag = \Leafpub\Tag::get($slug);
         }
 
         // Do {{else}} if no tag is found
@@ -456,7 +456,7 @@ return [
         // Get data for each tag
         $tags = [];
         foreach((array) $slugs as $slug) {
-            $tag = \Postleaf\Tag::get($slug);
+            $tag = \Leafpub\Tag::get($slug);
             if($tag) $tags[] = $tag;
         }
 
@@ -480,7 +480,7 @@ return [
             $c = '';
             if($autolink) {
                 $c .=
-                    '<a href="' . htmlspecialchars( \Postleaf\Tag::url($tag['slug']) ) . '">' .
+                    '<a href="' . htmlspecialchars( \Leafpub\Tag::url($tag['slug']) ) . '">' .
                     htmlspecialchars($tag['name']) .
                     '</a>';
             } else {
@@ -516,12 +516,12 @@ return [
         if($editable && $options['data']['meta']['editable']) {
             // If so, wrap in editable tags and output raw
             //
-            // Note that content is also being inserted into the data-postleaf-html attribute inside
+            // Note that content is also being inserted into the data-leafpub-html attribute inside
             // the div. We do this so we can grab the original markup once it's loaded into the
             // editor, as the code may have been altered by scripts.
             return new \LightnCandy\SafeString(
-                '<div data-postleaf-id="post:title" data-postleaf-type="post-title" ' .
-                'data-postleaf-html="' . htmlspecialchars($title) . '">' .
+                '<div data-leafpub-id="post:title" data-leafpub-type="post-title" ' .
+                'data-leafpub-html="' . htmlspecialchars($title) . '">' .
                 htmlspecialchars($title) .
                 '</div>'
             );

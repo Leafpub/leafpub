@@ -1,18 +1,18 @@
-/* global Postleaf, showdown */
+/* global Leafpub, showdown */
 /* jshint unused:false */
-var Postleaf;
+var Leafpub;
 
-// The Postleaf object
+// The Leafpub object
 $(function() {
     'use strict';
 
-    Postleaf = {
-        // Postleaf metadata
-        template: $('meta[name="postleaf:template"]').attr('content'),
+    Leafpub = {
+        // Leafpub metadata
+        template: $('meta[name="leafpub:template"]').attr('content'),
 
         // Returns the admin URL optionally concatenating a path
         adminUrl: function(path) {
-            var url = $('meta[name="postleaf:url"]').attr('data-admin');
+            var url = $('meta[name="leafpub:url"]').attr('data-admin');
             return path ?
                 url.replace(/\/$/, '') + '/' + path.replace(/^\//, '') :
                 url;
@@ -72,7 +72,7 @@ $(function() {
             return converter.makeHtml(markdown);
         },
 
-        // Returns a slug; same as Postleaf::slug()
+        // Returns a slug; same as Leafpub::slug()
         slug: function(string) {
         	return string
         		// Convert spaces and underscores to dashes
@@ -130,7 +130,7 @@ $(function() {
 
             // Send request to upload
             $.ajax({
-                url: Postleaf.url('api/uploads'),
+                url: Leafpub.url('api/uploads'),
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -166,7 +166,7 @@ $(function() {
 
         // Returns the website URL optionally concatenating a path
         url: function(path) {
-            var url = $('meta[name="postleaf:url"]').attr('data-base');
+            var url = $('meta[name="leafpub:url"]').attr('data-base');
             return path ?
                 url.replace(/\/$/, '') + '/' + path.replace(/^\//, '') :
                 url;

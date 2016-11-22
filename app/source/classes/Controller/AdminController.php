@@ -2,26 +2,26 @@
 //
 // Controller for admin panel views
 //
-namespace Postleaf\Controller;
+namespace Leafpub\Controller;
 
-use Postleaf\Admin,
-    Postleaf\Backup,
-    Postleaf\Blog,
-    Postleaf\Cache,
-    Postleaf\Error,
-    Postleaf\Feed,
-    Postleaf\History,
-    Postleaf\Language,
-    Postleaf\Post,
-    Postleaf\Postleaf,
-    Postleaf\Renderer,
-    Postleaf\Search,
-    Postleaf\Session,
-    Postleaf\Setting,
-    Postleaf\Tag,
-    Postleaf\Theme,
-    Postleaf\Upload,
-    Postleaf\User;
+use Leafpub\Admin,
+    Leafpub\Backup,
+    Leafpub\Blog,
+    Leafpub\Cache,
+    Leafpub\Error,
+    Leafpub\Feed,
+    Leafpub\History,
+    Leafpub\Language,
+    Leafpub\Post,
+    Leafpub\Leafpub,
+    Leafpub\Renderer,
+    Leafpub\Search,
+    Leafpub\Session,
+    Leafpub\Setting,
+    Leafpub\Tag,
+    Leafpub\Theme,
+    Leafpub\Upload,
+    Leafpub\User;
 
 class AdminController extends Controller {
 
@@ -133,7 +133,7 @@ class AdminController extends Controller {
             'all_tags' => Tag::getNames(),
             'post_tags' => [],
             'can_create_tags' => Session::isRole(['owner', 'admin', 'editor']) ? 'true' : 'false',
-            'frame_src' => Postleaf::url(
+            'frame_src' => Leafpub::url(
                 'api/posts/render?new&zen=' . rawurlencode($_COOKIE['zen'])
             )
         ]);
@@ -166,7 +166,7 @@ class AdminController extends Controller {
             'all_tags' => Tag::getNames(),
             'post_tags' => $post['tags'],
             'can_create_tags' => Session::isRole(['owner', 'admin', 'editor']) ? 'true' : 'false',
-            'frame_src' => Postleaf::url(
+            'frame_src' => Leafpub::url(
                 'api/posts/render?post=' . rawurlencode($post['slug']) .
                 '&zen=' . rawurlencode($_COOKIE['zen'])
             )

@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Feed: methods for working with the RSS feed
+// Leafpub\Feed: methods for working with the RSS feed
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Feed extends Postleaf {
+class Feed extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

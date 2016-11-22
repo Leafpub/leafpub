@@ -200,7 +200,7 @@
                         <h3 class="m-t-3">{{L 'custom_code'}}</h3>
                         {{!-- Head code --}}
                         <div class="form-group">
-                            <label for="head-code">{{L 'inject_this_code_into_postleaf_head'}}</label>
+                            <label for="head-code">{{L 'inject_this_code_into_leafpub_head'}}</label>
                             <div class="tag-cover">
                                 <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
                                 <textarea class="form-control code" name="head-code" id="head-code" rows="6" spellcheck="false">{{@settings.head_code}}</textarea>
@@ -208,7 +208,7 @@
                         </div>
                         {{!-- Foot code --}}
                         <div class="form-group">
-                            <label for="foot-code">{{L 'inject_this_code_into_postleaf_foot'}}</label>
+                            <label for="foot-code">{{L 'inject_this_code_into_leafpub_foot'}}</label>
                             <div class="tag-cover">
                                 <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
                                 <div class="tag-cover">
@@ -234,7 +234,7 @@
 
                         {{!-- Version --}}
                         <div class="form-group m-t-3 text-xs-center text-muted">
-                            Postleaf {{@postleaf.version}}
+                            Leafpub {{@leafpub.version}}
                         </div>
                     </div>
 
@@ -243,7 +243,7 @@
                         {{! -- Create backup --}}
                         <h3>{{L 'create_backup'}}</h3>
                         <p>
-                            {{L 'postleaf_can_create_a_backup_of_your_entire_website...'}}
+                            {{L 'leafpub_can_create_a_backup_of_your_entire_website...'}}
                         </p>
                         <div class="form-group">
                             <button class="btn btn-primary" type="button" data-create-backup>

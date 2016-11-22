@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Error: methods for working with error pages
+// Leafpub\Error: methods for working with error pages
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Error extends Postleaf {
+class Error extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Public methods

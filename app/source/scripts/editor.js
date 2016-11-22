@@ -1,4 +1,4 @@
-/* globals Editor:true, Postleaf */
+/* globals Editor:true, Leafpub */
 /* jshint unused:false */
 //
 // We're trying to completely abstract TinyMCE so it could be replaced with another library or maybe
@@ -76,7 +76,7 @@ var Editor;
             browser_spellcheck: true,
             // Document base URL must end with slash per the TinyMCE docs. This is especially
             // important for sites running in a subfolder, otherwise the URLs will be incorrect.
-            document_base_url: Postleaf.url().replace(/\/$/, '') + '/',
+            document_base_url: Leafpub.url().replace(/\/$/, '') + '/',
             element_format: 'html',
             entity_encoding: 'raw',
             extended_valid_elements: 'i[class],iframe[*],script[*]',
@@ -143,7 +143,7 @@ var Editor;
             object_resizing: false, // CSS selector or `false` to disable
             plugins: 'lists,paste,table,textpattern',
             relative_urls: true,
-            selector: '[data-postleaf-id="' + element.getAttribute('data-postleaf-id') + '"]',
+            selector: '[data-leafpub-id="' + element.getAttribute('data-leafpub-id') + '"]',
             skin: false,
             textpattern_patterns: [
                 {start: '*', end: '*', format: 'italic'},
@@ -204,7 +204,7 @@ var Editor;
                         matches[i].setAttribute(
                             'data-embed',
                             // Remove data-mce-* from pasted embed blocks
-                            // See https://github.com/Postleaf/postleaf/issues/7
+                            // See https://github.com/Leafpub/leafpub/issues/7
                             removeDataMceAttributes(matches[i].innerHTML)
                         );
                         matches[i].setAttribute('contenteditable', false);

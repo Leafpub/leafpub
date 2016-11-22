@@ -1,4 +1,4 @@
-/* globals Cookies, Editor, Nanobar, Postleaf */
+/* globals Cookies, Editor, Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -69,16 +69,16 @@ $(function() {
         hidePanel();
 
         // Trigger show event
-        $(panel).trigger('show.postleaf.panel');
+        $(panel).trigger('show.leafpub.panel');
 
         // Show the specified panel
-        $(panel).on('transitionend.postleaf.panel', function() {
-            $(panel).off('transitionend.postleaf.panel').trigger('shown.postleaf.panel');
+        $(panel).on('transitionend.leafpub.panel', function() {
+            $(panel).off('transitionend.leafpub.panel').trigger('shown.leafpub.panel');
         }).addClass('active');
 
         $(document)
         // Watch for keypresses or clicks outside the panel
-        .on('touchstart.postleaf.panel keydown.postleaf.panel mousedown.postleaf.panel', function(event) {
+        .on('touchstart.leafpub.panel keydown.leafpub.panel mousedown.leafpub.panel', function(event) {
             if(
                 // Is it outside the panel?
                 !$(event.target).parents().addBack().is(panel) &&
@@ -89,7 +89,7 @@ $(function() {
             }
         })
         // Watch for the escape key
-        .on('keydown.postleaf.panel', function(event) {
+        .on('keydown.leafpub.panel', function(event) {
             if(event.keyCode === 27) {
                 event.preventDefault();
                 hidePanel(panel);
@@ -97,13 +97,13 @@ $(function() {
         });
 
         // Watch for form submission
-        $(panel).find('form').on('submit.postleaf.panel', function(event) {
+        $(panel).find('form').on('submit.leafpub.panel', function(event) {
             event.preventDefault();
             hidePanel(panel);
         });
 
         // Watch for clicks on the close button
-        $(panel).find('[data-panel="hide"]').on('click.postleaf.panel', function(event) {
+        $(panel).find('[data-panel="hide"]').on('click.leafpub.panel', function(event) {
             event.preventDefault();
             hidePanel(panel);
         });
@@ -122,15 +122,15 @@ $(function() {
         }
 
         // Remove bindings
-        $(panel).find('[data-panel="hide"]').off('.postleaf.panel');
-        $(document).off('.postleaf.panel');
+        $(panel).find('[data-panel="hide"]').off('.leafpub.panel');
+        $(document).off('.leafpub.panel');
 
         // Trigger hide event
-        $(panel).trigger('hide.postleaf.panel');
+        $(panel).trigger('hide.leafpub.panel');
 
         // Show the specified panel
-        $(panel).on('transitionend.postleaf.panel', function() {
-            $(panel).off('transitionend.postleaf.panel').trigger('hidden.postleaf.panel');
+        $(panel).on('transitionend.leafpub.panel', function() {
+            $(panel).off('transitionend.leafpub.panel').trigger('hidden.leafpub.panel');
         }).removeClass('active');
     }
 
@@ -148,26 +148,26 @@ $(function() {
         frameDoc = $('.editor-frame').get(0).contentWindow.document;
 
         // Add the HTML class
-        $('html', frameDoc).addClass('postleaf');
+        $('html', frameDoc).addClass('leafpub');
 
         // Show the frame
         $('.editor-loader').prop('hidden', true);
         $('.editor-frame').prop('hidden', false);
 
         // Check for errors
-        if($('html', frameDoc).is('[data-postleaf-error]')) {
+        if($('html', frameDoc).is('[data-leafpub-error]')) {
             // Stop initializing
             return;
         }
 
         // Show the toolbar and force a resize
         $('.editor-toolbar').prop('hidden', false);
-        $(window).trigger('resize.postleaf');
+        $(window).trigger('resize.leafpub');
 
         // Prevent links from loading other pages
         $(frameDoc).on('click mousedown', 'a, area', function(event) {
-            // Skip [data-postleaf] elements
-            if(!$(this).parents().addBack().is('[data-postleaf-id]')) {
+            // Skip [data-leafpub] elements
+            if(!$(this).parents().addBack().is('[data-leafpub-id]')) {
                 event.preventDefault();
             }
         });
@@ -183,7 +183,7 @@ $(function() {
         });
 
         // Title region
-        new Editor($('[data-postleaf-id="post:title"]', frameDoc).get(0), {
+        new Editor($('[data-leafpub-id="post:title"]', frameDoc).get(0), {
             allowNewlines: false,
             placeholder: $('.editor-frame').attr('data-default-title'),
             textOnly: true,
@@ -195,7 +195,7 @@ $(function() {
         });
 
         // Content region
-        new Editor($('[data-postleaf-id="post:content"]', frameDoc).get(0), {
+        new Editor($('[data-leafpub-id="post:content"]', frameDoc).get(0), {
             placeholder: $('.editor-frame').attr('data-default-content'),
             nodeChange: function() {
                 // Update toolbar buttons
@@ -252,7 +252,7 @@ $(function() {
                     // Fetch the provider's oEmbed code
                     progress.go(50);
                     $.ajax({
-                        url: Postleaf.url('api/oembed'),
+                        url: Leafpub.url('api/oembed'),
                         type: 'GET',
                         data: {
                             url: pastedData
@@ -310,7 +310,7 @@ $(function() {
                 if(!target || !isDraggingFile(event)) return;
 
                 // Upload it
-                Postleaf.upload({
+                Leafpub.upload({
                     accept: target === 'post-image' ? 'image' : null,
                     files: event.originalEvent.dataTransfer.files,
                     progress: function(percent) {
@@ -399,8 +399,8 @@ $(function() {
             $('body', frameDoc).replaceWith(this.contentWindow.document.body);
 
             // Reinsert title/content elements
-            $('[data-postleaf-id="post:title"]', frameDoc).replaceWith(title);
-            $('[data-postleaf-id="post:content"]', frameDoc).replaceWith(content);
+            $('[data-leafpub-id="post:title"]', frameDoc).replaceWith(title);
+            $('[data-leafpub-id="post:content"]', frameDoc).replaceWith(content);
 
             // Remove the frame
             $(this).remove();
@@ -414,7 +414,7 @@ $(function() {
         // Create a dummy form and submit it
         $(form)
         .hide()
-        .attr('action', Postleaf.url('api/posts/render'))
+        .attr('action', Leafpub.url('api/posts/render'))
         .attr('method', 'post')
         .attr('target', 'dummy_frame')
         .append(
@@ -450,7 +450,7 @@ $(function() {
     // Saves the post and redirects to the posts page on success
     function save() {
         var type = post === '' ? 'POST' : 'PUT',
-            url = Postleaf.url(
+            url = Leafpub.url(
                 type === 'POST' ? 'api/posts' : 'api/posts/' + encodeURIComponent(post)
             );
 
@@ -459,7 +459,7 @@ $(function() {
 
         // Show progress
         progress.go(50);
-        Postleaf.highlightErrors('.settings-form');
+        Leafpub.highlightErrors('.settings-form');
 
         // Send request
         request = $.ajax({
@@ -475,17 +475,17 @@ $(function() {
                 ready = false;
 
                 // Show feedback
-                Postleaf.announce(
-                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                Leafpub.announce(
+                    $('meta[name="leafpub:language"]').attr('data-changes-saved'),
                     { style: 'success' }
                 ).then(function() {
                     // Remove save confirmation and redirect
                     window.onbeforeunload = null;
-                    location.href = Postleaf.adminUrl('posts');
+                    location.href = Leafpub.adminUrl('posts');
                 });
             } else {
                 // Show errors
-                Postleaf.highlightErrors('.settings-form', res.invalid);
+                Leafpub.highlightErrors('.settings-form', res.invalid);
                 $.alertable.alert(res.message);
             }
         })
@@ -513,7 +513,7 @@ $(function() {
         return {
             title: titleEditor ? titleEditor.getContent() : null,
             content: contentEditor ? contentEditor.getContent() : null,
-            slug: $('#slug').val() || Postleaf.slug(titleEditor.getContent()),
+            slug: $('#slug').val() || Leafpub.slug(titleEditor.getContent()),
             pub_date: $('#pub-date').val() + ' ' + $('#pub-time').val(),
             image: $('#image').val(),
             tags: tags,
@@ -532,7 +532,7 @@ $(function() {
     function setPostImage(src) {
         if(src) {
             $('input[name="image"]').val(src).trigger('change');
-            $('.post-image').css('background-image', 'url("' + Postleaf.url(src) + '")');
+            $('.post-image').css('background-image', 'url("' + Leafpub.url(src) + '")');
             $('.remove-post-image').prop('hidden', false);
         } else {
             $('input[name="image"]').val('').trigger('change');
@@ -643,7 +643,7 @@ $(function() {
         searchField: ['slug', 'name'],
         create: canCreateTags ?
             function(input) {
-                var slug = Postleaf.slug(input);
+                var slug = Leafpub.slug(input);
                 return slug.length ? { slug: slug, name: input } : false;
             } : false,
         render: {
@@ -656,7 +656,7 @@ $(function() {
 
     // Enforce slug syntax
     $('#slug').on('change', function() {
-        this.value = Postleaf.slug(this.value);
+        this.value = Leafpub.slug(this.value);
     });
 
     // Upload post image
@@ -665,7 +665,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             files: event.target.files[0],
             progress: function(percent) {
@@ -714,7 +714,7 @@ $(function() {
 
             // Send the request
             $.ajax({
-                url: Postleaf.url('api/history/' + encodeURIComponent(id)),
+                url: Leafpub.url('api/history/' + encodeURIComponent(id)),
                 type: 'GET'
             })
             .done(function(res) {
@@ -747,7 +747,7 @@ $(function() {
 
             // Send the request
             $.ajax({
-                url: Postleaf.url('api/history/' + encodeURIComponent(id)),
+                url: Leafpub.url('api/history/' + encodeURIComponent(id)),
                 type: 'DELETE'
             })
             .done(function(res) {
@@ -813,11 +813,11 @@ $(function() {
 
         // Settings panel
         $('.settings-panel')
-        .on('show.postleaf.panel', function() {
+        .on('show.leafpub.panel', function() {
             updateSearchEnginePreview();
             $(btn).addClass('active');
         })
-        .on('hide.postleaf.panel', function() {
+        .on('hide.leafpub.panel', function() {
             $(btn).removeClass('active');
         });
 
@@ -838,7 +838,7 @@ $(function() {
 
         // Link panel
         $('.link-panel')
-        .on('show.postleaf.panel', function() {
+        .on('show.leafpub.panel', function() {
             var href,
                 title,
                 target;
@@ -862,10 +862,10 @@ $(function() {
             // Toggle button state
             $(btn).addClass('active');
         })
-        .on('shown.postleaf.panel', function() {
+        .on('shown.leafpub.panel', function() {
             $('#link-href').focus();
         })
-        .on('hide.postleaf.panel', function() {
+        .on('hide.leafpub.panel', function() {
             $(btn).removeClass('active');
             contentEditor.focus();
         });
@@ -905,7 +905,7 @@ $(function() {
             if(!event.target.files.length) return;
 
             // Upload it
-            Postleaf.upload({
+            Leafpub.upload({
                 files: event.target.files[0],
                 progress: function(percent) {
                     progress.go(percent);
@@ -940,7 +940,7 @@ $(function() {
 
         // Image panel
         $('.image-panel')
-        .on('show.postleaf.panel', function() {
+        .on('show.leafpub.panel', function() {
             var src,
                 href,
                 alt;
@@ -977,10 +977,10 @@ $(function() {
             // Toggle button state
             $(btn).addClass('active');
         })
-        .on('shown.postleaf.panel', function() {
+        .on('shown.leafpub.panel', function() {
             $('#image-src').focus();
         })
-        .on('hide.postleaf.panel', function() {
+        .on('hide.leafpub.panel', function() {
             $(btn).removeClass('active');
             contentEditor.focus();
         });
@@ -1026,7 +1026,7 @@ $(function() {
             if(!event.target.files.length) return;
 
             // Upload it
-            Postleaf.upload({
+            Leafpub.upload({
                 accept: 'image',
                 files: event.target.files[0],
                 progress: function(percent) {
@@ -1057,7 +1057,7 @@ $(function() {
                 img;
 
             if(src.length) {
-                src = Postleaf.url(src);
+                src = Leafpub.url(src);
             } else {
                 return;
             }
@@ -1111,7 +1111,7 @@ $(function() {
 
         // Embed panel
         $('.embed-panel')
-        .on('show.postleaf.panel', function() {
+        .on('show.leafpub.panel', function() {
             var code;
 
             // Get bookmark and selected element
@@ -1136,10 +1136,10 @@ $(function() {
             // Toggle button state
             $(btn).addClass('active');
         })
-        .on('shown.postleaf.panel', function() {
+        .on('shown.leafpub.panel', function() {
             $('#embed-code').focus();
         })
-        .on('hide.postleaf.panel', function() {
+        .on('hide.leafpub.panel', function() {
             $(btn).removeClass('active');
             contentEditor.focus();
         });
@@ -1161,7 +1161,7 @@ $(function() {
                     // Fetch the provider's oEmbed code
                     progress.go(50);
                     $.ajax({
-                        url: Postleaf.url('api/oembed'),
+                        url: Leafpub.url('api/oembed'),
                         type: 'GET',
                         data: {
                             url: code

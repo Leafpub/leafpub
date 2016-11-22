@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\History: methods for working with history
+// Leafpub\History: methods for working with history
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class History extends Postleaf {
+class History extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Private methods

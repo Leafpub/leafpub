@@ -2,15 +2,15 @@
 // Variables
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$postleaf-blue: #09d;
-$postleaf-green: #8cc152;
-$postleaf-black: #252525;
+$leafpub-blue: #09d;
+$leafpub-green: #8cc152;
+$leafpub-black: #252525;
 
-$postleaf-transition-speed: .2s;
+$leafpub-transition-speed: .2s;
 
 // Locater
-$postleaf-locater-width: 35rem;
-$postleaf-locater-width-xs: 90%;
+$leafpub-locater-width: 35rem;
+$leafpub-locater-width-xs: 90%;
 
 // Font awesome path
 $fa-font-path: '../font';
@@ -27,8 +27,8 @@ $font-family-monospace:  "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mon
 $text-muted: #aaa;
 
 // Brand
-$brand-primary: $postleaf-blue;
-$brand-success: $postleaf-green;
+$brand-primary: $leafpub-blue;
+$brand-success: $leafpub-green;
 $brand-info: #40c9ff;
 $brand-warning: #ff851b;
 $brand-danger: #ff4136;
@@ -50,7 +50,7 @@ $border-radius-small: 2px;
 
 // Forms
 $input-border-color: #ddd;
-$input-border-focus: $postleaf-blue;
+$input-border-focus: $leafpub-blue;
 
 // Buttons
 $btn-secondary-color: #888;
@@ -61,11 +61,11 @@ $alert-border-width: 0;
 
 // Dropdowns
 $dropdown-link-hover-color: white;
-$dropdown-link-hover-bg: $postleaf-blue;
+$dropdown-link-hover-bg: $leafpub-blue;
 
 
 // Tooltips
-$tooltip-bg: $postleaf-black;
+$tooltip-bg: $leafpub-black;
 $tooltip-opacity: 1;
 
 // Bootstrap vars and mixins

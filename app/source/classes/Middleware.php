@@ -1,8 +1,8 @@
 <?php
 //
-// Postleaf\Middleware: PSR 7 compatible middleware for use with Postleaf's router
+// Leafpub\Middleware: PSR 7 compatible middleware for use with Leafpub's router
 //
-namespace Postleaf;
+namespace Leafpub;
 
 class Middleware {
 

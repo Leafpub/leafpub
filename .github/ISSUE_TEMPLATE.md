@@ -1,4 +1,4 @@
-This issue tracker is ONLY for bug reports. If you need help with something or would like to request a feature, please ask on https://community.postleaf.org/ instead.
+This issue tracker is ONLY for bug reports. If you need help with something or would like to request a feature, please ask on https://community.leafpub.org/ instead.
 
 ---
 
@@ -16,7 +16,7 @@ Tell us how to replicate the problem.
 
 ### Additional info
 
-- Postleaf version:
+- Leafpub version:
 - PHP version:
 - Affected browsers:
 - Operating system:

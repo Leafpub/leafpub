@@ -1,10 +1,10 @@
 // Menu variables
-$postleaf-main-menu-width: 4rem;
-$postleaf-mobile-menu-height: 2.75rem;
+$leafpub-main-menu-width: 4rem;
+$leafpub-mobile-menu-height: 2.75rem;
 
 // Pad the body unless it has the `no-menu` class
 body:not(.no-menu) {
-    padding-left: $postleaf-main-menu-width;
+    padding-left: $leafpub-main-menu-width;
 }
 
 // Main menu
@@ -14,8 +14,8 @@ body:not(.no-menu) {
     top: 0;
     left: 0;
     bottom: 0;
-    width: $postleaf-main-menu-width;
-    background: $postleaf-black;
+    width: $leafpub-main-menu-width;
+    background: $leafpub-black;
     color: white;
     padding: .4rem 0 4rem 0;
     overflow-y: auto;
@@ -24,15 +24,15 @@ body:not(.no-menu) {
         text-align: center;
         font-size: 1.6rem;
         color: white;
-        transition: color $postleaf-transition-speed;
+        transition: color $leafpub-transition-speed;
         padding: .4rem;
         display: block;
         &:hover,
         &:focus {
-            color: $postleaf-blue;
+            color: $leafpub-blue;
         }
         &.current {
-            color: $postleaf-blue;
+            color: $leafpub-blue;
         }
         &:first-child {
             // Let the logo breathe
@@ -46,8 +46,8 @@ body:not(.no-menu) {
     .edit-profile {
         position: fixed;
         bottom: 0;
-        width: $postleaf-main-menu-width;
-        background: $postleaf-black;
+        width: $leafpub-main-menu-width;
+        background: $leafpub-black;
         padding: .4rem .4rem .8rem .4rem;
         overflow: hidden;
         img {
@@ -70,15 +70,15 @@ body:not(.no-menu) {
 .mobile-menu-header {
     position: relative;
     z-index: 1002;
-    height: $postleaf-mobile-menu-height;
-    background: $postleaf-black;
+    height: $leafpub-mobile-menu-height;
+    background: $leafpub-black;
     color: white;
     @include clearfix;
 }
 
 .mobile-menu-logo {
     float: left;
-    height: $postleaf-mobile-menu-height;
+    height: $leafpub-mobile-menu-height;
     padding: .4rem .6rem;
     img {
         height: 100%;
@@ -87,17 +87,17 @@ body:not(.no-menu) {
 
 .mobile-menu-title {
     @include text-truncate;
-    line-height: $postleaf-mobile-menu-height;
+    line-height: $leafpub-mobile-menu-height;
     text-align: center;
     margin: 0 3rem;
 }
 
 .mobile-menu-toggle {
     float: right;
-    height: $postleaf-mobile-menu-height;
+    height: $leafpub-mobile-menu-height;
     font-size: 1.2rem;
     color: white;
-    transition: color $postleaf-transition-speed;
+    transition: color $leafpub-transition-speed;
     padding: .45rem .8rem;
     cursor: pointer;
     &:hover,
@@ -109,11 +109,11 @@ body:not(.no-menu) {
 .mobile-menu-items {
     position: fixed;
     z-index: 1001;
-    top: $postleaf-mobile-menu-height;
+    top: $leafpub-mobile-menu-height;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba($postleaf-black, .97);
+    background: rgba($leafpub-black, .97);
     padding: .4rem 0;
     display: none;
     overflow-y: auto;
@@ -124,7 +124,7 @@ body:not(.no-menu) {
 
 .mobile-menu-items a {
     color: white;
-    transition: color $postleaf-transition-speed;
+    transition: color $leafpub-transition-speed;
     height: 6rem;
     padding: 1rem .2rem;
     font-size: .75rem;
@@ -146,18 +146,18 @@ body:not(.no-menu) {
         display: block;
         @include text-truncate;
         color: $gray-light;
-        transition: color $postleaf-transition-speed;
+        transition: color $leafpub-transition-speed;
     }
     &:hover,
     &:focus,
     &:hover .description,
     &:focus .description {
-        color: $postleaf-blue;
+        color: $leafpub-blue;
         text-decoration: none;
     }
     &.current,
     &.current .description {
-        color: $postleaf-blue;
+        color: $leafpub-blue;
     }
 }
 
@@ -172,7 +172,7 @@ body:not(.no-menu) {
     // Switch to top padding
     body:not(.no-menu) {
         padding-left: 0;
-        padding-top: $postleaf-mobile-menu-height;
+        padding-top: $leafpub-mobile-menu-height;
     }
 
     // Swap menus

@@ -9,7 +9,7 @@ $(function() {
             $(this).outerHeight(winHeight - $(this).offset().top);
         });
     }
-    $(window).on('resize.postleaf', stretchDown);
+    $(window).on('resize.leafpub', stretchDown);
     stretchDown();
 
     // Show/hide the mobile menu with animation
@@ -68,11 +68,11 @@ $(function() {
     // Custom alertable defaults
     $.alertable.defaults.okButton =
         '<button class="btn btn-primary" type="submit">' +
-        ($('meta[name="postleaf:language"]').attr('data-ok') || 'OK') +
+        ($('meta[name="leafpub:language"]').attr('data-ok') || 'OK') +
         '</button>';
     $.alertable.defaults.cancelButton =
         '<button class="btn btn-secondary" type="button">' +
-        ($('meta[name="postleaf:language"]').attr('data-cancel') || 'Cancel') +
+        ($('meta[name="leafpub:language"]').attr('data-cancel') || 'Cancel') +
         '</button>';
     $.alertable.defaults.show = function() {
         var modal = this.modal,

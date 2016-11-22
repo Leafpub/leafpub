@@ -41,7 +41,7 @@ $(function() {
                 }).then(function(data) {
                     // Attempt login
                     $.ajax({
-                        url: Postleaf.url('api/login'),
+                        url: Leafpub.url('api/login'),
                         type: 'POST',
                         data: {
                             username: data.username,

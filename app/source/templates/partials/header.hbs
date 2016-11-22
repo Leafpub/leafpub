@@ -4,19 +4,19 @@
     <title>{{title}} &middot; {{@settings.title}}</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="apple-mobile-web-app-title" content="Postleaf">
+    <meta name="apple-mobile-web-app-title" content="Leafpub">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1, minimal-ui">
-    {{!-- Postleaf metadata --}}
-    <meta name="postleaf:language" data-cancel="{{L 'cancel'}}" data-ok="{{L 'ok'}}" data-changes-saved="{{L 'your_changes_have_been_saved'}}">
-    <meta name="postleaf:template" content="{{@template}}">
-    <meta name="postleaf:url" data-base="{{url}}" data-admin="{{admin_url}}">
+    {{!-- Leafpub metadata --}}
+    <meta name="leafpub:language" data-cancel="{{L 'cancel'}}" data-ok="{{L 'ok'}}" data-changes-saved="{{L 'your_changes_have_been_saved'}}">
+    <meta name="leafpub:template" content="{{@template}}">
+    <meta name="leafpub:url" data-base="{{url}}" data-admin="{{admin_url}}">
     {{!-- App icons --}}
     {{#either @settings.favicon 'source/assets/img/logo-color.png'}}
     <link rel="apple-touch-icon" href="{{url this}}">
     <link rel="shortcut icon" href="{{url this}}">
     {{/either}}
     {{!-- Styles --}}
-    <link rel="stylesheet" href="{{url 'source/assets/css/lib.css'}}?v={{@postleaf.version}}">
+    <link rel="stylesheet" href="{{url 'source/assets/css/lib.css'}}?v={{@leafpub.version}}">
     {{admin_styles}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic|Roboto+Mono:300">
 </head>

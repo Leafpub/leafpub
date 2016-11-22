@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -13,7 +13,7 @@ $(function() {
                 $.trim($('#name').val()),
             description =
                 $.trim($('#meta-description').val()) ||
-                $.trim($(Postleaf.markdownToHtml($('#description').val())).text());
+                $.trim($(Leafpub.markdownToHtml($('#description').val())).text());
 
         $('.se-slug').text(slug);
         $('.se-title').text(title);
@@ -24,7 +24,7 @@ $(function() {
     $('.tag-form').on('submit', function(event) {
         var form = this,
             type = tag === '' ? 'POST' : 'PUT',
-            url = Postleaf.url(
+            url = Leafpub.url(
                 type === 'POST' ? 'api/tags' : 'api/tags/' + encodeURIComponent(tag)
             );
 
@@ -35,7 +35,7 @@ $(function() {
 
         // Show progress
         progress.go(50);
-        Postleaf.highlightErrors(form);
+        Leafpub.highlightErrors(form);
 
         // Send request
         request = $.ajax({
@@ -51,15 +51,15 @@ $(function() {
                 });
 
                 // Show feedback and redirect
-                Postleaf.announce(
-                    $('meta[name="postleaf:language"]').attr('data-changes-saved'),
+                Leafpub.announce(
+                    $('meta[name="leafpub:language"]').attr('data-changes-saved'),
                     { style: 'success' }
                 ).then(function() {
-                    location.href = Postleaf.adminUrl('tags');
+                    location.href = Leafpub.adminUrl('tags');
                 });
             } else {
                 // Show errors
-                Postleaf.highlightErrors(form, res.invalid);
+                Leafpub.highlightErrors(form, res.invalid);
                 $.alertable.alert(res.message);
             }
         })
@@ -85,13 +85,13 @@ $(function() {
 
             // Send request
             $.ajax({
-                url: Postleaf.url('api/tags/' + encodeURIComponent(tag)),
+                url: Leafpub.url('api/tags/' + encodeURIComponent(tag)),
                 type: 'DELETE'
             })
             .done(function(res) {
                 if(res.success) {
                     // Redirect
-                    location.href = Postleaf.adminUrl('tags');
+                    location.href = Leafpub.adminUrl('tags');
                 } else {
                     // Show error
                     $.alertable.alert(res.message);
@@ -111,12 +111,12 @@ $(function() {
 
     // Enforce slug syntax
     $('#slug').on('change', function() {
-        this.value = Postleaf.slug(this.value);
+        this.value = Leafpub.slug(this.value);
     });
 
     // Guess slug when name changes
     $('#name').on('change', function() {
-        var slug = Postleaf.slug(this.value);
+        var slug = Leafpub.slug(this.value);
 
         // Only guess if no slug is present
         if($('#slug').val() === '') {
@@ -140,7 +140,7 @@ $(function() {
         if(!event.target.files.length) return;
 
         // Upload it
-        Postleaf.upload({
+        Leafpub.upload({
             accept: 'image',
             files: event.target.files[0],
             progress: function(percent) {

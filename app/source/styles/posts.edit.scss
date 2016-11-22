@@ -93,13 +93,13 @@
         border-radius: $border-radius-large;
         text-align: center;
         transition:
-            $postleaf-transition-speed font-size,
-            $postleaf-transition-speed color,
-            $postleaf-transition-speed border-color;
+            $leafpub-transition-speed font-size,
+            $leafpub-transition-speed color,
+            $leafpub-transition-speed border-color;
         &.active {
             font-size: 2.5rem;
-            color: $postleaf-blue;
-            border-color: $postleaf-blue;
+            color: $leafpub-blue;
+            border-color: $leafpub-blue;
         }
         &:first-child {
             height: calc(30% - 1rem);

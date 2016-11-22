@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -25,7 +25,7 @@ $(function() {
 
             // Show errors
             if(res.invalid && res.invalid.length) {
-                Postleaf.highlightErrors(form, res.invalid);
+                Leafpub.highlightErrors(form, res.invalid);
             }
 
             // Show message
@@ -45,7 +45,7 @@ $(function() {
     // Force slug syntax for username
     $('#username').on('change', function() {
         $(this).val(
-            Postleaf.slug($(this).val())
+            Leafpub.slug($(this).val())
         );
     });
 

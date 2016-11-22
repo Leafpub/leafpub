@@ -5,13 +5,13 @@
     margin-bottom: 1rem;
     .se-title {
         font-size: 1.2rem;
-        color: $postleaf-blue;
+        color: $leafpub-blue;
         @include text-truncate;
     }
     .se-url {
         font-size: .9rem;
         line-height: 1.8;
-        color: $postleaf-green;
+        color: $leafpub-green;
         @include text-truncate;
     },
     .se-description {

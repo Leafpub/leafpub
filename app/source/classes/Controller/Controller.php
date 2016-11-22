@@ -1,5 +1,5 @@
 <?php
-namespace Postleaf\Controller;
+namespace Leafpub\Controller;
 
 use Interop\Container\ContainerInterface;
 

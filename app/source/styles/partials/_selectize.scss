@@ -151,7 +151,7 @@
   border: 0 solid rgba(0, 0, 0, 0);
 }
 .selectize-control.multi .selectize-input > div.active {
-  background: $postleaf-blue;
+  background: $leafpub-blue;
   color: white;
   border: 0 solid rgba(0, 0, 0, 0);
 }
@@ -229,7 +229,7 @@
   color: #262626;
 }
 .selectize-dropdown .create {
-  color: $postleaf-green;
+  color: $leafpub-green;
 }
 .selectize-dropdown-content {
   overflow-y: auto;
@@ -309,7 +309,7 @@
 }
 .selectize-input {
   min-height: 34px;
-  transition: border-color $postleaf-transition-speed;
+  transition: border-color $leafpub-transition-speed;
 }
 .selectize-input.dropdown-active {
   border-radius: $border-radius;

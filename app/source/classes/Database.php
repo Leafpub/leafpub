@@ -1,13 +1,13 @@
 <?php
 //
-// Postleaf\Database: methods for working with the database
+// Leafpub\Database: methods for working with the database
 //
 // Note: the database instance is stored in the static $database property of the base class to
 // prevent superflous database connections.
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Database extends Postleaf {
+class Database extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Constants
@@ -43,7 +43,7 @@ class Database extends Postleaf {
 
         // Connect to the database
         try {
-            self::$database = new PostleafPDO(
+            self::$database = new LeafpubPDO(
                 (
                     "mysql:host={$config[host]};" .
                     "port={$config[port]};" .
@@ -90,10 +90,10 @@ class Database extends Postleaf {
         return $string;
     }
 
-    // Drops all Postleaf database tables and recreates them from default.database.sql
+    // Drops all Leafpub database tables and recreates them from default.database.sql
     public static function resetTables() {
         try {
-            self::$database->exec(file_get_contents(Postleaf::path('source/defaults/default.database.sql')));
+            self::$database->exec(file_get_contents(Leafpub::path('source/defaults/default.database.sql')));
         } catch(\PDOException $e) {
             throw new \Exception(
                 'Unable to create database schema: ' . $e->getMessage(),

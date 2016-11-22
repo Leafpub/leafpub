@@ -110,12 +110,12 @@
             }
 
             /* Hide outlines */
-            body [data-postleaf-type="post-content"],
-            body [data-postleaf-type="post-title"] {
+            body [data-leafpub-type="post-content"],
+            body [data-leafpub-type="post-title"] {
                 outline: none;
             }
         </style>
-        {{postleaf_head}}
+        {{leafpub_head}}
     </head>
     <body>
         {{#post}}
@@ -126,6 +126,6 @@
                 </div>
             </div>
         {{/post}}
-        {{postleaf_foot}}
+        {{leafpub_foot}}
     </body>
 </html>

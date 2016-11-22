@@ -1,4 +1,4 @@
-/* globals Nanobar, Postleaf */
+/* globals Nanobar, Leafpub */
 $(function() {
     'use strict';
 
@@ -18,15 +18,15 @@ $(function() {
         event.preventDefault();
 
         // Determine URL
-        switch(Postleaf.template) {
+        switch(Leafpub.template) {
             case 'login.recover':
-                url = Postleaf.url('api/login/recover');
+                url = Leafpub.url('api/login/recover');
                 break;
             case 'login.reset':
-                url = Postleaf.url('api/login/reset');
+                url = Leafpub.url('api/login/reset');
                 break;
             default:
-                url = Postleaf.url('api/login');
+                url = Leafpub.url('api/login');
                 break;
         }
 
@@ -34,7 +34,7 @@ $(function() {
         progress.go(50);
 
         // Hide errors
-        Postleaf.highlightErrors(form);
+        Leafpub.highlightErrors(form);
         $('.form-message').prop('hidden', true);
 
         // Send request
@@ -55,16 +55,16 @@ $(function() {
 
             if(res.success) {
                 // Disable the form and do nothing if we're recovering
-                if(Postleaf.template === 'login.recover') {
+                if(Leafpub.template === 'login.recover') {
                     $(form).find(':input').prop('disabled', true);
                     return;
                 }
 
                 // Redirect to a custom URL or to the main admin page
-                location.href = redirect ? redirect : Postleaf.adminUrl();
+                location.href = redirect ? redirect : Leafpub.adminUrl();
             } else {
                 // Show errors
-                Postleaf.highlightErrors(form, res.invalid);
+                Leafpub.highlightErrors(form, res.invalid);
 
                 // Shake on error
                 $('.login-form')

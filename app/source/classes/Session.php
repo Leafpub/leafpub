@@ -1,10 +1,10 @@
 <?php
 //
-// Postleaf\Session: methods for working with authenticated sessions
+// Leafpub\Session: methods for working with authenticated sessions
 //
-namespace Postleaf;
+namespace Leafpub;
 
-class Session extends Postleaf {
+class Session extends Leafpub {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Properties
