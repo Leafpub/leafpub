@@ -1,10 +1,10 @@
 <?php
 namespace Leafpub;
 
-define('POSTLEAF_VERSION', '{{version}}');
-define('POSTLEAF_DEV', !!preg_match('/\.dev$/', $_SERVER['HTTP_HOST']));
+define('LEAFPUB_VERSION', '{{version}}');
+define('LEAFPUB_DEV', !!preg_match('/\.dev$/', $_SERVER['HTTP_HOST']));
 error_reporting(E_ALL & ~E_NOTICE);
-ini_set('display_errors', POSTLEAF_DEV ? 1 : 0);
+ini_set('display_errors', LEAFPUB_DEV ? 1 : 0);
 ini_set('log_errors', 1);
 
 // Autoloader

@@ -102,7 +102,7 @@ class Renderer extends Leafpub {
         $special_vars = array_merge((array) $special_vars, [
             'cookies' => $_COOKIE,
             'leafpub' => [
-                'version' => POSTLEAF_VERSION === '{{version}}' ? 'dev' : POSTLEAF_VERSION
+                'version' => LEAFPUB_VERSION === '{{version}}' ? 'dev' : LEAFPUB_VERSION
             ],
             'request' => [
                 'get' => $_GET,
