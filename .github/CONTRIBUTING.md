@@ -137,6 +137,6 @@ This section is a work in progress. 🔨
 
 ## License and Code Contributions
 
-By submitting bug fixes, code, documentation, or anything else to this project, you agree to allow the developer, A Beautiful Site, LLC, to license or relicense your work under their license of choice and you agree to forfeit all copyrights, intellectual property rights, and royalties pertaining to your contribution.
+By submitting bug fixes, code, documentation, or anything else to this project, you agree to allow the developer to license or relicense your work under their license of choice and you agree to forfeit all copyrights, intellectual property rights, and royalties pertaining to your contribution.
 
 We want Leafpub to remain free for everyone to use, forever, so please do not submit any code or content that is licensed or copyrighted without first getting written consent from the author.
