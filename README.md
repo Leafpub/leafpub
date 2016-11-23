@@ -3,10 +3,11 @@
 **Simple, beautiful publishing.**
 
 Created by [Cory LaViska](https://twitter.com/claviska)
+
 Maintained by [Marc Apfelbaum](https://twitter.com/karsasmus)
 
 - Website: [leafpub.org](https://www.leafpub.org/)
-- Twitter: [@leafpubapp](https://twitter.com/leafpubapp)
+- Twitter: [@leafpub](https://twitter.com/leafpub)
 
 
 ![Screenshots](https://www.leafpub.org/content/uploads/2016/07/homepage-splash.png)
