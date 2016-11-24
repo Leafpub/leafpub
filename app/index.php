@@ -40,6 +40,7 @@ $frags = (object) [
 $container = new \Slim\Container();
 $app = new \Slim\App($container);
 $app->add('Leafpub\Middleware:removeTrailingSlashes');
+$app->add('Leafpub\Middleware::maintenance');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // API routes

@@ -207,6 +207,8 @@ Setting::add('timezone', 'America/New_York');
 Setting::add('title', 'A Leafpub Blog');
 Setting::add('twitter', '');
 Setting::add('password_min_length', '8');
+Setting::add('maintenance', 'off');
+Setting::add('maintenance-message', '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>');
 
 // Insert owner
 try {

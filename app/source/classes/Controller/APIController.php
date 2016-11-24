@@ -745,6 +745,8 @@ class APIController extends Controller {
             'timezone' => $params['timezone'],
             'head_code' => $params['head-code'],
             'foot_code' => $params['foot-code'],
+            'maintenance' => $params['maintenance'] === 'on' ? 'on' : 'off',
+            'maintenance-message' => $params['maintenance-message'],
             'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off'
         ];
 

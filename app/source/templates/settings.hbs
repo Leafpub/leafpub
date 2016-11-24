@@ -217,7 +217,24 @@
                                 </div>
                             </div>
                         </div>
-
+                        {{!-- Maintenance Mode --}}
+                        <h3 class="m-t-3">{{L 'maintenance'}}</h3>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="maintenance" value="on"{{#is @settings.maintenance 'on'}} checked{{/is}}>
+                                    {{L 'maintenance_enabled'}}<br>
+                                </label>
+                            </div>
+                            <label for="maintenance-message">{{L 'show_this_message_in_maintenance_mode'}}</label>
+                            <div class="tag-cover">
+                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                                <div class="tag-cover">
+                                    <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                                    <textarea class="form-control" name="maintenance-message" id="maintenance-message" rows="6" spellcheck="false">{{@settings.maintenance-message}}</textarea>
+                                </div>
+                            </div>
+                        </div>
                         {{!-- Caching --}}
                         <h3 class="m-t-3">{{L 'cache'}}</h3>
                         <div class="form-group">

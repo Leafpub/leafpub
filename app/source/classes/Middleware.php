@@ -68,4 +68,27 @@ class Middleware {
         return $next($request, $response);
     }
 
+    /** 
+    *   Maintenance Middleware
+    *
+    *   Checks, if the site is in maintenance mode. 
+    *   Only the owner and admins see the site after login
+    *   All other see maintenance.hbs
+    *
+    **/
+    public static function maintenance($request, $response, $next){
+        $siteInMaintenanceMode = (Setting::get('maintenance') == 'on');
+        
+        $allowedRoutes = array('/admin', '/admin/login', '/api/login', '/logout');
+        $tryToLogin = in_array($request->getUri()->getPath(), $allowedRoutes);
+        
+        if ($siteInMaintenanceMode && !$tryToLogin ){
+            if (!Session::isAuthenticated() || (Session::isAuthenticated() && !Session::isRole(array('owner', 'admin')))){
+                $html = Maintenance::render();
+                return $response->withStatus(503)->write($html);
+            }
+        }
+        return $next($request, $response);
+    }
+
 }
