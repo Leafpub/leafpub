@@ -20,6 +20,12 @@ if(Leafpub::isInstalled()) {
     <link rel="stylesheet" href="../assets/css/lib.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic">
 </head>
+<style>
+    .logo.text-xs-center {
+        margin-top: 20px;
+        margin-bottom: 10px:
+    }
+</style>
 <body class="no-menu">
     <div class="container">
         <div class="row">
