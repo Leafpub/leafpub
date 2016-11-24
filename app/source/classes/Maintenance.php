@@ -13,13 +13,13 @@ class Maintenance extends Leafpub {
         }
         
         // We provide the use of HTML in the message, 
-        // so we can't use @settings.maintenance-message in the template file.
+        // so we can't use @settings.maintenance_message in the template file.
         // We need to use the content variable, because the content helper parses this variable
         // and returns the raw HTML.
         return Renderer::render([
             'template' => $template,
             'data' => [
-                'content' => Setting::get('maintenance-message'), 
+                'content' => Setting::get('maintenance_message'), 
             ],
             'special_vars' => [
                 'meta' => [
