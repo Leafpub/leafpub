@@ -155,7 +155,7 @@ $(function() {
 
                 // Send request
                 request = $.ajax({
-                    url: leafpub.url('api/locater'),
+                    url: Leafpub.url('api/locater'),
                     type: 'GET',
                     data: {
                         query: query
