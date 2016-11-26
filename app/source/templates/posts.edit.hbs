@@ -201,7 +201,7 @@
                 </label>
             </div>
         </div>
-        <div class="form-group m-t-2">
+        <div class="form-group mt-2">
             <button class="btn btn-secondary unlink pull-right" type="button"><i class="fa fa-unlink"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
@@ -279,7 +279,7 @@
                 {{L 'constrain_proportions'}}
             </label>
         </div>
-        <div class="form-group m-t-2">
+        <div class="form-group mt-2">
             <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
@@ -323,7 +323,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group m-t-2">
+        <div class="form-group mt-2">
             <button class="btn btn-secondary delete-embed pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
@@ -439,7 +439,7 @@
                 </div>
                 {{!-- Only show featured and page options to owners, admins, and editor --}}
                 {{#is @user.role 'in' 'owner,admin,editor'}}
-                <div class="row m-t-2">
+                <div class="row mt-2">
                     <div class="col-xs-4">
                         <label class="checkbox">
                             <input type="checkbox" name="featured" id="featured" value="on"{{#is post.featured}} checked{{/is}}>

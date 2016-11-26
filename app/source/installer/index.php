@@ -20,19 +20,13 @@ if(Leafpub::isInstalled()) {
     <link rel="stylesheet" href="../assets/css/lib.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic">
 </head>
-<style>
-    .logo.text-xs-center {
-        margin-top: 20px;
-        margin-bottom: 10px:
-    }
-</style>
 <body class="no-menu">
     <div class="container">
         <div class="row">
             <div class="col-lg-4 push-lg-4 col-md-6 push-md-3 col-sm-8 push-sm-1">
                 <div class="logo text-xs-center">
                     <a href="https://www.leafpub.org/" target="_blank">
-                        <img class="logo m-t-3 m-b-2" src="../assets/img/logo-color.png" alt="Logo" width="100" height="100">
+                        <img class="logo mt-3 mb-2" src="../assets/img/logo-color.png" alt="Logo" width="100" height="100">
                     </a>
                 </div>
                 <h2 class="text-xs-center">Install Leafpub</h2>
@@ -40,7 +34,7 @@ if(Leafpub::isInstalled()) {
                     Simple, beautiful publishing
                 </p>
 
-                <form id="installer-form" class="m-t-3" action="<?=htmlspecialchars(Leafpub::url('source/installer/install.php'))?>" autocomplete="off">
+                <form id="installer-form" class="mt-3" action="<?=htmlspecialchars(Leafpub::url('source/installer/install.php'))?>" autocomplete="off">
                     <!-- Owner -->
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -75,7 +69,7 @@ if(Leafpub::isInstalled()) {
                     </div>
 
                     <!-- Database -->
-                    <h4 class="m-t-3">Database</h4>
+                    <h4 class="mt-3">Database</h4>
                     <div class="row">
                         <div class="col-sm-8">
                             <div class="form-group">
