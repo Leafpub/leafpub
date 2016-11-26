@@ -529,6 +529,54 @@ return [
             // Otherwise, just return the title as-is
             return $title;
         }
+    },
+
+    'tags' => function($options){
+        $tags = array();
+        if (count($options['hash']) > 0){
+            $data = $options['hash'];
+
+            if(isset($data['query'])){
+                $searchFor['query'] = $data['query'];
+            }
+
+            if (isset($data['count'])){
+                $searchFor['items_per_page'] = $data['count'];
+            }
+
+            if (isset($data['sort'])){
+                $sort = 'DESC';
+                if (strtolower($data['sort']) == 'oldest'){
+                    $sort = 'ASC';
+                }
+                $searchFor['sort'] = $sort;
+            }
+
+            $tags = \Leafpub\Tag::getMany($searchFor);
+        }
+        if(count($tags)) {
+            return $options['fn'](['tags' => $tags]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
+    },
+
+    'authors' => function($options){
+        $searchFor = array();
+
+        if (isset($options['hash']['query'])){
+            $searchFor['query'] = $options['hash']['query'];
+        }
+        
+        $authors = \Leafpub\User::getAuthors($searchFor);
+    
+        if(count($authors)) {
+            return $options['fn'](['authors' => $authors]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
     }
 
 ];
