@@ -530,7 +530,7 @@ return [
             return $title;
         }
     },
-
+    /*
     'tags' => function($options){
         $tags = array();
         if (count($options['hash']) > 0){
@@ -561,7 +561,7 @@ return [
             return $options['inverse'] ? $options['inverse']() : '';
         }
     },
-
+    */
     'authors' => function($options){
         $searchFor = array();
 
