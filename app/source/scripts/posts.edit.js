@@ -841,6 +841,7 @@ $(function() {
         .on('show.leafpub.panel', function() {
             var href,
                 title,
+                classes,
                 target;
 
             // Get bookmark and selected element
@@ -850,11 +851,13 @@ $(function() {
             // Get attributes
             href = decodeURI($(link).attr('href') || '');
             title = $(link).attr('title') || '';
+            classes = $(link).attr('class') || '';
             target = $(link).attr('target') || '';
 
             // Set fields
             $('#link-href').val(href);
             $('#link-title').val(title);
+            $('#link-class').val(classes);
             $('#link-new-window').prop('checked', target === '_blank');
             $('.link-open').prop('hidden', href.length === 0);
             $('.unlink').prop('hidden', !link.length);
@@ -874,6 +877,7 @@ $(function() {
         $('.link-form').on('submit', function(event) {
             var href = encodeURI($('#link-href').val()),
                 title = $('#link-title').val(),
+                classes = $('#link-class').val(),
                 target = $('#link-new-window').prop('checked') ? '_blank' : '';
 
             event.preventDefault();
@@ -886,6 +890,7 @@ $(function() {
                 contentEditor.link('insert', {
                     href: href,
                     title: title,
+                    class: classes,
                     target: target
                 });
             } else {

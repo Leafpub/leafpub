@@ -653,6 +653,7 @@ var Editor;
                     href: options.href || '',
                     target: options.target || '',
                     title: options.title || '',
+                    class: options.class || '',
                     rel: options.target ? 'noopener' : ''
                 });
             } else if(cmd === 'remove') {
