@@ -156,7 +156,8 @@ class Tag extends Leafpub {
         $options = array_merge([
             'query' => null,
             'page' => 1,
-            'items_per_page' => 10
+            'items_per_page' => 10,
+            'sort' => 'DESC'
         ], (array) $options);
 
         // Generate select SQL
@@ -177,7 +178,7 @@ class Tag extends Leafpub {
         ';
 
         // Generate order SQL
-        $order_sql = ' ORDER BY name';
+        $order_sql = ' ORDER BY name ' . $options['sort'];
 
         // Generate limit SQL
         $limit_sql = ' LIMIT :offset, :count';

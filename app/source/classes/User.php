@@ -621,4 +621,41 @@ class User extends Leafpub {
         return password_verify($password, $user['password']);
     }
 
+    public static function getAuthors($options){
+        $sSQL = "SELECT
+                    a.slug, a.name, a.avatar, COALESCE(COUNT(*), 0) AS post_count
+                 FROM
+                    __users a
+                 LEFT JOIN
+                    __posts b
+                 ON
+                    a.id = b.author
+                 GROUP BY 
+                    a.slug";
+        if (isset($option['query'])){
+	        $sSQL .="HAVING
+	                    a.slug LIKE :name
+	                 OR
+	                    a.name LIKE :name";
+
+        	$name = '%' . Database::escapeLikeWildcards($options['query']) . '%';
+        }
+
+        $sSQL .= 'ORDER BY slug, post_count DESC';
+        
+        try {
+                if (isset($options['query'])){
+                    $st = self::$database->prepare($sSQL);
+            	    $st->bindParam(':name', $name);
+                    $st->execute();
+                } else {
+                    $st = self::$database->query($sSQL);
+                }
+            $authors = $st->fetchAll(\PDO::FETCH_ASSOC);
+        }
+        catch(PDOException $e) {
+            return false;
+        }
+        return $authors;
+    }
 }

@@ -420,7 +420,8 @@ class Post extends Leafpub {
             'page' => 1,
             'query' => null,
             'start_date' => null,
-            'tag' => null
+            'tag' => null,
+            'sort' => 'DESC'
         ], (array) $options);
 
         // Convert dates to UTC
@@ -478,9 +479,9 @@ class Post extends Leafpub {
 
         // Generate order SQL
         if($is_fulltext) {
-            $order_sql = ' ORDER BY (title_score * 1.5 + content_score) DESC';
+            $order_sql = ' ORDER BY (title_score * 1.5 + content_score) ' . $options['sort'];
         } else {
-            $order_sql = ' ORDER BY sticky DESC, pub_date DESC, id DESC';
+            $order_sql = ' ORDER BY sticky ' . $options['sort'] . ', pub_date ' . $options['sort'] . ', id ' . $options['sort'];
         }
 
         // Generate limit SQL

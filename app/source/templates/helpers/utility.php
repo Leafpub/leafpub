@@ -369,6 +369,94 @@ return [
     // Converts HTML to plain-text
     'text' => function($text) {
         return new \LightnCandy\SafeString(strip_tags($text));
+    },
+    
+    // Fetch posts via parameter search
+    'posts' => function($options){
+        $posts = array();
+        if (count($options['hash']) > 0){
+            $availableOptions = array(
+                'author' => null,
+                'items_per_page' => 10,
+                'page' => 1,
+                'query' => null,
+                'tag' => null,
+                //'sort' => 'DESC' //NEWEST
+            );
+            $data = $options['hash'];
+            foreach(array_keys($availableOptions) as $key){
+                if (isset($data[$key])){
+                    $searchFor[$key] = $data[$key];
+                }
+            }
+
+            if (isset($data['count'])){
+                $searchFor['items_per_page'] = $data['count'];
+            }
+
+            if (isset($data['sort'])){
+                $sort = 'DESC';
+                if (strtolower($data['sort']) == 'oldest'){
+                    $sort = 'ASC';
+                }
+                $searchFor['sort'] = $sort;
+            }
+            $posts = \Leafpub\Post::getMany($searchFor);
+        }
+        if(count($posts)) {
+            return $options['fn'](['posts' => $posts]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
+    },
+
+    'tags' => function($options){
+        $tags = array();
+        if (count($options['hash']) > 0){
+            $data = $options['hash'];
+
+            if(isset($data['query'])){
+                $searchFor['query'] = $data['query'];
+            }
+
+            if (isset($data['count'])){
+                $searchFor['items_per_page'] = $data['count'];
+            }
+
+            if (isset($data['sort'])){
+                $sort = 'DESC';
+                if (strtolower($data['sort']) == 'oldest'){
+                    $sort = 'ASC';
+                }
+                $searchFor['sort'] = $sort;
+            }
+
+            $tags = \Leafpub\Tag::getMany($searchFor);
+        }
+        if(count($tags)) {
+            return $options['fn'](['tags' => $tags]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
+    },
+
+    'authors' => function($options){
+        $searchFor = array();
+
+        if (isset($options['hash']['query'])){
+            $searchFor['query'] = $options['hash']['query'];
+        }
+        
+        $authors = \Leafpub\User::getAuthors($searchFor);
+    
+        if(count($authors)) {
+            return $options['fn'](['authors' => $authors]);
+        } else {
+            // No posts, do {{else}}
+            return $options['inverse'] ? $options['inverse']() : '';
+        }
     }
 
 ];
