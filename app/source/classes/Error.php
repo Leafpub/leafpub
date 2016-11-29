@@ -1,16 +1,29 @@
 <?php
-//
-// Leafpub\Error: methods for working with error pages
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Error
+*
+* methods for working with error pages
+* @package Leafpub
+*
+**/
 class Error extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Renders the error page
+    /**
+    * Renders the error page
+    *
+    * @return mixed
+    *
+    **/
     public static function render() {
         // Render it
         return Renderer::render([
@@ -26,12 +39,18 @@ class Error extends Leafpub {
         ]);
     }
 
-    // Renders the system error template and exits. This method should be called before any output
-    // is sent to the browser and only when an irrecoverable error occurs.
-    //
-    // Important: This method should not use the handlebars engine, database resources, or any
-    // assets over HTTP because it may be triggered any time, even before a database connection is
-    // established.
+    /**
+    * Renders the system error template and exits. This method should be called before any output
+    * is sent to the browser and only when an irrecoverable error occurs.
+    *
+    * Important: This method should not use the handlebars engine, database resources, or any
+    * assets over HTTP because it may be triggered any time, even before a database connection is
+    * established.
+    *
+    * @param array $data
+    * @return mixed
+    *
+    **/
     public static function system($data) {
         // Get the template
         $template = self::path('source/templates/error.system.hbs');

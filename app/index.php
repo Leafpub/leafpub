@@ -1,23 +1,11 @@
 <?php
-/*
-Leafpub: Simple, beautiful publishing.
-Copyright 2016 A Beautiful Site, LLC
-
-Website: https://www.leafpub.org/
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
 namespace Leafpub;
 require __DIR__ . '/source/runtime.php';
 
@@ -42,11 +30,11 @@ $app = new \Slim\App($container);
 $app->add('Leafpub\Middleware:removeTrailingSlashes');
 $app->add('Leafpub\Middleware::maintenance');
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// API routes
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* API routes
+**/
 
-// Unprotected
+/** Unprotected **/
 $app->group("/api", function() {
     // Auth
     $this->post('/login', 'Leafpub\Controller\APIController:login');
@@ -54,7 +42,7 @@ $app->group("/api", function() {
     $this->post('/login/reset', 'Leafpub\Controller\APIController:reset');
 });
 
-// Protected
+/** Protected **/
 $app->group("/api", function() {
     // Posts
     $this->get('/posts', 'Leafpub\Controller\APIController:getPosts');
@@ -103,11 +91,11 @@ $app->group("/api", function() {
     $this->get('/oembed', 'Leafpub\Controller\APIController:getOembed');
 })->add('Leafpub\Middleware:requireAuth');
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Admin views
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* Admin views
+**/
 
-// Unprotected
+/** Unprotected **/
 $app->group("/$frags->admin", function() {
     $this->get('/login', 'Leafpub\Controller\AdminController:login');
     $this->get('/login/recover', 'Leafpub\Controller\AdminController:recover');
@@ -115,7 +103,7 @@ $app->group("/$frags->admin", function() {
     $this->get('/logout', 'Leafpub\Controller\AdminController:logout');
 });
 
-// Protected
+/** Protected **/
 $app->group("/$frags->admin", function() {
     // Dashboard
     $this->get('', 'Leafpub\Controller\AdminController:dashboard');
@@ -143,11 +131,11 @@ $app->group("/$frags->admin", function() {
     $this->get('/settings', 'Leafpub\Controller\AdminController:settings');
 })->add('Leafpub\Middleware:requireAuth');
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Theme views
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* Theme views
+**/
 
-// Homepage
+/** Homepage **/
 if(Setting::get('homepage')) {
     // Custom homepage
     $app->get('/', 'Leafpub\Controller\ThemeController:customHomepage');
@@ -184,9 +172,9 @@ $app->group("/$frags->search", function() use($frags) {
 // Posts
 $app->get('/{post}', 'Leafpub\Controller\ThemeController:post');
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Custom handlers
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+* Custom handlers
+**/
 
 // Not found handler
 $container['notFoundHandler'] = function($container) {

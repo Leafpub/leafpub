@@ -1,34 +1,66 @@
 <?php
-//
-// Leafpub\Settings: methods for working with settings
-//
-// Note: settings are cached in the static $settings property of the base class in order to reduce
-// superfluous database calls.
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Setting
+*
+* methods for working with settings
+*
+* Note: settings are cached in the static $settings property of the base class in order to reduce
+* superfluous database calls.
+* @package Leafpub
+*
+**/
 class Setting extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Adds a setting
+    /**
+    * Adds a setting
+    *
+    * @param String $name
+    * @param String $value
+    * @return bool
+    *
+    **/
     public static function add($name, $value) {
         return self::update($name, $value);
     }
 
-    // Gets a single setting
+    /**
+    * Gets a single setting
+    *
+    * @param null $name
+    * @return mixed
+    *
+    **/
     public static function get($name = null) {
         return isset(self::$settings[$name]) ? self::$settings[$name] : null;
     }
 
-    // Returns all settings in an array
+    /**
+    * Returns all settings in an array
+    *
+    * @return array
+    *
+    **/
     public static function getAll() {
         return self::$settings;
     }
 
-    // Delete a setting
+    /**
+    * Delete a setting
+    *
+    * @param String $name
+    * @return bool
+    *
+    **/
     public static function delete($name) {
         // Delete from the database
         try {
@@ -44,7 +76,12 @@ class Setting extends Leafpub {
         return true;
     }
 
-    // Load settings from the database and store in a static variable for quick access
+    /**
+    * Load settings from the database and store in a static variable for quick access
+    *
+    * @return array
+    *
+    **/
     public static function load() {
         try {
             $st = self::$database->query('SELECT name, value FROM __settings ORDER BY name');
@@ -56,7 +93,14 @@ class Setting extends Leafpub {
         }
     }
 
-    // Update a setting
+    /**
+    * Update a setting
+    *
+    * @param String $name
+    * @param String $value
+    * @return bool
+    *
+    **/
     public static function update($name, $value) {
         // Update the database
         try {

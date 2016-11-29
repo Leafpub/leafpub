@@ -1,12 +1,32 @@
 <?php
-//
-// Leafpub\Middleware: PSR 7 compatible middleware for use with Leafpub's router
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Middleware
+*
+* PSR 7 compatible middleware for use with Leafpub's router
+* @package Leafpub
+*
+**/ 
 class Middleware {
 
-    // Redirect {path}/page/0 and {path}/page/1 to {path}
+    /**
+    * Redirect {path}/page/0 and {path}/page/1 to {path}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param callable $next
+    * @return \Slim\Http\Response
+    *
+    **/
     public function adjustPageNumbers($request, $response, $next) {
         $uri = $request->getUri();
         $path = $uri->getPath();
@@ -22,7 +42,15 @@ class Middleware {
         return $next($request, $response);
     }
 
-    // Redirect ?s=query to /search/query
+    /**
+    * Redirect ?s=query to /search/query
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param callable $next
+    * @return \Slim\Http\Response
+    *
+    **/
     public function adjustSearchQuery($request, $response, $next) {
         if(isset($request->getQueryParams()['s'])) {
             return $response->withRedirect(Search::url($request->getQueryParams()['s']));
@@ -30,7 +58,15 @@ class Middleware {
         return $next($request, $response);
     }
 
-    // Remove trailing slashes from requests
+    /**
+    * Remove trailing slashes from requests
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param callable $next
+    * @return \Slim\Http\Response
+    *
+    **/
     public function removeTrailingSlashes($request, $response, $next) {
         $uri = $request->getUri();
         $path = $uri->getPath();
@@ -42,7 +78,15 @@ class Middleware {
         return $next($request, $response);
     }
 
-    // Requires an authenticated user
+    /**
+    * Requires an authenticated user
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param callable $next
+    * @return \Slim\Http\Response
+    *
+    **/
     public function requireAuth($request, $response, $next) {
         $uri = $request->getUri();
 
@@ -74,6 +118,11 @@ class Middleware {
     *   Checks, if the site is in maintenance mode. 
     *   Only the owner and admins see the site after login
     *   All other see maintenance.hbs
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param callable $next
+    * @return \Slim\Http\Response
     *
     **/
     public static function maintenance($request, $response, $next){

@@ -1,16 +1,30 @@
 <?php
-//
-// Leafpub\Blog: methods for working with the blog
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Blog
+*
+*  methods for working with the blog
+* @package Leafpub
+*
+**/ 
 class Blog extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Render blog index page
+    /**
+    * Render blog index page
+    *
+    * @param 1 $page
+    * @return mixed
+    *
+    **/
     public static function render($page = 1) {
         // Get the posts
         $posts = Post::getMany([
@@ -76,7 +90,13 @@ class Blog extends Leafpub {
         ]);
     }
 
-    // Returns a blog URL
+    /**
+    * Returns a blog URL
+    * 
+    * @param 1 $page
+    * @return String
+    *
+    **/
     public static function url($page = 1) {
         if(!mb_strlen(Setting::get('homepage'))) {
             // Default homepage

@@ -1,7 +1,11 @@
 <?php
-//
-// Controller for API endpoints
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
 namespace Leafpub\Controller;
 
 use Leafpub\Admin,
@@ -23,13 +27,25 @@ use Leafpub\Admin,
     Leafpub\Upload,
     Leafpub\User;
 
+/**
+* APIController
+*
+* This class handles all ajax requests from the Leafpub backend.
+* It's the controller for API endpoints
+*
+* @package Leafpub\Controller
+**/
 class APIController extends Controller {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Auth
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // api/login
+    /**
+    * Handles POST api/login
+    *
+    * @param \Slim\Http\Request $request 
+    * @param \Slim\Http\Response $response 
+    * @param array $args 
+    * @return \Slim\Http\Response (json)
+    *
+    **/
     public function login($request, $response, $args) {
         $params = $request->getParams();
 
@@ -46,7 +62,15 @@ class APIController extends Controller {
         }
     }
 
-    // api/login/recover
+    /**
+    * Handles POST api/login/recover
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function recover($request, $response, $args) {
         $params = $request->getParams();
 
@@ -86,7 +110,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // api/login/reset
+    /**
+    * Handles POST api/login/reset
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function reset($request, $response, $args) {
         $params = $request->getParams();
 
@@ -139,11 +171,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Posts
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET api/posts
+    /**
+    * Handles GET api/posts
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getPosts($request, $response, $args) {
         $params = $request->getParams();
 
@@ -174,7 +210,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // Private method to handle add and update
+    /**
+    * Handles adding and updating of a post
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     private function addUpdatePost($action, $request, $response, $args) {
         $params = $request->getParams();
         $properties = $params['properties'];
@@ -253,17 +297,41 @@ class APIController extends Controller {
         ]);
     }
 
-    // POST api/posts
+    /**
+    * Handles POSTS api/posts
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function addPost($request, $response, $args) {
         return $this->addUpdatePost('add', $request, $response, $args);
     }
 
-    // PUT api/posts/{slug}
+    /**
+    * Handles PUT api/posts/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function updatePost($request, $response, $args) {
         return $this->addUpdatePost('update', $request, $response, $args);
     }
 
-    // DELETE api/posts/{slug}
+    /**
+    * Handles DELETE api/posts/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deletePost($request, $response, $args) {
 
         // If you're not an owner, admin, or editor then you can only delete your own posts
@@ -281,8 +349,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // GET api/posts/render
-    // POST api/posts/render
+    /**
+    * Handles GET/POST api/posts/render
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function renderPost($request, $response, $args) {
         //
         // Render an editable post for the editor. This method supports GET and POST due to query
@@ -353,11 +428,15 @@ class APIController extends Controller {
             ->write($html);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // History
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // DELETE api/history/{id}
+    /**
+    * Handles DELETE api/history{id} 
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deleteHistory($request, $response, $args) {
         // Get the history item and the affected post so we can verify privileges
         $history = History::get($args['id']);
@@ -384,7 +463,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // GET api/history/{id}
+    /**
+    * Handles GET api/history/{id}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getHistory($request, $response, $args) {
         $history = History::get($args['id']);
         if(!$history) {
@@ -407,11 +494,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Tags
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET api/tags
+    /**
+    * Handles GET api/tags
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getTags($request, $response, $args) {
         $params = $request->getParams();
 
@@ -440,7 +531,16 @@ class APIController extends Controller {
         ]);
     }
 
-    // Private method to handle add and update
+    /**
+    * Private method to handle add and update
+    *
+    * @param String $action
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     private function addUpdateTag($action, $request, $response, $args) {
         $params = $request->getParams();
         $slug = $action === 'add' ? $params['slug'] : $args['slug'];
@@ -498,17 +598,41 @@ class APIController extends Controller {
         ]);
     }
 
-    // POST api/tags
+    /**
+    * Handles POST api/tags
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function addTag($request, $response, $args) {
         return $this->addUpdateTag('add', $request, $response, $args);
     }
 
-    // PUT  api/tags/{slug}
+    /**
+    * Handles PUT  api/tags/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function updateTag($request, $response, $args) {
         return $this->addUpdateTag('update', $request, $response, $args);
     }
 
-    // DELETE api/tags/{slug}
+    /**
+    * Handles DELETE api/tags/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deleteTag($request, $response, $args) {
         // To delete tags, you must be an owner, admin, or editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
@@ -520,11 +644,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Navigation
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // PUT api/navigation
+    /**
+    * Handles PUT api/navigation
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function updateNavigation($request, $response, $args) {
         $params = $request->getParams();
 
@@ -556,11 +684,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Users
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET api/users
+    /**
+    * Handles GET api/users
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getUsers($request, $response, $args) {
         $params = $request->getParams();
 
@@ -589,7 +721,16 @@ class APIController extends Controller {
         ]);
     }
 
-    // Private method to handle add and update
+    /**
+    * Private method to handle add and update
+    *
+    * @param String $action
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     private function addUpdateUser($action, $request, $response, $args) {
         $params = $request->getParams();
         $slug = $action === 'add' ? $params['username'] : $args['slug'];
@@ -678,17 +819,41 @@ class APIController extends Controller {
         ]);
     }
 
-    // POST api/users
+    /**
+    * Handles POST api/users
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function addUser($request, $response, $args) {
         return $this->addUpdateUser('add', $request, $response, $args);
     }
 
-    // PUT api/users/{slug}
+    /**
+    * Handles PUT api/users/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function updateUser($request, $response, $args) {
         return $this->addUpdateUser('update', $request, $response, $args);
     }
 
-    // DELETE api/users/{slug}
+    /**
+    * Handles DELETE api/users/{slug}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deleteUser($request, $response, $args) {
         // To delete a user, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -715,11 +880,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Settings
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // POST api/settings/update
+    /**
+    * Handles POST api/settings/update
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function updateSettings($request, $response, $args) {
         $params = $request->getParams();
 
@@ -761,7 +930,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // DELETE api/settings/cache
+    /**
+    * Handles DELETE api/settings/cache
+    *
+    * @param $request
+    * @param $response
+    * @param $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deleteCache($request, $response, $args) {
         Cache::flush();
 
@@ -772,11 +949,11 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Backups
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Returns the HTML for the backups table
+    /**
+    * Returns the HTML for the backups table
+    *
+    * @return mixed
+    **/
     private function getBackupTableHTML() {
         // To manage backups, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -792,7 +969,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // POST api/backup
+    /**
+    * Handles POST api/backup
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function addBackup($request, $response, $args) {
         // To manage backups, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -831,7 +1016,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // DELETE api/backup/{file}
+    /**
+    * Handles DELETE api/backup/{file}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function deleteBackup($request, $response, $args) {
         // To manage backups, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -847,7 +1040,15 @@ class APIController extends Controller {
         ]);
     }
 
-    // GET api/backup/{file}
+    /**
+    * Handles GET api/backup/{file}
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getBackup($request, $response, $args) {
         // To manage backups, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -875,7 +1076,15 @@ class APIController extends Controller {
             ->withBody($stream);
     }
 
-    // POST api/backup/{file}/restore
+    /**
+    * Handles POST api/backup/{file}/restore
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function restoreBackup($request, $response, $args) {
         $params = $request->getParams();
 
@@ -909,11 +1118,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Locater
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET api/locater
+    /**
+    * Handles GET api/locater
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getLocater($request, $response, $args) {
         $params = $request->getParams();
         $html = '';
@@ -1012,11 +1225,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Uploads
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // POST api/upload
+    /**
+    * Handles POST api/upload
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function addUpload($request, $response, $args) {
         $params = $request->getParams();
         $uploaded = [];
@@ -1096,11 +1313,15 @@ class APIController extends Controller {
         ]);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Utilities
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET api/oembed
+    /**
+    * Handles GET api/oembed
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function getOembed($request, $response, $args) {
         $params = $request->getParams();
 

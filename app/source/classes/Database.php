@@ -1,18 +1,29 @@
 <?php
-//
-// Leafpub\Database: methods for working with the database
-//
-// Note: the database instance is stored in the static $database property of the base class to
-// prevent superflous database connections.
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Database
+*
+* methods for working with the database
+*
+* Note: the database instance is stored in the static $database property of the base class to
+* prevent superflous database connections.
+* @package Leafpub
+*
+**/
 class Database extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Constants
+    **/
     const
         AUTH_ERROR = 1,
         CONNECT_ERROR = 2,
@@ -20,11 +31,16 @@ class Database extends Leafpub {
         INIT_FAILED = 4,
         NOT_CONFIGURED = 5,
         TIMEOUT = 6;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    
+    /**
+    * Connect the Database
+    *
+    * @param null $config
+    * @param array $pdo_options
+    * @return void
+    * @throws \Exception
+    *
+    **/
     public static function connect($config = null, $pdo_options = []) {
         // Load default database config
         if(!$config) {
@@ -83,14 +99,26 @@ class Database extends Leafpub {
         }
     }
 
-    // Escapes % and _ characters which are wildcards for LIKE
+    /**
+    * Escapes % and _ characters which are wildcards for LIKE
+    *
+    * @param String $string
+    * @return String
+    *
+    **/
     public static function escapeLikeWildcards($string) {
         $string = str_replace('%', '\\%', $string);
         $string = str_replace('_', '\\_', $string);
         return $string;
     }
 
-    // Drops all Leafpub database tables and recreates them from default.database.sql
+    /**
+    * Drops all Leafpub database tables and recreates them from default.database.sql
+    *
+    * @return void
+    * @throws \Exception
+    *
+    **/
     public static function resetTables() {
         try {
             self::$database->exec(file_get_contents(Leafpub::path('source/defaults/default.database.sql')));

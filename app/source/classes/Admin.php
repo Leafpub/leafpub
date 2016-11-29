@@ -1,16 +1,31 @@
 <?php
-//
-// Leafpub\Admin: methods for working with the admin panel
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Admin
+*
+* methods for working with the admin panel
+* @package Leafpub
+*
+**/
 class Admin extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Returns an array of default and registered toolbar items
+    /**
+    * Returns an array of default and registered toolbar items
+    *
+    * @param String $template
+    * @param array $data
+    * @return array
+    *
+    **/
     public static function getAdminToolbarItems($template, $data) {
         $items = [];
 
@@ -69,7 +84,12 @@ class Admin extends Leafpub {
         return $items;
     }
 
-    // Returns an array of default and registered menu items
+    /**
+    * Returns an array of default and registered menu items
+    *
+    * @return array
+    *
+    **/
     public static function getMenuItems() {
         $items = [];
 
@@ -142,7 +162,14 @@ class Admin extends Leafpub {
         return $items;
     }
 
-    // Renders an admin page
+    /**
+    * Renders an admin page
+    *
+    * @param String $template
+    * @param null $data
+    * @return mixed
+    *
+    **/
     public static function render($template, $data = null) {
         return Renderer::render([
             'template' => self::path("source/templates/$template.hbs"),
@@ -152,7 +179,13 @@ class Admin extends Leafpub {
         ]);
     }
 
-    // Returns an admin URL
+    /**
+    * Returns an admin URL
+    *
+    * @param null $path
+    * @return String
+    *
+    **/
     public static function url($path = null) {
         return parent::url(Setting::get('frag_admin'), $path);
     }

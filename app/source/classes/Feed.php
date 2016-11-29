@@ -1,16 +1,30 @@
 <?php
-//
-// Leafpub\Feed: methods for working with the RSS feed
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Feed
+*
+* methods for working with the RSS feed
+* @package Leafpub
+*
+**/
 class Feed extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Renders an RSS feed
+    /**
+    * Renders an RSS feed
+    *
+    * @param null $options
+    * @return String
+    *
+    **/
     public static function render($options = null) {
         // Merge options
         $options = array_merge([
@@ -61,7 +75,13 @@ class Feed extends Leafpub {
         return $feed;
     }
 
-    // Returns the feed URL
+    /**
+    * Returns the feed URL
+    *
+    * @param null $options
+    * @return String
+    *
+    **/
     public static function url($options = null) {
         if(count($options)) {
             // example.com/feed?author=name&tag=name

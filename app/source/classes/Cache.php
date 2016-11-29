@@ -1,26 +1,40 @@
 <?php
-//
-// Leafpub\Cache: methods for working with cache files
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Cache
+*
+* methods for working with cache files
+* @package Leafpub
+*
+**/
 class Cache extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Constants
+    **/
     const
         UNABLE_TO_CREATE_DIRECTORY = 1,
         UNABLE_TO_DELETE_FILE = 2,
         UNABLE_TO_READ_FILE = 3,
         UNABLE_TO_WRITE_FILE = 4;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Deletes a cache file
+    /**
+    * Deletes a cache file
+    *
+    * @param null $filename
+    * @return bool
+    * @throws \Exception
+    *
+    **/
     public static function delete($filename = null) {
         // Determine full path
         $filename = self::path('content/cache', $filename);
@@ -38,8 +52,15 @@ class Cache extends Leafpub {
         return true;
     }
 
-    // Deletes all files in the cache directory. If $prefix is set, only files starting with
-    // that string will be deleted.
+    /**
+    * Deletes all files in the cache directory. If $prefix is set, only files starting with
+    * that string will be deleted.
+    *
+    * @param null $prefix
+    * @return bool
+    * @throws \Exception
+    *
+    **/
     public static function flush($prefix = null) {
         // There's nothing to do if the directory doesn't exist
         if(!file_exists(self::path('content/cache'))) return true;
@@ -70,7 +91,14 @@ class Cache extends Leafpub {
         return true;
     }
 
-    // Reads a cache file. If no cache file exists, false is returned.
+    /**
+    * Reads a cache file. If no cache file exists, false is returned.
+    *
+    * @param String $filename
+    * @return mixed
+    * @throws \Exception
+    *
+    **/
     public static function get($filename) {
         // Read the cache file
         $filename = self::path('content/cache', $filename);
@@ -87,7 +115,15 @@ class Cache extends Leafpub {
         return $data;
     }
 
-    // Writes a cache file
+    /**
+    * Writes a cache file
+    *
+    * @param String $filename
+    * @param array $data
+    * @return bool
+    * @throws \Exception
+    *
+    **/
     public static function put($filename, $data) {
         // Create the cache directory if it doesn't exist
         if(!self::makeDir(self::path('content/cache'))) {

@@ -1,22 +1,35 @@
 <?php
-//
-// Leafpub\Session: methods for working with authenticated sessions
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Session
+*
+* methods for working with authenticated sessions
+* @package Leafpub
+*
+**/
 class Session extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Properties
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Properties
+    **/
     private static $user;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private properties
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Generate and store an token
+    /**
+    * Generate and store an token
+    *
+    * @param String $username
+    * @return void
+    *
+    **/
     private static function createJWT($username) {
         $now = time();
         $expires = $now + 3600; // + one hour
@@ -33,17 +46,23 @@ class Session extends Leafpub {
         setcookie('authToken', $token, $expires, '/');
     }
 
-    // Destroys the cookie holding the token
+    /**
+    * Destroys the cookie holding the token
+    *
+    * @return void
+    *
+    **/
     private static function destroyJWT() {
         unset($_COOKIE['authToken']);
         setcookie('authToken', '', time() - 3600, '/');
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public properties
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Initializes the user's session
+    /**
+    * Initializes the user's session
+    *
+    * @return bool
+    *
+    **/
     public static function init() {
         // No token means no session
         if(empty($_COOKIE['authToken'])) return false;
@@ -65,17 +84,35 @@ class Session extends Leafpub {
         return true;
     }
 
-    // Determines is a user is currently logged in
+    /**
+    * Determines is a user is currently logged in
+    *
+    * @return bool
+    *
+    **/
     public static function isAuthenticated() {
         return isset(self::$user);
     }
 
-    // Tests the authenticated user for a role. $role can be a string or an array of roles.
+    /**
+    * Tests the authenticated user for a role. $role can be a string or an array of roles.
+    *
+    * @param String/array $role
+    * @return bool
+    *
+    **/
     public static function isRole($role) {
         return in_array(self::user('role'), (array) $role);
     }
 
-    // Logs the user in and sets the token cookie
+    /**
+    * Logs the user in and sets the token cookie
+    *
+    * @param String $username
+    * @param String $password
+    * @return bool
+    *
+    **/
     public static function login($username, $password) {
         if(User::verifyPassword($username, $password)) {
             // Store user data
@@ -90,15 +127,26 @@ class Session extends Leafpub {
         }
     }
 
-    // Logs the user out and destroys the token cookie
+    /**
+    * Logs the user out and destroys the token cookie
+    *
+    * @return bool
+    *
+    **/
     public static function logout() {
         self::$user = null;
         self::destroyJWT();
         return true;
     }
 
-    // Updates the authenticated user's token and data. This method should be called anytime the
-    // authenticated user is updated. If the username (slug) has changed, pass it to $new_username.
+    /**
+    * Updates the authenticated user's token and data. This method should be called anytime the
+    * authenticated user is updated. If the username (slug) has changed, pass it to $new_username.
+    *
+    * @param null $new_username
+    * @return void
+    *
+    **/
     public static function update($new_username = null) {
         // Has the username (slug) changed?
         if($new_username !== Session::user()['slug']) {
@@ -111,8 +159,14 @@ class Session extends Leafpub {
         }
     }
 
-    // Gets the user that is currently logged in. If $property is set, only that property will be
-    // returned.
+    /**
+    * Gets the user that is currently logged in. If $property is set, only that property will be
+    * returned.
+    *
+    * @param null $property
+    * @return mixed
+    *
+    **/
     public static function user($property = null) {
         if(self::isAuthenticated()) {
             return $property ? self::$user[$property] : self::$user;

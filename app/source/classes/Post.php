@@ -1,26 +1,38 @@
 <?php
-//
-// Leafpub\Post: methods for working with posts
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Post
+*
+* methods for working with posts
+*
+**/
 class Post extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Constants
+    **/
     const
         ALREADY_EXISTS = 1,
         INVALID_SLUG = 2,
         INVALID_USER = 3,
         NOT_FOUND = 4;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Gets the tags for the specified post.
+    /**
+    * Gets the tags for the specified post.
+    *
+    * @param int $post_id
+    * @return mixed
+    *
+    **/
     private static function getTags($post_id) {
         try {
            // Get a list of slugs
@@ -38,7 +50,13 @@ class Post extends Leafpub {
        }
     }
 
-    // Normalize data types for certain fields
+    /**
+    * Normalize data types for certain fields
+    *
+    * @param array $post
+    * @return array
+    *
+    **/
     private static function normalize($post) {
         // Cast to integer
         $post['id'] = (int) $post['id'];
@@ -56,7 +74,14 @@ class Post extends Leafpub {
         return $post;
     }
 
-    // Sets the tags for the specified post. To remove all tags, call this method with $tags = null.
+    /**
+    * Sets the tags for the specified post. To remove all tags, call this method with $tags = null.
+    *
+    * @param int $post_id
+    * @param null $tags
+    * @return bool
+    *
+    **/
     private static function setTags($post_id, $tags = null) {
         // Remove old tags
         try {
@@ -90,11 +115,15 @@ class Post extends Leafpub {
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Adds a post
+    /**
+    * Adds a post
+    *
+    * @param String $slug
+    * @param array $post
+    * @return mixed
+    * @throws \Exception
+    *
+    **/
     public static function add($slug, $post) {
         // Enforce slug syntax
         $slug = self::slug($slug);
@@ -187,7 +216,13 @@ class Post extends Leafpub {
         return $post_id;
     }
 
-    // Returns the total number of posts that exist
+    /**
+    * Returns the total number of posts that exist
+    *
+    * @param array $options
+    * @return mixed
+    *
+    **/
     public static function count($options = null) {
         // Merge options
         $options = array_merge([
@@ -244,7 +279,13 @@ class Post extends Leafpub {
         }
     }
 
-    // Deletes a post
+    /**
+    * Deletes a post
+    *
+    * @param String $slug
+    * @return bool
+    *
+    **/
     public static function delete($slug) {
         // If this post is the custom homepage, update settings
         if($slug === Setting::get('homepage')) {
@@ -276,7 +317,13 @@ class Post extends Leafpub {
         return true;
     }
 
-    // Tells whether a post exists
+    /**
+    * Tells whether a post exists
+    *
+    * @param String $slug
+    * @return bool
+    *
+    **/
     public static function exists($slug) {
         try {
             $st = self::$database->prepare('SELECT id FROM __posts WHERE slug = :slug');
@@ -288,7 +335,13 @@ class Post extends Leafpub {
         }
     }
 
-    // Gets a single post. Returns an array on success, false if not found.
+    /**
+    * Gets a single post. Returns an array on success, false if not found.
+    *
+    * @param String $slug
+    * @return mixed
+    *
+    **/
     public static function get($slug) {
         // Retrieve the post
         try {
@@ -315,7 +368,14 @@ class Post extends Leafpub {
         return $post;
     }
 
-    // Gets one public post immediately before or after the target post
+    /**
+    * Gets one public post immediately before or after the target post
+    *
+    * @param String $slug
+    * @param null $options
+    * @return mixed
+    *
+    **/
     public static function getAdjacent($slug, $options = null) {
         // Merge options
         $options = array_merge([
@@ -401,11 +461,18 @@ class Post extends Leafpub {
         return $post;
     }
 
-    // Gets multiple posts. Returns an array of posts on success, false if not found. If $pagination
-    // is specified, it will be populated with pagination data generated by Leafpub::paginate().
-    //
-    // If a query is specified, this method will perform a full text search with basic scoring, very
-    // similar to the solution recommended here: http://stackoverflow.com/a/600915/567486
+    /** 
+    * Gets multiple posts. Returns an array of posts on success, false if not found. If $pagination
+    * is specified, it will be populated with pagination data generated by Leafpub::paginate().
+    *
+    * If a query is specified, this method will perform a full text search with basic scoring, very
+    * similar to the solution recommended here: http://stackoverflow.com/a/600915/567486
+    *
+    * @param null $options
+    * @param null $pagination
+    * @return mixed
+    *
+    **/
     public static function getMany($options = null, &$pagination = null) {
         // Merge options with defaults
         $options = array_merge([
@@ -544,7 +611,14 @@ class Post extends Leafpub {
         return $posts;
     }
 
-    // Gets suggested posts for the target post
+    /**
+    * Gets suggested posts for the target post
+    *
+    * @param String $slug
+    * @param null $options
+    * @return mixed
+    *
+    **/
     public static function getSuggested($slug, $options = null) {
         // Merge options
         $options = array_merge([
@@ -645,7 +719,13 @@ class Post extends Leafpub {
         return $posts;
     }
 
-    // Tells whether or not a post is e to the public
+    /**
+    * Tells whether or not a post is e to the public
+    *
+    * @param String $post_or_slug
+    * @return bool
+    *
+    **/
     public static function isVisible($post_or_slug) {
         // Get the post
         $post = is_string($post_or_slug) ? Post::get($post_or_slug) : $post_or_slug;
@@ -667,7 +747,14 @@ class Post extends Leafpub {
         return true;
     }
 
-    // Renders a post
+    /**
+    * Renders a post
+    *
+    * @param String $slug_or_post
+    * @param null $options
+    * @return mixed
+    *
+    **/
     public static function render($slug_or_post, $options = null) {
         // Get the post
         if(is_array($slug_or_post)) {
@@ -826,7 +913,15 @@ class Post extends Leafpub {
         return $html;
     }
 
-    // Updates a post
+    /**
+    * Updates a post
+    *
+    * @param String $slug
+    * @param array $properties
+    * @return bool
+    * @throws \Exception
+    *
+    **/ 
     public static function update($slug, $properties) {
         // Get the post
         $post = self::get($slug);
@@ -935,7 +1030,13 @@ class Post extends Leafpub {
         return true;
     }
 
-    // Returns a post URL
+    /**
+    * Returns a post URL
+    *
+    * @param String $slug
+    * @return String
+    *
+    **/
     public static function url($slug = '') {
         // example.com/slug
         return parent::url($slug);

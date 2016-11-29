@@ -1,16 +1,31 @@
 <?php
-//
-// Leafpub\Search: methods for working with search pages
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Search
+*
+* methods for working with search pages
+* @package Leafpub
+*
+**/
 class Search extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Renders a search page
+    /** 
+    * Renders a search page
+    *
+    * @param String $query
+    * @param in $page
+    * @return mixed
+    *
+    **/
     public static function render($query, $page = 1) {
         // Get the search's posts
         if(mb_strlen($query)) {

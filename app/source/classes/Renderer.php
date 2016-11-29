@@ -1,16 +1,30 @@
 <?php
-//
-// Leafpub\Renderer: methods for rendering handlebar templates
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Renderer
+*
+* methods for rendering handlebar templates
+* @package Leafpub
+*
+**/
 class Renderer extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Return admin helpers
+    /**
+    * Return admin helpers
+    *
+    * @param array $helpers
+    * @return array
+    *
+    **/
     private static function loadHelpers($helpers = []) {
         $array = [];
 
@@ -24,11 +38,14 @@ class Renderer extends Leafpub {
         return $array;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Renders the specified handlebar template and returns the resulting HTML
+    /**
+    * Renders the specified handlebar template and returns the resulting HTML
+    *
+    * @param array $options
+    * @return String
+    * @throws \Exception
+    *
+    **/
     public static function render($options = []) {
         // Extract options
         $template = $data = $special_vars = $helpers = '';

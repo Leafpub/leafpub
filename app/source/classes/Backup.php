@@ -1,15 +1,26 @@
 <?php
-//
-// Leafpub\Backup: methods for working with backups
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* Backup
+*
+* methods for working with backups
+* @package Leafpub
+*
+**/
 class Backup extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Constants
+    **/
     const
         NOT_FOUND = 1,
         REQUIRED_FILE_IS_MISSING = 2,
@@ -21,11 +32,13 @@ class Backup extends Leafpub {
         UNABLE_TO_MOVE_FILE = 8,
         UNABLE_TO_RESTORE_DATABASE = 9;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Fetch a database table and convert it to JSON
+    /**
+    * Fetch a database table and convert it to JSON
+    *
+    * @param String $table
+    * @return mixed
+    *
+    **/
     private static function dbToJson($table) {
         try {
             $st = self::$database->prepare("SELECT * FROM __$table");
@@ -38,12 +51,24 @@ class Backup extends Leafpub {
         return json_encode($result, JSON_PRETTY_PRINT);
     }
 
-    // Returns an array of all known database table names
+    /**
+    * Returns an array of all known database table names
+    *
+    * @return array
+    *
+    **/
     private static function getTableNames() {
         return ['history', 'post_tags', 'posts', 'settings', 'tags', 'uploads', 'users'];
     }
 
-    // Truncates a database table and restores values from JSON
+    /**
+    * Truncates a database table and restores values from JSON
+    *
+    * @param String $table
+    * @param String $json
+    * @return bool
+    *
+    **/
     private static function jsonToDb($table, $json) {
         // Decode it
         $rows = json_decode($json, true);
@@ -82,11 +107,12 @@ class Backup extends Leafpub {
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Creates a backup file
+    /**
+    * Creates a backup file
+    *
+    * @return array
+    * @throws \Exception
+    **/
     public static function create() {
         $tmp_dir = self::path('backups/create-' . uniqid());
 
@@ -192,13 +218,25 @@ class Backup extends Leafpub {
         ];
     }
 
-    // Deletes the specified backup file
+    /**
+    * Deletes the specified backup file
+    *
+    * @param String $filename
+    * @return bool
+    *
+    **/
     public static function delete($filename) {
         $pathname = self::path('backups', $filename);
         return file_exists($pathname) ? unlink($pathname) : false;
     }
 
-    // Gets a backup file
+    /**
+    * Gets a backup file
+    *
+    * @param String $filename
+    * @return mixed
+    *
+    **/
     public static function get($filename) {
         $pathname = self::path('backups', $filename);
         if(!file_exists($pathname)) return false;
@@ -211,7 +249,12 @@ class Backup extends Leafpub {
         ];
     }
 
-    // Gets an array of all available backups
+    /**
+    * Gets an array of all available backups
+    *
+    * @return array
+    *
+    **/
     public static function getAll() {
         if(!file_exists(self::path('backups'))) return [];
 
@@ -236,7 +279,14 @@ class Backup extends Leafpub {
         return $backups;
     }
 
-    // Restores content and data to the specified backup file
+    /**
+    * Restores content and data to the specified backup file
+    *
+    * @param String $file
+    * @return void
+    * @throws \Exception
+    *
+    **/
     public static function restore($file) {
         $content_dir = self::path('content');
         $tmp_dir = self::path('backups/restore-' . uniqid());

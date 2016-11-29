@@ -1,7 +1,11 @@
 <?php
-//
-// Controller for admin panel views
-//
+/**
+ * Leafpub (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
 namespace Leafpub\Controller;
 
 use Leafpub\Admin,
@@ -23,13 +27,24 @@ use Leafpub\Admin,
     Leafpub\Upload,
     Leafpub\User;
 
+/**
+* AdminController
+*
+* This class handles all non-api requests in the Leafpub backend.
+* It's the controller for the admin panel views.
+*
+**/
 class AdminController extends Controller {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Auth
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET admin/login
+    /**
+    * Renders the login view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function login($request, $response, $args) {
         $params = $request->getParams();
 
@@ -49,7 +64,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/login/recover
+    /**
+    * Renders the password recover view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function recover($request, $response, $args) {
         // Log out the current user if they requested this page
         Session::logout();
@@ -64,7 +87,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/login/reset
+    /**
+    * Renders the password reset view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function reset($request, $response, $args) {
         // Log out the current user if they requested this page
         Session::logout();
@@ -79,26 +110,42 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/logout
+    /**
+    * Logout the current user (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function logout($request, $response, $args) {
         Session::logout();
         return $response->withRedirect(Admin::url('login'));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Dashboard
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // admin/
+    /**
+    * Redirects admin/ to admin/posts (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function dashboard($request, $response, $args) {
         return $response->withRedirect(Admin::url('posts'));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Posts
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET admin/posts
+    /**
+    * Renders the posts view view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function posts($request, $response, $args) {
         $html = Admin::render('posts', [
             'title' => Language::term('posts'),
@@ -121,7 +168,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/posts/new
+    /**
+    * Renders the new post view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function newPost($request, $response, $args) {
         $html = Admin::render('posts.new', [
             'title' => Language::term('new_post'),
@@ -141,7 +196,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/posts/{slug}
+    /**
+    * Renders the edit post view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function editPost($request, $response, $args) {
         $post = Post::get($args['slug']);
         if(!$post) {
@@ -175,7 +238,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/posts/{slug}/history/{id}
+    /**
+    * Renders the history of a post (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function history($request, $response, $args) {
         $history = History::get($args['id']);
         // Is there a history object and does the post's slug match the slug argument?
@@ -191,11 +262,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Tags
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET admin/tags
+    /**
+    * Renders the tags view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function tags($request, $response, $args) {
         // To view tags, you must be an owner, admin, or editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
@@ -214,7 +289,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/tags/new
+    /**
+    * Renders the new tag view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function newTag($request, $response, $args) {
         // To add tags, you must be an owner, admin, or editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
@@ -231,7 +314,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/tags/{slug}
+    /**
+    * Renders the edit tag view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function editTag($request, $response, $args) {
         // To edit tags, you must be an owner, admin, or editor
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
@@ -253,11 +344,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Navigation
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // admin/navigation
+    /**
+    * Renders the navigation view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function navigation($request, $response, $args) {
         $params = $request->getParams();
 
@@ -276,11 +371,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Users
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // GET admin/users
+    /**
+    * Renders the user view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function users($request, $response, $args) {
         // To view users, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -299,7 +398,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/users/add
+    /**
+    * Renders the new user view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function newUser($request, $response, $args) {
         // To add users, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {
@@ -317,7 +424,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    // GET admin/users/{slug}
+    /**
+    * Renders the edit user view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function editUser($request, $response, $args) {
         // To edit a user, you must be an owner, admin or the user
         if(!Session::isRole(['owner', 'admin']) && $args['slug'] !== Session::user('slug')) {
@@ -342,11 +457,15 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Admin
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // admin/settings
+    /**
+    * Renders the settings view (GET)
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
     public function settings($request, $response, $args) {
         // To edit settings, you must be an owner or admin
         if(!Session::isRole(['owner', 'admin'])) {

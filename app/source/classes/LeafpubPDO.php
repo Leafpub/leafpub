@@ -1,32 +1,50 @@
 <?php
-//
-//  Leafpub\LeafpubPDO: an extension of the PDO class that supports table prefixing
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* LeafpubPDO
+*
+* an extension of the PDO class that supports table prefixing
+*
+*/
 class LeafpubPDO extends \PDO {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Properties
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+    * Properties
+    **/
     protected $table_prefix;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Protected methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Adds the specified prefix to any word preceeded by two underscores in the statement
+    /**
+    * Adds the specified prefix to any word preceeded by two underscores in the statement
+    *
+    * @param String $statement
+    * @return String
+    *
+    **/
     protected function addTablePrefix($statement) {
         // Regex example: https://regex101.com/r/yC5kO5/3
         return preg_replace('/\b__([a-z0-9_]+)\b/i', $this->table_prefix . '$1', $statement);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Constructor
+    /**
+    * Constructor
+    *
+    * @param String $dsn
+    * @param null $user
+    * @param null $password
+    * @param array $driver_options
+    * @param null $prefix
+    * @return void
+    *
+    **/
     public function __construct($dsn, $user = null, $password = null, $driver_options = array(), $prefix = null) {
         $this->table_prefix = $prefix;
         parent::__construct($dsn, $user, $password, $driver_options);
@@ -35,19 +53,38 @@ class LeafpubPDO extends \PDO {
         $this->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    // Wrapper for exec()
+    /**
+    * Wrapper for exec()
+    *
+    * @param String $statement
+    * @return int
+    *
+    **/
     public function exec($statement) {
         $statement = $this->addTablePrefix($statement);
         return parent::exec($statement);
     }
 
-    // Wrapper for prepare()
+    /**
+    * Wrapper for prepare()
+    *
+    * @param String $statement
+    * @param array $driver_options
+    * @return void
+    *
+    **/
     public function prepare($statement, $driver_options = array()) {
         $statement = $this->addTablePrefix($statement);
         return parent::prepare($statement, $driver_options);
     }
 
-    // Wrapper for query()
+    /**
+    * Wrapper for query()
+    *
+    * @param String $statement
+    * @return PDOStatement
+    *
+    **/
     public function query($statement) {
         $statement = $this->addTablePrefix($statement);
         $args = func_get_args();

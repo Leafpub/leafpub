@@ -1,16 +1,30 @@
 <?php
-//
-// Leafpub\History: methods for working with history
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
+/**
+* History
+*
+* methods for working with post history
+* @package Leafpub
+*
+**/
 class History extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Normalize data types for certain fields
+    /**
+    * Normalize data types for certain fields
+    *
+    * @param array $revision
+    * @return array
+    *
+    **/
     private static function normalize($revision) {
         // Cast to integer
         $revision['id'] = (int) $revision['id'];
@@ -25,11 +39,13 @@ class History extends Leafpub {
         return $revision;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Get a history item
+    /**
+    * Get a history item
+    *
+    * @param int $id
+    * @return mixed
+    *
+    **/
     public static function get($id) {
         try {
             $st = self::$database->prepare('
@@ -50,7 +66,13 @@ class History extends Leafpub {
         return self::normalize($revision);
     }
 
-    // Get all history for the specified post
+    /**
+    * Get all history for the specified post
+    *
+    * @param String $slug
+    * @return mixed
+    *
+    **/
     public static function getAll($slug) {
         try {
             $st = self::$database->prepare('
@@ -75,7 +97,14 @@ class History extends Leafpub {
         return $revisions;
     }
 
-    // Adds a revision based on the specified post's current entry
+    /**
+    * Adds a revision based on the specified post's current entry
+    *
+    * @param String $slug
+    * @param bool $initial = false
+    * @return mixed
+    *
+    **/
     public static function add($slug, $initial = false) {
         $post = Post::get($slug);
         if(!$post) return false;
@@ -106,7 +135,13 @@ class History extends Leafpub {
         return $history_id;
     }
 
-    // Delete a history record
+    /**
+    * Delete a history record
+    *
+    * @param int $id
+    * @return bool
+    *
+    **/
     public static function delete($id) {
         try {
             $st = self::$database->prepare('DELETE FROM __history WHERE id = :id');
@@ -118,7 +153,13 @@ class History extends Leafpub {
         }
     }
 
-    // Remove all history linked to the specified post
+    /**
+    * Remove all history linked to the specified post
+    *
+    * @param String $slug
+    * @return bool
+    *
+    **/
     public static function flush($slug) {
         try {
             $st = self::$database->prepare('

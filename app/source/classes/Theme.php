@@ -1,18 +1,31 @@
 <?php
-//
-// Leafpub\Theme: methods for working with themes
-//
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
+
 namespace Leafpub;
 
 use DirectoryIterator;
 
+/**
+* Theme
+*
+* methods for working with themes
+* @package Leafpub
+*
+**/
 class Theme extends Leafpub {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Public methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Returns an array of all available themes
+    /**
+    * Returns an array of all available themes
+    *
+    * @return array
+    *
+    **/
     public static function getAll() {
         $themes = [];
 
@@ -31,7 +44,12 @@ class Theme extends Leafpub {
         return $themes;
     }
 
-    // Returns the path to the current theme, optionally concatenating a path
+    /**
+    * Returns the path to the current theme, optionally concatenating a path
+    *
+    * @return String
+    *
+    **/
     public static function getPath() {
         $paths = func_get_args();
         $base_path = 'content/themes/' . Setting::get('theme');
