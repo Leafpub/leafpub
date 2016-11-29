@@ -1,5 +1,6 @@
 # Rewrites
 RewriteEngine On
+RewriteBase /
 
 # Forbid access to these folders
 RewriteRule ^backups/ - [F]
