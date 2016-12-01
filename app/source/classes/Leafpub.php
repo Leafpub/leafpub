@@ -507,6 +507,15 @@ class Leafpub {
         exit();
     }
 
+    public static function scanDir($dir){
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        return $files;
+    }
+
     /**
     * Recursively removes a directory and all its contents
     *
@@ -516,10 +525,7 @@ class Leafpub {
     **/
     public static function removeDir($dir) {
         // Remove everything inside
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
-        );
+        $files = self::scanDir($dir);
         foreach($files as $file) {
             if($file->isDir()) {
                 if(!rmdir($file->getRealPath())) return false;
