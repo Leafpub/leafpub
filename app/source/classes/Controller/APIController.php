@@ -25,7 +25,8 @@ use Leafpub\Admin,
     Leafpub\Tag,
     Leafpub\Theme,
     Leafpub\Upload,
-    Leafpub\User;
+    Leafpub\User,
+    Leafpub\Importer\ImportFactory;
 
 /**
 * APIController
@@ -1338,6 +1339,88 @@ class APIController extends Controller {
             'success' => true,
             'code' => $code
         ]);
+    }
+
+    public function handleImportUpload($request, $response, $args){
+        $params = $request->getParams();
+        $uploaded = [];
+        $failed = [];
+
+        foreach($request->getUploadedFiles()['files'] as $upload) {
+            $extension = Leafpub::fileExtension($upload->getClientFilename());
+
+            // Check for a successful upload
+            if($upload->getError() !== UPLOAD_ERR_OK) {
+                $failed[] = [
+                    'filename' => $upload->getClientFilename(),
+                    'message' => Language::term('upload_failed')
+                ];
+                continue;
+            }
+            $upload->moveTo(Leafpub::path('content/uploads/import.xml'));
+            $uploaded[] = Leafpub::path('content/uploads/import.xml');
+        }
+
+        return $response->withJson([
+            'success' => true,
+            'uploaded' => $uploaded,
+            'failed' => $failed
+        ]);
+    }
+
+    /**
+    * Imports a blog. At the moment the dropins Wordpress and Ghost are available.
+    * 
+    * Steps:
+    * 1. Set site in maintenance mode.
+    * 2. Flush __posts & __post_tags
+    * 3. ini_set(time_limit)
+    * 4. Begin Transaction!
+    * 5. Import 
+    * 6. Load the pictures
+    * 7. Commit Transaction.
+    * 8. Delete import.xml ($file)
+    * 9. Set maintenance mode off
+    * 10. Done
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return bool
+    * @throws \Exception
+    *
+    **/
+    public function doImport($request, $response, $args){
+        $params = $request->getParams();
+        // Read params
+        $dropin = $params['importer'];
+        $file = $params['file'];
+        $flush = $params['flush'];
+        $user = $params['user'];
+        $media = $params['media'];
+        // 1. Set site in maintenance mode
+        Setting::update('maintenance', 'on');
+        // 2. ini_set
+
+        // 3. Transaction
+
+        // 4. Flush tables
+        if ($flush){
+
+        }
+        // 5. Parse file and import data
+        $importer = ImportFactory::factory($dropin, $file);
+        var_dump($importer->parseFile());
+        // 6. Load pictures
+        if ($media){
+
+        }
+        // 7. Commit
+
+        // 8. unlink $file
+        unlink($file);
+        // 9. Set maintenance mode off
+        Setting::update('maintenance', 'off');
     }
 
 }
