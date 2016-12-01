@@ -1,0 +1,76 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-xs-6">
+            <h1>
+                {{L 'import'}}
+            </h1>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-xs-6 text-xs-right">
+            <button type="button" class="submit btn btn-primary disabled">
+                {{L 'import'}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container stretch-down">
+    <div class="row mt-2">
+        <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+            <h3>{{L 'import_welcome'}}</h3>
+        </div>
+    </div>
+    <form class="import-form" autocomplete="off">
+        <div class="row mt-10">
+            <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+                <div class="form-group">
+                    <label>{{L 'select_blog_plattform'}}</label>
+                    {{#each dropins}}
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input dropin" type="radio" name="dropin" id="{{this}}" value="{{this}}">
+                            {{this}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="upload-xml btn btn-translucent-dark disabled">
+                        <i class="fa fa-fw fa-cloud-upload"></i>
+                        {{L 'select_a_xml_file_to_import'}}
+                        <input type="file" accept="xml" style="display: none;">
+                    </label>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label>{{L 'options'}}</label>
+                    <div class="form-check">
+                        <label class="checkbox">
+                            <input type="checkbox" data-option="flush" name="flush" id="flush">
+                            <span class="tag tag-primary">{{L 'import_flush_tables'}}</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" data-option="user" name="user" id="user">
+                            <span class="tag tag-primary">{{L 'import_import_user'}}</span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" data-option="media" name="media" id="media">
+                            <span class="tag tag-primary">{{L 'import_load_media'}}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" hidden>
+    </form>
+</div>
+
+{{> footer}}

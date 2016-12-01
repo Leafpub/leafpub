@@ -1,0 +1,21 @@
+@import "partials/variables";
+
+.import-form {
+    padding: 3rem 1rem;
+}
+
+.upload-xml {
+    transition: all .5s linear;
+    opacity: 0;
+}
+
+.upload-xml.visible {
+    opacity: 1;
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .import-form {
+        padding: 1.5rem .5rem;
+    }
+}
