@@ -125,6 +125,35 @@ class AdminController extends Controller {
     }
 
     /**
+    * Show the import page
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    *
+    **/
+    public function import($request, $response, $args){
+        // Only the blog owner can import another blog
+        if (!Session::isRole('owner')){
+            return $this->notFound($request, $response);
+        }
+
+        // Search for available dropins
+        foreach (Leafpub::scanDir(Leafpub::path('source/classes/Importer/Dropins/')) as $file){
+            $installedImporter[] = Leafpub::filename($file->getFilename());
+        }
+        
+        $html = Admin::render('import', [
+            'title' => Language::term('import'),
+            'scripts' => 'import.min.js',
+            'styles' => 'import.css',
+            'dropins' => $installedImporter
+        ]);
+
+        return $response->write($html);
+    }
+
+    /**
     * Redirects admin/ to admin/posts (GET)
     *
     * @param \Slim\Http\Request $request
