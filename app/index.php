@@ -44,6 +44,10 @@ $app->group("/api", function() {
 
 /** Protected **/
 $app->group("/api", function() {
+    // Importer
+    $this->post('/import', 'Leafpub\Controller\APIController:handleImportUpload');
+    $this->put('/import', 'Leafpub\Controller\APIController:doImport');
+
     // Posts
     $this->get('/posts', 'Leafpub\Controller\APIController:getPosts');
     $this->post('/posts', 'Leafpub\Controller\APIController:addPost');
@@ -107,6 +111,9 @@ $app->group("/$frags->admin", function() {
 $app->group("/$frags->admin", function() {
     // Dashboard
     $this->get('', 'Leafpub\Controller\AdminController:dashboard');
+
+    // Importer
+    $this->get('/import', 'Leafpub\Controller\AdminController:import');
 
     // Posts
     $this->get('/posts', 'Leafpub\Controller\AdminController:posts');
