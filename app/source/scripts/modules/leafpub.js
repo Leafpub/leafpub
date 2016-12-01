@@ -111,11 +111,13 @@ $(function() {
         upload: function(options) {
             var defer = $.Deferred(),
                 formData = new FormData(),
-                key, req;
+                key, req, 
+                url = 'api/uploads';
 
             // Set form data
-            if(options.accept) formData.append('accept', options.accept);
-            if(options.thumbnail) formData.append('thumbnail', JSON.stringify(options.thumbnail));
+            if (options.accept) formData.append('accept', options.accept);
+            if (options.thumbnail) formData.append('thumbnail', JSON.stringify(options.thumbnail));
+            if (options.url) url = options.url;
 
             // Set files
             if(options.files.length) {
@@ -130,7 +132,7 @@ $(function() {
 
             // Send request to upload
             $.ajax({
-                url: Leafpub.url('api/uploads'),
+                url: Leafpub.url(url),
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
