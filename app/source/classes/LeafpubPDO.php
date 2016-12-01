@@ -21,6 +21,7 @@ class LeafpubPDO extends \PDO {
     * Properties
     **/
     protected $table_prefix;
+    protected $transactionCount = 0;
 
     /**
     * Adds the specified prefix to any word preceeded by two underscores in the statement
@@ -96,4 +97,45 @@ class LeafpubPDO extends \PDO {
         }
     }
 
+    /**
+    * Begins a transaction
+    *
+    * @return bool
+    *
+    **/
+    public function beginTransaction() {
+        if (!$this->transactionCounter++) {
+            return parent::beginTransaction();
+        }
+        $this->exec('SAVEPOINT trans'.$this->transactionCounter);
+        return $this->transactionCounter >= 0;
+    }
+
+    /**
+    * Commit a transaction
+    *
+    * @return bool
+    *
+    **/
+    public function commit() {
+        if (!--$this->transactionCounter) {
+            return parent::commit();
+        }
+        return $this->transactionCounter >= 0;
+    }
+
+    /**
+    * Rollback a transaction
+    *
+    * @return bool
+    *
+    **/
+    public function rollBack() {
+        if (--$this->transactionCounter) {
+            $this->exec('ROLLBACK TO trans'.$this->transactionCounter + 1);
+            return true;
+        }
+        return parent::rollBack();
+    }
+    
 }
