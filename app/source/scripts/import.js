@@ -48,6 +48,7 @@ $(function() {
 
     // Submit button
     $('.submit').on('click', function() {
+        $(this).addClass('disabled');
         $('.import-form').submit();
     });
 
