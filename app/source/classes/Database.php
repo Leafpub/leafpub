@@ -130,4 +130,45 @@ class Database extends Leafpub {
         }
     }
 
+    /**
+    * Begins a transaction
+    *
+    * @return bool
+    *
+    **/
+    public static function beginTransaction(){
+        return self::$database->beginTransaction();
+    }
+
+    /**
+    * Rollback a transaction
+    *
+    * @return bool
+    *
+    **/ 
+    public static function rollBack() {
+        return self::$database->rollBack();
+    }
+
+    /**
+    * Commit a transaction
+    *
+    * @return bool
+    *
+    **/
+    public static function commit(){
+        return self::$database->commit();
+    }
+
+    /**
+    * Truncate a table
+    *
+    * @param String $table
+    * @return bool
+    *
+    **/
+    public static function truncate($table){
+        return self::$database->exec('TRUNCATE ' . $table);
+    }
+
 }
