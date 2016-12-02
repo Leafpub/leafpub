@@ -31,6 +31,13 @@ class Wordpress extends AbstractImporter {
             throw new \Exception(Language::term('Extension simplexml needs to be installed!'));
         }
         
+		foreach($this->_posts as &$post){
+			if (isset($post['image'])){
+				$id = $post['image']; 
+				$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
+			}
+		}
+
         return array(
             'user' => $this->_user,
             'posts' => $this->_posts,
@@ -158,11 +165,13 @@ class Wordpress extends AbstractImporter {
 		$post['page'] = (((string) $wp->post_type == 'page') ? 1 : 0);
 			
 		$post['sticky'] = (int) $wp->is_sticky;
-
+		
+		/*
 		if (isset($wp->attachment_url)){
+			echo (string) $wp->attachment_url;
 			$post['image'] = (string) $wp->attachment_url; // NOT URL --> PATH TO PIC
 		}
-		
+		*/
 		
 		foreach ( $item->category as $c ) {
 			$att = $c->attributes();
@@ -174,14 +183,18 @@ class Wordpress extends AbstractImporter {
 					//Save the Cat ID.	
 				}
 		}
-        /*
+        
 		foreach ( $wp->postmeta as $meta ) {
+			/*
 			$post['postmeta'][] = array(
 				'key' => (string) $meta->meta_key,
 				'value' => (string) $meta->meta_value
-			);
+			);*/
+			if ($meta->meta_key == '_thumbnail_id'){
+				$post['image'] = $meta->meta_value;
+			}
 		}
-        */
+    
 		$this->_posts[(string) $wp->post_name] = $post;
     }
     
@@ -192,7 +205,8 @@ class Wordpress extends AbstractImporter {
 		$media['author'] = $this->users[(string) $dc->creator]['id'];
 
 		$wp = $item->children($this->namespaces['wp']);
-		$media['id'] = (int) $wp->post_id;
+		$id = (int) $wp->post_id;
+		$media['id'] = $id;
 		
 		$url = (string) $wp->attachment_url;
 		
@@ -202,11 +216,65 @@ class Wordpress extends AbstractImporter {
 		
 		$media['url'] = $url;
 
-        $this->_media[(string) $wp->post_name] = $media;
+        //$this->_media[(string) $wp->post_name] = $media;
+		$this->_media[$id] = $media;
     }
     
     protected function filterContent($content){
-		return str_replace($this->_oldBlogUrl . '/wp-content/', '/content/', $content);
+		$year = date('Y');
+        $month = date('m');
+		
+		// Filter the old url, wp-content and year/month to our folder structure
+		if (preg_match('/[0-9]{4}\/[0-9]{2}/', $content)){
+			// Replace year/month to actual year / actual month
+			$content = preg_replace(
+				'/(?:' . addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/)*[0-9]{4}\/[0-9]{2}/', 
+				'/content/uploads/' . $year . '/' . $month, 
+				$content
+			);
+		} else {
+			$content = preg_replace(
+				'/(?:' . addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/)/', 
+				'/content/uploads/' . $year . '/' . $month, 
+				$content
+			);
+		}
+		// Delete wxh from filename
+		$content = preg_replace('/-[0-9]{3,4}x[0-9]{3,4}/', '', $content);
+		// Delete Wordpress Shortcodes
+		//$content = preg_replace('/' . $this->_getShortcodeRegex() . '/', '', $content);
+		return $content;
     }
+
+	private function _getShortcodeRegex(){
+		return
+  					'\\['                              // Opening bracket
+	                . '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+	                . '(\\w*)'                    // 2: Shortcode name
+	                . '(?![\\w-])'                       // Not followed by word character or hyphen
+	                . '('                                // 3: Unroll the loop: Inside the opening shortcode tag	                .     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
+	                .     '(?:'
+	                .         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
+	                .         '[^\\]\\/]*'               // Not a closing bracket or forward slash
+	                .     ')*?'
+	                . ')'
+	                . '(?:'
+	                .     '(\\/)'                        // 4: Self closing tag ...
+	                .     '\\]'                          // ... and closing bracket
+	                . '|'
+	                .     '\\]'                          // Closing bracket
+	                .     '(?:'
+	                .         '('                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+	                .             '[^\\[]*+'             // Not an opening bracket
+	                .             '(?:'
+	                .                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+	                .                 '[^\\[]*+'         // Not an opening bracket
+	                .             ')*+'
+	                .         ')'
+	                .         '\\[\\/\\2\\]'             // Closing shortcode tag
+	                .     ')?'
+	                . ')'
+	                . '(\\]?)';      
+	} 
 }
 ?>
