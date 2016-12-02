@@ -26,7 +26,7 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Upload,
     Leafpub\User,
-    Leafpub\Importer\ImportFactory;
+    Leafpub\Importer;
 
 /**
 * APIController
@@ -1392,35 +1392,12 @@ class APIController extends Controller {
     **/
     public function doImport($request, $response, $args){
         $params = $request->getParams();
-        // Read params
-        $dropin = $params['importer'];
-        $file = $params['file'];
-        $flush = $params['flush'];
-        $user = $params['user'];
-        $media = $params['media'];
-        // 1. Set site in maintenance mode
-        Setting::update('maintenance', 'on');
-        // 2. ini_set
-
-        // 3. Transaction
-
-        // 4. Flush tables
-        if ($flush){
-
+        
+        if (Importer::doImport($params)){
+            return  $response->withJson([
+            'success' => true,
+        ]);
         }
-        // 5. Parse file and import data
-        $importer = ImportFactory::factory($dropin, $file);
-        var_dump($importer->parseFile());
-        // 6. Load pictures
-        if ($media){
-
-        }
-        // 7. Commit
-
-        // 8. unlink $file
-        unlink($file);
-        // 9. Set maintenance mode off
-        Setting::update('maintenance', 'off');
     }
 
 }
