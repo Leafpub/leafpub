@@ -101,7 +101,7 @@ class Wordpress extends AbstractImporter {
 				'description' => (string) $t->category_description
 			);
 
-			$this->_categories[$cat_name] = $category;
+			$this->_tags[$cat_name] = $category;
 		}
 		
 		foreach ( $parser->xpath('/rss/channel/wp:tag') as $tags ) {
@@ -177,10 +177,10 @@ class Wordpress extends AbstractImporter {
 			$att = $c->attributes();
 			if ( isset($att['nicename'] ))
 				if ($att['domain'] == 'post_tag'){
-					$this->_post_tags[(int) $wp->post_id][] = $this->tags[(string) $c]['id'];
-					$post['tags'][] = (string) $c;
+					//$post['tags'][] = (string) $c;
 				} elseif ($att['domain'] == 'category'){
-					//Save the Cat ID.	
+					// Only WP category is used as a Leafpub tag	
+					$post['tags'][] = (string) $c;
 				}
 		}
         
