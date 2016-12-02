@@ -89,7 +89,7 @@ return [
     'if_this_was_sent_in_error_you_can_ignore_this_message' => 'If this was sent in error, you can ignore this message.',
     'image' => 'Image',
     'import' => 'Import',
-    'import_flush_tables' => 'Flush post table (all data will be deleted)',
+    'import_flush_tables' => 'Truncate tables (all data will be deleted)',
     'import_import_user' => 'Import user',
     'import_load_media' => 'Load media from server',
     'import_welcome' => 'Welcome to the Leafpub importer',
