@@ -208,4 +208,17 @@ $(function() {
             });
         });
     });
+
+    // Tooltips
+    $('.top-toolbar').find('[title]')
+    .tooltip({
+        trigger: 'hover',
+        placement: 'bottom'
+    })
+    .on('show.bs.tooltip', function(event) {
+        // Don't show tooltips on touch-enabled devices
+        if('ontouchstart' in document.documentElement) {
+            event.preventDefault();
+        }
+    });
 });
