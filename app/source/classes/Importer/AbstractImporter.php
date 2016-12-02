@@ -13,7 +13,8 @@ use Leafpub\Post,
     Leafpub\Leafpub,
     Leafpub\Tag,
     Leafpub\Upload,
-    Leafpub\User;
+    Leafpub\User,
+    Leafpub\Database;
 
 /**
 * AbstractImporter
@@ -28,6 +29,9 @@ abstract class AbstractImporter {
     **/
     protected $_user, $_tags, $_content, $_media, $_post_tags; // arrays
     protected $_loadMediaFiles = false; // boolean
+    protected $_loadUser = false;
+    protected $_truncateTables = false;
+    protected $_tmpPath = '';
     protected $_fileToParse; // String
     protected $_oldBlogUrl; // String - this adress will be deleted in filterPosts() in img src tags
     
@@ -35,6 +39,11 @@ abstract class AbstractImporter {
         $this->_fileToParse = $file;
     }
     
+    public function setOptions($options){
+        $this->_loadMediaFiles =  ($options['media'] == 'false' ? false : true);
+        $this->_loadUser = ($options['user'] == 'false' ? false : true);
+        $this->_truncateTables = ($options['flush'] == 'false' ? false : true);
+    }
     /**
     * This function has to be defined in the ImporterClass
     *
@@ -56,8 +65,7 @@ abstract class AbstractImporter {
         
         // Where should we save the media files?
         // Every file in todays folder (year/month/day)?
-        $path = 'PATH_TO_SET';
-        $mediaFile = fopen ($path. '/' . $filename, 'w+');
+        $mediaFile = fopen ($this->_tmpPath . '/' . $filename, 'w+');
         $handle = curl_init(str_replace(" ","%20",$url));
         curl_setopt($ch, CURLOPT_TIMEOUT, 50);
         
@@ -78,13 +86,78 @@ abstract class AbstractImporter {
     // parseFile fills our protected arrays with data.
     // We are now saving the array data to DB; 
     public function importData(){
-        $this->_user;
-        $this->_tags;
-        $this->_posts;
-        $this->_post_tags;
-        if ($this->_loadMediaFiles){
-            //$this->_media;
+        Database::beginTransaction();
+        if ($this->_truncateTables){
+            Database::truncate('__post_tags');
+            Database::truncate('__posts');
+            Database::truncate('__tags');
         }
+        if ($this->_loadUser){
+            $this->_importUser();
+        }
+        $this->_importTags();
+        $this->_importPosts();
+        if ($this->_loadMediaFiles){
+            $this->_importMedia();
+        }
+        Database::commit();
+        return true;
+    }
+
+    private function _importUser(){
+        foreach($this->_user as $slug => $ds){
+            try {
+                User::add($slug, $ds);
+            } catch (\Exception $e){
+                //echo($e->getMessage());
+            }
+        }
+        return true;
+    }
+
+    private function _importTags(){
+        foreach($this->_tags as $slug => $ds){
+            try {
+                Tag::add($slug, $ds);
+            } catch (\Exception $e){
+                //echo($e->getMessage());
+            }
+        }
+        return true;
+    }
+
+    private function _importPosts(){
+        foreach($this->_posts as $slug => $ds){
+            try {
+                Post::add($slug, $ds);
+            } catch (\Exception $e){
+                //echo($e->getMessage());
+            }
+        }
+        return true;
+    }
+
+    private function _importMedia(){
+        $info = array();
+        $this->_tmpPath = Leafpub::path('content/uploads/' . uniqid());
+        if (!Leafpub::makeDir($this->_tmpPath)){
+            throw new \Exception('Couldn\'t create ' . $this->_tmpPath );
+        }
+
+        foreach ($this->_media as $file){
+            $filename = $file['filename'] . '.' . $file['extension'];
+            $this->loadMediaFile($filename, $file['url']);
+            if (is_file($this->_tmpPath . '/' . $filename)){
+                try {
+                    Upload::add($filename, file_get_contents($this->_tmpPath . '/' . $filename), $info);
+                }
+                catch (\Exception $e){
+
+                }
+            }
+        }
+        Leafpub::removeDir($this->_tmpPath);
+        return true;
     }
 }
 ?>
