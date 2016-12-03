@@ -27,10 +27,12 @@ abstract class AbstractImporter {
     /**
     * Properties
     **/
-    protected $_user, $_tags, $_content, $_media, $_post_tags; // arrays
-    protected $_loadMediaFiles = false; // boolean
+    protected $_user, $_tags, $_categories, $_content, $_media, $_post_tags; // arrays
+    protected $_loadMediaFilesRemote = false; // boolean
+    protected $_loadMediaFilesLocal = false;
     protected $_loadUser = false;
     protected $_truncateTables = false;
+    protected $_useCategoryAsTag = false;
     protected $_tmpPath = '';
     protected $_fileToParse; // String
     protected $_oldBlogUrl; // String - this adress will be deleted in filterPosts() in img src tags
@@ -40,9 +42,11 @@ abstract class AbstractImporter {
     }
     
     public function setOptions($options){
-        $this->_loadMediaFiles =  ($options['media'] == 'false' ? false : true);
+        $this->_loadMediaFilesRemote =  ($options['media'] == 'remote' ? true : false);
+        $this->_loadMediaFilesLocal = ($options['media'] == 'local' ? true : false);
         $this->_loadUser = ($options['user'] == 'false' ? false : true);
         $this->_truncateTables = ($options['flush'] == 'false' ? false : true);
+        $this->_useCategoryAsTag = ($options['category'] == 'false' ? false :true);
     }
     /**
     * This function has to be defined in the ImporterClass
@@ -97,7 +101,7 @@ abstract class AbstractImporter {
         }
         $this->_importTags();
         $this->_importPosts();
-        if ($this->_loadMediaFiles){
+        if ($this->_loadMediaFilesRemote || $this->_loadMediaFilesLocal){
             $this->_importMedia();
         }
         Database::commit();
@@ -116,7 +120,13 @@ abstract class AbstractImporter {
     }
 
     private function _importTags(){
-        foreach($this->_tags as $slug => $ds){
+        $data = array();
+        if ($this->_useCategoryAsTag){
+            $data = $this->_categories;
+        } else {
+            $data = $this->_tags;
+        }
+        foreach($data as $slug => $ds){
             try {
                 Tag::add($slug, $ds);
             } catch (\Exception $e){
@@ -136,27 +146,51 @@ abstract class AbstractImporter {
         }
         return true;
     }
+    /*
+    private function _importPostTags(){
 
+    }
+    */
     private function _importMedia(){
         $info = array();
-        $this->_tmpPath = Leafpub::path('content/uploads/' . uniqid());
-        if (!Leafpub::makeDir($this->_tmpPath)){
-            throw new \Exception('Couldn\'t create ' . $this->_tmpPath );
+        if ($this->_loadMediaFilesRemote){
+            // if we load media from an external server...
+            $this->_tmpPath = Leafpub::path('content/uploads/import/' . uniqid());
+            if (!Leafpub::makeDir($this->_tmpPath)){
+                throw new \Exception('Couldn\'t create ' . $this->_tmpPath );
+            }
+        } elseif ($this->_loadMediaFilesLocal){
+            // if we load from a temp dir of our server...
+            $this->_tmpPath = Leafpub::path('content/uploads/import');
+        } else {
+            throw new \Exception('Haha, nice try....');
         }
+        
 
         foreach ($this->_media as $file){
+            $path = '';
             $filename = $file['filename'] . '.' . $file['extension'];
-            $this->loadMediaFile($filename, $file['url']);
-            if (is_file($this->_tmpPath . '/' . $filename)){
+            // CURL load
+            if ($this->_loadMediaFilesRemote){
+                $this->loadMediaFile($filename, $file['url']);
+                $path = $this->_tmpPath . '/' . $filename;
+            }
+            // Just copy the file
+            if ($this->_loadMediaFilesLocal){
+                $path = $this->_tmpPath . '/' . $file['attachedFile'];
+            }
+            if (is_file($path)){
                 try {
-                    Upload::add($filename, file_get_contents($this->_tmpPath . '/' . $filename), $info);
+                    Upload::add($filename, file_get_contents($path), $info);
                 }
                 catch (\Exception $e){
 
                 }
             }
         }
-        Leafpub::removeDir($this->_tmpPath);
+        if ($this->_loadMediaFilesRemote){
+            Leafpub::removeDir($this->_tmpPath);
+        }
         return true;
     }
 }
