@@ -7,7 +7,8 @@ $(function() {
         file: '',
         flush: false,
         user: false,
-        media: false
+        media: '',
+        category: false
     };
 
     var progress = new Nanobar();
@@ -60,6 +61,11 @@ $(function() {
     $('input[type=checkbox]').on('click', function(event){
         var option = event.currentTarget.dataset.option;
         data[option] = event.currentTarget.checked;
+    });
+
+    $('input[type=radio]').on('click', function(event){
+        var option = event.currentTarget.dataset.option;
+        data[option] = event.currentTarget.dataset.type;
     });
 
     $('.upload-xml').on('change', 'input[type="file"]', function(event) {

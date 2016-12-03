@@ -62,8 +62,20 @@
                             <span class="tag tag-primary">{{L 'import_import_user'}}</span>
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-option="media" name="media" id="media">
-                            <span class="tag tag-primary">{{L 'import_load_media'}}</span>
+                            <input type="checkbox" data-option="category" name="category" id="category">
+                            <span class="tag tag-primary">{{L 'import_use_category_as_tag'}}</span>
+                        </label>
+                         <label class="radio">
+                            <input type="radio" data-option="media" data-type="" checked name="media" id="load_media">
+                            <span class="tag tag-success">{{L 'import_no_media'}}</span>
+                        </label>
+                        <label class="radio">
+                            <input type="radio" data-option="media" data-type="remote" name="media" id="load_media">
+                            <span class="tag tag-success">{{L 'import_remote_media'}}</span>
+                        </label>
+                        <label class="radio">
+                            <input type="radio" data-option="media" data-type="local" name="media" id="import_media">
+                            <span class="tag tag-success">{{L 'import_local_media'}}</span>
                         </label>
                     </div>
                 </div>
