@@ -101,7 +101,7 @@ class Wordpress extends AbstractImporter {
 				'description' => (string) $t->category_description
 			);
 
-			$this->_tags[$cat_name] = $category;
+			$this->_categories[$cat_name] = $category;
 		}
 		
 		foreach ( $parser->xpath('/rss/channel/wp:tag') as $tags ) {
@@ -210,12 +210,18 @@ class Wordpress extends AbstractImporter {
 		
 		$url = (string) $wp->attachment_url;
 		
-		//$media['path'] = '' // path needs to get set...
+		$media['title'] = $item->title; // title won't be used yet.... ;-)
 		$media['filename'] = \Leafpub\Leafpub::fileName($url);
 		$media['extension'] = \Leafpub\Leafpub::fileExtension($url);
 		
 		$media['url'] = $url;
-
+		// Where is this file saved in WP?
+		foreach ( $wp->postmeta as $meta ) {
+			if ($meta->meta_key == '_wp_attached_file'){
+				$media['attached_file'] = $meta->meta_value;
+			}
+		}
+		
         //$this->_media[(string) $wp->post_name] = $media;
 		$this->_media[$id] = $media;
     }
