@@ -85,17 +85,20 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7"
+                "reference": "20ff8bbb57205368b4b42d094642a3e52dac85fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7",
-                "reference": "3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/20ff8bbb57205368b4b42d094642a3e52dac85fb",
+                "reference": "20ff8bbb57205368b4b42d094642a3e52dac85fb",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
             },
             "type": "library",
             "autoload": {
@@ -120,7 +123,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2015-10-04 16:44:32"
+            "time": "2016-11-02 15:56:58"
         },
         {
             "name": "firebase/php-jwt",
@@ -357,16 +360,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "3.5.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "184352bc1913d7ba552ab4131d62f4730ddb0893"
+                "reference": "a685fe91a9435e1432e8eeb7cf516e2f5cee7f64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/184352bc1913d7ba552ab4131d62f4730ddb0893",
-                "reference": "184352bc1913d7ba552ab4131d62f4730ddb0893",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/a685fe91a9435e1432e8eeb7cf516e2f5cee7f64",
+                "reference": "a685fe91a9435e1432e8eeb7cf516e2f5cee7f64",
                 "shasum": ""
             },
             "require": {
@@ -423,20 +426,20 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-07-26 15:12:13"
+            "time": "2016-11-20 20:48:49"
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.4.2",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "351593db2412674e7be21db0d5f2e0c16bfe946d"
+                "reference": "9d2f73868b5b576cc01f7508ba3dec605c863830"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/351593db2412674e7be21db0d5f2e0c16bfe946d",
-                "reference": "351593db2412674e7be21db0d5f2e0c16bfe946d",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/9d2f73868b5b576cc01f7508ba3dec605c863830",
+                "reference": "9d2f73868b5b576cc01f7508ba3dec605c863830",
                 "shasum": ""
             },
             "type": "component",
@@ -469,7 +472,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2016-08-25 13:51:28"
+            "time": "2016-11-23 13:00:08"
         },
         {
             "name": "zordius/lightncandy",
@@ -477,12 +480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "df28163a3d64cad1b9b61a8ccd3a8042d89deb57"
+                "reference": "24972266aa2da14cd18157b2357c70c799f1338e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/df28163a3d64cad1b9b61a8ccd3a8042d89deb57",
-                "reference": "df28163a3d64cad1b9b61a8ccd3a8042d89deb57",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/24972266aa2da14cd18157b2357c70c799f1338e",
+                "reference": "24972266aa2da14cd18157b2357c70c799f1338e",
                 "shasum": ""
             },
             "require": {
@@ -521,7 +524,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-08-24 10:18:47"
+            "time": "2016-11-30 05:41:33"
         }
     ],
     "packages-dev": [],
