@@ -3,7 +3,7 @@ namespace Leafpub;
 
 define('LEAFPUB_VERSION', '{{version}}');
 define('LEAFPUB_DEV', !!preg_match('/\.dev$/', $_SERVER['HTTP_HOST']));
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 ini_set('display_errors', LEAFPUB_DEV ? 1 : 0);
 ini_set('log_errors', 1);
 
