@@ -19,12 +19,12 @@ class Importer extends Leafpub {
         $importer = ImportFactory::factory($dropin, $file);
         $importer->setOptions($options);
         $importer->parseFile();
-        $importer->importData();
+        $ret = $importer->importData();
         // 8. unlink $file
         unlink($file);
         // 9. Set maintenance mode off
         ini_set('max_execution_time', $old_execution_time);
         Setting::update('maintenance', 'off');
-        return true;
+        return $ret;
     }
 }

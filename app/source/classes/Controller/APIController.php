@@ -1392,12 +1392,13 @@ class APIController extends Controller {
     **/
     public function doImport($request, $response, $args){
         $params = $request->getParams();
+        $ret = Importer::doImport($params);
         
-        if (Importer::doImport($params)){
-            return  $response->withJson([
-            'success' => true,
+        return $response->withJson([
+            'success' => (count($ret['succeed']) > 0),
+            'uploaded' => $ret['succeed'],
+            'failed' => $ret['failed']
         ]);
-        }
     }
 
 }

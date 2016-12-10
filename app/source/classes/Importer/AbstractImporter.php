@@ -36,7 +36,9 @@ abstract class AbstractImporter {
     protected $_tmpPath = '';
     protected $_fileToParse; // String
     protected $_oldBlogUrl; // String - this adress will be deleted in filterPosts() in img src tags
-    
+    private $_failed = [];
+    private $_succeed = [];
+
     public function __construct($file){
         $this->_fileToParse = $file;
     }
@@ -105,15 +107,16 @@ abstract class AbstractImporter {
             $this->_importMedia();
         }
         Database::commit();
-        return true;
+        return array('succeed' => $this->_succeed, 'failed' => $this->_failed);
     }
 
     private function _importUser(){
         foreach($this->_user as $slug => $ds){
             try {
                 User::add($slug, $ds);
+                $this->_succeed['user'][] = $slug;
             } catch (\Exception $e){
-                //echo($e->getMessage());
+                $this->_failed['user'][] = $slug;
             }
         }
         return true;
@@ -121,16 +124,20 @@ abstract class AbstractImporter {
 
     private function _importTags(){
         $data = array();
+        $key = '';
         if ($this->_useCategoryAsTag){
             $data = $this->_categories;
+            $key = 'cat';
         } else {
             $data = $this->_tags;
+            $key = 'tag';
         }
         foreach($data as $slug => $ds){
             try {
                 Tag::add($slug, $ds);
+                $this->_succeed[$key][] = $slug;
             } catch (\Exception $e){
-                //echo($e->getMessage());
+                $this->_failed[$key][] = $slug;
             }
         }
         return true;
@@ -140,8 +147,9 @@ abstract class AbstractImporter {
         foreach($this->_posts as $slug => $ds){
             try {
                 Post::add($slug, $ds);
+                $this->_succeed['post'][] = $slug;
             } catch (\Exception $e){
-                //echo($e->getMessage());
+                $this->_failed['post'][] = $slug;
             }
         }
         return true;
@@ -182,9 +190,10 @@ abstract class AbstractImporter {
             if (is_file($path)){
                 try {
                     Upload::add($filename, file_get_contents($path), $info);
+                    $this->_succeed['media'][] = $filename;
                 }
                 catch (\Exception $e){
-
+                    $this->_failed['media'][] = $filename;
                 }
             }
         }
