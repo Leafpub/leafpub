@@ -19,7 +19,10 @@ use DirectoryIterator;
 *
 **/
 class Theme extends Leafpub {
-
+    
+    private static $_themeOptions;
+    const THEME_STD_ERROR = 'error.hbs';
+    const THEME_STD_MAINTENANCE = 'source/templates/maintenance.hbs';
     /**
     * Returns an array of all available themes
     *
@@ -55,6 +58,26 @@ class Theme extends Leafpub {
         $base_path = 'content/themes/' . Setting::get('theme');
 
         return self::path($base_path, implode('/', $paths));
+    }
+
+    public static function getErrorTemplate($code){
+        if (!self::$_themeOptions){
+            self::$_themeOptions = json_decode(
+                                        file_get_contents(
+                                            self::path('content/themes/' . Setting::get('theme') . '/theme.json')
+                                            , true
+                                        )
+                                    );
+        }
+        $file = self::getPath(self::$_themeOptions->error_templates->{$code});
+        if (!is_file($file)){
+            if ($code == '503'){
+                $file = self::path(self::THEME_STD_MAINTENANCE);
+            } else {
+                $file = self::getPath(self::THEME_STD_ERROR);
+            }
+        }
+        return $file;
     }
 
 }
