@@ -133,7 +133,17 @@ class Middleware {
         
         if ($siteInMaintenanceMode && !$tryToLogin ){
             if (!Session::isAuthenticated() || (Session::isAuthenticated() && !Session::isRole(array('owner', 'admin')))){
-                $html = Maintenance::render();
+                $data = array(
+                    'content' => Setting::get('maintenance_message')
+                );
+
+                $special = array(
+                    'meta' => array(
+                        'title' => Language::term('maintenance'),
+                        'description' => Language::term('maintenance')
+                    )
+                );
+                $html = Error::render('503', $data, $special);
                 return $response->withStatus(503)->write($html);
             }
         }

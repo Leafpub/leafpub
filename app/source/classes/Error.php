@@ -17,24 +17,27 @@ namespace Leafpub;
 *
 **/
 class Error extends Leafpub {
-
+    const STD_ERR_CODE = '404';
     /**
     * Renders the error page
     *
+    * @param String $code - The http status code
+    * @param array $data - data to use in view
+    * @param array $special - data for special_vars
     * @return mixed
     *
     **/
-    public static function render() {
+    public static function render($code = self::STD_ERR_CODE, $data = array(), $special = array()) {
         // Render it
         return Renderer::render([
-            'template' => Theme::getPath('error.hbs'),
-            'data' => null,
-            'special_vars' => [
+            'template' => Theme::getErrorTemplate($code),
+            'data' => $data,
+            'special_vars' => array_merge([
                 'meta' => [
                     'title' => Language::term('not_found'),
                     'description' => ''
                 ]
-            ],
+            ], $special),
             'helpers' => ['url', 'utility', 'theme']
         ]);
     }
