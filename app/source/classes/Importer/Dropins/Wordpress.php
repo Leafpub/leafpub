@@ -248,39 +248,10 @@ class Wordpress extends AbstractImporter {
 		// Delete wxh from filename
 		$content = preg_replace('/-[0-9]{3,4}x[0-9]{3,4}/', '', $content);
 		// Delete Wordpress Shortcodes
-		//$content = preg_replace('/' . $this->_getShortcodeRegex() . '/', '', $content);
+		$content = preg_replace('/' . "\[\w(.*?)?\]" . '/', '', $content);
+		$content = preg_replace('/' . "\[\/\w(.*?)?\]" . '/', '', $content);
+		//$content = preg_replace('/' . "\[\w(.+?)?\](?:(.+?)\[\/\w(.+?)?\])?" . '/', '', $content);
 		return $content;
-    }
-
-	private function _getShortcodeRegex(){
-		return
-  					'\\['                              // Opening bracket
-	                . '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
-	                . '(\\w*)'                    // 2: Shortcode name
-	                . '(?![\\w-])'                       // Not followed by word character or hyphen
-	                . '('                                // 3: Unroll the loop: Inside the opening shortcode tag	                .     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
-	                .     '(?:'
-	                .         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
-	                .         '[^\\]\\/]*'               // Not a closing bracket or forward slash
-	                .     ')*?'
-	                . ')'
-	                . '(?:'
-	                .     '(\\/)'                        // 4: Self closing tag ...
-	                .     '\\]'                          // ... and closing bracket
-	                . '|'
-	                .     '\\]'                          // Closing bracket
-	                .     '(?:'
-	                .         '('                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
-	                .             '[^\\[]*+'             // Not an opening bracket
-	                .             '(?:'
-	                .                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
-	                .                 '[^\\[]*+'         // Not an opening bracket
-	                .             ')*+'
-	                .         ')'
-	                .         '\\[\\/\\2\\]'             // Closing shortcode tag
-	                .     ')?'
-	                . ')'
-	                . '(\\]?)';      
-	} 
+    } 
 }
 ?>
