@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
 * Leafpub
 *
@@ -21,7 +23,7 @@ class Leafpub {
     /**
     * Properties
     **/
-    protected static $database, $language, $listeners, $settings;
+    protected static $database, $language, $listeners, $settings, $dispatcher;
 
     /**
     * Initialize the app
@@ -76,16 +78,22 @@ class Leafpub {
 
         // Set timezone
         date_default_timezone_set(Setting::get('timezone'));
+
+         // Create the Symfony EventDispatcher
+        self::$dispatcher = new EventDispatcher();
+        self::_registerCoreListener();
     }
 
-    // Dispatches an event
-    public static function dispatchEvent($event, &$data = null) {
-        // Run the callback for all listeners of this event
-        foreach((array) self::$listeners[$event] as $listener) {
-            if(is_callable($listener['callback'])) {
-                $listener['callback']($data);
-            }
-        }
+    private static function _registerCoreListener(){
+        // Add Application Listener
+        $appListener = new Listeners\Application();
+        self::on(Events\Application\Startup::NAME, array($appListener, 'onApplicationStartup'));
+        
+        // Add Post Listener
+        $postListener = new Listeners\Post();
+        self::on(Events\Post\Add::NAME, array($postListener, 'onPostAdd'));
+        self::on(Events\Post\Added::NAME, array($postListener, 'onPostAdded'));
+        self::on(Events\Post\BeforeRender::NAME, array($postListener, 'onBeforeRender'));
     }
 
     /**
@@ -323,40 +331,26 @@ class Leafpub {
         );
     }
 
+    /**
+    * Dispatches an event
+    *
+    * @param String $eventName
+    * @param \Symfony\Component\EventDispatcher\Event $event
+    * @return void
+    *
+    **/
+    public static function dispatchEvent($eventName, $event) {
+        self::$dispatcher->dispatch($eventName, $event);
+    }
+
     // Removes one or more event listeners
     //
     //  By event:     Leafpub::off('post.save')
     //  By namespace: Leafpub::off('/namespace')
     //  By both:      Leafpub::off('post.save/namespace')
     //
-    public static function off($event) {
-        // Separate namespace from event
-        $options = explode('#', $event, 2);
-        $event = $options[0] ?: null;
-        $namespace = $options[1] ?: null;
-
-        if($event && $namespace) {
-            // Remove listeners for this event with this namespace
-            self::$listeners[$event] = array_filter(
-                (array) self::$listeners[$event],
-                function($listener) use($namespace) {
-                    return $listener['namespace'] !== $namespace;
-                }
-            );
-        } elseif($namespace) {
-            // Remove listeners for all events with this namespace
-            foreach((array) self::$listeners as $key => $value) {
-                self::$listeners[$key] = array_filter(
-                    (array) self::$listeners[$key],
-                    function($listener) use($namespace) {
-                        return $listener['namespace'] !== $namespace;
-                    }
-                );
-            }
-        } elseif($event) {
-            // Remove all listeners for this event
-            unset(self::$listeners[$event]);
-        }
+    public static function off($eventName, $listener) {
+        self::$dispatcher->removeListener($eventName, $listener);
     }
 
     // Adds an event listener
@@ -364,19 +358,15 @@ class Leafpub {
     //  No namespace:   Leafpub::on('post.save', $callback)
     //  With namespace: Leafpub::on('post.save/namespace', $callback)
     //
-    public static function on($event, $callback) {
-        // Separate namespace from event
-        $options = explode('#', $event, 2);
-        $event = $options[0];
-        $namespace = $options[1];
-
-        // Attach the listener
-        self::$listeners[$event][] = [
-            'namespace' => $namespace ?: null,
-            'callback' => $callback
-        ];
+    public static function on($event, $callback, $priority = 0) {
+        self::$dispatcher->addListener($event, $callback, $priority);
     }
 
+    /** TODO: Do we also need Subscriber functionality?
+    public static function addSubscriber(EventSubscriberInterface $event){
+        self::$dispatcher->addSubscriber($event);
+    }
+    **/
     /**
     * Generates an array of pagination data
     *
