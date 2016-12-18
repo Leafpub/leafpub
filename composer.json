@@ -12,7 +12,8 @@
         "abeautifulsite/simpleimage": "^2.6",
         "erusev/parsedown": "^1.6",
         "tinymce/tinymce": "^4.3",
-        "mpratt/embera": "^1.9"
+        "mpratt/embera": "^1.9",
+        "symfony/event-dispatcher": "^3.1"
     },
     "config": {
         "vendor-dir": "app/source/vendor"

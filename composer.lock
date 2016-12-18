@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "32722b255265379e22661d58e3e22616",
-    "content-hash": "7fa2133fb74eea52835d32d15d262ec3",
+    "hash": "21e9e57db42f3132a33979a9e79a5f93",
+    "content-hash": "bbc9125526934c6114e85d30ca2cd898",
     "packages": [
         {
             "name": "abeautifulsite/simpleimage",
@@ -429,17 +429,77 @@
             "time": "2016-11-20 20:48:49"
         },
         {
-            "name": "tinymce/tinymce",
-            "version": "4.5.0",
+            "name": "symfony/event-dispatcher",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "9d2f73868b5b576cc01f7508ba3dec605c863830"
+                "url": "https://github.com/symfony/event-dispatcher.git",
+                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/9d2f73868b5b576cc01f7508ba3dec605c863830",
-                "reference": "9d2f73868b5b576cc01f7508ba3dec605c863830",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
+                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~2.8|~3.0",
+                "symfony/dependency-injection": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/stopwatch": "~2.8|~3.0"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-10-13 06:29:04"
+        },
+        {
+            "name": "tinymce/tinymce",
+            "version": "4.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tinymce/tinymce-dist.git",
+                "reference": "d9f914960a296b06a47ac0c9f3a027c6c4523f7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/d9f914960a296b06a47ac0c9f3a027c6c4523f7b",
+                "reference": "d9f914960a296b06a47ac0c9f3a027c6c4523f7b",
                 "shasum": ""
             },
             "type": "component",
@@ -472,7 +532,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2016-11-23 13:00:08"
+            "time": "2016-12-07 07:02:09"
         },
         {
             "name": "zordius/lightncandy",
@@ -480,12 +540,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "24972266aa2da14cd18157b2357c70c799f1338e"
+                "reference": "6b7d1191556e6cfc336b4e5c68ace72232cb5c89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/24972266aa2da14cd18157b2357c70c799f1338e",
-                "reference": "24972266aa2da14cd18157b2357c70c799f1338e",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/6b7d1191556e6cfc336b4e5c68ace72232cb5c89",
+                "reference": "6b7d1191556e6cfc336b4e5c68ace72232cb5c89",
                 "shasum": ""
             },
             "require": {
@@ -524,7 +584,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-11-30 05:41:33"
+            "time": "2016-12-15 06:16:31"
         }
     ],
     "packages-dev": [],
