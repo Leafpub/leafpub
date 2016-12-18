@@ -8,7 +8,9 @@
  */
 
 namespace Leafpub;
-
+use Leafpub\Events\Post\Add,
+    Leafpub\Events\Post\Added,
+    Leafpub\Events\Post\BeforeRender;
 /**
 * Post
 *
@@ -780,12 +782,9 @@ class Post extends Leafpub {
             $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
         }
 
-        // Render it
-        $html = Renderer::render([
-            'template' => $template,
-            'data' => [
-                'post' => $post
-            ],
+        // Generate event
+        $beforeRender = new BeforeRender([
+            'post' => $post,
             'special_vars' => [
                 'meta' => [
                     'editable' => !!$options['editable'],
@@ -795,84 +794,22 @@ class Post extends Leafpub {
                         $post['meta_description'] :
                         self::getChars(strip_tags($post['content']), 160),
                     // JSON linked data (schema.org)
-                    'ld_json' => [
-                        '@context' => 'https://schema.org',
-                        '@type' => 'Article',
-                        'publisher' => [
-                            '@type' => 'Organization',
-                            'name' => Setting::get('title'),
-                            'logo' => !empty(Setting::get('logo')) ?
-                                parent::url(Setting::get('logo')) : null
-                        ],
-                        'author' => [
-                            '@type' => 'Person',
-                            'name' => $author['name'],
-                            'description' => strip_tags(self::markdownToHtml($author['bio'])),
-                            'image' => !empty($author['avatar']) ?
-                                parent::url($author['avatar']) : null,
-                            'sameAs' => !empty($author['website']) ?
-                                [$author['website']] : null,
-                        ],
-                        'url' => Post::url($post['slug']),
-                        'headline' => !empty($post['meta_title']) ?
-                            $post['meta_title'] :
-                            $post['title'],
-                        'description' => !empty($post['meta_description']) ?
-                            $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
-                        'image' => empty($post['image']) ? null : parent::url($post['image']),
-                        'datePublished' => self::strftime('%FT%TZ', strtotime($post['pub_date'])),
-                        'dateModified' => self::strftime('%FT%TZ', strtotime($post['pub_date']))
-                    ],
-                    // Open Graph
-                    'open_graph' => [
-                        'og:type' => 'article',
-                        'og:site_name' => Setting::get('title'),
-                        'og:title' => !empty($post['meta_title']) ?
-                            $post['meta_title'] :
-                            $post['title'],
-                        'og:description' => !empty($post['meta_description']) ?
-                            $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
-                        'og:url' => self::url($post['slug']),
-                        'og:image' => empty($post['image']) ? '' : parent::url($post['image']),
-                        'article:published_time' => $post['page'] ?
-                            null : self::strftime('%FT%TZ', strtotime($post['pub_date'])),
-                        'article:modified_time' => $post['page'] ?
-                            null : self::strftime('%FT%TZ', strtotime($post['pub_date'])),
-                        'article:tag' => $post['page'] ?
-                            null : implode(', ', (array) $post['tags'])
-                    ],
-                    // Twitter Card
-                    'twitter_card' => [
-                        'twitter:card' => !empty($post['image']) ?
-                            'summary_large_image' :
-                            'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
-                        'twitter:title' => !empty($post['meta_title']) ?
-                            $post['meta_title'] :
-                            $post['title'],
-                        'twitter:description' => !empty($post['meta_description']) ?
-                            $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
-                        'twitter:creator' => !empty($author['twitter']) ?
-                            '@' . $author['twitter'] : null,
-                        'twitter:url' => self::url($post['slug']),
-                        'twitter:image' => !empty($post['image']) ?
-                            parent::url($post['image']) :
-                            null,
-                        'twitter:label1' => !$post['page'] ?
-                            'Written by' : null,
-                        'twitter:data1' => !$post['page'] ?
-                            $author['name'] : null,
-                        'twitter:label2' => !$post['page'] ?
-                            'Tagged with' : null,
-                        'twitter:data2' => !$post['page'] ?
-                            implode(', ', (array) $post['tags']) : null
-                    ]
                 ]
             ],
+        ]);
+        // Dispatch Event
+        Leafpub::dispatchEvent(BeforeRender::NAME, $beforeRender);
+        // Get data from our dispatched event...
+        $data = $beforeRender->getEventData();
+
+        // Render it
+        $html = Renderer::render([
+            'template' => $template,
+            'data' => [
+                'post' => $data['post']
+            ],
+            'special_vars' => $data['special_vars'],
+            
             'helpers' => ['theme', 'url', 'utility'],
             // If we're editing or previewing, don't pass in user data to simulate what an
             // unauthenticated user would see.
