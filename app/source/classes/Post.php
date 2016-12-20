@@ -229,6 +229,7 @@ class Post extends Leafpub {
             'author' => null,
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
+            'show_featured' => false,
             'ignore_featured' => false,
             'ignore_sticky' => false,
             'ignore_pages' => true,
@@ -479,6 +480,7 @@ class Post extends Leafpub {
             'author' => null,
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
+            'show_featured' => false,
             'ignore_featured' => false,
             'ignore_sticky' => false,
             'ignore_pages' => true,
@@ -529,6 +531,7 @@ class Post extends Leafpub {
             $where_sql .= ' AND FIND_IN_SET(status, :status) > 0';
             $status = implode(',', (array) $options['status']);
         }
+        if($options['show_featured']) $where_sql .= ' AND featured = 1';
         if($options['ignore_featured']) $where_sql .= ' AND featured != 1';
         if($options['ignore_sticky']) $where_sql .= ' AND sticky != 1';
         if($options['ignore_posts']) $where_sql .= ' AND page = 1';
