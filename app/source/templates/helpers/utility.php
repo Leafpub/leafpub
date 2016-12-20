@@ -389,6 +389,10 @@ return [
                     $searchFor[$key] = $data[$key];
                 }
             }
+            
+            if (isset($data['featured'])){
+                $searchFor['show_featured'] = true;
+            }
 
             if (isset($data['count'])){
                 $searchFor['items_per_page'] = $data['count'];
