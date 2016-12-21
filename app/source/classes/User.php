@@ -732,17 +732,17 @@ class User extends Leafpub {
                  ON
                     a.id = b.author
                  GROUP BY 
-                    a.slug";
+                    a.slug ";
         if (isset($option['query'])){
 	        $sSQL .="HAVING
 	                    a.slug LIKE :name
 	                 OR
-	                    a.name LIKE :name";
+	                    a.name LIKE :name ";
 
         	$name = '%' . Database::escapeLikeWildcards($options['query']) . '%';
         }
 
-        $sSQL .= 'ORDER BY slug, post_count DESC';
+        $sSQL .= 'ORDER BY a.slug, post_count DESC';
         
         try {
                 if (isset($options['query'])){
