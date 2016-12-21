@@ -114,9 +114,12 @@ abstract class AbstractImporter {
         foreach($this->_user as $slug => $ds){
             try {
                 User::add($slug, $ds);
-                $this->_succeed['user'][] = $slug;
+                $this->_succeed[] = 'user: ' . $slug;
             } catch (\Exception $e){
-                $this->_failed['user'][] = $slug;
+                $this->_failed[] = [
+                    'user: ' . $slug,
+                    $e->getMessage()
+                ];
             }
         }
         return true;
@@ -135,9 +138,12 @@ abstract class AbstractImporter {
         foreach($data as $slug => $ds){
             try {
                 Tag::add($slug, $ds);
-                $this->_succeed[$key][] = $slug;
+                $this->_succeed[] = $key . ': ' . $slug;
             } catch (\Exception $e){
-                $this->_failed[$key][] = $slug;
+                $this->_failed[] = [
+                    $key . ': ' . $slug,
+                    $e->getMessage()
+                ];
             }
         }
         return true;
@@ -147,9 +153,12 @@ abstract class AbstractImporter {
         foreach($this->_posts as $slug => $ds){
             try {
                 Post::add($slug, $ds);
-                $this->_succeed['post'][] = $slug;
+                $this->_succeed[] = 'post: ' . $slug;
             } catch (\Exception $e){
-                $this->_failed['post'][] = $slug;
+                $this->_failed[] = [
+                    'post: ' . $slug,
+                    $e->getMessage()
+                ];
             }
         }
         return true;
@@ -190,10 +199,13 @@ abstract class AbstractImporter {
             if (is_file($path)){
                 try {
                     Upload::add($filename, file_get_contents($path), $info);
-                    $this->_succeed['media'][] = $filename;
+                    $this->_succeed[] = 'media: ' . $filename;
                 }
                 catch (\Exception $e){
-                    $this->_failed['media'][] = $filename;
+                    $this->_failed[] = [
+                        'media: ' . $filename,
+                        $e->getMessage()
+                    ];
                 }
             }
         }
