@@ -137,7 +137,7 @@ return [
         // Get desired length
         $num_chars = (int) $options['hash']['characters'];
         $num_words = (int) $options['hash']['words'];
-
+        $continue = $options['hash']['continue'];
         // Truncate it
         if($num_chars) {
             $string = \Leafpub\Leafpub::getChars($string, $num_chars ? $num_chars : 140);
@@ -145,7 +145,10 @@ return [
             // Return first n words
             $string = \Leafpub\Leafpub::getWords($string, $num_words ? $num_words : 50);
         }
-
+        
+        if ($continue){
+            $string .= '... </br><a class="read-more" href="' .  \Leafpub\Post::url($options['_this']['slug']) . '">' . \Leafpub\Language::term('read_more') . '</a>';
+        }
         // We've stripped HTML tags, so return as-is
         return new \LightnCandy\SafeString($string);
     },

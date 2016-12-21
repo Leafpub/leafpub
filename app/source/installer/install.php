@@ -194,11 +194,14 @@ Setting::add('frag_feed', 'feed');
 Setting::add('frag_page', 'page');
 Setting::add('frag_search', 'search');
 Setting::add('frag_tag', 'tag');
+Setting::add('generator', 'on');
 Setting::add('hbs_cache', 'on');
 Setting::add('head_code', '');
 Setting::add('homepage', '');
 Setting::add('language', 'en-us');
 Setting::add('logo', 'source/assets/img/logo-color.png');
+Setting::add('maintenance', 'off');
+Setting::add('maintenance_message', '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>');
 Setting::add('navigation', '[{"label":"Home","link":"/"}]');
 Setting::add('posts_per_page', '10');
 Setting::add('tagline', 'Go forth and create!');
@@ -207,8 +210,6 @@ Setting::add('timezone', 'America/New_York');
 Setting::add('title', 'A Leafpub Blog');
 Setting::add('twitter', '');
 Setting::add('password_min_length', '8');
-Setting::add('maintenance', 'off');
-Setting::add('maintenance_message', '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>');
 
 // Insert owner
 try {

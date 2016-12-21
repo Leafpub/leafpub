@@ -909,6 +909,7 @@ class APIController extends Controller {
             'cover' => $params['cover'],
             'logo' => $params['logo'],
             'favicon' => $params['favicon'],
+            'generator' => $params['generator'] === 'on' ? 'on' : 'off',
             'default_title' => $params['default-title'],
             'default_content' => $params['default-content'],
             'language' => $params['language'],

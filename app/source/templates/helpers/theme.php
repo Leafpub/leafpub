@@ -230,7 +230,11 @@ return [
     // Handles the output for {{leafpub_head}}
     'leafpub_head' => function($options) {
         $html = '';
-
+        
+        if (\Leafpub\Setting::get('generator') == 'on'){
+            $html .= '<meta name="generator" content="Leafpub v' . LEAFPUB_VERSION . '">';
+        }
+        
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject Leafpub data and editor stylesheet
@@ -530,8 +534,8 @@ return [
             return $title;
         }
     },
-    /*
-    'tags' => function($options){
+    
+    'tag_cloud' => function($options){
         $tags = array();
         if (count($options['hash']) > 0){
             $data = $options['hash'];
@@ -553,15 +557,17 @@ return [
             }
 
             $tags = \Leafpub\Tag::getMany($searchFor);
+        } else {
+            $tags = \Leafpub\Tag::getNames();
         }
         if(count($tags)) {
-            return $options['fn'](['tags' => $tags]);
+            return $options['fn'](['tc' => $tags]);
         } else {
             // No posts, do {{else}}
             return $options['inverse'] ? $options['inverse']() : '';
         }
     },
-    */
+    
     'authors' => function($options){
         $searchFor = array();
 
