@@ -77,6 +77,7 @@ return [
     'feed' => 'Feed',
     'full_name' => 'Full Name',
     'general' => 'General',
+    'generator_enabled' => 'Show some love and add generator meta to head',
     'heading_1' => 'Heading 1',
     'heading_2' => 'Heading 2',
     'heading_3' => 'Heading 3',
