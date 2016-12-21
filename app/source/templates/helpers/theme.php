@@ -534,8 +534,8 @@ return [
             return $title;
         }
     },
-    /*
-    'tags' => function($options){
+    
+    'tag_cloud' => function($options){
         $tags = array();
         if (count($options['hash']) > 0){
             $data = $options['hash'];
@@ -557,15 +557,17 @@ return [
             }
 
             $tags = \Leafpub\Tag::getMany($searchFor);
+        } else {
+            $tags = \Leafpub\Tag::getNames();
         }
         if(count($tags)) {
-            return $options['fn'](['tags' => $tags]);
+            return $options['fn'](['tc' => $tags]);
         } else {
             // No posts, do {{else}}
             return $options['inverse'] ? $options['inverse']() : '';
         }
     },
-    */
+    
     'authors' => function($options){
         $searchFor = array();
 
