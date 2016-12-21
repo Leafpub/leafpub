@@ -230,7 +230,11 @@ return [
     // Handles the output for {{leafpub_head}}
     'leafpub_head' => function($options) {
         $html = '';
-
+        
+        if (\Leafpub\Setting::get('generator') == 'on'){
+            $html .= '<meta name="generator" content="Leafpub v' . LEAFPUB_VERSION . '">';
+        }
+        
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject Leafpub data and editor stylesheet

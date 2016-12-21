@@ -217,6 +217,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="generator" value="on"{{#is @settings.generator 'on'}} checked{{/is}}>
+                                    {{L 'generator_enabled'}}<br>
+                                </label>
+                            </div>
+                        </div>
                         {{!-- Maintenance Mode --}}
                         <h3 class="mt-3">{{L 'maintenance'}}</h3>
                         <div class="form-group">
