@@ -37,8 +37,11 @@ $(function() {
                 );
             } else {
                 // Show errors
-                Leafpub.highlightErrors(form, res.invalid);
-                $.alertable.alert(res.message);
+                var err = '';
+                res.failed.forEach(function(element, index, arr){
+                    err += element[0] + ':\\n' + element[1] + '\\n';
+                });
+                $.alertable.alert(err);
             }
         })
         .always(function() {
@@ -69,8 +72,6 @@ $(function() {
     });
 
     $('.upload-xml').on('change', 'input[type="file"]', function(event) {
-        var input = this;
-        
         if ($(event.delegateTarget).hasClass('disabled')) {
             return;
         }
