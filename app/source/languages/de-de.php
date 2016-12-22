@@ -243,6 +243,21 @@ return [
     'your_password' => 'Ihr Passwort',	// Sie oder du?
     'zen_mode' => 'Zen Mode',
     
+    'year' => 'Jahr',
+    'year_pl' => 'Jahre',
+    'month' => 'Monat',
+    'month_pl' => 'Monate',
+    'day' => 'Tag',
+    'day_pl' => 'Tage',
+    'hour' => 'Stunde',
+    'hour_pl' => 'Stunden',
+    'minute' => 'Minute',
+    'minute_pl' => 'Minuten',
+    'second' => 'Sekunde',
+    'second_pl' => 'Sekunden',
+    'ago' => 'vor',
+    '{n}_{time}_{ago}' => '{ago} {n} {time}',
+
     'january' => 'Januar',
     'february' => 'Februar',
     'march' => 'März',
