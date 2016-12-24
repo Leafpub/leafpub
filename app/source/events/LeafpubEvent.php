@@ -8,7 +8,8 @@ abstract class LeafpubEvent extends Event implements ILeafpubEvent{
     
     protected $_data;
 
-    public function __construct($data){
+    // Set data to null, so an event can be just a notification without data
+    public function __construct($data = null){
         $this->_data = $data;
     }
 
