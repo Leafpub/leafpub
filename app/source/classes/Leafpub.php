@@ -614,19 +614,23 @@ class Leafpub {
         $month_long = Language::term(mb_strtolower(date('F', $timestamp)));
         $am_pm = Language::term(date('a', $timestamp));
 
-        // Convert them
-        $format = str_replace('%a', $day_short, $format);
-        $format = str_replace('%A', $day_long, $format);
-        $format = str_replace('%b', $month_short, $format);
-        $format = str_replace('%B', $month_long, $format);
-        $format = str_replace('%p', mb_strtoupper($am_pm), $format);
-        $format = str_replace('%P', mb_strtolower($am_pm), $format);
+        if ($format != 'time_ago'){
+            // Convert them
+            $format = str_replace('%a', $day_short, $format);
+            $format = str_replace('%A', $day_long, $format);
+            $format = str_replace('%b', $month_short, $format);
+            $format = str_replace('%B', $month_long, $format);
+            $format = str_replace('%p', mb_strtoupper($am_pm), $format);
+            $format = str_replace('%P', mb_strtolower($am_pm), $format);
 
-        // %e isn't supported on Windows
-        $format = str_replace('%e', date('j', $timestamp), $format);
+            // %e isn't supported on Windows
+            $format = str_replace('%e', date('j', $timestamp), $format);
 
-        // Run the rest through strftime()
-        return strftime($format, $timestamp);
+            // Run the rest through strftime()
+            return strftime($format, $timestamp);
+        } else {
+            return self::getTimeAgo($timestamp);
+        }
     }
 
     /**
@@ -689,6 +693,40 @@ class Leafpub {
         $dt = new \DateTime($utc_date, new \DateTimeZone('UTC'));
         $dt->setTimeZone(new \DateTimeZone(Setting::get('timezone')));
         return $dt->format('Y-m-d H:i:s');
+    }
+
+    public static function getTimeAgo($timestamp) {
+        $estimate_time = time() - $timestamp;
+
+        if( $estimate_time < 1 ){
+            return 'less than 1 second ago';
+        }
+
+        $condition = [ 
+                    12 * 30 * 24 * 60 * 60  =>  'year',
+                    30 * 24 * 60 * 60       =>  'month',
+                    24 * 60 * 60            =>  'day',
+                    60 * 60                 =>  'hour',
+                    60                      =>  'minute',
+                    1                       =>  'second'
+        ];
+
+        foreach( $condition as $secs => $caption ){
+            $duration = $estimate_time / $secs;
+
+            if( $duration >= 1 ){
+                $r = round( $duration );
+                $caption = (( $r > 1) ? Language::term($caption . '_pl') : Language::term($caption) );
+                return Language::term(
+                        '{n}_{time}_{ago}',
+                        [
+                            'n' => $r,
+                            'time' => $caption,
+                            'ago' => Language::term('ago')
+                        ]
+                    );
+            }
+        }
     }
 
 }
