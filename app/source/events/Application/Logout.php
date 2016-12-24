@@ -6,12 +6,11 @@
  * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
- namespace Leafpub\Events\Post;
+namespace Leafpub\Events\Application;
 
 use Leafpub\Events\LeafpubEvent;
 
-class BeforeRender extends LeafpubEvent{
-    const NAME = 'post.beforeRender';
+class Logout extends LeafpubEvent {
+    const NAME = 'application.logout';
 }
-
 ?>

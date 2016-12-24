@@ -12,21 +12,6 @@ use Leafpub\Events\LeafpubEvent;
 
 class LeafpubFoot extends LeafpubEvent {
     const NAME = 'application.leafpub_foot';
-    
-    protected $_html;
-
-    public function __construct(String $html){
-        parent::__construct();
-        $this->_html = $html;
-    }
-
-    public function getEventData(){
-        return $this->_html;
-    }
-
-    public function setEventData(String $html){
-        $this->_html = $html;
-    }
 }
 
 ?>

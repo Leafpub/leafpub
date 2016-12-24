@@ -14,12 +14,12 @@ use Leafpub\Events\Application\Startup,
 class Application {
     
     public function onApplicationStartup(Startup $start){
-        $app = $start->getApp();
+        $app = $start->getEventData();
         // Now, we could load Plugins and add routes...
     }
     
-    public function onApplicationShutdown(){
-        
+    public function onApplicationShutdown(Shutdown $end){
+        //$end->getEventData();
     }
 }
 ?>

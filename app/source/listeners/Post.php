@@ -19,19 +19,22 @@ use Leafpub\Events\Post\Add,
 class Post {
     
     public function onPostAdd(Add $add){
-        $post = $add->getPost();
+        $post = $add->getEventData();
     }
     
     public function onPostAdded(Added $added){
-        $post = $added->getPost();
+        $post = $added->getEventData();
     }
 
     public function onBeforeRender(BeforeRender $event){
-        $data = &$event->getEventData();
+        $data = $event->getEventData();
+
         $author = User::get($data['post']['author']);
         $data['special_vars']['meta']['ld_json'] = $this->_generateLDJson($data['post'], $author);
         $data['special_vars']['meta']['open_graph'] = $this->_generateOGData($data['post']);
         $data['special_vars']['meta']['twitter_card'] = $this->_generateTwitterData($data['post'], $author);
+        
+        $event->setEventData($data);
     }
 
     private function _generateLDJson($post, $author){

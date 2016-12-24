@@ -8,14 +8,10 @@
  */
 namespace Leafpub\Events\Application;
 
-use Symfony\Component\EventDispatcher\Event;
+use Leafpub\Events\LeafpubEvent;
 
-class Shutdown extends Event {
+class Shutdown extends LeafpubEvent {
     const NAME = 'application.shutdown';
-    
-    public function __construct(){
-        
-    }
 }
 
 ?>

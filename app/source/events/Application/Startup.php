@@ -8,20 +8,10 @@
  */
 namespace Leafpub\Events\Application;
 
-use Symfony\Component\EventDispatcher\Event;
+use Leafpub\Events\LeafpubEvent;
 
-class Startup extends Event {
+class Startup extends LeafpubEvent {
     const NAME = 'application.startup';
-    
-    protected $app;
-    
-    public function __construct(\Slim\App $app){
-        $this->app = $app;
-    }
-    
-    public function getApp(){
-        return $this->app;
-    }
 }
 
 ?>

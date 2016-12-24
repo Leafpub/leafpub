@@ -185,7 +185,13 @@ return [
     // Handles the output for {{leafpub_foot}}
     'leafpub_foot' => function($options) {
         $html = '';
-
+       
+        // Dispatch event.
+        // A disqus plugin could inject the javascript here....
+        $event = new \Leafpub\Events\Application\LeafpubFoot($html);
+        \Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubFoot::NAME, $event);
+        $html = $event->getEventData();
+        
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject TinyMCE
@@ -231,6 +237,11 @@ return [
     'leafpub_head' => function($options) {
         $html = '';
         
+        // Dispatch event.
+        $event = new \Leafpub\Events\Application\LeafpubHead($html);
+        \Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubHead::NAME, $event);
+        $html = $event->getEventData();
+
         if (\Leafpub\Setting::get('generator') == 'on'){
             $html .= '<meta name="generator" content="Leafpub v' . LEAFPUB_VERSION . '">';
         }
