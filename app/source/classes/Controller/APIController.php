@@ -264,8 +264,14 @@ class APIController extends Controller {
         // Update the post
         try {
             if($action === 'add') {
+                $evt = new Events\Post\Add($properties);
+                Leafpub::dispatchEvent(Events\Post\Add::NAME, $evt);
+                $properties = $evt->getEventData();
                 Post::add($slug, $properties);
             } else {
+                $evt = new Events\Post\Update($properties);
+                Leafpub::dispatchEvent(Events\Post\Update::NAME, $evt);
+                $properties = $evt->getEventData();
                 Post::update($slug, $properties);
             }
         } catch(\Exception $e) {
@@ -292,6 +298,13 @@ class APIController extends Controller {
             ]);
         }
 
+        if ($action === 'add'){
+            $evt = new Events\Post\Added();
+            Leafpub::dispatchEvent(Events\Post\Added::NAME, $evt);
+        } else {
+            $evt = new Events\Post\Updated();
+            Leafpub::dispatchEvent(Events\Post\Updated::NAME, $evt);
+        }
         // Send response
         return $response->withJson([
             'success' => true
@@ -340,8 +353,15 @@ class APIController extends Controller {
             Session::isRole(['owner', 'admin', 'editor']) ||
             Post::get($args['slug'])['author'] === Session::user('slug')
         ) {
+            $evt = new Events\Post\Delete($args['slug']);
+            Leafpub::dispatchEvent(Events\Post\Delete::NAME, $evt);
+            $ret = Post::delete($args['slug']);
+            if ($ret){
+                $evt = new Events\Post\Deleted($args['slug']);
+                Leafpub::dispatchEvent(Events\Post\Deleted::NAME, $evt);
+            }
             return $response->withJson([
-                'success' => Post::delete($args['slug'])
+                'success' => $ret
             ]);
         }
 
@@ -564,8 +584,14 @@ class APIController extends Controller {
         // Add/update the tag
         try {
             if($action === 'add') {
+                $evt = new Events\Tag\Add($tag);
+                Leafpub::dispatchEvent(Events\Tag\Add::NAME, $evt);
+                $tag = $evt->getEventData();
                 Tag::add($slug, $tag);
             } else {
+                $evt = new Events\Tag\Update($tag);
+                Leafpub::dispatchEvent(Events\Tag\Update::NAME, $evt);
+                $tag = $evt->getEventData();
                 Tag::update($slug, $tag);
             }
         } catch(\Exception $e) {
@@ -594,6 +620,13 @@ class APIController extends Controller {
             ]);
         }
 
+        if ($action === 'add'){
+            $evt = new Events\Tag\Added();
+            Leafpub::dispatchEvent(Events\Tag\Added::NAME, $evt);
+        } else {
+            $evt = new Events\Tag\Updated();
+            Leafpub::dispatchEvent(Events\Tag\Updated::NAME, $evt);
+        }
         return $response->withJson([
             'success' => true
         ]);
@@ -639,9 +672,15 @@ class APIController extends Controller {
         if(!Session::isRole(['owner', 'admin', 'editor'])) {
             return $response->with(403);
         }
-
+        $evt = new Events\Tag\Delete($args['slug']);
+        Leafpub::dispatchEvent(Events\Tag\Delete::NAME, $evt);
+        $ret = Tag::delete($args['slug']);
+        if ($ret){
+            $evt = new Events\Tag\Deleted();
+            Leafpub::dispatchEvent(Events\Tag\Deleted::NAME, $evt);
+        }
         return $response->withJson([
-            'success' => Tag::delete($args['slug'])
+            'success' => $ret
         ]);
     }
 
@@ -769,8 +808,14 @@ class APIController extends Controller {
         // Add/update the user
         try {
             if($action === 'add') {
+                $evt = new Events\User\Add($user);
+                Leafpub::dispatchEvent(Events\User\Add::NAME, $evt);
+                $user = $evt->getEventData();
                 User::add($slug, $user);
             } else {
+                $evt = new Events\User\Update($user);
+                Leafpub::dispatchEvent(Events\User\Update::NAME, $evt);
+                $user = $evt->getEventData();
                 User::update($slug, $user);
             }
         } catch(\Exception $e) {
@@ -815,6 +860,13 @@ class APIController extends Controller {
             ]);
         }
 
+        if ($action === 'add'){
+            $evt = new Events\User\Added($user);
+            Leafpub::dispatchEvent(Events\User\Added::NAME, $evt);
+        } else {
+            $evt = new Events\User\Updated($user);
+            Leafpub::dispatchEvent(Events\User\Updated::NAME, $evt);
+        }
         return $response->withJson([
             'success' => true
         ]);
@@ -863,6 +915,8 @@ class APIController extends Controller {
 
         // Delete the user
         try {
+            $evt = new Events\User\Delete($args['slug']);
+            Leafpub::dispatchEvent(Events\User\Delete::NAME, $evt);
             User::delete($args['slug']);
 
             // Did you delete yourself? If so, cya!
@@ -875,7 +929,8 @@ class APIController extends Controller {
                 ]);
             }
         }
-
+        $evt = new Events\User\Deleted($args['slug']);
+        Leafpub::dispatchEvent(Events\User\Deleted::NAME, $evt);
         return $response->withJson([
             'success' => true
         ]);
