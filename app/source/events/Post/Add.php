@@ -8,9 +8,9 @@
  */
 namespace Leafpub\Events\Post;
 
-use Symfony\Component\EventDispatcher\Event;
+use Leafpub\Events\LeafpubEvent;
 
-class Add extends Event {
+class Add extends LeafpubEvent {
     const NAME = 'post.add';
 }
 
