@@ -8,8 +8,17 @@
  */
 
 namespace Leafpub;
+
 use Leafpub\Events\Post\Add,
     Leafpub\Events\Post\Added,
+    Leafpub\Events\Post\Update,
+    Leafpub\Events\Post\Updated,
+    Leafpub\Events\Post\Delete,
+    Leafpub\Events\Post\Deleted,
+    Leafpub\Events\Post\Retrieve,
+    Leafpub\Events\Post\Retrieved,
+    Leafpub\Events\Post\ManyRetrieve,
+    Leafpub\Events\Post\ManyRetrieved,
     Leafpub\Events\Post\BeforeRender;
 /**
 * Post
@@ -172,6 +181,10 @@ class Post extends Leafpub {
             $post[$key] = filter_var($post[$key], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
+        $evt = new Add($post);
+        Leafpub::dispatchEvent(Add::NAME, $evt);
+        $post = $evt->getEventData();
+
         try {
             // Create the post
             $st = self::$database->prepare('
@@ -214,7 +227,10 @@ class Post extends Leafpub {
 
         // Create the initial revision
         History::add($slug, true);
-
+        
+        $evt = new Added($post_id);
+        Leafpub::dispatchEvent(PostAdded::NAME, $evt);
+        
         return $post_id;
     }
 
@@ -295,6 +311,9 @@ class Post extends Leafpub {
             Setting::update('homepage', '');
         }
 
+        $evt = new Delete($slug);
+        Leafpub::dispatchEvent(Delete::NAME, $evt);
+
         // Delete the post
         try {
             // Cleanup history
@@ -316,6 +335,9 @@ class Post extends Leafpub {
         } catch(\PDOException $e) {
             return false;
         }
+
+        $evt = new Deleted($slug);
+        Leafpub::dispatchEvent(Deleted::NAME, $evt);
 
         return true;
     }
@@ -346,6 +368,9 @@ class Post extends Leafpub {
     *
     **/
     public static function get($slug) {
+        $evt = new Retrieve($slug);
+        Leafpub::dispatchEvent(Retrieve::NAME, $evt);
+
         // Retrieve the post
         try {
             $st = self::$database->prepare('
@@ -368,7 +393,9 @@ class Post extends Leafpub {
         // Normalize fields
         $post = self::normalize($post);
 
-        return $post;
+        $evt = new Retrieved($post);
+        Leafpub::dispatchEvent(Retrieved::NAME, $evt);
+        return $evt->getEventData();
     }
 
     /**
@@ -494,6 +521,10 @@ class Post extends Leafpub {
             'tag' => null,
             'sort' => 'DESC'
         ], (array) $options);
+        
+        $evt = new ManyRetrieve($options);
+        Leafpub::dispatchEvent(ManyRetrieve::NAME, $evt);
+        $options = $evt->getEventData();
 
         // Convert dates to UTC
         if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
@@ -612,6 +643,10 @@ class Post extends Leafpub {
         foreach($posts as $key => $value) {
             $posts[$key] = self::normalize($value);
         }
+
+        $evt = new ManyRetrieved($posts);
+        Leafpub::dispatchEvent(ManyRetrieved::NAME, $evt);
+        $posts = $evt->getEventData();
 
         return $posts;
     }
@@ -925,6 +960,10 @@ class Post extends Leafpub {
             }
         }
 
+        $evt = new Update($post);
+        Leafpub::dispatchEvent(Update::NAME, $evt);
+        $post = $evt->getEventData();
+
         try {
             // Update the post
             $st = self::$database->prepare('
@@ -966,6 +1005,9 @@ class Post extends Leafpub {
 
         // Create a revision
         History::add($post['slug']);
+
+        $evt = new Updated($post['id']);
+        Leafpub::dispatchEvent(Updated::NAME, $evt);
 
         return true;
     }

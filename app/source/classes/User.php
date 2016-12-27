@@ -11,7 +11,17 @@ namespace Leafpub;
 
 use Exception,
     PDO,
-    PDOException;
+    PDOException,
+    Leafpub\Events\User\Add,
+    Leafpub\Events\User\Added,
+    Leafpub\Events\User\Update,
+    Leafpub\Events\User\Updated,
+    Leafpub\Events\User\Delete,
+    Leafpub\Events\User\Deleted,
+    Leafpub\Events\User\Retrieve,
+    Leafpub\Events\User\Retrieved,
+    Leafpub\Events\User\ManyRetrieve,
+    Leafpub\Events\User\ManyRetrieved;
 
 /**
 * User
@@ -124,6 +134,10 @@ class User extends Leafpub {
             $user['role'] = 'author';
         }
 
+        $evt = new Add($user);
+        Leafpub::dispatchEvent(Add::NAME, $evt);
+        $user = $evt->getEventData();
+
         // Hash the password
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
         if($user['password'] === false) {
@@ -161,10 +175,15 @@ class User extends Leafpub {
             $st->bindParam(':location', $user['location']);
             $st->bindParam(':website', $user['website']);
             $st->execute();
-            return $st->rowCount() > 0;
+            $ret = $st->rowCount() > 0;
         } catch(PDOException $e) {
             throw new Exception('Database error: ' . $e->getMessage());
         }
+
+        $evt = new Added($user);
+        Leafpub::dispatchEvent(Added::NAME, $evt);
+
+        return $ret;
     }
 
     /**
@@ -192,6 +211,9 @@ class User extends Leafpub {
     *
     **/
     public static function delete($slug, $recipient_slug = null) {
+        $evt = new Delete($slug);
+        Leafpub::dispatchEvent(Delete::NAME, $evt);
+
         // Get target user
         $user = self::get($slug);
         if(!$user) throw new Exception('Invalid user.', self::INVALID_USER);
@@ -241,10 +263,15 @@ class User extends Leafpub {
             ');
             $st->bindParam(':slug', $slug);
             $st->execute();
-            return $st->rowCount() > 0;
+            $ret = $st->rowCount() > 0;
         } catch(PDOException $e) {
             return false;
         }
+
+        $evt = new Deleted($slug);
+        Leafpub::dispatchEvent(Deleted::NAME, $evt);
+
+        return $ret;
     }
 
     /**
@@ -545,6 +572,9 @@ class User extends Leafpub {
     *
     **/ 
     public static function update($slug, $properties) {
+        $evt = new Update($properties);
+        Leafpub::dispatchEvent(Update::NAME, $evt);
+        
         // Get the user
         $user = self::get($slug);
         if(!$user) {
@@ -673,6 +703,9 @@ class User extends Leafpub {
         if(Session::user()['slug'] === $slug) {
             Session::update($user['slug']);
         }
+
+        $evt = new Updated($user);
+        Leafpub::dispatchEvent(Updated::NAME, $evt);
 
         return $st->rowCount() > 0;
     }

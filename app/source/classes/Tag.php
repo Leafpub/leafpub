@@ -9,6 +9,17 @@
 
 namespace Leafpub;
 
+use Leafpub\Events\Tag\Add,
+    Leafpub\Events\Tag\Added,
+    Leafpub\Events\Tag\Update,
+    Leafpub\Events\Tag\Updated,
+    Leafpub\Events\Tag\Delete,
+    Leafpub\Events\Tag\Deleted,
+    Leafpub\Events\Tag\Retrieve,
+    Leafpub\Events\Tag\Retrieved,
+    Leafpub\Events\Tag\ManyRetrieve,
+    Leafpub\Events\Tag\ManyRetrieved;
+
 /**
 * Tag
 *
@@ -78,6 +89,10 @@ class Tag extends Leafpub {
         $tag['meta_title'] = (string) $tag['meta_title'];
         $tag['meta_description'] = (string) $tag['meta_description'];
 
+        $evt = new Add($tag);
+        Leafpub::dispatchEvent(Add::NAME, $evt);
+        $tag = $evt->getEventData();
+
         try {
             // Create the tag
             $st = self::$database->prepare('
@@ -97,10 +112,15 @@ class Tag extends Leafpub {
             $st->bindParam(':meta_title', $tag['meta_title']);
             $st->bindParam(':meta_description', $tag['meta_description']);
             $st->execute();
-            return $st->rowCount() > 0;
+            $ret = ($st->rowCount() > 0);
         } catch(\PDOException $e) {
             throw new \Exception('Database error: ' . $e->getMessage());
         }
+
+        $evt = new Added($slug);
+        Leafpub::dispatchEvent(Added::NAME, $evt);
+
+        return $ret;
     }
 
     /**
@@ -126,6 +146,9 @@ class Tag extends Leafpub {
     *
     **/
     public static function delete($slug) {
+        $evt = new Delete($slug);
+        Leafpub::dispatchEvent(Delete::NAME, $evt);
+
         try {
             // Cleanup post_tags
             $st = self::$database->prepare('
@@ -139,10 +162,15 @@ class Tag extends Leafpub {
             $st = self::$database->prepare('DELETE FROM __tags WHERE slug = :slug');
             $st->bindParam(':slug', $slug);
             $st->execute();
-            return $st->rowCount() > 0;
+            $ret = $st->rowCount() > 0;
         } catch(\PDOException $e) {
             return false;
         }
+
+        $evt = new Deleted($slug);
+        Leafpub::dispatchEvent(Deleted::NAME, $evt);
+
+        return $ret;
     }
 
     /**
@@ -171,6 +199,9 @@ class Tag extends Leafpub {
     *
     **/
     public static function get($slug) {
+        $evt = new Retrieve($slug);
+        Leafpub::dispatchEvent(Retrieve::NAME, $evt);
+
         try {
             $st = self::$database->prepare('
                 SELECT id, created, slug, name, description, cover, meta_title, meta_description
@@ -186,7 +217,11 @@ class Tag extends Leafpub {
         }
 
         // Normalize fields
-        return self::normalize($tag);
+        $tag = self::normalize($tag);
+
+        $evt = new Retrieved($tag);
+        Leafpub::dispatchEvent(Retrieved::NAME, $evt);
+        return $evt->getEventData();
     }
 
     /**
@@ -206,6 +241,10 @@ class Tag extends Leafpub {
             'items_per_page' => 10,
             'sort' => 'DESC'
         ], (array) $options);
+
+        $evt = new ManyRetrieve($options);
+        Leafpub::dispatchEvent(ManyRetrieve::NAME, $evt);
+        $options = $evt->getEventData();
 
         // Generate select SQL
         $select_sql = '
@@ -278,7 +317,9 @@ class Tag extends Leafpub {
             $tags[$key] = self::normalize($value);
         }
 
-        return $tags;
+        $evt = new ManyRetrieved($tags);
+        Leafpub::dispatchEvent(ManyRetrieved::NAME, $evt);
+        return $evt->getEventData();
     }
 
     // Returns an array of all tag names and corresponding slugs
@@ -295,6 +336,7 @@ class Tag extends Leafpub {
 
     // Renders a tag page
     public static function render($slug, $page = 1) {
+        //TODO BeforeRender Event!
         // Get the tag
         $tag = self::get($slug);
         if(!$tag) return false;
@@ -393,6 +435,9 @@ class Tag extends Leafpub {
 
         // Merge properties
         $tag = array_merge($tag, $properties);
+        $evt = new Update($tag);
+        Leafpub::dispatchEvent(Update::NAME, $evt);
+        $tag = $evt->getEventData();
 
         // Must have a name
         if(!mb_strlen($tag['name'])) {
@@ -441,10 +486,15 @@ class Tag extends Leafpub {
             $st->bindParam(':meta_description', $tag['meta_description']);
             $st->bindParam(':original_slug', $slug);
             $st->execute();
-            return $st->rowCount() > 0;
+            $ret = $st->rowCount() > 0;
         } catch(\PDOException $e) {
             return false;
         }
+
+        $evt = new Updated($tag);
+        Leafpub::dispatchEvent(Updated::NAME, $evt);
+        
+        return $ret;
     }
 
     /**
