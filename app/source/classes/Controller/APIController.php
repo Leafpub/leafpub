@@ -27,24 +27,8 @@ use Leafpub\Admin,
     Leafpub\Upload,
     Leafpub\User,
     Leafpub\Importer,
-    Leafpub\Events\Post\Add as PostAdd,
-    Leafpub\Events\Post\Added as PostAdded,
-    Leafpub\Events\Post\Update as PostUpdate,
-    Leafpub\Events\Post\Updated as PostUpdated,
-    Leafpub\Events\Post\Delete as PostDelete,
-    Leafpub\Events\Post\Deleted as PostDeleted,
-    Leafpub\Events\Tag\Add as TagAdd,
-    Leafpub\Events\Tag\Added as TagAdded,
-    Leafpub\Events\Tag\Update as TagUpdate,
-    Leafpub\Events\Tag\Updated as TagUpdated,
-    Leafpub\Events\Tag\Delete as TagDelete,
-    Leafpub\Events\Tag\Deleted as TagDeleted,
-    Leafpub\Events\User\Add as UserAdd,
-    Leafpub\Events\User\Added as UserAdded,
-    Leafpub\Events\User\Update as UserUpdate,
-    Leafpub\Events\User\Updated as UserUpdated,
-    Leafpub\Events\User\Delete as UserDelete,
-    Leafpub\Events\User\Deleted as UserDeleted;
+    Leafpub\Events\Application\MailCompose,
+    Leafpub\Events\Application\MailSend;
 
 /**
 * APIController
@@ -108,8 +92,7 @@ class APIController extends Controller {
             'reset_token' => $token = Leafpub::randomBytes(50)
         ]);
 
-        // Send the user an email
-        Leafpub::sendEmail([
+        $emailData = [
             'to' => $user['email'],
             'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
             'message' =>
@@ -120,8 +103,20 @@ class APIController extends Controller {
                 Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
                 '&token=' . rawurlencode($token)),
             'from' => 'Leafpub <leafpub@' . $_SERVER['HTTP_HOST'] . '>'
-        ]);
+        ];
 
+        $evt = new MailCompose($emailData);
+        Leafpub::dispatchEvent(MailCompose::NAME, $evt);
+        $emailData = $evt->getEventData();
+
+        $evt = new MailSend($emailData);
+        Leafpub::dispatchEvent(MailSend::NAME, $evt);
+        /*
+        if (!Leafpub::hasListener(MailSend::NAME)){
+            // Send the user an email
+            Leafpub::sendEmail($emailData);
+        }
+        */
         // Send response
         return $response->withJson([
             'success' => true,
@@ -282,14 +277,8 @@ class APIController extends Controller {
         // Update the post
         try {
             if($action === 'add') {
-                $evt = new PostAdd($properties);
-                Leafpub::dispatchEvent(PostAdd::NAME, $evt);
-                $properties = $evt->getEventData();
                 Post::add($slug, $properties);
             } else {
-                $evt = new PostUpdate($properties);
-                Leafpub::dispatchEvent(PostUpdate::NAME, $evt);
-                $properties = $evt->getEventData();
                 Post::update($slug, $properties);
             }
         } catch(\Exception $e) {
@@ -316,13 +305,6 @@ class APIController extends Controller {
             ]);
         }
 
-        if ($action === 'add'){
-            $evt = new PostAdded();
-            Leafpub::dispatchEvent(PostAdded::NAME, $evt);
-        } else {
-            $evt = new PostUpdated();
-            Leafpub::dispatchEvent(PostUpdated::NAME, $evt);
-        }
         // Send response
         return $response->withJson([
             'success' => true
@@ -371,15 +353,8 @@ class APIController extends Controller {
             Session::isRole(['owner', 'admin', 'editor']) ||
             Post::get($args['slug'])['author'] === Session::user('slug')
         ) {
-            $evt = new PostDelete($args['slug']);
-            Leafpub::dispatchEvent(PostDelete::NAME, $evt);
-            $ret = Post::delete($args['slug']);
-            if ($ret){
-                $evt = new PostDeleted($args['slug']);
-                Leafpub::dispatchEvent(PostDeleted::NAME, $evt);
-            }
             return $response->withJson([
-                'success' => $ret
+                'success' => Post::delete($args['slug'])
             ]);
         }
 
@@ -422,7 +397,7 @@ class APIController extends Controller {
         //      ]
         //
         $params = $request->getParams();
-
+        
         // Generate post data
         if(isset($params['post-json'])) {
             // Post was passed as JSON data
