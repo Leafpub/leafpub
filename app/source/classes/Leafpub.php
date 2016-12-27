@@ -89,6 +89,7 @@ class Leafpub {
         $appListener = new Listeners\Application();
         self::on(Events\Application\Startup::NAME, array($appListener, 'onApplicationStartup'));
         
+        self::on(Events\Application\MailSend::NAME, array('sendMail'), 999);
         // Add Post Listener
         $postListener = new Listeners\Post();
         self::on(Events\Post\Add::NAME, array($postListener, 'onPostAdd'));
@@ -343,23 +344,40 @@ class Leafpub {
         self::$dispatcher->dispatch($eventName, $event);
     }
 
-    // Removes one or more event listeners
-    //
-    //  By event:     Leafpub::off('post.save')
-    //  By namespace: Leafpub::off('/namespace')
-    //  By both:      Leafpub::off('post.save/namespace')
-    //
+    /**
+    * Removes one or more event listeners
+    *
+    * @param String $eventName
+    * @param callable $listener
+    * @return void
+    *
+    */
     public static function off($eventName, $listener) {
         self::$dispatcher->removeListener($eventName, $listener);
     }
 
-    // Adds an event listener
-    //
-    //  No namespace:   Leafpub::on('post.save', $callback)
-    //  With namespace: Leafpub::on('post.save/namespace', $callback)
-    //
+    /**
+    * Adds an event listener
+    *
+    * @param String $event
+    * @param callable $callback
+    * @param int $priority
+    * @return void
+    *
+    */
     public static function on($event, $callback, $priority = 0) {
         self::$dispatcher->addListener($event, $callback, $priority);
+    }
+
+    /**
+    * Checks if a listener exists
+    *
+    * @param String $event
+    * @return bool
+    *
+    */
+    public static function hasListener($event){
+        return (self::$dispatcher->hasListeners($event) > 0);
     }
 
     /** TODO: Do we also need Subscriber functionality?
