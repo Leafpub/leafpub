@@ -21,7 +21,8 @@ use Exception,
     Leafpub\Events\User\Retrieve,
     Leafpub\Events\User\Retrieved,
     Leafpub\Events\User\ManyRetrieve,
-    Leafpub\Events\User\ManyRetrieved;
+    Leafpub\Events\User\ManyRetrieved,
+    Leafpub\Events\User\BeforeRender;
 
 /**
 * User
@@ -507,15 +508,9 @@ class User extends Leafpub {
             self::url($slug, $pagination['next_page']) : null;
         $pagination['previous_page_url'] = $pagination['previous_page'] ?
             self::url($slug, $pagination['previous_page']) : null;
-
-        // Render it
-        return Renderer::render([
-            'template' => Theme::getPath('author.hbs'),
-            'data' => [
-                'author' => $author,
-                'posts' => $posts,
-                'pagination' => $pagination
-            ],
+        
+        $beforeRender = new BeforeRender([
+            'author' => $author,
             'special_vars' => [
                 'meta' => [
                     'title'=> $author['name'],
@@ -557,7 +552,21 @@ class User extends Leafpub {
                             parent::url($author['cover']) : null
                     ]
                 ]
+            ]
+        ]);
+
+        Leafpub::dispatchEvent(BeforeRender::NAME, $beforeRender);
+        $data = $beforeRender->getEventData();
+
+        // Render it
+        return Renderer::render([
+            'template' => Theme::getPath('author.hbs'),
+            'data' => [
+                'author' => $data['author'],
+                'posts' => $posts,
+                'pagination' => $pagination
             ],
+            'special_vars' => $data['special_vars'],
             'helpers' => ['url', 'utility', 'theme']
         ]);
     }

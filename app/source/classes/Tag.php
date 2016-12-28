@@ -18,7 +18,8 @@ use Leafpub\Events\Tag\Add,
     Leafpub\Events\Tag\Retrieve,
     Leafpub\Events\Tag\Retrieved,
     Leafpub\Events\Tag\ManyRetrieve,
-    Leafpub\Events\Tag\ManyRetrieved;
+    Leafpub\Events\Tag\ManyRetrieved,
+    Leafpub\Events\Tag\BeforeRender;
 
 /**
 * Tag
@@ -356,15 +357,9 @@ class Tag extends Leafpub {
             self::url($slug, $pagination['next_page']) : null;
         $pagination['previous_page_url'] = $pagination['previous_page'] ?
             self::url($slug, $pagination['previous_page']) : null;
-
-        // Render it
-        return Renderer::render([
-            'template' => Theme::getPath('tag.hbs'),
-            'data' => [
-                'tag' => $tag,
-                'posts' => $posts,
-                'pagination' => $pagination
-            ],
+        
+        $beforeRender = new BeforeRender([
+            'tag' => $tag,
             'special_vars' => [
                 'meta' => [
                     'title'=> !empty($tag['meta_title']) ? $tag['meta_title'] : $tag['name'],
@@ -412,7 +407,21 @@ class Tag extends Leafpub {
                             parent::url($tag['cover']) : null
                     ]
                 ]
+            ]
+        ]);
+
+        Leafpub::dispatchEvent(BeforeRender::NAME, $beforeRender);
+        $data = $beforeRender->getEventData();
+
+        // Render it
+        return Renderer::render([
+            'template' => Theme::getPath('tag.hbs'),
+            'data' => [
+                'tag' => $data['tag'],
+                'posts' => $posts,
+                'pagination' => $pagination
             ],
+            'special_vars' => $data['special_vars'],
             'helpers' => ['url', 'utility', 'theme']
         ]);
     }
