@@ -28,13 +28,14 @@ class Post {
 
     public function onBeforeRender(BeforeRender $event){
         $data = $event->getEventData();
-
+        /*
         $author = User::get($data['post']['author']);
         $data['special_vars']['meta']['ld_json'] = $this->_generateLDJson($data['post'], $author);
         $data['special_vars']['meta']['open_graph'] = $this->_generateOGData($data['post']);
         $data['special_vars']['meta']['twitter_card'] = $this->_generateTwitterData($data['post'], $author);
         
         $event->setEventData($data);
+        */
     }
 
     private function _generateLDJson($post, $author){
