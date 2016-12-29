@@ -53,11 +53,15 @@ class Plugin extends Leafpub {
     *
     */
     public static function getActivatedPlugins(){
-        $plugins = [];
-        $sSQL = "SELECT * FROM __plugins WHERE enabled = 1";
-        $st = self::$database->query($sSQL);
-        $plugins = $st->fetchAll(\PDO::FETCH_ASSOC);
-        return $plugins;
+        try {
+           // Get a list of slugs
+           $st = self::$database->query('
+               SELECT * FROM __plugins WHERE enabled = 1
+           ');
+           return $st->fetchAll(\PDO::FETCH_ASSOC);
+       } catch(\PDOException $e) {
+           return false;
+       }
     }
 
     /**
@@ -88,25 +92,61 @@ class Plugin extends Leafpub {
     * @return bool
     *
     */
-    public static function activate($plugin){
-        $p = self::getAll();
-        foreach($p as $plug){
-            if ($plug['dir'] == $plugin){
-                // Set enable
-                return true;
-            }
+    public static function activate($dir){
+        $plugin = self::get($dir);
+        if (!$plugin){
+            $plugin = (object) json_decode(
+                file_get_contents(
+                    self::path("content/plugins/$dir/plugin.json")
+                ), true
+            );
+            self::add($plugin);
         }
+        try {
+            $st = self::$database->prepare('
+                UPDATE __plugins SET
+                  enabled = 1,
+                  enable_date = NOW()
+                WHERE
+                  1 = 1
+                AND
+                  dir = :dir;
+            ');
+            $st->bindParam(':dir', $dir);
+            return $st->execute();
+        } catch(\PDOException $e) {
+           return false;
+       }    
     }
 
     /**
     * Deactivates an installed plugin
     *
-    * @param String $plugin the plugin to deactivate
+    * @param String $dir the plugin to deactivate
     * @return bool
     *
     */
-    public static function deactivate($plugin){
-
+    public static function deactivate($dir){
+        $plugin = self::get($dir);
+        if (!$plugin){
+            return false;
+        }
+        try {
+            $st = self::$database->prepare('
+                UPDATE __plugins SET
+                  enabled = 0,
+                  enable_date = NOW()
+                WHERE
+                  1 = 1
+                AND
+                  dir = :dir;
+            ');
+            $st->bindParam(':dir', $dir);
+            $st->execute();
+            return ($st->rowCount() > 0);
+        } catch(\PDOException $e) {
+           return false;
+       }   
     }
 
     public static function getMergedPlugins(){
@@ -131,7 +171,127 @@ class Plugin extends Leafpub {
         
     }
 
+    private static function normalize($plugin){
+        // Cast to integer
+        $plugin['id'] = (int) $plugin['id'];
+        $plugin['isAdminPlugin'] = (int) $plugin['isAdminPlugin'];
+        $plugin['isMiddleware'] = (int) $plugin['isMiddleware'];
+        $plugin['enabled'] = (int) $plugin['enabled'];
+
+        // Convert dates from UTC to local
+        $plugin['install_date'] = self::utcToLocal($plugin['install_date']);
+        $plugin['enable_date'] = self::utcToLocal($plugin['enable_date']);
+
+        return $plugin;
+    }
+
     public static function get($plugin){
-        
+        try {
+           // Get a plugin from database
+           $st = self::$database->prepare('
+               SELECT * FROM __plugins
+               WHERE dir = :dir
+               ORDER BY name
+           ');
+           $st->bindParam(':dir', $plugin);
+           $st->execute();
+           $plugin = $st->fetch(\PDO::FETCH_ASSOC);
+       } catch(\PDOException $e) {
+           return false;
+       }
+
+       $plugin = self::normalize($plugin);
+       return $plugin;
+    }
+
+    public static function add($plugin){
+        try {
+           // Get a plugin from database
+           $st = self::$database->prepare('
+               INSERT INTO __plugins SET
+                 name = :name,
+                 description = :description,
+                 author = :author,
+                 version = :version,
+                 dir = :dir,
+                 isAdminPlugin = :isAdminPlugin,
+                 isMiddleware = :isMiddleware,
+                 requires = :requires,
+                 license = :license,
+                 install_date = NOW()
+           ');
+
+           $st->bindParam(':name', $plugin['name']);
+           $st->bindParam(':description', $plugin['description']);
+           $st->bindParam(':author', $plugin['author']);
+           $st->bindParam(':version', $plugin['version']);
+           $st->bindParam(':dir', $plugin['dir']);
+           $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
+           $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
+           $st->bindParam(':requires', $plugin['requires']);
+           $st->bindParam(':license', $plugin['license']);
+           $st->execute();
+           
+           $plugin_id = (int) self::$database->lastInsertId();
+           if($plugin_id <= 0) return false;
+       } catch(\PDOException $e) {
+           return false;
+       }
+
+       return true;
+    }
+
+    public static function edit($plugin){
+        try {
+           // Get a plugin from database
+           $st = self::$database->prepare('
+               UPDATE __plugins SET
+                 name = :name,
+                 description = :description,
+                 author = :author,
+                 version = :version,
+                 dir = :dir,
+                 isAdminPlugin = :isAdminPlugin,
+                 isMiddleware = :isMiddleware,
+                 requires = :requires,
+                 license = :license
+                WHERE
+                  1 = 1
+                AND
+                  id = :id
+           ');
+
+           $st->bindParam(':name', $plugin['name']);
+           $st->bindParam(':description', $plugin['description']);
+           $st->bindParam(':author', $plugin['author']);
+           $st->bindParam(':version', $plugin['version']);
+           $st->bindParam(':dir', $plugin['dir']);
+           $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
+           $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
+           $st->bindParam(':requires', $plugin['requires']);
+           $st->bindParam(':license', $plugin['license']);
+           $st->bindParam(':id', $plugin['id']);
+           
+           $st->execute();
+       } catch(\PDOException $e) {
+           return false;
+       }
+
+       return true;
+    }
+
+    public static function delete($dir){
+        try {
+           // Get a plugin from database
+           $st = self::$database->prepare('
+               DELETE FROM __plugins
+               WHERE dir = :dir
+           ');
+           $st->bindParam(':dir', $plugin);
+           $st->execute();
+           return ($st->rowCount() > 0);
+       } catch(\PDOException $e) {
+           return false;
+       }
     }
 }
