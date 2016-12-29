@@ -25,7 +25,8 @@ use Leafpub\Admin,
     Leafpub\Tag,
     Leafpub\Theme,
     Leafpub\Upload,
-    Leafpub\User;
+    Leafpub\User,
+    Leafpub\Plugin;
 
 /**
 * AdminController
@@ -164,6 +165,21 @@ class AdminController extends Controller {
     **/
     public function dashboard($request, $response, $args) {
         return $response->withRedirect(Admin::url('posts'));
+    }
+
+    public function plugins($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $this->notFound($request, $response);
+        } else {
+            $html = Admin::render('plugins', [
+                'title' => Language::term('plugins'),
+                'scripts' => 'plugins.min.js',
+                'styles' => 'plugins.css',
+                'plugins' => Plugin::getMergedPlugins()
+            ]);
+
+            return $response->write($html);
+        }
     }
 
     /**
