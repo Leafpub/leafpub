@@ -38,6 +38,10 @@ $app->group("/api", function() {
     $this->get('/posts/render', 'Leafpub\Controller\APIController:renderPost');
     $this->post('/posts/render', 'Leafpub\Controller\APIController:renderPost');
 
+    // Plugins
+    $this->post('/plugins', 'Leafpub\Controller\APIController:activatePlugin');
+    $this->delete('/plugins/{plugin}', 'Leafpub\Controller\APIController:deactivatePlugin');
+
     // History
     $this->get('/history/{id}', 'Leafpub\Controller\APIController:getHistory');
     $this->delete('/history/{id}', 'Leafpub\Controller\APIController:deleteHistory');
@@ -118,6 +122,9 @@ $app->group("/$frags->admin", function() {
 
     // Settings
     $this->get('/settings', 'Leafpub\Controller\AdminController:settings');
+
+    // Plugins
+    $this->get('/plugins', 'Leafpub\Controller\AdminController:plugins');
 })->add('Leafpub\Middleware:requireAuth');
 
 /**
