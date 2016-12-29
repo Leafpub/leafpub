@@ -1,0 +1,88 @@
+@import "partials/variables";
+$plugin-list-item-image-size: 8rem;
+
+.plugin-list {
+    height: 100%;
+    padding: 2rem 1rem;
+    user-select: none;
+}
+
+.plugin-list-none {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+}
+
+.plugin-list-item {
+    position: relative;
+    text-align: center;
+    border-radius: $border-radius-large;
+    border: solid 2px white;
+    padding: 1rem;
+    padding-top: $plugin-list-item-image-size + 1.75rem;
+    transition:
+        color $leafpub-transition-speed,
+        background-color $leafpub-transition-speed;
+    .preview {
+        position: absolute;
+        top: 1rem;
+        left: calc(50% - #{$plugin-list-item-image-size} / 2);
+        width: $plugin-list-item-image-size;
+        height: $plugin-list-item-image-size;
+        overflow: hidden;
+        img,
+        i {
+            background: $gray-light;
+            width: $plugin-list-item-image-size;
+            height: $plugin-list-item-image-size;
+            line-height: $plugin-list-item-image-size;
+            font-size: $plugin-list-item-image-size - 2rem;
+            color: white;
+            border-radius: 50%;
+        }
+    }
+    .name h4{
+        font-weight: bold;
+        @include text-truncate;
+        color: #09d;
+    }
+    .info, .description {
+        font-size: .9rem;
+        color: $text-muted;
+        @include text-truncate;
+        transition: color $leafpub-transition-speed;
+    }
+    &:hover {
+        background-color: #f2f2f2;
+    }
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+    &.selected {
+        background-color: $leafpub-blue;
+        color: white;
+        .info, .description, .name h4 {
+            color: white;
+        }
+    }
+    .info a {
+        color: white;
+    }
+    .info .tag {
+        font-size: .9rem;
+    }
+}
+
+// Fix sticky hovers in iOS
+.ios .plugin-list-item:hover:not(.selected) {
+    background-color: inherit;
+}
+
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .plugin-list {
+        padding: 1rem 0;
+    }
+}

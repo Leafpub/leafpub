@@ -1,0 +1,59 @@
+{{#each plugins}}
+    <div
+        class="plugin-list-item col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-6"
+        data-dir="{{dir}}"
+        data-enabled="{{#is enable_date}}1{{else}}0{{/is}}"
+    >
+        <div class="preview">
+            {{#if image}}
+                <img class="preview-image" src="{{url image}}">
+            {{else}}
+                <i class="preview-image fa fa-plug"></i>
+            {{/if}}
+        </div>
+        <div class="name">
+            <h4>{{name}}
+            {{#is enable_date}}
+                <span class="tag tag-success" title="active">
+                    <i class="fa fa-check" title="{{enable_date}}"></i>
+                </span>
+            {{/is}}
+            </h4>
+        </div>
+        <div class="description">
+            {{description}}
+        </div>
+        <div class="info">
+            <span class="tag tag-pill tag-primary">
+                <i class="fa fa-balance-scale" title="{{license}}"></i>
+            </span>
+            <span class="tag tag-pill tag-primary">
+                <i class="fa fa-code-fork" title="{{version}}"></i>
+            </span>
+            <span class="tag tag-pill tag-primary">
+                <i class="fa fa-user-circle" title="{{author}}"></i> 
+            </span>
+            <span class="tag tag-pill tag-primary">
+                <a href="{{link}}" title="{{link}}" target="_blank">
+                    <i class="fa fa-globe"></i>
+                </a>
+            </span>
+            {{#is isAdminPlugin}}
+            <span class="tag tag-pill tag-warning">
+                <i class="fa fa-lock" title="Admin Plugin"></i>
+            </span>
+            {{/is}}
+            {{#is isMiddleware}}
+            <span class="tag tag-pill tag-danger">
+                <i class="fa fa-lock" title="Middleware"></i>
+            </span>
+            {{/is}}
+        </div>
+    </div>
+{{else}}
+    <div class="plugin-list-none valign">
+        <div class="valign-middle">
+            {{L 'no_plugins'}}
+        </div>
+    </div>
+{{/each}}
