@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Leafpub\Events\Application\AdminMenu;
+
 /**
 * Admin
 *
@@ -143,6 +145,15 @@ class Admin extends Leafpub {
             ];
         }
 
+        // Plugins
+        if (Session::isRole(['owner', 'admin'])){
+            $items[] = [
+                'title' => Language::term('plugins'),
+                'link' => Admin::url('plugins'),
+                'icon' => 'fa fa-plug'
+            ];
+        }
+
         // Settings
         if(Session::isRole(['owner', 'admin'])) {
             $items[] = [
@@ -159,7 +170,9 @@ class Admin extends Leafpub {
             'icon' => 'fa fa-power-off'
         ];
 
-        return $items;
+        $evt = new AdminMenu($items);
+        Leafpub::dispatchEvent(AdminMenu::NAME, $evt);
+        return $evt->getEventData();
     }
 
     /**
