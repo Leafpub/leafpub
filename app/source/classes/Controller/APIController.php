@@ -27,6 +27,7 @@ use Leafpub\Admin,
     Leafpub\Upload,
     Leafpub\User,
     Leafpub\Importer,
+    Leafpub\Plugin,
     Leafpub\Events\Application\MailCompose,
     Leafpub\Events\Application\MailSend;
 
@@ -440,6 +441,43 @@ class APIController extends Controller {
             // Prevents `Refused to execute a JavaScript script` error
             ->withAddedHeader('X-XSS-Protection', '0')
             ->write($html);
+    }
+
+    public function activatePlugin($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withJson([
+                'success' => false
+            ]);
+        } else {
+            $params = $request->getParams();
+            
+            $plugin = $params['plugin'];
+            $enable = ($params['enable'] == '0' ? true : false);
+        
+            if ($enable){
+                $ret = Plugin::activate($plugin);
+            } else {
+                $ret = Plugin::deactivate($plugin);
+            }
+            return $response->withJson([
+                'success' => $ret
+            ]);
+        }
+    }
+
+    public function deactivatePlugin($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withJson([
+                'success' => false
+            ]);
+        } else {
+            $plugin = $args['plugin'];
+            $enable = $args['enable'];
+            var_dump($args);
+            return $response->withJson([
+                'success' => true
+            ]);
+        }
     }
 
     /**
