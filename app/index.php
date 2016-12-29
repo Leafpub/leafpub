@@ -20,6 +20,7 @@ $app = new \Slim\App($container);
 require __DIR__ . '/source/config/routes.php';
 require __DIR__ . '/source/config/middleware.php';
 require __DIR__ . '/source/config/dependencies.php';
+require __DIR__ . '/source/config/plugins.php';
 
 // Create startup event and dispatch...
 $startup = new Events\Application\Startup($app);
