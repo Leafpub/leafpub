@@ -99,6 +99,21 @@ abstract class APlugin {
 
     /**
     *
+    * Will be triggered after plugin activation
+    * You could create database tables for example
+    *
+    */
+    public static function afterActivation(){}
+
+    /**
+    *
+    * Will be triggered before plugin gets removed
+    *
+    **/
+    public static function afterDeactivation(){}
+
+    /**
+    *
     * @return String Plugin Name + Plugin Version
     *
     */
