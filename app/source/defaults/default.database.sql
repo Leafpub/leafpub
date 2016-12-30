@@ -57,6 +57,31 @@ CREATE TABLE `__posts` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 ####################################################################################################
+# plugins
+####################################################################################################
+
+DROP TABLE IF EXISTS `__plugins`;
+
+CREATE TABLE `__plugins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(51) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `author` varchar(51) NOT NULL,
+  `version` varchar(8) NOT NULL,
+  `requires` varchar(8) NOT NULL,
+  `license` varchar(8) NOT NULL,
+  `dir` varchar(51) NOT NULL,
+  `img` varchar(100) DEFAULT NULL,
+  `isAdminPlugin` tinyint(1) NOT NULL DEFAULT '0',
+  `isMiddleware` tinyint(1) NOT NULL DEFAULT '0',
+  `install_date` datetime NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
+  `enable_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `dir` (`dir`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+####################################################################################################
 # settings
 ####################################################################################################
 
