@@ -97,6 +97,27 @@ class Leafpub {
         self::on(Events\Post\BeforeRender::NAME, array($postListener, 'onBeforeRender'));
     }
 
+    public static function registerPlugins(\Slim\App $app){
+        // Only register plugins if the static array is null.
+        if (Plugin::$plugins == null){
+            try {
+                $plugins = Plugin::getActivatedPlugins();
+
+                foreach($plugins as $plugin){
+                    //$ns = ucfirst($plugin['dir']);
+                    $ns = $plugin['dir'];
+                    $class = 'Leafpub\\Plugins\\' . $ns . '\\Plugin';
+                    $pls[] = new $class($app);
+                }
+                Plugin::$plugins = $pls;
+            } catch (\Exception $e){
+                exit(Error::system([
+                    'title' => 'Register Plugin Error',
+                    'message' => $e->getMessage()
+                ]));
+            }
+        }
+    }
     /**
     * Returns the file extension of $filename (lowercase, without a dot)
     *
