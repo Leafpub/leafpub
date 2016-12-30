@@ -111,8 +111,20 @@ class Plugin extends Leafpub {
                     self::path("content/plugins/$dir/plugin.json")
                 ), true
             );
-            self::add($plugin);
+            $plugin['dir'] = $dir;
+            try{
+                self::add($plugin);
+            } catch (\Exception $e){
+                echo $e->getMessage();
+                return false;
+            }
         }
+
+        // Create Plugin and call _afterActivation
+        $plug = "Leafpub\\Plugins\\$dir\\Plugin";
+        $plug::afterActivation();
+
+        // Update database
         try {
             $st = self::$database->prepare('
                 UPDATE __plugins SET
@@ -142,6 +154,13 @@ class Plugin extends Leafpub {
         if (!$plugin){
             return false;
         }
+
+        // Get the plugin instance from the static array and call _afterDeactivation
+        $plug = "Leafpub\\Plugins\\$dir\\Plugin";
+        $plug::afterDeactivation();
+        unset(Plugin::$plugins[$dir]);
+
+        // Update database
         try {
             $st = self::$database->prepare('
                 UPDATE __plugins SET
@@ -227,6 +246,9 @@ class Plugin extends Leafpub {
            $st->bindParam(':dir', $plugin);
            $st->execute();
            $plugin = $st->fetch(\PDO::FETCH_ASSOC);
+           if (!$plugin){
+               return false;
+           }
        } catch(\PDOException $e) {
            return false;
        }
@@ -247,7 +269,7 @@ class Plugin extends Leafpub {
 
         // Is the name valid?
         if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
-        throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
+            throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
         if(
@@ -258,13 +280,17 @@ class Plugin extends Leafpub {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
 
-        if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
-            throw new \Exception(
-                'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
-                self::VERSION_MISMATCH
-            );
+        if (LEAFPUB_VERSION != '{{version}}'){
+            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
+                throw new \Exception(
+                    'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
+                    self::VERSION_MISMATCH
+                );
+            }
         }
 
+        $plugin = self::normalize($plugin);
+        
         try {
            // Get a plugin from database
            $st = self::$database->prepare('
