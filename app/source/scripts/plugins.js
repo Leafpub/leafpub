@@ -121,7 +121,6 @@ $(function() {
     // Edit
     $('.edit').on('click', function(){
         var element = $('.plugin-list').selectable('getElements', true)[0];
-        console.log(element);
         return toggleState(element);
     });
 
@@ -129,8 +128,8 @@ $(function() {
         if (!request){
             progress.go(50);
 
-            var plugin = $(element).attr('data-dir'),
-                enable = $(element).attr('data-enabled');
+            var plugin = element.getAttribute('data-dir'),
+                enable = element.classList.contains('enabled');
 
             if(request) request.abort();
             request = $.ajax({
@@ -143,8 +142,8 @@ $(function() {
             })
             .done(function(res) {
                 request = null;
-                $(element).toggleClass('enabled');
-                $(element).attr('data-enabled', !enable);
+                element.classList.toggle('enabled');
+                element.setAttribute('data-enabled', (enable == 0 ? 1 : 0));
             })
             .always(function() {
                 // Hide progress
