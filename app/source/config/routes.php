@@ -40,7 +40,7 @@ $app->group("/api", function() {
 
     // Plugins
     $this->post('/plugins', 'Leafpub\Controller\APIController:activatePlugin');
-    $this->delete('/plugins/{plugin}', 'Leafpub\Controller\APIController:deactivatePlugin');
+    $this->delete('/plugins/{plugin}', 'Leafpub\Controller\APIController:deletePlugin');
 
     // History
     $this->get('/history/{id}', 'Leafpub\Controller\APIController:getHistory');
