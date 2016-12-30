@@ -19,7 +19,7 @@ $(function() {
             $('.delete').prop('disabled', values.length === 0);
         },
         doubleClick: function(value, element) {
-            //location.href = $(element).attr('href');
+            toggleState(element);
         },
         getValue: function() {
             return $(this).attr('data-dir');
@@ -119,9 +119,13 @@ $(function() {
     });
 
     // Edit
-    $('.edit').on('click', function() {
-        var dir = $('.plugin-list').selectable('getElements', true)[0].getAttribute('data-dir'),
-            enable = $('.plugin-list').selectable('getElements', true)[0].getAttribute('data-enabled');
+    $('.edit').on('click', function(){
+        var element = $('.plugin-list').selectable('getElements', true)[0];
+        console.log(element);
+        return toggleState(element);
+    });
+
+    var toggleState = function(element) {
         if (!request){
             progress.go(50);
 
@@ -131,20 +135,20 @@ $(function() {
                 url: Leafpub.url('api/plugins'),
                 type: 'POST',
                 data: {
-                    plugin: dir,
-                    enable: enable
+                    plugin: $(element).attr('data-dir'),
+                    enable: $(element).attr('data-enabled'),
                 }
             })
             .done(function(res) {
                 request = null;
-                location.reload();
+                $(element).toggleClass('enabled');
             })
             .always(function() {
                 // Hide progress
                 progress.go(100);
             });
         }
-    });
+    };
 
     // Delete
     $('.delete').on('click', function() {
