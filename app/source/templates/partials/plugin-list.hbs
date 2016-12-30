@@ -1,6 +1,6 @@
 {{#each plugins}}
     <div
-        class="plugin-list-item col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-6"
+        class="plugin-list-item col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-6 {{#is enable_date}}enabled{{/is}}"
         data-dir="{{dir}}"
         data-enabled="{{#is enable_date}}1{{else}}0{{/is}}"
     >
@@ -12,12 +12,8 @@
             {{/if}}
         </div>
         <div class="name">
-            <h4>{{name}}
-            {{#is enable_date}}
-                <span class="tag tag-success" title="active">
-                    <i class="fa fa-check" title="{{enable_date}}"></i>
-                </span>
-            {{/is}}
+            <h4>
+                {{name}}
             </h4>
         </div>
         <div class="description">
@@ -48,6 +44,9 @@
                 <i class="fa fa-lock" title="Middleware"></i>
             </span>
             {{/is}}
+            <span class="tag tag-pill tag-success enable" title="{{date enable_date}}">
+                <i class="fa fa-check" title="{{date enable_date}}"></i>
+            </span>
         </div>
     </div>
 {{else}}

@@ -52,6 +52,10 @@ $plugin-list-item-image-size: 8rem;
         color: $text-muted;
         @include text-truncate;
         transition: color $leafpub-transition-speed;
+        padding: 5px;
+         .tag.enable{
+            visibility: hidden;
+        }
     }
     &:hover {
         background-color: #f2f2f2;
@@ -75,6 +79,11 @@ $plugin-list-item-image-size: 8rem;
     }
 }
 
+.plugin-list-item.enabled {
+    .info .tag.enable {
+        visibility: visible;
+    }
+}
 // Fix sticky hovers in iOS
 .ios .plugin-list-item:hover:not(.selected) {
     background-color: inherit;
