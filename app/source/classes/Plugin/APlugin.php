@@ -72,7 +72,7 @@ abstract class APlugin {
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin){
             $admin = Setting::get('frag_admin');
-            $this->_app->group("/$admin/" . $safeName , function() use($routes){
+            $this->_app->group("/$admin/$safeName" , function() use($routes){
                 foreach($routes as $route){
                     $method = $route["method"];
                     $uri = $route["uri"];
@@ -81,7 +81,7 @@ abstract class APlugin {
                 }
             })->add('Leafpub\Middleware:requireAuth');
         } else {
-            $this->_app->group('/' . $safeName, function() use($routes){
+            $this->_app->group("/$safeName", function() use($routes){
                 foreach($routes as $route){
                     $method = $route["method"];
                     $uri = $route["uri"];
@@ -164,6 +164,15 @@ abstract class APlugin {
     */
     public function getRequiredLeafpubVersion(){
         return $this->_requires;
+    }
+
+    public function url($path){
+        $safeName = Leafpub::slug($this->_name);
+        if ($this->_isAdminPlugin){
+            $admin = Setting::get('frag_admin');
+            return Leafpub::url("/$admin/$safename/$path");
+        }
+        return Leafpub::url("/$safename/$path");
     }
 
 }
