@@ -107,7 +107,7 @@ class Leafpub {
                     //$ns = ucfirst($plugin['dir']);
                     $ns = $plugin['dir'];
                     $class = 'Leafpub\\Plugins\\' . $ns . '\\Plugin';
-                    $pls[] = new $class($app);
+                    $pls[$ns] = new $class($app);
                 }
                 Plugin::$plugins = $pls;
             } catch (\Exception $e){
