@@ -93,7 +93,20 @@ class Plugin extends Leafpub {
     *
     */
     public static function deinstall($plugin){
+        $plugin = self::get($plugin);
+        if (!$plugin){
+            return false;
+        }
 
+        if ($plugin['enabled'] == 1){
+            self::deactivate($plugin['dir']);
+        }
+
+        self::delete($plugin['dir']);
+
+        parent::removeDir(self::path('content/plugins/' . $plugin['dir']));
+
+        return true;
     }
 
     /**
@@ -290,7 +303,7 @@ class Plugin extends Leafpub {
         }
 
         $plugin = self::normalize($plugin);
-        
+
         try {
            // Get a plugin from database
            $st = self::$database->prepare('
