@@ -465,17 +465,25 @@ class APIController extends Controller {
         }
     }
 
-    public function deactivatePlugin($request, $response, $args){
-        if (!Session::isRole(['owner', 'admin'])){
+    public function deletePlugin($request, $response, $args){
+         if (!Session::isRole(['owner', 'admin'])){
             return $response->withJson([
                 'success' => false
             ]);
         } else {
-            $plugin = $args['plugin'];
-            $enable = $args['enable'];
-            var_dump($args);
+            $dir = $args['plugin'];
+            $plugin = Plugin::get($dir);
+
+            if (!$plugin){
+                return $response->withJson([
+                    'success' => false
+                ]);
+            }
+
+            $ret = Plugin::deinstall($dir);
+            
             return $response->withJson([
-                'success' => true
+                'success' => $ret
             ]);
         }
     }
