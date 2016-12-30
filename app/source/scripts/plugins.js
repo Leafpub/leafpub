@@ -129,19 +129,22 @@ $(function() {
         if (!request){
             progress.go(50);
 
-            // Load next page
+            var plugin = $(element).attr('data-dir'),
+                enable = $(element).attr('data-enabled');
+
             if(request) request.abort();
             request = $.ajax({
                 url: Leafpub.url('api/plugins'),
                 type: 'POST',
                 data: {
-                    plugin: $(element).attr('data-dir'),
-                    enable: $(element).attr('data-enabled'),
+                    plugin: plugin,
+                    enable: enable,
                 }
             })
             .done(function(res) {
                 request = null;
                 $(element).toggleClass('enabled');
+                $(element).attr('data-enabled', !enable);
             })
             .always(function() {
                 // Hide progress
