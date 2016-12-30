@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "21e9e57db42f3132a33979a9e79a5f93",
-    "content-hash": "bbc9125526934c6114e85d30ca2cd898",
+    "hash": "085be272a005e3de55dd3b0c6b29867a",
+    "content-hash": "f4685199354c6c9c55bc8118cc95320c",
     "packages": [
         {
             "name": "abeautifulsite/simpleimage",
@@ -55,6 +55,68 @@
             ],
             "description": "A PHP class that simplifies working with images",
             "time": "2015-10-22 19:13:41"
+        },
+        {
+            "name": "composer/semver",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/semver.git",
+                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/semver/zipball/c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Semver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "keywords": [
+                "semantic",
+                "semver",
+                "validation",
+                "versioning"
+            ],
+            "time": "2016-08-30 16:08:34"
         },
         {
             "name": "container-interop/container-interop",
@@ -221,16 +283,16 @@
         },
         {
             "name": "nikic/fast-route",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/FastRoute.git",
-                "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af"
+                "reference": "f3dcf5130e634b6123d40727d612ec6aa4f61fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/8ea928195fa9b907f0d6e48312d323c1a13cc2af",
-                "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/f3dcf5130e634b6123d40727d612ec6aa4f61fb3",
+                "reference": "f3dcf5130e634b6123d40727d612ec6aa4f61fb3",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +322,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2016-06-12 19:08:51"
+            "time": "2016-10-20 17:36:47"
         },
         {
             "name": "pimple/pimple",
@@ -360,16 +422,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "3.6.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "a685fe91a9435e1432e8eeb7cf516e2f5cee7f64"
+                "reference": "4254e40d81559e35cdf856bcbaca5f3af468b7ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/a685fe91a9435e1432e8eeb7cf516e2f5cee7f64",
-                "reference": "a685fe91a9435e1432e8eeb7cf516e2f5cee7f64",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/4254e40d81559e35cdf856bcbaca5f3af468b7ef",
+                "reference": "4254e40d81559e35cdf856bcbaca5f3af468b7ef",
                 "shasum": ""
             },
             "require": {
@@ -419,14 +481,14 @@
                 }
             ],
             "description": "Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs",
-            "homepage": "http://slimframework.com",
+            "homepage": "https://slimframework.com",
             "keywords": [
                 "api",
                 "framework",
                 "micro",
                 "router"
             ],
-            "time": "2016-11-20 20:48:49"
+            "time": "2016-12-20 20:30:47"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -540,12 +602,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "6b7d1191556e6cfc336b4e5c68ace72232cb5c89"
+                "reference": "b76817bddeb51ca51d9246df271fdcb133c57623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/6b7d1191556e6cfc336b4e5c68ace72232cb5c89",
-                "reference": "6b7d1191556e6cfc336b4e5c68ace72232cb5c89",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/b76817bddeb51ca51d9246df271fdcb133c57623",
+                "reference": "b76817bddeb51ca51d9246df271fdcb133c57623",
                 "shasum": ""
             },
             "require": {
@@ -557,7 +619,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.0-dev"
+                    "dev-master": "1.0.1-dev"
                 }
             },
             "autoload": {
@@ -584,7 +646,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-12-15 06:16:31"
+            "time": "2016-12-30 04:30:46"
         }
     ],
     "packages-dev": [],
