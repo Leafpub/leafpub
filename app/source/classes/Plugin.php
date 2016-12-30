@@ -9,7 +9,8 @@
 
 namespace Leafpub;
 
-use DirectoryIterator;
+use DirectoryIterator,
+    Composer\Semver\Comparator;
 
 /**
 * Plugin
@@ -20,10 +21,20 @@ use DirectoryIterator;
 **/
 class Plugin extends Leafpub {
     
+    /**
+    * Constants
+    **/
+    const
+        ALREADY_EXISTS = 1,
+        INVALID_NAME = 2,
+        INVALID_DIR = 3,
+        NOT_FOUND = 4,
+        VERSION_MISMATCH = 5;
+
     public static $plugins;
     
     /**
-    * Returns an array of all available themes
+    * Returns a list of all available plugins
     *
     * @return array
     *
@@ -47,9 +58,9 @@ class Plugin extends Leafpub {
     }
 
     /**
-    * Returns an array of all activated Plugins
+    * Returns a list of all activated Plugins
     *
-    * @return array
+    * @return mixed
     *
     */
     public static function getActivatedPlugins(){
@@ -88,14 +99,14 @@ class Plugin extends Leafpub {
     /**
     * Activates an installed plugin
     *
-    * @param String $plugin the plugin to activate
+    * @param String $dir the plugin to activate
     * @return bool
     *
     */
     public static function activate($dir){
         $plugin = self::get($dir);
         if (!$plugin){
-            $plugin = (object) json_decode(
+            $plugin = json_decode(
                 file_get_contents(
                     self::path("content/plugins/$dir/plugin.json")
                 ), true
@@ -149,6 +160,12 @@ class Plugin extends Leafpub {
        }   
     }
 
+    /**
+    * Returns an array of available and activated plugins
+    *
+    * @return array
+    *
+    */
     public static function getMergedPlugins(){
         $enabledPlugins = self::getActivatedPlugins();
         $plugins = array_map(
@@ -171,6 +188,13 @@ class Plugin extends Leafpub {
         
     }
 
+    /**
+    * Normalize types for certain fields
+    *
+    * @param array $plugin
+    * @return array
+    *
+    */
     private static function normalize($plugin){
         // Cast to integer
         $plugin['id'] = (int) $plugin['id'];
@@ -185,6 +209,13 @@ class Plugin extends Leafpub {
         return $plugin;
     }
 
+    /**
+    * Retrieve a plugin
+    *
+    * @param String $plugin
+    * @return mixed
+    *
+    */
     public static function get($plugin){
         try {
            // Get a plugin from database
@@ -204,7 +235,36 @@ class Plugin extends Leafpub {
        return $plugin;
     }
 
+    /**
+    * Adds a plugin to database
+    *
+    * @param array $plugin
+    * @return mixed
+    * @throws Exception
+    *
+    */
     public static function add($plugin){
+
+        // Is the name valid?
+        if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
+        throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
+        }
+
+        if(
+            !mb_strlen($plugin['dir']) || 
+            self::isProtectedSlug($plugin['dir']) || 
+            !is_dir(self::path('content/plugins/' . $plugin['dir']))
+        ) {
+            throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
+        }
+
+        if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
+            throw new \Exception(
+                'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
+                self::VERSION_MISMATCH
+            );
+        }
+
         try {
            // Get a plugin from database
            $st = self::$database->prepare('
@@ -241,7 +301,35 @@ class Plugin extends Leafpub {
        return true;
     }
 
+    /**
+    * Update the database entry
+    *
+    * @param $plugin
+    * @return bool
+    * @throws Exception
+    *
+    */
     public static function edit($plugin){
+        // Is the name valid?
+        if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
+        throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
+        }
+
+        if(
+            !mb_strlen($plugin['dir']) || 
+            self::isProtectedSlug($plugin['dir']) || 
+            !is_dir(self::path('content/plugins/' . $plugin['dir']))
+        ) {
+            throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
+        }
+
+        if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
+            throw new \Exception(
+                'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
+                self::VERSION_MISMATCH
+            );
+        }
+
         try {
            // Get a plugin from database
            $st = self::$database->prepare('
@@ -280,6 +368,13 @@ class Plugin extends Leafpub {
        return true;
     }
 
+    /**
+    * Delete a database entry
+    *
+    * @param String $dir
+    * @return bool
+    * 
+    */
     public static function delete($dir){
         try {
            // Get a plugin from database
@@ -287,9 +382,32 @@ class Plugin extends Leafpub {
                DELETE FROM __plugins
                WHERE dir = :dir
            ');
-           $st->bindParam(':dir', $plugin);
+           $st->bindParam(':dir', $dir);
            $st->execute();
            return ($st->rowCount() > 0);
+       } catch(\PDOException $e) {
+           return false;
+       }
+    }
+
+    /**
+    * Checks, if a plugin exists
+    *
+    * @param String $dir
+    * @return bool
+    *
+    */
+    public static function exists($dir){
+        try {
+           // Get a plugin from database
+           $st = self::$database->prepare('
+               SELECT * FROM __plugins
+               WHERE dir = :dir
+               ORDER BY name
+           ');
+           $st->bindParam(':dir', $dir);
+           $st->execute();
+           return !!$st->fetch(\PDO::FETCH_ASSOC);
        } catch(\PDOException $e) {
            return false;
        }
