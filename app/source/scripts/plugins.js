@@ -134,7 +134,7 @@ $(function() {
             if(request) request.abort();
             request = $.ajax({
                 url: Leafpub.url('api/plugins'),
-                type: 'POST',
+                type: 'PUT',
                 data: {
                     plugin: plugin,
                     enable: enable,
