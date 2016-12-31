@@ -488,6 +488,56 @@ class APIController extends Controller {
         }
     }
 
+    public function uploadPlugin($request, $response, $args){
+        $params = $request->getParams();
+        $uploaded = [];
+        $failed = [];
+
+        // Loop through uploaded files
+        foreach($request->getUploadedFiles()['files'] as $upload) {
+            $extension = Leafpub::fileExtension($upload->getClientFilename());
+
+            // Check for a successful upload
+            if($upload->getError() !== UPLOAD_ERR_OK) {
+                $failed[] = [
+                    'filename' => $upload->getClientFilename(),
+                    'message' => Language::term('upload_failed')
+                ];
+                continue;
+            }
+
+            if ($extension === 'zip'){
+
+            } else {
+                return $response->withJson([
+                    'success' => false,
+                    'message' => WRONG_EXTENSION
+                ]);
+            }
+
+            try {
+                // Add the file to uploads
+                $id = Plugin::install(
+                    $upload->getClientFilename(),
+                    file_get_contents($upload->file),
+                    $info
+                );
+                $uploaded[] = $info;
+            } catch(\Exception $e) {
+                $failed[] = [
+                    'filename' => $upload->getClientFilename(),
+                    'message' => Language::term('unable_to_upload_file')
+                ];
+            }
+        }
+
+        return $response->withJson([
+            'success' => true,
+            'uploaded' => $uploaded,
+            'failed' => $failed
+        ]);
+    }
+
     /**
     * Handles DELETE api/history{id} 
     *
