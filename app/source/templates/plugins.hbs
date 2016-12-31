@@ -7,14 +7,14 @@
     <div class="top-toolbar">
         {{!-- Left side --}}
         <div class="top-toolbar-section col-lg-4 col-sm-6">
-            <div class="inner-addon-group">
+            <!--div class="inner-addon-group">
                 <span class="inner-addon"><i class="fa fa-search"></i></span>
                 <input
                     class="plugin-search form-control"
                     type="search"
                     placeholder="{{L 'search'}}"
                     autofocus>
-            </div>
+            </div-->
         </div>
         {{!-- Right side --}}
         <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
@@ -26,9 +26,10 @@
                     <i class="fa fa-trash-o"></i>
                 </button>
             </div>
-            <a href="{{admin_url 'plugins/new'}}" class="btn btn-success disabled" title="{{L 'upload_a_new_plugin'}}">
+            <label class="btn btn-success upload-new-plugin" title="{{L 'upload_a_new_plugin'}}">
                 <i class="fa fa-plus"></i>
-            </a>
+                <input type="file" accept="image/*" style="display: none;">
+            </label>
         </div>
     </div>
 </div>

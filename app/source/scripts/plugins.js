@@ -193,4 +193,35 @@ $(function() {
             });
         });
     });
+
+    // Upload post image
+    $('.upload-new-plugin').on('change', 'input[type="file"]', function(event) {
+        var input = this;
+        if(!event.target.files.length) return;
+
+        // Upload it
+        Leafpub.upload({
+            accept: 'zip',
+            files: event.target.files[0],
+            url: '/api/plugins',
+            progress: function(percent) {
+                progress.go(percent);
+            }
+        })
+        .then(function(res) {
+            // Reset the input
+            $(input).replaceWith($(input).clone());
+
+            // Set the post image
+            if(res.uploaded.length) {
+                //setPostImage(res.uploaded[0].relative_path);
+            }
+
+            // Show feedback
+            if(res.failed.length) {
+                $.alertable.alert(res.failed[0].message);
+            }
+        });
+    });
+
 });

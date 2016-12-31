@@ -1,6 +1,11 @@
 @import "partials/variables";
 $plugin-list-item-image-size: 8rem;
 
+.upload-new-plugin {
+    margin-bottom: 0px;
+}
+
+
 .plugin-list {
     height: 100%;
     padding: 2rem 1rem;
