@@ -72,6 +72,7 @@ CREATE TABLE `__plugins` (
   `license` varchar(8) NOT NULL,
   `dir` varchar(51) NOT NULL,
   `img` varchar(100) DEFAULT NULL,
+  `link` varchar(100) DEFAULT NULL,
   `isAdminPlugin` tinyint(1) NOT NULL DEFAULT '0',
   `isMiddleware` tinyint(1) NOT NULL DEFAULT '0',
   `install_date` datetime NOT NULL,
