@@ -139,6 +139,7 @@ return [
     'no_history' => 'Keine Revision',	// history
     'no_posts_selected' => 'Keine Posts ausgewählt',
     'no_posts' => 'Keine Posts',
+    'no_plugins' => 'Keine Plugins',
     'no_tags' => 'Keine Schlagwörter',
     'no_users' => 'Keine Benutzer',
     'none' => 'Keins',
