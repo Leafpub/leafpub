@@ -10,6 +10,7 @@
 namespace Leafpub;
 
 use DirectoryIterator,
+    ZipArchive,
     Composer\Semver\Comparator;
 
 /**
@@ -81,8 +82,72 @@ class Plugin extends Leafpub {
     * @return bool
     *
     */
-    public static function install(){
+    public static function install($zipFile){
+        $bPluginJson = false;
+        $bPluginPhp = false;
+        $bUpdate = false;
+        
+        $zip = new ZipArchive();
+        $res = $zip->open($zipFile, ZipArchive::CHECKCONS);
+        
+        // Check if zip is ok
+        if ($res !== TRUE) {
+            switch($res) {
+                case ZipArchive::ER_NOZIP:
+                    throw new \Exception('not a zip archive');
+                case ZipArchive::ER_INCONS :
+                    throw new \Exception('consistency check failed');
+                case ZipArchive::ER_CRC :
+                    throw new \Exception('checksum failed');
+                default:
+                    throw new \Exception('error ' . $res);
+            }
+        }
+        
+        // Check for the mandatory files
+        for( $i = 0; $i < $zip->numFiles; $i++ ){
+            $file = $zip->getNameIndex( $i );
+            if (strstr($file, 'plugin.json')){
+                $bPluginJson = true; 
+            }
+            if (strstr($file, 'Plugin.php')){
+                $bPluginPhp = true;
+            }
+        } 
+        
+        // All mandatory files are present
+        if (!$bPluginJson || !$bPluginPhp){
+            throw new \Exception('Mandatory file missing');
+        }
+        
+        // Get the plugin folder
+        $ns = $zip->getNameIndex(0);
+        
+        // Plugin exists already
+        if (is_dir(self::path('content/plugins/' . $ns))){
+            // We're doing an update'
+            self::removeDir(self::path('content/plugins/' . $ns));
+            $bUpdate = true;
+        }
+        
+        if (!$zip->extractTo(self::path('content/plugins'))){
+            throw new \Exception('Unable to extract zip');
+        }
+        
+        $plugin = json_decode(
+            file_get_contents(
+                self::path("content/plugins/$ns/plugin.json")
+            ), true
+        );
+        $plugin['dir'] = $ns;
+        
+        if ($bUpdate){
+            $res = self::edit($plugin);
+        } else {
+            $res = self::add($plugin);
+        }
 
+        return $res;
     }
 
     /**
@@ -198,12 +263,61 @@ class Plugin extends Leafpub {
     * @return array
     *
     */
-    public static function getMergedPlugins(){
-        $enabledPlugins = self::getActivatedPlugins();
+    public static function getMergedPlugins($options = null){
+         $options = array_merge([
+            'items_per_page' => 10,
+            'page' => 1,
+            'query' => null,
+            'sort' => 'DESC'
+        ], (array) $options);
+
+        try {
+            // Get count of all matching rows
+            $st = self::$database->query('SELECT COUNT(*) FROM __plugins');
+            $total_items = (int) $st->fetch()[0];
+        } catch(\PDOException $e) {
+            return false;
+        }
+
+        // Generate pagination
+        $pagination = self::paginate(
+            $total_items,
+            $options['items_per_page'],
+            $options['page']
+        );
+
+        $offset = ($pagination['current_page'] - 1) * $pagination['items_per_page'];
+        $count = $pagination['items_per_page'];
+
+        $sSQL = 'SELECT 
+                   * 
+                 FROM 
+                   __plugins 
+                 WHERE 
+                   enabled = 0
+                 UNION
+                 SELECT 
+                   *
+                 FROM
+                   __plugins
+                 WHERE
+                   enabled = 1
+                 ORDER BY
+                   name ' . $options['sort'];
+
+        $limit_sql = ' LIMIT :offset, :count';
+
+        $st = self::$database->prepare($sSQL . $limit_sql);
+        $st->bindParam(':offset', $offset, \PDO::PARAM_INT);
+        $st->bindParam(':count', $count, \PDO::PARAM_INT);
+        $st->execute();
+        $databasePlugins = $st->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Merge plugins from database with plugins from filesystem...
         $plugins = array_map(
-                        function($arr) use($enabledPlugins){
-                            foreach($enabledPlugins as $plugin){
-                                if ($plugin['name'] == $arr['name']){
+                        function($arr) use($databasePlugins){
+                            foreach($databasePlugins as $plugin){
+                                if ($plugin['dir'] == $arr['dir']){
                                     $arr['install_date'] = $plugin['install_date'];
                                     if ($plugin['enabled'] == 1){
                                         $arr['enable_date'] = $plugin['enable_date'];
@@ -213,8 +327,12 @@ class Plugin extends Leafpub {
                             }
                             return $arr;
                         },
-                        Plugin::getAll()
+                        self::getAll()
                     );
+        
+        foreach ($plugins as $key => $plugin){
+            $plugins[$key] = self::normalize($plugin);
+        }
 
         return $plugins;
         
@@ -313,6 +431,8 @@ class Plugin extends Leafpub {
                  author = :author,
                  version = :version,
                  dir = :dir,
+                 img = :img,
+                 link = :link,
                  isAdminPlugin = :isAdminPlugin,
                  isMiddleware = :isMiddleware,
                  requires = :requires,
@@ -325,6 +445,8 @@ class Plugin extends Leafpub {
            $st->bindParam(':author', $plugin['author']);
            $st->bindParam(':version', $plugin['version']);
            $st->bindParam(':dir', $plugin['dir']);
+           $st->bindParam(':img', $plugin['img']);
+           $st->bindParam(':link', $plugin['link']);
            $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
            $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
            $st->bindParam(':requires', $plugin['requires']);
@@ -351,7 +473,7 @@ class Plugin extends Leafpub {
     public static function edit($plugin){
         // Is the name valid?
         if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
-        throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
+            throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
         if(
@@ -362,11 +484,13 @@ class Plugin extends Leafpub {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
 
-        if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
-            throw new \Exception(
-                'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
-                self::VERSION_MISMATCH
-            );
+        if (LEAFPUB_VERSION != '{{version}}'){
+            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
+                throw new \Exception(
+                    'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
+                    self::VERSION_MISMATCH
+                );
+            }
         }
 
         try {
@@ -378,6 +502,8 @@ class Plugin extends Leafpub {
                  author = :author,
                  version = :version,
                  dir = :dir,
+                 img = :img,
+                 link = :link,
                  isAdminPlugin = :isAdminPlugin,
                  isMiddleware = :isMiddleware,
                  requires = :requires,
@@ -393,6 +519,8 @@ class Plugin extends Leafpub {
            $st->bindParam(':author', $plugin['author']);
            $st->bindParam(':version', $plugin['version']);
            $st->bindParam(':dir', $plugin['dir']);
+           $st->bindParam(':img', $plugin['img']);
+           $st->bindParam(':link', $plugin['link']);
            $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
            $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
            $st->bindParam(':requires', $plugin['requires']);
