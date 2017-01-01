@@ -212,14 +212,10 @@ $(function() {
             // Reset the input
             $(input).replaceWith($(input).clone());
 
-            // Set the post image
-            if(res.uploaded.length) {
-                //setPostImage(res.uploaded[0].relative_path);
-            }
-
-            // Show feedback
-            if(res.failed.length) {
-                $.alertable.alert(res.failed[0].message);
+            if(res.success == true) {
+                location.reload();
+            } else {
+                $.alertable.alert(res.message);
             }
         });
     });
