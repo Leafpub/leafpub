@@ -10,3 +10,4 @@ npm-debug.log
 /design
 /dist
 /node_modules
+.vscode
