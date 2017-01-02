@@ -452,8 +452,7 @@ class APIController extends Controller {
             $params = $request->getParams();
             
             $plugin = $params['plugin'];
-            $enable = ($params['enable'] == '0' ? true : false);
-        
+            $enable = ($params['enable'] === 'false' ? true : false);
             if ($enable){
                 $ret = Plugin::activate($plugin);
             } else {

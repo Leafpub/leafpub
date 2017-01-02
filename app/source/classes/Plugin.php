@@ -214,7 +214,8 @@ class Plugin extends Leafpub {
                   dir = :dir;
             ');
             $st->bindParam(':dir', $dir);
-            return $st->execute();
+            $st->execute();
+            return ($st->rowCount() > 0);
         } catch(\PDOException $e) {
            return false;
        }    
@@ -338,6 +339,7 @@ class Plugin extends Leafpub {
                                     if ($plugin['dir'] == $arr['dir']){
                                         $arr['install_date'] = $plugin['install_date'];
                                         if ($plugin['enabled'] == 1){
+                                            $arr['enabled'] = 1; // Set to 1 because this is the HDD Plugin, not the database plugin...
                                             $arr['enable_date'] = $plugin['enable_date'];
                                         }
                                         return $arr;
