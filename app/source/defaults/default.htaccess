@@ -1,6 +1,8 @@
 # Rewrites
 RewriteEngine On
-RewriteBase /
+
+# Uncomment RewriteBase if you are using a subdomain
+#RewriteBase /
 
 # Forbid access to these folders
 RewriteRule ^backups/ - [F]
