@@ -50,6 +50,7 @@ return [
     'default_content' => 'Standardinhalt',
     'default_title' => 'Standardtitel',
     'delete_tag' => 'Schlagwort löschen',
+    'delete_the_selected_plugins' => 'Die gewählten Plugins löschen?',
     'delete_the_selected_posts' => 'Ausgewählten Post löschen?',
     'delete_the_selected_tags' => 'Ausgewählte Schlagwörter löschen?',
     'delete_the_selected_users' => 'Ausgewählten Benutzer löschen?',
@@ -212,6 +213,7 @@ return [
     'time_zone' => 'Zeitzone',
     'time' => 'Zeit',
     'title' => 'Titel',
+    'toggle_plugin_state' => 'Ändere Plugin Status',
     'to_reset_your_password_visit_this_address' => 'Um Ihr Kennwort zurückzusetzen, rufen Sie folgende Adresse auf:',	// Sie oder du?
     'turn_this_post_into_a_page' => 'Diesen Post in eine Seite umwandeln',
     'twitter' => 'Twitter',
@@ -230,6 +232,7 @@ return [
     'undo' => 'Rückgängig machen',
     'upload_failed' => 'Hochladen fehlgeschlagen',
     'upload' => 'Hochladen',
+    'upload_a_new_plugin' => 'Ein neues Plugin hinzufügen',
     'url' => 'URL',
     'use_your_real_name_so_people_can_identify_you_easily' => 'Verwenden Sie Ihren echten Namen, sodass Sie leichter identifiziert werden können',	// Sie oder du?
     'user' => 'Benutzer',
