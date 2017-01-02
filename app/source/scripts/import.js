@@ -38,7 +38,7 @@ $(function() {
             } else {
                 // Show errors
                 var err = '';
-                res.failed.forEach(function(element, index, arr){
+                res.failed.forEach(function(element){
                     err += element[0] + ':\\n' + element[1] + '\\n';
                 });
                 $.alertable.alert(err);

@@ -9,6 +9,36 @@ $(function() {
         request,
         searchTimeout;
 
+    var toggleState = function(element) {
+        if (!request){
+            progress.go(50);
+
+            var plugin = element.getAttribute('data-dir'),
+                enable = element.classList.contains('enabled');
+
+            if(request) request.abort();
+            request = $.ajax({
+                url: Leafpub.url('api/plugins'),
+                type: 'PUT',
+                data: {
+                    plugin: plugin,
+                    enable: enable,
+                }
+            })
+            .done(function(res) {
+                if (res.success === true){
+                    request = null;
+                    element.classList.toggle('enabled');
+                    element.setAttribute('data-enabled', (enable === 0 ? 1 : 0));
+                }
+            })
+            .always(function() {
+                // Hide progress
+                progress.go(100);
+            });
+        }
+    };
+    
     // Selection
     $('.plugin-list').selectable({
         items: '.plugin-list-item',
@@ -124,34 +154,6 @@ $(function() {
         return toggleState(element);
     });
 
-    var toggleState = function(element) {
-        if (!request){
-            progress.go(50);
-
-            var plugin = element.getAttribute('data-dir'),
-                enable = element.classList.contains('enabled');
-
-            if(request) request.abort();
-            request = $.ajax({
-                url: Leafpub.url('api/plugins'),
-                type: 'PUT',
-                data: {
-                    plugin: plugin,
-                    enable: enable,
-                }
-            })
-            .done(function(res) {
-                request = null;
-                element.classList.toggle('enabled');
-                element.setAttribute('data-enabled', (enable == 0 ? 1 : 0));
-            })
-            .always(function() {
-                // Hide progress
-                progress.go(100);
-            });
-        }
-    };
-
     // Delete
     $('.delete').on('click', function() {
         var plugins = $('.plugin-list').selectable('value'),
@@ -212,7 +214,7 @@ $(function() {
             // Reset the input
             $(input).replaceWith($(input).clone());
 
-            if(res.success == true) {
+            if(res.success === true) {
                 location.reload();
             } else {
                 $.alertable.alert(res.message);
