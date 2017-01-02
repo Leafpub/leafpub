@@ -16,7 +16,7 @@ Before we accept your pull request, we ask that you agree to the following terms
 
 1. I certify that the code I am contributing to this project is completely original or free of any known license or copyright.
 
-2. I agree to allow the developer of Leafpub, A Beautiful Site, LLC, license or relicense my work at their discretion. By submitting this pull request, I agree to forfeit all copyrights, intellectual property rights, and royalties pertaining to my contribution.
+2. I agree to allow the developer of Leafpub license or relicense my work at their discretion. By submitting this pull request, I agree to forfeit all copyrights, intellectual property rights, and royalties pertaining to my contribution.
 
 3. By entering my name in the space provided below, I agree to all of the terms mentioned above.
 
