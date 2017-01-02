@@ -263,7 +263,7 @@ class Plugin extends Leafpub {
     * @return array
     *
     */
-    public static function getMergedPlugins($options = null){
+    public static function getMany($options = null, &$pagination = null){
          $options = array_merge([
             'items_per_page' => 10,
             'page' => 1,
@@ -271,9 +271,22 @@ class Plugin extends Leafpub {
             'sort' => 'DESC'
         ], (array) $options);
 
+        $whereSQL = '';
+
+        if ($options['query'] !== null){
+            $whereSQL = ' AND name LIKE :query';
+            $query = '%' . Database::escapeLikeWildcards($options['query']) . '%';
+        }
+
         try {
             // Get count of all matching rows
-            $st = self::$database->query('SELECT COUNT(*) FROM __plugins');
+            if ($options['query'] !== null){
+                $st = self::$database->prepare('SELECT COUNT(*) FROM __plugins WHERE 1 = 1' . $whereSQL);
+                $st->bindParam(':query', $query);
+                $st->execute();
+            } else {
+                $st = self::$database->query('SELECT COUNT(*) FROM __plugins');
+            }
             $total_items = (int) $st->fetch()[0];
         } catch(\PDOException $e) {
             return false;
@@ -294,42 +307,49 @@ class Plugin extends Leafpub {
                  FROM 
                    __plugins 
                  WHERE 
-                   enabled = 0
-                 UNION
+                   enabled = 0 ' . $whereSQL .
+                 ' UNION
                  SELECT 
                    *
                  FROM
                    __plugins
                  WHERE
-                   enabled = 1
-                 ORDER BY
+                   enabled = 1 ' . $whereSQL .
+                 ' ORDER BY
                    name ' . $options['sort'];
+        
+        $limitSQL = ' LIMIT :offset, :count';
 
-        $limit_sql = ' LIMIT :offset, :count';
-
-        $st = self::$database->prepare($sSQL . $limit_sql);
+        $st = self::$database->prepare($sSQL . $limitSQL);
+        if ($options['query'] !== null){
+            $st->bindParam(':query', $query);
+        }
         $st->bindParam(':offset', $offset, \PDO::PARAM_INT);
         $st->bindParam(':count', $count, \PDO::PARAM_INT);
         $st->execute();
         $databasePlugins = $st->fetchAll(\PDO::FETCH_ASSOC);
 
-        // Merge plugins from database with plugins from filesystem...
-        $plugins = array_map(
-                        function($arr) use($databasePlugins){
-                            foreach($databasePlugins as $plugin){
-                                if ($plugin['dir'] == $arr['dir']){
-                                    $arr['install_date'] = $plugin['install_date'];
-                                    if ($plugin['enabled'] == 1){
-                                        $arr['enable_date'] = $plugin['enable_date'];
+        // Merge plugins from database with plugins from filesystem
+        // only, when we're not searching...'
+        if ($options['query'] == null){
+            $plugins = array_map(
+                            function($arr) use($databasePlugins){
+                                foreach($databasePlugins as $plugin){
+                                    if ($plugin['dir'] == $arr['dir']){
+                                        $arr['install_date'] = $plugin['install_date'];
+                                        if ($plugin['enabled'] == 1){
+                                            $arr['enable_date'] = $plugin['enable_date'];
+                                        }
+                                        return $arr;
                                     }
-                                    return $arr;
                                 }
-                            }
-                            return $arr;
-                        },
-                        self::getAll()
-                    );
-        
+                                return $arr;
+                            },
+                            self::getAll()
+                        );
+        } else {
+            $plugins = $databasePlugins;
+        }
         foreach ($plugins as $key => $plugin){
             $plugins[$key] = self::normalize($plugin);
         }

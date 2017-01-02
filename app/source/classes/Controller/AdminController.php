@@ -175,7 +175,7 @@ class AdminController extends Controller {
                 'title' => Language::term('plugins'),
                 'scripts' => 'plugins.min.js',
                 'styles' => 'plugins.css',
-                'plugins' => Plugin::getMergedPlugins()
+                'plugins' => Plugin::getMany()
             ]);
 
             return $response->write($html);

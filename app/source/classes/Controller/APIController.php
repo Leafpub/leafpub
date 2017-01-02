@@ -525,6 +525,43 @@ class APIController extends Controller {
     }
 
     /**
+    * Handles GET api/plugins
+    *
+    * @param \Slim\Http\Request $request
+    * @param \Slim\Http\Response $response
+    * @param array $args
+    * @return \Slim\Http\Response
+    *
+    **/
+    public function getPlugins($request, $response, $args) {
+        $params = $request->getParams();
+
+        // To view users, you must be an owner or admin
+        if(!Session::isRole(['owner', 'admin'])) {
+            return $response->withStatus(403);
+        }
+
+        // Get users
+        $plugins = Plugin::getMany([
+            'items_per_page' => 10,
+            'page' => (int) $params['page'],
+            'query' => empty($params['query']) ? null : $params['query']
+        ], $pagination);
+
+        // Render post list
+        $html = Admin::render('partials/plugin-list', [
+            'plugins' => $plugins
+        ]);
+
+        // Send response
+        return $response->withJson([
+            'success' => true,
+            'html' => $html,
+            'pagination' => $pagination
+        ]);
+    }
+
+    /**
     * Handles DELETE api/history{id} 
     *
     * @param \Slim\Http\Request $request

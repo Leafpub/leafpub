@@ -39,6 +39,7 @@ $app->group("/api", function() {
     $this->post('/posts/render', 'Leafpub\Controller\APIController:renderPost');
 
     // Plugins
+    $this->get('/plugins', 'Leafpub\\Controller\\APIController:getPlugins');
     $this->post('/plugins', 'Leafpub\\Controller\\APIController:uploadPlugin');
     $this->put('/plugins', 'Leafpub\Controller\APIController:activatePlugin');
     $this->delete('/plugins/{plugin}', 'Leafpub\Controller\APIController:deletePlugin');
