@@ -6,7 +6,7 @@ Created by [Cory LaViska](https://twitter.com/claviska)
 Maintained by [Marc Apfelbaum](https://twitter.com/karsasmus)
 
 - Website: [leafpub.org](https://www.leafpub.org/)
-- Twitter: [@leafpubapp](https://twitter.com/leafpub)
+- Twitter: [@leafpub](https://twitter.com/leafpub)
 
 ## Installation
 
