@@ -9,7 +9,7 @@
 
 namespace Leafpub;
 
-use Leafpub\Events\Application\AdminMenu;
+use Leafpub\Events\Navigation\AdminMenu;
 
 /**
 * Admin
