@@ -229,7 +229,7 @@ class Post extends Leafpub {
         History::add($slug, true);
         
         $evt = new Added($post_id);
-        Leafpub::dispatchEvent(PostAdded::NAME, $evt);
+        Leafpub::dispatchEvent(Added::NAME, $evt);
         
         return $post_id;
     }
