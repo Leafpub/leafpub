@@ -275,6 +275,13 @@ class Leafpub {
         // of $_SERVER[REQUEST_SCHEME] instead.
         if($_SERVER['REQUEST_SCHEME'] === 'https') return true;
 
+         // If https is empty or it is  off, perform extra checks
+       if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'){
+               // Detect if HTTP_X_FORWARDED_PROTO is set to https; and if so set HTTPS to on.
+               if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
+                   $_SERVER['HTTPS']='on';
+               }
+       }
         // Other servers will populate $_SERVER[HTTPS] when SSL is on. IIS is unique because the
         // value will be 'off' when SSL is not enabled.
         return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
