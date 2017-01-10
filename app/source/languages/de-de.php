@@ -5,7 +5,7 @@ return [
     '1_post' => '1 Post',
     'a_password_reset_has_been_requested_for_this_account' => 'Eine Passwortzurücksetzung wurde für dieses Konto angefordert:',
     'a_post_already_exists_at_the_url_you_entered' => 'Es existiert bereits ein Post unter der eingegebenen URL',
-    'a_tag_already_exists_at_the_slug_you_entered' => 'Es existiert bereits ein Schlagwort unter dem eingegebenen Kurzwort',	// slug = Kurzwort
+    'a_tag_already_exists_at_the_slug_you_entered' => 'Dieses Schlagwort existiert bereits',	// slug = Kurzwort oder Schlagwort
     'about' => 'Über',
     'administrator' => 'Administrator',
     'advanced' => 'Fortgeschritten',
