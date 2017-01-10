@@ -18,7 +18,7 @@
             </h1>
         </div>
         {{!-- Right side --}}
-        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-left">
             {{#is @template 'tags.edit'}}
             <div class="btn-group m-r-1">
                 <button type="button" class="open btn btn-secondary" data-url="{{tag_url tag.slug}}">
@@ -75,8 +75,8 @@
                 </div>
                 <div class="form-group">
                     <label for="description">{{L 'description'}}</label>
-                    <div class="tag-cover">
-                        <span class="tag tag-default tag-tr tag-outside">{{L 'markdown'}}</span>
+                    <div class="badge-cover">
+                        <span class="badge badge-default badge-tr badge-outside">{{L 'markdown'}}</span>
                         <textarea class="form-control" name="description" id="description" rows="4">{{tag.description}}</textarea>
                     </div>
                 </div>

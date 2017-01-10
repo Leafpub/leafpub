@@ -1,6 +1,6 @@
 {{#each plugins}}
     <div
-        class="plugin-list-item col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 {{#is enabled}}enabled{{/is}}"
+        class="plugin-list-item col-xl-3 col-lg-4 col-md-4 col-sm-4 col-12 {{#is enabled}}enabled{{/is}}"
         data-dir="{{dir}}"
     >
         <div class="preview">
@@ -19,31 +19,31 @@
             {{description}}
         </div>
         <div class="info">
-            <span class="tag tag-pill tag-primary">
+            <span class="badge badge-pill badge-primary">
                 <i class="fa fa-balance-scale" title="{{license}}"></i>
             </span>
-            <span class="tag tag-pill tag-primary">
+            <span class="badge badge-pill badge-primary">
                 <i class="fa fa-code-fork" title="{{version}}"></i>
             </span>
-            <span class="tag tag-pill tag-primary">
+            <span class="badge badge-pill badge-primary">
                 <i class="fa fa-user-circle" title="{{author}}"></i> 
             </span>
-            <span class="tag tag-pill tag-primary">
+            <span class="badge badge-pill badge-primary">
                 <a href="{{link}}" title="{{link}}" target="_blank">
                     <i class="fa fa-globe"></i>
                 </a>
             </span>
             {{#is isAdminPlugin}}
-            <span class="tag tag-pill tag-warning">
+            <span class="badge badge-pill badge-warning">
                 <i class="fa fa-lock" title="Admin Plugin"></i>
             </span>
             {{/is}}
             {{#is isMiddleware}}
-            <span class="tag tag-pill tag-danger">
+            <span class="badge badge-pill badge-danger">
                 <i class="fa fa-lock" title="Middleware"></i>
             </span>
             {{/is}}
-            <span class="tag tag-pill tag-success enable" title="{{date enable_date}}">
+            <span class="badge badge-pill badge-success enable" title="{{date enable_date}}">
                 <i class="fa fa-check" title="{{date enable_date}}"></i>
             </span>
         </div>

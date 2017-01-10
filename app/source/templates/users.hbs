@@ -17,7 +17,7 @@
             </div>
         </div>
         {{!-- Right side --}}
-        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-xs-left">
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-left">
             <div class="btn-group">
                 <button type="button" class="edit btn btn-secondary" title="{{L 'edit'}}" disabled>
                     <i class="fa fa-pencil"></i>
@@ -38,8 +38,10 @@
 
 {{!-- Main container --}}
 <div class="main-container">
-    <div class="user-list stretch-down">
-        {{> user-list}}
+    <div class="row">
+        <div class="user-list stretch-down">
+            {{> user-list}}
+        </div>
     </div>
 </div>
 

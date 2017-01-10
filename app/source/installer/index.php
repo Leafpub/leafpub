@@ -24,13 +24,13 @@ if(Leafpub::isInstalled()) {
     <div class="container">
         <div class="row">
             <div class="col-lg-4 push-lg-4 col-md-6 push-md-3 col-sm-8 push-sm-1">
-                <div class="logo text-xs-center">
+                <div class="logo text-center">
                     <a href="https://www.leafpub.org/" target="_blank">
                         <img class="logo mt-3 mb-2" src="../assets/img/logo-color.png" alt="Logo" width="100" height="100">
                     </a>
                 </div>
-                <h2 class="text-xs-center">Install Leafpub</h2>
-                <p class="text-xs-center text-muted">
+                <h2 class="text-center">Install Leafpub</h2>
+                <p class="text-center text-muted">
                     Simple, beautiful publishing
                 </p>
 
@@ -116,7 +116,7 @@ if(Leafpub::isInstalled()) {
                         <button type="submit" class="btn btn-lg btn-block btn-primary">Install</button>
                     </div>
 
-                    <div class="text-xs-center text-muted m-y-2">
+                    <div class="text-center text-muted m-y-2">
                         Need help?
                         <a href="https://community.leafpub.org/" target="_blank">community.leafpub.org</a>
                     </div>

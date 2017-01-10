@@ -6,13 +6,13 @@
 <div class="container-fluid">
     <div class="top-toolbar">
         {{!-- Left side --}}
-        <div class="top-toolbar-section col-xs-6">
+        <div class="top-toolbar-section col-6">
             <h1>
                 {{L 'settings'}}
             </h1>
         </div>
         {{!-- Right side --}}
-        <div class="top-toolbar-section col-xs-6 text-xs-right">
+        <div class="top-toolbar-section col-6 text-right">
             <button type="button" class="submit btn btn-primary">
                 {{L 'save'}}
             </button>
@@ -28,19 +28,19 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#general" role="tab" data-toggle="tab">
                     <i class="fa fa-cog hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'general'}}</span>
+                    <span class="hidden-sm-down">{{L 'general'}}</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#advanced" role="tab" data-toggle="tab">
                     <i class="fa fa-code hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'advanced'}}</span>
+                    <span class="hidden-sm-down">{{L 'advanced'}}</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#backups" role="tab" data-toggle="tab">
                     <i class="fa fa-archive hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'backups'}}</span>
+                    <span class="hidden-sm-down">{{L 'backups'}}</span>
                 </a>
             </li>
         </ul>
@@ -191,8 +191,8 @@
                         {{!-- Default content --}}
                         <div class="form-group">
                             <label for="default-content">{{L 'default_content'}}</label>
-                            <div class="tag-cover">
-                                <span class="tag tag-default tag-tr tag-outside">{{L 'markdown'}}</span>
+                            <div class="badge-cover">
+                                <span class="badge badge-default badge-tr badge-outside">{{L 'markdown'}}</span>
                                 <textarea class="form-control" name="default-content" id="default-content" rows="6">{{@settings.default_content}}</textarea>
                             </div>
                         </div>
@@ -201,18 +201,18 @@
                         {{!-- Head code --}}
                         <div class="form-group">
                             <label for="head-code">{{L 'inject_this_code_into_leafpub_head'}}</label>
-                            <div class="tag-cover">
-                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                            <div class="badge-cover">
+                                <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
                                 <textarea class="form-control code" name="head-code" id="head-code" rows="6" spellcheck="false">{{@settings.head_code}}</textarea>
                             </div>
                         </div>
                         {{!-- Foot code --}}
                         <div class="form-group">
                             <label for="foot-code">{{L 'inject_this_code_into_leafpub_foot'}}</label>
-                            <div class="tag-cover">
-                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
-                                <div class="tag-cover">
-                                    <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                            <div class="badge-cover">
+                                <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
+                                <div class="badge-cover">
+                                    <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
                                     <textarea class="form-control code" name="foot-code" id="foot-code" rows="6" spellcheck="false">{{@settings.foot_code}}</textarea>
                                 </div>
                             </div>
@@ -235,10 +235,10 @@
                                 </label>
                             </div>
                             <label for="maintenance-message">{{L 'show_this_message_in_maintenance_mode'}}</label>
-                            <div class="tag-cover">
-                                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
-                                <div class="tag-cover">
-                                    <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                            <div class="badge-cover">
+                                <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
+                                <div class="badge-cover">
+                                    <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
                                     <textarea class="form-control" name="maintenance-message" id="maintenance-message" rows="6" spellcheck="false">{{@settings.maintenance_message}}</textarea>
                                 </div>
                             </div>
@@ -258,7 +258,7 @@
                         </div>
 
                         {{!-- Version --}}
-                        <div class="form-group mt-3 text-xs-center text-muted">
+                        <div class="form-group mt-3 text-center text-muted">
                             Leafpub {{@leafpub.version}}
                         </div>
                     </div>

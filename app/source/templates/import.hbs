@@ -6,13 +6,13 @@
 <div class="container-fluid">
     <div class="top-toolbar">
         {{!-- Left side --}}
-        <div class="top-toolbar-section col-xs-6">
+        <div class="top-toolbar-section col-6">
             <h1>
                 {{L 'import'}}
             </h1>
         </div>
         {{!-- Right side --}}
-        <div class="top-toolbar-section col-xs-6 text-xs-right">
+        <div class="top-toolbar-section col-6 text-right">
             <button type="button" class="submit btn btn-primary disabled">
                 {{L 'import'}}
             </button>
@@ -55,15 +55,15 @@
                     <div class="form-check">
                         <label class="checkbox">
                             <input type="checkbox" data-option="flush" name="flush" id="flush">
-                            <span class="tag tag-primary">{{L 'import_flush_tables'}}</span>
+                            <span class="badge badge-primary">{{L 'import_flush_tables'}}</span>
                         </label>
                         <label class="checkbox">
                             <input type="checkbox" data-option="user" name="user" id="user">
-                            <span class="tag tag-primary">{{L 'import_import_user'}}</span>
+                            <span class="badge badge-primary">{{L 'import_import_user'}}</span>
                         </label>
                         <label class="checkbox">
                             <input type="checkbox" data-option="category" name="category" id="category">
-                            <span class="tag tag-primary">{{L 'import_use_category_as_tag'}}</span>
+                            <span class="badge badge-primary">{{L 'import_use_category_as_tag'}}</span>
                         </label>
                         <!--select class="form-control">
                             <option value="">{{L 'import_no_media'}}</option>
@@ -72,15 +72,15 @@
                         </select-->
                          <label class="radio">
                             <input type="radio" data-option="media" data-type="" checked name="media" id="load_media">
-                            <span class="tag tag-success">{{L 'import_no_media'}}</span>
+                            <span class="badge badge-success">{{L 'import_no_media'}}</span>
                         </label>
                         <label class="radio">
                             <input type="radio" data-option="media" data-type="remote" name="media" id="load_media">
-                            <span class="tag tag-success">{{L 'import_remote_media'}}</span>
+                            <span class="badge badge-success">{{L 'import_remote_media'}}</span>
                         </label>
                         <label class="radio">
                             <input type="radio" data-option="media" data-type="local" name="media" id="import_media">
-                            <span class="tag tag-success">{{L 'import_local_media'}}</span>
+                            <span class="badge badge-success">{{L 'import_local_media'}}</span>
                         </label>
                     </div>
                 </div>

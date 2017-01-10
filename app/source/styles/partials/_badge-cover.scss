@@ -1,0 +1,73 @@
+/*
+
+    badge Covers - allows you to easily position badges over an element
+
+    Top right badge on the inside of the cover:
+
+        <div class="badge-cover">
+            <span class="badge badge-primary badge-tr">Markdown</span>
+            <textarea></textarea>
+        </div>
+
+    Top right badge on the outside of the cover:
+
+        <div class="badge-cover">
+            <span class="badge badge-primary badge-tr badge-outside">Markdown</span>
+            <textarea></textarea>
+        </div>
+
+    Available positions:
+
+        Top left - `badge-tl`
+        Top right - `badge-tr`
+        Bottom left - `badge-bl`
+        Bottom right - `badge-br`
+
+    By default, badge are positioned inside the container. Use the `badge-outside` class to
+    position badges outside the cover.
+
+ */
+
+.badge-cover {
+    position: relative;
+    font-weight: 300;
+    .badge {
+        position: absolute;
+        // Top left
+        &.badge-tl {
+            left: .5em;
+            top: .5em;
+            &.badge-outside {
+                left: 0;
+                top: -2em;
+            }
+        }
+        // Top right
+        &.badge-tr {
+            right: .5em;
+            top: .5em;
+            &.badge-outside {
+                right: 0;
+                top: -2em;
+            }
+        }
+        // Bottom left
+        &.badge-bl {
+            left: .5em;
+            bottom: .5em;
+            &.badge-outside {
+                left: 0;
+                bottom: -2em;
+            }
+        }
+        // Bottom right
+        &.badge-br {
+            right: .5em;
+            bottom: .5em;
+            &.badge-outside {
+                right: 0;
+                bottom: -2em;
+            }
+        }
+    }
+}

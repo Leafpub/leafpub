@@ -6,19 +6,19 @@
         data-url="{{post_url}}?preview"
     >
         {{#is sticky}}
-            <span class="tag tag-info">{{L 'sticky'}}</span>
+            <span class="badge badge-info">{{L 'sticky'}}</span>
         {{/is}}
         {{#date_compare pub_date '>' 'now'}}
-            <span class="tag tag-default">{{L 'scheduled'}}</span>
+            <span class="badge badge-default">{{L 'scheduled'}}</span>
         {{/date_compare}}
         {{#is page}}
-            <span class="tag tag-primary">{{L 'page'}}</span>
+            <span class="badge badge-primary">{{L 'page'}}</span>
         {{/is}}
         {{#is featured}}
-            <span class="tag tag-success">{{L 'featured'}}</span>
+            <span class="badge badge-success">{{L 'featured'}}</span>
         {{/is}}
         {{#is status 'draft'}}
-            <span class="tag tag-warning">{{L 'draft'}}</span>
+            <span class="badge badge-warning">{{L 'draft'}}</span>
         {{/is}}
         <div class="title">
             {{title}}

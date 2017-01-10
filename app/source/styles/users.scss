@@ -3,6 +3,7 @@ $user-list-item-image-size: 8rem;
 
 .user-list {
     height: 100%;
+    width: 100%;
     padding: 2rem 1rem;
     user-select: none;
 }
@@ -15,6 +16,7 @@ $user-list-item-image-size: 8rem;
 }
 
 .user-list-item {
+    display: block;
     position: relative;
     text-align: center;
     border-radius: $border-radius-large;

@@ -1,5 +1,5 @@
 @import "partials/variables";
-$tag-cover-blur: 35px;
+$badge-cover-blur: 35px;
 
 .cover {
     position: relative;
@@ -17,7 +17,7 @@ $tag-cover-blur: 35px;
         width: 200%;
         height: 200%;
         background: inherit;
-        filter: blur($tag-cover-blur);
+        filter: blur($badge-cover-blur);
     }
     .cover-controls {
         position: absolute;

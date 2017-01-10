@@ -8,6 +8,7 @@ $plugin-list-item-image-size: 8rem;
 
 .plugin-list {
     height: 100%;
+    width: 100%;
     padding: 2rem 1rem;
     user-select: none;
 }
@@ -58,7 +59,7 @@ $plugin-list-item-image-size: 8rem;
         @include text-truncate;
         transition: color $leafpub-transition-speed;
         padding: 5px;
-         .tag.enable{
+         .badge.enable{
             visibility: hidden;
         }
     }
@@ -79,13 +80,13 @@ $plugin-list-item-image-size: 8rem;
     .info a {
         color: white;
     }
-    .info .tag {
+    .info .badge {
         font-size: .9rem;
     }
 }
 
 .plugin-list-item.enabled {
-    .info .tag.enable {
+    .info .badge.enable {
         visibility: visible;
     }
 }

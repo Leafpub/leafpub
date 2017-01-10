@@ -142,7 +142,7 @@
 <div class="editor stretch-down">
     {{!-- Loader --}}
     <div class="editor-loader valign" hidden>
-        <div class="valign-middle text-xs-center">
+        <div class="valign-middle text-center">
             <i class="loader loader-xl"></i>
         </div>
     </div>
@@ -294,9 +294,9 @@
         <h3>{{L 'embed'}}</h3>
         <div class="form-group">
             <label for="embed-code">{{L 'code'}}</label>
-            <div class="tag-cover">
+            <div class="badge-cover">
                 <textarea class="form-control code" name="code" id="embed-code" rows="6" spellcheck="false"></textarea>
-                <span class="tag tag-default tag-tr tag-outside">{{L 'html'}}</span>
+                <span class="badge badge-default badge-tr badge-outside">{{L 'html'}}</span>
             </div>
             <small class="text-muted">{{L 'paste_embed_code_or_url_here'}}</small>
         </div>
@@ -342,19 +342,19 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#settings" role="tab" data-toggle="tab">
                     <i class="fa fa-file-text-o hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'settings'}}</span>
+                    <span class="hidden-sm-down">{{L 'settings'}}</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#meta" role="tab" data-toggle="tab">
                     <i class="fa fa-info hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'metadata'}}</span>
+                    <span class="hidden-sm-down">{{L 'metadata'}}</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#history" role="tab" data-toggle="tab">
                     <i class="fa fa-clock-o hidden-sm-up"></i>
-                    <span class="hidden-xs-down">{{L 'history'}}</span>
+                    <span class="hidden-sm-down">{{L 'history'}}</span>
                 </a>
             </li>
         </ul>
@@ -371,13 +371,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <div class="form-group">
                             <label for="pub-date">{{L 'date'}}</label>
                             <input class="form-control" type="date" name="pub-date" id="pub-date" value="{{date post.pub_date format="%Y-%m-%d"}}" placeholder="{{date format="%Y-%m-%d"}}">
                         </div>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <div class="form-group">
                             <label for="pub-time">{{L 'time'}}</label>
                             <input class="form-control" type="time" name="pub-time" id="pub-time" value="{{date post.pub_date format="%H:%M"}}" placeholder="{{date format="%H:%M"}}">
@@ -440,22 +440,22 @@
                 {{!-- Only show featured and page options to owners, admins, and editor --}}
                 {{#is @user.role 'in' 'owner,admin,editor'}}
                 <div class="row mt-2">
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <label class="checkbox">
                             <input type="checkbox" name="featured" id="featured" value="on"{{#is post.featured}} checked{{/is}}>
-                            <span class="tag tag-success">{{L 'featured'}}</span>
+                            <span class="badge badge-success">{{L 'featured'}}</span>
                         </label>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <label class="checkbox">
                             <input type="checkbox" name="sticky" id="sticky" value="on"{{#is post.sticky}} checked{{/is}}>
-                            <span class="tag tag-info">{{L 'sticky'}}</span>
+                            <span class="badge badge-info">{{L 'sticky'}}</span>
                         </label>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <label class="checkbox">
                             <input type="checkbox" name="page" id="page" value="on"{{#is post.page}} checked{{/is}}>
-                            <span class="tag tag-primary">{{L 'page'}}</span>
+                            <span class="badge badge-primary">{{L 'page'}}</span>
                         </label>
                     </div>
                 </div>
