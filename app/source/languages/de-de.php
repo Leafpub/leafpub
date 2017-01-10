@@ -5,7 +5,7 @@ return [
     '1_post' => '1 Post',
     'a_password_reset_has_been_requested_for_this_account' => 'Eine Passwortzurücksetzung wurde für dieses Konto angefordert:',
     'a_post_already_exists_at_the_url_you_entered' => 'Es existiert bereits ein Post unter der eingegebenen URL',
-    'a_tag_already_exists_at_the_slug_you_entered' => 'Es existiert bereits ein Schlagwort unter dem eingegebenen Rohling',	// slug
+    'a_tag_already_exists_at_the_slug_you_entered' => 'Es existiert bereits ein Schlagwort unter dem eingegebenen Slug',	// slug ist besser und verbreiteter als "Rohling"
     'about' => 'Über',
     'administrator' => 'Administrator',
     'advanced' => 'Fortgeschritten',
@@ -183,7 +183,7 @@ return [
     'select_blog_plattform' => 'Wähle eine Blog Plattform',
     'set_post_image' => 'Postbild setzen',
     'settings' => 'Einstellungen',
-    'share_a_sentence_or_two_about_yourself' => 'Schreiben Sie ein bis zwei Sätze über sich',	// Sie oder du?
+    'share_a_sentence_or_two_about_yourself' => 'Schreiben Sie ein bis zwei Sätze über sich',	// "Sie" ist verbreiteter und üblich in Deutschland. Du sagt man zu Freunden und Bekannten.
     'slug' => 'Rohling',
     'source' => 'Quelle',
     'status' => 'Status',
@@ -205,7 +205,7 @@ return [
     'the_password_you_entered_is_not_valid' => 'Das eingegebene Passwort ist nicht gültig',
     'the_password_you_entered_is_too_short' => 'Das eingegebene Passwort ist zu kurz',
     'the_passwords_you_entered_do_not_match' => 'Die eingegebenen Passswörter stimmen nicht überein',
-    'the_slug_you_entered_cannot_be_used' => 'Der eingegebene Rohling kann nicht verwendet werden',	// slug
+    'the_slug_you_entered_cannot_be_used' => 'Der eingegebene Slug kann nicht verwendet werden',	// "slug" ist besser als "Rohling"
     'the_url_you_entered_cannot_be_used' => 'Die eingegebene URL kann nicht verwendet werden',
     'the_username_you_entered_cannot_be_used' => 'Der eingegebene Benutzername kann nicht verwendet werden',
     'the_username_you_entered_is_already_taken' => 'Der eingegebene Benutzername ist bereits belegt',
