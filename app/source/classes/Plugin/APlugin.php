@@ -26,7 +26,7 @@ abstract class APlugin {
 
     public function __construct(\Slim\App $app){
         $this->_app = $app;
-        //$this->setOptions();
+        $this->setOptions();
     }
 
     /**
@@ -35,9 +35,10 @@ abstract class APlugin {
     * @return void
     *
     */
-    protected function setOptions($dir){
-        // Read the plugin.json
-        $plugin_json = $dir . '/plugin.json';
+    protected function setOptions(){
+        // Generate path from the class and read the plugin.json
+        $dir = array_slice(explode('\\', get_class($this)), 0, -1)[2];
+        $plugin_json = Leafpub::path('content/plugins/' . $dir . '/plugin.json');
         $json = json_decode(file_get_contents($plugin_json), true);
         
         // Fill info vars
