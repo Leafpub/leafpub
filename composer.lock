@@ -4,36 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "085be272a005e3de55dd3b0c6b29867a",
-    "content-hash": "f4685199354c6c9c55bc8118cc95320c",
+    "hash": "714413cd18e8e143698268ab189f9a43",
+    "content-hash": "0b013562f6f764c7b87400da1e3f7c3f",
     "packages": [
         {
-            "name": "abeautifulsite/simpleimage",
-            "version": "2.6.0",
+            "name": "claviska/simpleimage",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "a8fb6f68d12f32e3394a2784c3a8c500bc24cdec"
+                "reference": "da1e98f3fa7ffa78dc897ba7586f233a0c4901a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/a8fb6f68d12f32e3394a2784c3a8c500bc24cdec",
-                "reference": "a8fb6f68d12f32e3394a2784c3a8c500bc24cdec",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/da1e98f3fa7ffa78dc897ba7586f233a0c4901a0",
+                "reference": "da1e98f3fa7ffa78dc897ba7586f233a0c4901a0",
                 "shasum": ""
             },
             "require": {
                 "ext-gd": "*",
-                "php": ">=5.3.0"
+                "league/color-extractor": "0.3.*",
+                "php": ">=5.6.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
-                    "abeautifulsite": "src/"
+                    "claviska": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -42,19 +38,13 @@
             ],
             "authors": [
                 {
-                    "name": "Nazar Mokrynskyi",
-                    "email": "nazar@mokrynskyi.com",
-                    "homepage": "http://cleverstyle.org/",
-                    "role": "Developer"
-                },
-                {
                     "name": "Cory LaViska",
                     "homepage": "http://www.abeautifulsite.net/",
                     "role": "Developer"
                 }
             ],
-            "description": "A PHP class that simplifies working with images",
-            "time": "2015-10-22 19:13:41"
+            "description": "A PHP class that makes working with images as simple as possible.",
+            "time": "2017-01-11 22:17:12"
         },
         {
             "name": "composer/semver",
@@ -229,6 +219,60 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2015-07-22 18:31:08"
+        },
+        {
+            "name": "league/color-extractor",
+            "version": "0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/color-extractor.git",
+                "reference": "837086ec60f50c84c611c613963e4ad2e2aec806"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/color-extractor/zipball/837086ec60f50c84c611c613963e4ad2e2aec806",
+                "reference": "837086ec60f50c84c611c613963e4ad2e2aec806",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.4.0"
+            },
+            "replace": {
+                "matthecat/colorextractor": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2",
+                "phpunit/phpunit": "~5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathieu Lechat",
+                    "email": "math.lechat@gmail.com",
+                    "homepage": "http://matthecat.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extract colors from an image as a human would do.",
+            "homepage": "https://github.com/thephpleague/color-extractor",
+            "keywords": [
+                "color",
+                "extract",
+                "human",
+                "image",
+                "palette"
+            ],
+            "time": "2016-12-15 09:30:02"
         },
         {
             "name": "mpratt/embera",
@@ -552,16 +596,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.5.1",
+            "version": "4.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "d9f914960a296b06a47ac0c9f3a027c6c4523f7b"
+                "reference": "7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/d9f914960a296b06a47ac0c9f3a027c6c4523f7b",
-                "reference": "d9f914960a296b06a47ac0c9f3a027c6c4523f7b",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6",
+                "reference": "7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6",
                 "shasum": ""
             },
             "type": "component",
@@ -594,20 +638,20 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2016-12-07 07:02:09"
+            "time": "2017-01-04 13:58:37"
         },
         {
             "name": "zordius/lightncandy",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "b76817bddeb51ca51d9246df271fdcb133c57623"
+                "reference": "42a3683aba7867a6b30b7179ab26ebcef93d34cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/b76817bddeb51ca51d9246df271fdcb133c57623",
-                "reference": "b76817bddeb51ca51d9246df271fdcb133c57623",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/42a3683aba7867a6b30b7179ab26ebcef93d34cc",
+                "reference": "42a3683aba7867a6b30b7179ab26ebcef93d34cc",
                 "shasum": ""
             },
             "require": {
@@ -619,7 +663,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.1-dev"
+                    "dev-master": "1.0.0-dev"
                 }
             },
             "autoload": {
@@ -646,15 +690,13 @@
                 "php",
                 "template"
             ],
-            "time": "2016-12-30 04:30:46"
+            "time": "2016-12-30 04:28:45"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "zordius/lightncandy": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
