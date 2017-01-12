@@ -26,7 +26,11 @@
         <div class="description">
             {{#admin_author author}}
                 {{#if avatar}}
-                    <img class="avatar" src="{{url avatar}}">
+                    <img class="avatar" src="{{url avatar}}" title="{{name}}">
+                {{else}}
+                    <span class="avatar" title="{{name}}">
+                        <i class="fa fa-user"></i>
+                    </span>
                 {{/if}}
             {{/admin_author}}
             <span class="date">
