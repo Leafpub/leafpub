@@ -369,7 +369,10 @@ class Leafpub {
     *
     **/
     public static function dispatchEvent($eventName, $event) {
-        self::$dispatcher->dispatch($eventName, $event);
+        // We need this check because on install, the dispatcher won't be initiated!
+        if (self::$dispatcher instanceof EventDispatcher){
+            self::$dispatcher->dispatch($eventName, $event);
+        }
     }
 
     /**
