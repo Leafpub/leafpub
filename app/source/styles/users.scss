@@ -16,6 +16,7 @@ $user-list-item-image-size: 8rem;
 }
 
 .user-list-item {
+    height: $user-list-item-image-size + 6rem;
     display: block;
     position: relative;
     text-align: center;
