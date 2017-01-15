@@ -89,7 +89,6 @@ class Leafpub {
         $appListener = new Listeners\Application();
         self::on(Events\Application\Startup::NAME, array($appListener, 'onApplicationStartup'));
         
-        self::on(Events\Application\MailSend::NAME, array('sendMail'), 999);
         // Add Post Listener
         $postListener = new Listeners\Post();
         self::on(Events\Post\Add::NAME, array($postListener, 'onPostAdd'));
@@ -595,22 +594,6 @@ class Leafpub {
 
         // Remove duplicate dashes
         return preg_replace('/-+/', '-', $filename);
-    }
-
-    /**
-    * Sends an email (currently a wrapper for mail(), but can be extended later)
-    *
-    * @param array $options
-    * @return void
-    *
-    **/
-    public static function sendEmail($options) {
-        return mail(
-            $options['to'],
-            $options['subject'],
-            $options['message'],
-            'From: ' . $options['from']
-        );
     }
 
     /**
