@@ -28,6 +28,9 @@ use Leafpub\Admin,
     Leafpub\User,
     Leafpub\Importer,
     Leafpub\Plugin,
+    Leafpub\Mailer,
+    Leafpub\Mailer\Mail\MailFactory,
+    Leafpub\Mailer\Mail\AddressFactory,
     Leafpub\Events\Application\MailCompose,
     Leafpub\Events\Application\MailSend;
 
@@ -115,7 +118,7 @@ class APIController extends Controller {
             $evt = new MailSend($emailData);
             Leafpub::dispatchEvent(MailSend::NAME, $evt);
 
-            Mailer::sendEmail($mail);
+            Mailer::sendEmail($emailData);
         } catch (MailerException $error) {
             return $response->withJson([
                 'success' => false,

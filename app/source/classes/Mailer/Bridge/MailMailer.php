@@ -9,7 +9,7 @@
 
 namespace Leafpub\Mailer\Bridge;
 
-use Postleaf\Mailer\Mail\Mail;
+use Leafpub\Mailer\Mail\Mail;
 
 class MailMailer implements MailerInterface {
 

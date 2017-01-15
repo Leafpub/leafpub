@@ -9,7 +9,7 @@
 
 namespace Leafpub\Mailer\Mail;
 
-use Postleaf\Mailer\MailerException;
+use Leafpub\Mailer\MailerException;
 
 class AddressFactory {
 

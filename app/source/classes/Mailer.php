@@ -20,7 +20,7 @@ class Mailer extends Leafpub {
     static private $mailers = [
         'default' => [
             'name' => 'PHP mail',
-            'class' => 'Postleaf\Mailer\Bridge\MailMailer'
+            'class' => 'Leafpub\Mailer\Bridge\MailMailer'
         ]
     ];
 
