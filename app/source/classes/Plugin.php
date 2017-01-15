@@ -467,7 +467,7 @@ class Plugin extends Leafpub {
            $st->bindParam(':author', $plugin['author']);
            $st->bindParam(':version', $plugin['version']);
            $st->bindParam(':dir', $plugin['dir']);
-           $st->bindParam(':img', $plugin['img']);
+           $st->bindParam(':img', $plugin['image']);
            $st->bindParam(':link', $plugin['link']);
            $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
            $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
@@ -541,7 +541,7 @@ class Plugin extends Leafpub {
            $st->bindParam(':author', $plugin['author']);
            $st->bindParam(':version', $plugin['version']);
            $st->bindParam(':dir', $plugin['dir']);
-           $st->bindParam(':img', $plugin['img']);
+           $st->bindParam(':img', $plugin['image']);
            $st->bindParam(':link', $plugin['link']);
            $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
            $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
