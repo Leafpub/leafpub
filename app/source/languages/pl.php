@@ -106,6 +106,8 @@ return [
     'logo' => 'Logo',
     'logout' => 'Wyloguj',
     'lost_your_password' => 'Nie pamiętasz hasła?',
+    'mail' => 'Sending e-mails',
+    'mailer' => 'Wysyłanie e-maili',
     'markdown' => 'Markdown',
     'meta_description' => 'Meta opis',
     'meta_title' => 'Meta tytuł',

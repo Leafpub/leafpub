@@ -210,6 +210,7 @@ Setting::add('timezone', 'America/New_York');
 Setting::add('title', 'A Leafpub Blog');
 Setting::add('twitter', '');
 Setting::add('password_min_length', '8');
+Setting::add('mailer', 'default');
 
 // Insert owner
 try {

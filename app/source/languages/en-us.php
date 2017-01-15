@@ -120,6 +120,8 @@ return [
     'logout' => 'Logout',
     'lost_your_password' => 'Lost your password?',
     'markdown' => 'Markdown',
+    'mail' => 'Sending e-mails',
+    'mailer' => 'Mailer',
     'maintenance' => 'Maintenance Mode',
     'maintenance_enabled' => 'Maintenance mode active',
     'show_this_message_in_maintenance_mode' => 'Show this message in maintenance mode',

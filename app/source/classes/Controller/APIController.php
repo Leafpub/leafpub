@@ -93,31 +93,36 @@ class APIController extends Controller {
             'reset_token' => $token = Leafpub::randomBytes(50)
         ]);
 
-        $emailData = [
-            'to' => $user['email'],
-            'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
-            'message' =>
-                Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
-                $user['name'] . ' — ' . $user['slug'] . "\n\n" .
-                Language::term('if_this_was_sent_in_error_you_can_ignore_this_message') . "\n\n" .
-                Language::term('to_reset_your_password_visit_this_address') . ' ' .
-                Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
-                '&token=' . rawurlencode($token)),
-            'from' => 'Leafpub <leafpub@' . $_SERVER['HTTP_HOST'] . '>'
-        ];
+        // Send the user an email
+        try {
+            $emailData = MailFactory::create([
+                'to' => AddressFactory::create($user['email']),
+                'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
+                'message' =>
+                    Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
+                    $user['name'] . ' — ' . $user['slug'] . "\n\n" .
+                    Language::term('if_this_was_sent_in_error_you_can_ignore_this_message') . "\n\n" .
+                    Language::term('to_reset_your_password_visit_this_address') . ' ' .
+                    Admin::url('login/reset/?username=' . rawurlencode($user['slug']) .
+                               '&token=' . rawurlencode($token)),
+                'from' => AddressFactory::create('leafpub@' . $_SERVER['HTTP_HOST'], 'Leafpub')
+            ]);
 
-        $evt = new MailCompose($emailData);
-        Leafpub::dispatchEvent(MailCompose::NAME, $evt);
-        $emailData = $evt->getEventData();
+            $evt = new MailCompose($emailData);
+            Leafpub::dispatchEvent(MailCompose::NAME, $evt);
+            $emailData = $evt->getEventData();
 
-        $evt = new MailSend($emailData);
-        Leafpub::dispatchEvent(MailSend::NAME, $evt);
-        /*
-        if (!Leafpub::hasListener(MailSend::NAME)){
-            // Send the user an email
-            Leafpub::sendEmail($emailData);
+            $evt = new MailSend($emailData);
+            Leafpub::dispatchEvent(MailSend::NAME, $evt);
+
+            Mailer::sendEmail($mail);
+        } catch (MailerException $error) {
+            return $response->withJson([
+                'success' => false,
+                'message' => $error->getMessage()
+            ]);
         }
-        */
+
         // Send response
         return $response->withJson([
             'success' => true,
@@ -1050,7 +1055,8 @@ class APIController extends Controller {
             'foot_code' => $params['foot-code'],
             'maintenance' => $params['maintenance'] === 'on' ? 'on' : 'off',
             'maintenance_message' => $params['maintenance-message'],
-            'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off'
+            'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off',
+            'mailer' => $params['mailer']
         ];
 
         // Update settings

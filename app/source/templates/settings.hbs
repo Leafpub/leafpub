@@ -225,6 +225,17 @@
                                 </label>
                             </div>
                         </div>
+                        {{!-- Mail --}}
+                        <h3 class="m-t-3">{{L 'mail'}}</h3>
+                        {{!-- Mailers --}}
+                        <div class="form-group">
+                            <label for="mailer">{{L 'mailer'}}</label>
+                            <select class="form-control" name="mailer" id="mailer">
+                                {{#each mailers}}
+                                    <option value="{{this.tag}}"{{#is this.tag @settings.mailer}} selected{{/is}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
                         {{!-- Maintenance Mode --}}
                         <h3 class="mt-3">{{L 'maintenance'}}</h3>
                         <div class="form-group">

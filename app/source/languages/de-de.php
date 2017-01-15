@@ -119,6 +119,8 @@ return [
     'logo' => 'Logo',
     'logout' => 'Logout',
     'lost_your_password' => 'Passwort vergessen?',
+    'mail' => 'Emailversand',
+    'mailer' => 'Mail Methode',
     'markdown' => 'Markdown',
     'maintenance' => 'Wartungsmodus',
     'maintenance_enabled' => 'Wartungsmodus aktiv',

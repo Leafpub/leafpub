@@ -26,7 +26,8 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Upload,
     Leafpub\User,
-    Leafpub\Plugin;
+    Leafpub\Plugin,
+    Leafpub\Mailer;
 
 /**
 * AdminController
@@ -536,11 +537,21 @@ class AdminController extends Controller {
             ];
         }
 
+        // Get mailers
+        $mailers = [];
+        foreach (Mailer::getMailers() as $mailerName => $mailer) {
+            $mailers[] = [
+                'tag'  => $mailerName,
+                'name' => $mailer['name'],
+            ];
+        }
+
         $html = Admin::render('settings', [
             'title' => Language::term('settings'),
             'scripts' => 'settings.min.js',
             'styles' => 'settings.css',
             'pages' => $pages,
+            'mailers' => $mailers,
             'backups' => Backup::getAll(),
             'languages' => Language::getAll(),
             'timezones' => $timezones,
