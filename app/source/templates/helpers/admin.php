@@ -57,6 +57,15 @@ return [
             $html .= '<script src="' . htmlspecialchars($src) . '"></script>';
         }
 
+        if (isset($options['_this']['plugin_scripts'])){
+             foreach((array) $options['_this']['plugin_scripts'] as $name => $script) {
+                  $src =
+                    self::url('content/plugins/' . $name, $script) . '?v=' .
+                    $options['data']['leafpub']['version'];
+                 $html .= '<script src="' . htmlspecialchars($src) . '"></script>';
+             }
+        }
+
         return new \LightnCandy\SafeString($html);
     },
 
