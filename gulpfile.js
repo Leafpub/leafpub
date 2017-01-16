@@ -366,8 +366,12 @@ gulp.task('release:make', 'Generate a release.', function() {
     // Empty backups, content/cache, content/themes, content/uploads
     del.sync(path.join(target, 'backups/*'));
     del.sync(path.join(target, 'content/cache/*'));
-    del.sync(path.join(target, 'content/themes/*'));
+    del.sync([
+        path.join(target, 'content/themes/*'), 
+        '!' + path.join(target, 'content/themes/range')
+    ]);
     del.sync(path.join(target, 'content/uploads/*'));
+    del.sync(path.join(target, 'content/plugins/*'));
 
     // Prune source/images, source/scripts, and source/styles
     del.sync(path.join(target, 'source/images/**'));
