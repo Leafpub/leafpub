@@ -10,9 +10,11 @@
 namespace Leafpub\Plugin;
 
 use Leafpub\Leafpub,
-    Leafpub\Setting;
+    Leafpub\Setting,
+    Leafpub\Renderer;
 
 abstract class APlugin {
+    const NAME = '';
     private $_name = '';
     private $_version = '';
     private $_author = '';
@@ -21,6 +23,7 @@ abstract class APlugin {
     private $_requires = '';
     private $_image = '';
     private $_isAdminPlugin = false;
+    private $_dir = '';
 
     private $_app = null;
 
@@ -50,6 +53,7 @@ abstract class APlugin {
         $this->_link = $json['link'];
         $this->_image = $json['image'];
         $this->_isAdminPlugin = $json['isAdminPlugin'];
+        $this->_dir = $dir;
 
         if ($json['isMiddleware'] == true){
             $this->_app->add($this);
@@ -153,7 +157,7 @@ abstract class APlugin {
     }
 
     /**
-    * Returns the author's name
+    * Returns the license
     *
     * @return String
     *
@@ -163,7 +167,7 @@ abstract class APlugin {
     }
 
     /**
-    * Returns the author's name
+    * Returns the plugin address
     *
     * @return String
     *
@@ -173,7 +177,7 @@ abstract class APlugin {
     }
 
     /**
-    * Returns the author's name
+    * Returns the required Leafpub version
     *
     * @return String
     *
@@ -182,13 +186,45 @@ abstract class APlugin {
         return $this->_requires;
     }
 
-    public function url($path){
+    public function url($path = null){
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin){
             $admin = Setting::get('frag_admin');
-            return Leafpub::url("/$admin/$safename/$path");
+            return Leafpub::url("/$admin/$safeName/$path");
+        } else {
+            return Leafpub::url("/$safeName/$path");
         }
-        return Leafpub::url("/$safename/$path");
+    }
+
+    public static function getSetting($name){
+        return Setting::get($name);
+    }
+
+    public static function setSetting($name, $option){
+        $ret = Setting::get($name);
+
+        if ($ret === ''){
+            return Setting::add($name, $option);
+        } else {
+            return Setting::update($name, $option);
+        }
+    }
+
+     /**
+    * Renders an page
+    *
+    * @param String $template
+    * @param null $data
+    * @return mixed
+    *
+    **/
+    public static function render($template, $data = null, $dir = null) {
+        return Renderer::render([
+            'template' => Leafpub::path("content/plugins/" . $dir . "/templates/$template.hbs"),
+            'data' => $data,
+            'special_vars' => [],
+            'helpers' => ['admin', 'url', 'utility']
+        ]);
     }
 
 }
