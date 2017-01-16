@@ -57,6 +57,9 @@ class Renderer extends Leafpub {
         $template_name = self::fileName($template); // ex: post
         $theme_slug = self::slug(Setting::get('theme'));
 
+        // admin dir
+        $admin_dir = self::path('source/templates');
+
         // Load the template
         if(!file_exists($template) || !$source = file_get_contents($template)) {
             throw new \Exception("Template missing: $template_file");
@@ -81,11 +84,13 @@ class Renderer extends Leafpub {
                         \LightnCandy\LightnCandy::FLAG_PROPERTY |
                         \LightnCandy\LightnCandy::FLAG_BESTPERFORMANCE |
                         \LightnCandy\LightnCandy::FLAG_RUNTIMEPARTIAL,
-                    'partialresolver' => function($cx, $name) use ($template_dir) {
+                    'partialresolver' => function($cx, $name) use ($template_dir, $admin_dir) {
                         // Search these locations for partials
                         foreach([
                             "$template_dir/$name.hbs",
-                            "$template_dir/partials/$name.hbs"
+                            "$template_dir/partials/$name.hbs",
+                            "$admin_dir/$name.hbs",
+                            "$admin_dir/partials/$name.hbs",
                         ] as $file ) {
                             if(file_exists($file)) return file_get_contents($file);
                         }
