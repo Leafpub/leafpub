@@ -561,4 +561,20 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
+    public function uploads($request, $response, $args){
+        $uploads = Upload::getMany();
+
+        $html = Admin::render('uploads', [
+            'title' => Language::term('uploads'),
+            'scripts' => 'uploads.min.js',
+            'styles' => 'uploads.css',
+            'uploads' => $uploads,
+            'all_tags' => Tag::getNames(),
+            'post_tags' => [],
+            'can_create_tags' => Session::isRole(['owner', 'admin', 'editor']) ? 'true' : 'false',
+        ]);
+
+        return $response->write($html);
+    }
+
 }
