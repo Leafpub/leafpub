@@ -78,6 +78,9 @@ $app->group("/api", function() {
 
     // Uploads
     $this->post('/uploads', 'Leafpub\Controller\APIController:addUpload');
+    $this->get('/uploads', 'Leafpub\Controller\APIController:getUploads');
+    $this->put('/uploads/{file}', 'Leafpub\Controller\APIController:editUpload');
+    $this->delete('/uploads/{file}', 'Leafpub\Controller\APIController:deleteUpload');
 
     // Utilities
     $this->get('/oembed', 'Leafpub\Controller\APIController:getOembed');
@@ -127,6 +130,9 @@ $app->group("/$frags->admin", function() {
 
     // Plugins
     $this->get('/plugins', 'Leafpub\Controller\AdminController:plugins');
+
+    // Uploads
+    $this->get('/uploads', 'Leafpub\Controller\AdminController:uploads');
 })->add('Leafpub\Middleware:requireAuth');
 
 /**
