@@ -123,6 +123,7 @@ CREATE TABLE `__uploads` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created` datetime NOT NULL,
   `path` varchar(191) NOT NULL,
+  `thumbnail` varchar(191) NOT NULL,
   `filename` varchar(191) NOT NULL,
   `extension` varchar(191) NOT NULL,
   `size` int(11) NOT NULL,
