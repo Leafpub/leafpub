@@ -1409,7 +1409,7 @@ class APIController extends Controller {
                             }
                             break;
                     }
-
+                   
                     // Make it a thumbnail?
                     if(isset($params['image'])) {
                         // Decode JSON string
@@ -1417,7 +1417,7 @@ class APIController extends Controller {
 
                         // Make the image a thumbnail
                         if(isset($params['image']['thumbnail'])) {
-                            $image = new \abeautifulsite\SimpleImage($upload->file);
+                            $image = new \claviska\SimpleImage($upload->file);
                             $image->thumbnail(
                                 $params['image']['thumbnail']->width,
                                 $params['image']['thumbnail']->height
