@@ -118,6 +118,13 @@ class Admin extends Leafpub {
             'icon' => 'fa fa-file-text'
         ];
 
+        // Uploads
+        $items[] = [
+            'title' => Language::term('uploads'),
+            'link' => Admin::url('uploads'),
+            'icon' => 'fa fa-camera'
+        ];
+
         // Tags
         if(Session::isRole(['owner', 'admin', 'editor'])) {
             $items[] = [
