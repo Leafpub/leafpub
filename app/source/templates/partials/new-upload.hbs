@@ -1,0 +1,80 @@
+<!-- Modal 
+<div class="modal fade" id="new-upload-modal" tabindex="-1" role="dialog" aria-labelledby="new-upload-modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-upload-modal-title">{{L 'upload_a_new_file'}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div-->
+<div class="media-panel panel panel-right">
+    <form class="image-form" autocomplete="off" novalidate>
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <!--div class="form-group">
+            <label for="image-src">{{L 'source'}}</label>
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-picture-o"></i></span>
+                <input class="form-control" type="url" name="src" id="image-src">
+                <label class="inner-addon upload-image">
+                    <i class="fa fa-camera"></i>
+                    <input type="file" accept="image/*" style="display: none;">
+                </label>
+            </div>
+        </div-->
+        <div class="form-group">
+            <label>{{L 'image'}}</label>
+            <div class="picture card">
+                <div class="controls">
+                    <label class="upload-picture btn btn-translucent-dark">
+                        <i class="fa fa-fw fa-camera"></i>
+                        <input type="file" accept="image/*" style="display: none;">
+                    </label>                    
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="image-alt">{{L 'tags'}}</label>
+            <input class="form-control" type="text" name="image-tags" id="image-tags"
+                data-all-tags="{{json_encode all_tags}}"
+                data-post-tags="{{json_encode post_tags}}"
+                data-can-create-tags="{{can_create_tags}}"
+            >
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="image-width">{{L 'width'}}</label>
+                    <input class="form-control" type="number" name="image-width" id="image-width" min="0">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="image-height">{{L 'height'}}</label>
+                    <input class="form-control" type="number" name="image-height" id="image-height" min="0">
+                </div>
+            </div>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="constrain" id="image-constrain" checked>
+                {{L 'constrain_proportions'}}
+            </label>
+        </div>
+        <div class="form-group mt-2">
+            <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
+            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+        </div>
+    </form>
+</div>

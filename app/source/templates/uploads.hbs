@@ -1,0 +1,56 @@
+{{> header}}
+
+{{> menu}}
+
+{{!-- Toolbar --}}
+<div class="container-fluid">
+    <div class="top-toolbar">
+        {{!-- Left side --}}
+        <div class="top-toolbar-section col-lg-4 col-sm-6">
+            <div class="inner-addon-group">
+                <span class="inner-addon"><i class="fa fa-search"></i></span>
+                <input
+                    class="media-search form-control"
+                    type="search"
+                    placeholder="{{L 'search'}}"
+                    autofocus>
+            </div>
+        </div>
+        {{!-- Right side --}}
+        <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-left">
+            <div class="btn-group m-r-1">
+                <button type="button" class="edit btn btn-secondary" disabled>
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <button type="button" class="open btn btn-secondary" disabled>
+                    <i class="fa fa-external-link"></i>
+                </button>
+                <button type="button" class="delete btn btn-secondary" disabled data-confirm="{{L 'delete_the_selected_files'}}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-success new-upload">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+{{!-- Main container --}}
+<div class="main-container media-manager">
+    <div class="row media-list stretch-down">
+        {{!-- media list --}}
+        <!--div class="media-list stretch-down"-->
+            {{> media-list}}
+        <!--/div-->
+    </div>
+</div>
+
+{{!-- Dropzone --}}
+<div class="dropzone" hidden>
+    <div class="dropzone-target valign" data-target="database">
+        <div class="valign-middle">{{L 'insert_into_post'}}</div>
+    </div>
+</div>
+{{> new-upload}}
+{{> footer}}

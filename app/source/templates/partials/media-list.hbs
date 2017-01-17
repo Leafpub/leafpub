@@ -1,0 +1,13 @@
+{{#each uploads}}
+    <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6">
+       <div class="preview">
+            <img class="preview-image" src="{{#is thumbnail}}{{url thumbnail}}{{else}}{{url path}}{{/is}}">
+        </div>
+    </div>
+{{else}}
+    <div class="media-list-none valign">
+        <div class="valign-middle">
+            {{L 'no-uploads'}}
+        </div>
+    </div>
+{{/each}}

@@ -1,0 +1,156 @@
+@import "partials/variables";
+$media-list-item-image-size: 8rem;
+
+.new-upload {
+    margin-bottom: 0px;
+}
+
+
+.media-list {
+    //height: 100%;
+    padding: 2rem 1rem;
+    user-select: none;
+    //width: 100%;
+}
+
+.media-list-none {
+    text-align: center;
+    font-size: 1.3rem;
+    color: $text-muted;
+    padding: 1rem;
+}
+
+.media-list-item {
+    height: $media-list-item-image-size + 1rem;
+    position: relative;
+    text-align: center;
+    border-radius: $border-radius-large;
+    border: solid 2px white;
+    padding: 1rem;
+    padding-top: $media-list-item-image-size + 1.75rem;
+    transition:
+        color $leafpub-transition-speed,
+        background-color $leafpub-transition-speed;
+    .preview {
+        position: absolute;
+        top: 1rem;
+        left: calc(50% - #{$media-list-item-image-size} / 2);
+        width: $media-list-item-image-size;
+        height: $media-list-item-image-size;
+        overflow: hidden;
+        img,
+        i {
+            background: $gray-light;
+            width: $media-list-item-image-size;
+            height: $media-list-item-image-size;
+            line-height: $media-list-item-image-size;
+            font-size: $media-list-item-image-size - 2rem;
+            color: white;
+            //border-radius: 50%;
+        }
+    }
+    .name h4{
+        font-weight: bold;
+        @include text-truncate;
+        color: #09d;
+    }
+    .info, .description {
+        font-size: .9rem;
+        color: $text-muted;
+        @include text-truncate;
+        transition: color $leafpub-transition-speed;
+        padding: 5px;
+         .tag.enable{
+            visibility: hidden;
+        }
+    }
+    &:hover {
+        background-color: #f2f2f2;
+    }
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+    &.selected {
+        background-color: $leafpub-blue;
+        color: white;
+        .info, .description, .name h4 {
+            color: white;
+        }
+    }
+    .info a {
+        color: white;
+    }
+    .info .tag {
+        font-size: .9rem;
+    }
+}
+
+.media-list-item.enabled {
+    .info .tag.enable {
+        visibility: visible;
+    }
+}
+// Fix sticky hovers in iOS
+.ios .media-list-item:hover:not(.selected) {
+    background-color: inherit;
+}
+
+.media-panel {
+    width: 40rem;
+}
+
+.picture {
+    position: relative;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-radius: $border-radius;
+    .controls {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        .btn {
+            margin-bottom: 0;
+        }
+        .btn i {
+            transform: scale(1.2);
+        }
+    }
+}
+
+.dropzone {
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(white, .9);
+    padding: 2rem;
+    .dropzone-target {
+        height: 100%;
+        font-size: 2rem;
+        font-weight: 700;
+        color: $leafpub-blue;
+        border: dotted .5rem $leafpub-blue;
+        border-radius: $border-radius-large;
+        text-align: center;
+        transition:
+            $leafpub-transition-speed font-size,
+            $leafpub-transition-speed color,
+            $leafpub-transition-speed border-color;
+        &.active {
+            font-size: 2.5rem;
+            color: white;
+            border-color: $white;
+            background: rgba($leafpub-blue, .75);
+        }
+    }
+}
+// XS breakpoint
+@include media-breakpoint-down(xs) {
+    .media-list {
+        padding: 1rem 0;
+    }
+}
