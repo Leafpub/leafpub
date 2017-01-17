@@ -109,6 +109,19 @@ class Upload extends Leafpub {
             );
         }
 
+        $target_dir .= '/thumbnails';
+        if(!self::makeDir(self::path($target_dir))) {
+            throw new \Exception(
+                'Unable to create directory: ' . $target_dir,
+                self::UNABLE_TO_CREATE_DIRECTORY
+            );
+        }
+        $relative_thumb = "$target_dir/$filename";
+        $thumb_path = self::path($relative_thumb);
+        // Create a thumbnail
+        $image = new \claviska\SimpleImage($full_path);
+        $image->thumbnail(400, 300)->toFile($thumb_path);
+
         // Get file size
         $size = (int) @filesize($full_path);
 
@@ -146,6 +159,9 @@ class Upload extends Leafpub {
             'path' => $full_path,
             'relative_path' => $relative_path,
             'url' => parent::url($relative_path),
+            'thumbnail_path' => $thumb_path,
+            'relative_thumb' => $relative_thumb,
+            'thumbnail' => parent::url($relative_thumb),
             'width' => $width,
             'height' => $height,
             'size' => $size
@@ -156,6 +172,7 @@ class Upload extends Leafpub {
             $st = self::$database->prepare('
                 INSERT INTO __uploads SET
                     path = :path,
+                    thumbnail = :thumb_path,
                     created = NOW(),
                     filename = :filename,
                     extension = :extension,
@@ -164,6 +181,7 @@ class Upload extends Leafpub {
                     height = :height
             ');
             $st->bindParam(':path', $relative_path);
+            $st->bindParam(':thumb_path', $relative_thumb);
             $st->bindParam(':filename', $filename);
             $st->bindParam(':extension', $extension);
             $st->bindParam(':size', $size, \PDO::PARAM_INT);
@@ -241,7 +259,7 @@ class Upload extends Leafpub {
 
         // Generate select SQL
         $select_sql = '
-            SELECT id, path, created, filename, extension, size, width, height
+            SELECT id, path, thumbnail, created, filename, extension, size, width, height
             FROM __uploads
         ';
 
