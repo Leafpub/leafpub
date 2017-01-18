@@ -69,10 +69,11 @@ class Upload extends Leafpub {
         $filename = self::safeFilename($filename);
 
         // Get filename without extension
-        $filename_without_extension = self::fileName($filename);
-
+        $filename_without_extension = substr(self::fileName($filename), 0, 93);
         // Get extension
         $extension = self::fileExtension($filename);
+        
+        $filename = $filename_without_extension . '.' . $extension;
 
         // Check allowed upload types
         if(!in_array($extension, $allowed_upload_types)) {
