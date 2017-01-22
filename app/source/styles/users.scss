@@ -6,6 +6,7 @@ $user-list-item-image-size: 8rem;
     width: 100%;
     padding: 2rem 1rem;
     user-select: none;
+    display: flex !important; // Needed set to important because our search changes display to "block"
 }
 
 .user-list-none {

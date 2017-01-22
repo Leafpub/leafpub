@@ -11,6 +11,7 @@ $media-list-item-image-size: 8rem;
     padding: 2rem 1rem;
     user-select: none;
     //width: 100%;
+    display: flex !important; // Needed set to important because our search changes display to "block"
 }
 
 .media-list-none {
