@@ -523,7 +523,10 @@ class User extends Leafpub {
                         'description' => strip_tags(self::markdownToHtml($author['bio'])),
                         'url' => self::url($author['slug']),
                         'image' => !empty($author['avatar']) ?
-                            parent::url($author['avatar']) : null,
+                                [
+                                    '@type' => 'ImageObject',
+                                    'url' => parent::url($author['avatar'])
+                                ] : null,
                         'sameAs' => !empty($author['website']) ?
                             [$author['website']] : null
                     ],

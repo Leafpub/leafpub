@@ -835,18 +835,28 @@ class Post extends Leafpub {
                     'ld_json' => [
                         '@context' => 'https://schema.org',
                         '@type' => 'Article',
+                        "mainEntityOfPage" => [
+                            "@type" => "WebPage",
+                            "@id" => self::url($post['slug'])
+                        ],
                         'publisher' => [
                             '@type' => 'Organization',
                             'name' => Setting::get('title'),
                             'logo' => !empty(Setting::get('logo')) ?
-                                parent::url(Setting::get('logo')) : null
+                                [
+                                    '@type' => 'ImageObject',
+                                    'url' => parent::url(Setting::get('logo'))
+                                 ] : null
                             ],
                         'author' => [
                             '@type' => 'Person',
                             'name' => $author['name'],
                             'description' => strip_tags(self::markdownToHtml($author['bio'])),
                             'image' => !empty($author['avatar']) ?
-                                parent::url($author['avatar']) : null,
+                                [
+                                    '@type' => 'ImageObject',
+                                    'url' => parent::url($author['avatar'])
+                                ] : null,
                             'sameAs' => !empty($author['website']) ?
                                 [$author['website']] : null,
                         ],
@@ -857,7 +867,12 @@ class Post extends Leafpub {
                         'description' => !empty($post['meta_description']) ?
                             $post['meta_description'] :
                             self::getWords(strip_tags($post['content']), 50),
-                        'image' => empty($post['image']) ? null : parent::url($post['image']),
+                        'image' => empty($post['image']) ? null : [
+                                '@type' => 'ImageObject',
+                                'url' => parent::url($post['image']),
+                                'width' => 0,
+                                'height' => 0
+                            ],
                         'datePublished' => self::strftime('%FT%TZ', strtotime($post['pub_date'])),
                         'dateModified' => self::strftime('%FT%TZ', strtotime($post['pub_date']))
                     ],

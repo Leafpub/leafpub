@@ -370,7 +370,10 @@ class Tag extends Leafpub {
                         '@type' => 'Series',
                         'publisher' => Setting::get('title'),
                         'url' => self::url($tag['slug']),
-                        'image' => empty($tag['cover']) ? null : parent::url($tag['cover']),
+                        'image' => empty($tag['cover']) ? null : [
+                                    '@type' => 'ImageObject',
+                                    'url' => parent::url($tag['cover'])
+                                ],
                         'name' => !empty($tag['meta_description']) ?
                             $tag['meta_title'] :
                             $tag['name'],
