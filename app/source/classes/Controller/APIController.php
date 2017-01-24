@@ -1368,6 +1368,29 @@ class APIController extends Controller {
         ]);
     }
 
+    public function getUploads($request, $response, $args){
+        $params = $request->getParams();
+
+        // Get uploads
+        $uploads = Upload::getMany([
+            'items_per_page' => 20,
+            'page' => (int) $params['page'],
+            'query' => empty($params['query']) ? null : $params['query']
+        ], $pagination);
+
+        // Render post list
+        $html = Admin::render('partials/media-list', [
+            'uploads' => $uploads
+        ]);
+
+        // Send response
+        return $response->withJson([
+            'success' => true,
+            'html' => $html,
+            'pagination' => $pagination
+        ]);
+    }
+
     /**
     * Handles POST api/upload
     *
@@ -1444,7 +1467,7 @@ class APIController extends Controller {
             } catch(\Exception $e) {
                 $failed[] = [
                     'filename' => $upload->getClientFilename(),
-                    'message' => Language::term('unable_to_upload_file')
+                    'message' => $e->getMessage() //Language::term('unable_to_upload_file')
                 ];
             }
         }
@@ -1456,6 +1479,17 @@ class APIController extends Controller {
         ]);
     }
 
+    public function editUpload($request, $response, $args){
+        if (!isset($args['file'])){
+            return $response->withStatus(403);
+        }
+
+        $file = $args['file'];
+        $params = $request->getParams();
+        $data = $params['data'];
+
+        
+    }
     /**
     * Handles GET api/oembed
     *
