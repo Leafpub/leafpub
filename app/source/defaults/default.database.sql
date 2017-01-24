@@ -121,6 +121,7 @@ DROP TABLE IF EXISTS `__uploads`;
 
 CREATE TABLE `__uploads` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `caption` varchar(191) DEFAULT NULL,
   `created` datetime NOT NULL,
   `path` varchar(191) NOT NULL,
   `thumbnail` varchar(191) NOT NULL,
@@ -130,7 +131,8 @@ CREATE TABLE `__uploads` (
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `path` (`path`)
+  UNIQUE KEY `path` (`path`),
+  UNIQUE KEY `filename` (`filename`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 ####################################################################################################
