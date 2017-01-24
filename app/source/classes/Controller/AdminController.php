@@ -562,7 +562,9 @@ class AdminController extends Controller {
     }
 
     public function uploads($request, $response, $args){
-        $uploads = Upload::getMany();
+        $uploads = Upload::getMany([
+            'items_per_page' => 20
+        ], $pagination);
 
         $html = Admin::render('uploads', [
             'title' => Language::term('uploads'),
