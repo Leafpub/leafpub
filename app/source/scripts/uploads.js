@@ -49,10 +49,11 @@ $(function() {
             .then(function(res) {
                 // Insert image
                 if(res.uploaded.length) {
-                    if(res.uploaded[0].filename.match(/\.(gif|jpg|jpeg|png|svg)$/i)) {
+                    if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
                         $('.picture').css('background-image', 'url(\'' + res.uploaded[0].thumbnail + '\')');
                         $('#image-width').val(res.uploaded[0].width);
                         $('#image-height').val(res.uploaded[0].height);
+                        $('#image-slug').val(res.uploaded[0].filename);
                         showPanel();
                     }
                 }
@@ -76,36 +77,6 @@ $(function() {
 
         clearTimeout(dropTimeout);
     }
-
-    var toggleState = function(element) {
-        if (!request){
-            progress.go(50);
-
-            var plugin = element.getAttribute('data-dir'),
-                enable = element.classList.contains('enabled');
-
-            if(request) request.abort();
-            request = $.ajax({
-                url: Leafpub.url('api/plugins'),
-                type: 'PUT',
-                data: {
-                    plugin: plugin,
-                    enable: enable,
-                }
-            })
-            .done(function(res) {
-                if (res.success === true){
-                    request = null;
-                    element.classList.toggle('enabled');
-                    element.setAttribute('data-enabled', (enable === 0 ? 1 : 0));
-                }
-            })
-            .always(function() {
-                // Hide progress
-                progress.go(100);
-            });
-        }
-    };
     
     // Selection
     $('.media-list').selectable({
@@ -117,7 +88,7 @@ $(function() {
             $('.delete').prop('disabled', values.length === 0);
         },
         doubleClick: function(value, element) {
-            toggleState(element);
+            //toggleState(element);
         },
         getValue: function() {
             return $(this).attr('data-dir');
@@ -140,7 +111,7 @@ $(function() {
             // Load next page
             if(request) request.abort();
             request = $.ajax({
-                url: Leafpub.url('api/upload'),
+                url: Leafpub.url('api/uploads'),
                 type: 'GET',
                 data: {
                     page: ++page,
@@ -181,7 +152,7 @@ $(function() {
             // Load matching medias and reset page count
             if(request) request.abort();
             request = $.ajax({
-                url: Leafpub.url('api/upload'),
+                url: Leafpub.url('api/uploads'),
                 type: 'GET',
                 data: {
                     page: page = 1,
@@ -219,7 +190,7 @@ $(function() {
     // Edit
     $('.edit').on('click', function(){
         var element = $('.media-list').selectable('getElements', true)[0];
-        return toggleState(element);
+        return; // toggleState(element);
     });
 
     // Delete
@@ -239,7 +210,7 @@ $(function() {
             $.each(plugins, function(index, value) {
                 // Add deferreds to the queue
                 $.ajax({
-                    url: Leafpub.url('api/upload/' + encodeURIComponent(value)),
+                    url: Leafpub.url('api/uploads/' + encodeURIComponent(value)),
                     type: 'DELETE'
                 })
                 .done(function(res) {
@@ -264,20 +235,16 @@ $(function() {
         });
     });
 
-    $('.new-upload').on('click', function(){
-        showPanel();
-    });
-
-    // Upload post image
-    $('.upload-new-plugin').on('change', 'input[type="file"]', function(event) {
+     // Upload post image
+    $('.upload-picture').on('change', 'input[type="file"]', function(event) {
         var input = this;
         if(!event.target.files.length) return;
-
+        // Show progress
+        progress.go(50);
         // Upload it
         Leafpub.upload({
-            accept: 'zip',
+            accept: 'image',
             files: event.target.files[0],
-            url: '/api/plugins',
             progress: function(percent) {
                 progress.go(percent);
             }
@@ -286,12 +253,75 @@ $(function() {
             // Reset the input
             $(input).replaceWith($(input).clone());
 
-            if(res.success === true) {
-                location.reload();
-            } else {
-                $.alertable.alert(res.message);
+            if(res.uploaded.length) {
+                if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
+                    $('.picture').css('background-image', 'url(\'' + res.uploaded[0].thumbnail + '\')');
+                    $('#image-width').val(res.uploaded[0].width);
+                    $('#image-height').val(res.uploaded[0].height);
+                    $('#image-slug').val(res.uploaded[0].filename);
+                    //showPanel();
+                }
             }
+
+            // Show error
+            if(res.failed.length) {
+                $.alertable.alert(res.failed[0].message);
+            }
+        })
+        .always(function(){
+            // Show progress
+            progress.go(100);
         });
+    });
+
+    function getImageFormData(){
+        var selectize = $('#image-tags').get(0).selectize,
+            tagData = [],
+            width = $('#image-width').val(),
+            height = $('#image-height').val(),
+            i;
+
+        // Get array of tag data
+        for(i = 0; i < selectize.items.length; i++) {
+            tagData[i] = {
+                slug: selectize.getItem(selectize.items[i]).attr('data-value'),
+                name: selectize.getItem(selectize.items[i]).text()
+            };
+        }
+
+        return {
+            tags: tagData,
+            width: width,
+            height: height
+        };
+    }
+
+    // Submit
+    $('.image-form').on('submit', function(event) {
+        event.preventDefault();
+        var slug = $('#image-slug').val();
+        // Show progress
+        progress.go(50);
+        $.ajax({
+            url: Leafpub.url('api/uploads/' + slug),
+            type: 'PUT',
+            data: getImageFormData()
+        })
+        .done(function(res) {
+            if (res.success === true){
+
+            }
+                
+        })
+        .always(function() {
+            // Show progress
+            progress.go(100);
+            hidePanel();
+        });
+    });
+
+    $('.new-upload').on('click', function(){
+        showPanel();
     });
 
     // Shows the specified panel
