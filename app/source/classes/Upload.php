@@ -9,6 +9,18 @@
 
 namespace Leafpub;
 
+use Leafpub\Events\Upload\Add,
+    Leafpub\Events\Upload\Added,
+    Leafpub\Events\Upload\Update,
+    Leafpub\Events\Upload\Updated,
+    Leafpub\Events\Upload\Delete,
+    Leafpub\Events\Upload\Deleted,
+    Leafpub\Events\Upload\Retrieve,
+    Leafpub\Events\Upload\Retrieved,
+    Leafpub\Events\Upload\ManyRetrieve,
+    Leafpub\Events\Upload\ManyRetrieved;
+    //Leafpub\Events\Upload\BeforeRender;
+
 /**
 * Upload
 *
@@ -67,12 +79,16 @@ class Upload extends Leafpub {
 
         // Make filename web-safe
         $filename = self::safeFilename($filename);
-
+         // Get extension
+        $extension = self::fileExtension($filename);
         // Get filename without extension
         $filename_without_extension = self::fileName($filename);
 
-        // Get extension
-        $extension = self::fileExtension($filename);
+        // See Issue #87
+        if (mb_strlen($filename_without_extension) > 90){
+            $filename_without_extension = mb_substr($filename_without_extension, 0, 90);
+            $filename = $filename_without_extension . '.' . $extension;
+        }
 
         // Check allowed upload types
         if(!in_array($extension, $allowed_upload_types)) {
@@ -120,7 +136,14 @@ class Upload extends Leafpub {
         $thumb_path = self::path($relative_thumb);
         // Create a thumbnail
         $image = new \claviska\SimpleImage($full_path);
-        $image->thumbnail(400, 300)->toFile($thumb_path);
+        try{
+            $image->thumbnail(400, 300)->toFile($thumb_path);
+        } catch(\Exception $e){
+            throw new \Exception(
+                'Unable to create thumbnail: ' . $filename,
+                self::UNABLE_TO_WRITE_FILE
+            );
+        }
 
         // Get file size
         $size = (int) @filesize($full_path);
@@ -154,7 +177,7 @@ class Upload extends Leafpub {
 
         // Generate info to pass back
         $info = [
-            'filename' => $filename,
+            'filename' => self::fileName($filename), // We use filename as our slug
             'extension' => $extension,
             'path' => $full_path,
             'relative_path' => $relative_path,
@@ -166,6 +189,9 @@ class Upload extends Leafpub {
             'height' => $height,
             'size' => $size
         ];
+
+        $evt = new Add($info);
+        Leafpub::dispatchEvent(Add::NAME, $evt);
 
         try {
             // Create the upload
@@ -189,7 +215,14 @@ class Upload extends Leafpub {
             $st->bindParam(':height', $height, \PDO::PARAM_INT);
             $st->execute();
             $id = (int) self::$database->lastInsertId();
-            return $id > 0 ? $id : false;
+            if ($id > 0){
+                $evt = new Added($id);
+                Leafpub::dispatchEvent(Added::NAME, $evt);
+
+                return $id;
+             } else {
+                return false;
+             }
         } catch(\PDOException $e) {
             throw new \Exception('Database error: ' . $e->getMessage());
         }
@@ -202,12 +235,22 @@ class Upload extends Leafpub {
     * @return bool
     *
     **/
-    public static function delete($id) {
+    public static function delete($filename) {
+        $evt = new Delete($filename);
+        Leafpub::dispatchEvent(Delete::NAME, $evt);
+
         try {
-            $st = self::$database->prepare('DELETE FROM __uploads WHERE id = :id');
-            $st->bindParam(':id', $id);
+            $st = self::$database->prepare('DELETE FROM __uploads WHERE filename = :filename');
+            $st->bindParam(':filename', $filename);
             $st->execute();
-            return $st->rowCount() > 0;
+            if ($st->rowCount() > 0){
+                $evt = new Deleted($filename);
+                Leafpub::dispatchEvent(Deleted::NAME, $evt);
+
+                return true;
+            } else {
+                return false;
+            }
         } catch(\PDOException $e) {
             return false;
         }
@@ -220,14 +263,17 @@ class Upload extends Leafpub {
     * @return mixed
     *
     **/
-    public static function get($id) {
+    public static function get($file) {
+        $evt = new Retrieve($file);
+        Leafpub::dispatchEvent(Retrieve::NAME, $evt);
+
         try {
             $st = self::$database->prepare('
-                SELECT id, path, created, filename, extension, size, width, height
+                SELECT id, caption, path, created, filename, extension, size, width, height
                 FROM __uploads
-                WHERE id = :id
+                WHERE filename = :file
             ');
-            $st->bindParam(':id', $id);
+            $st->bindParam(':file', $file);
             $st->execute();
             $upload = $st->fetch(\PDO::FETCH_ASSOC);
             if(!$upload) return false;
@@ -236,7 +282,12 @@ class Upload extends Leafpub {
         }
 
         // Normalize fields
-        return self::normalize($upload);
+        $upload = self::normalize($upload);
+
+        $evt = new Retrieved($upload);
+        Leafpub::dispatchEvent(Retrieved::NAME, $evt);
+        
+        return $upload; 
     }
 
     /**
@@ -257,14 +308,18 @@ class Upload extends Leafpub {
             'items_per_page' => 10
         ], (array) $options);
 
+        $evt = new ManyRetrieve($options);
+        Leafpub::dispatchEvent(ManyRetrieve::NAME, $evt);
+        $options = $evt->getEventData();
+
         // Generate select SQL
         $select_sql = '
-            SELECT id, path, thumbnail, created, filename, extension, size, width, height
+            SELECT id, caption, path, thumbnail, created, filename, extension, size, width, height
             FROM __uploads
         ';
 
         // Generate where SQL
-        $where_sql = ' WHERE (filename LIKE :query OR extension LIKE :query)';
+        $where_sql = ' WHERE (filename LIKE :query OR extension LIKE :query OR caption LIKE :query)';
 
         // Generate order SQL
         $order_sql = ' ORDER BY created DESC';
@@ -320,6 +375,9 @@ class Upload extends Leafpub {
             $uploads[$key] = self::normalize($value);
         }
 
+        $evt = new ManyRetrieved($uploads);
+        Leafpub::dispatchEvent(ManyRetrieved::NAME, $evt);
+        
         return $uploads;
     }
 
