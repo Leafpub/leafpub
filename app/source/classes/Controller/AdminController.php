@@ -571,7 +571,7 @@ class AdminController extends Controller {
             'scripts' => 'uploads.min.js',
             'styles' => 'uploads.css',
             'uploads' => $uploads,
-            'all_tags' => Tag::getNames(),
+            'all_tags' => Tag::getNames('upload'),
             'post_tags' => [],
             'can_create_tags' => Session::isRole(['owner', 'admin', 'editor']) ? 'true' : 'false',
         ]);
