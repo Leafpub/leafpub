@@ -5,7 +5,6 @@ $media-list-item-image-size: 8rem;
     margin-bottom: 0px;
 }
 
-
 .media-list {
     //height: 100%;
     padding: 2rem 1rem;
@@ -48,6 +47,7 @@ $media-list-item-image-size: 8rem;
             font-size: $media-list-item-image-size - 2rem;
             color: white;
             //border-radius: 50%;
+            border-radius: $border-radius-large;
         }
     }
     .name h4{
@@ -55,15 +55,14 @@ $media-list-item-image-size: 8rem;
         @include text-truncate;
         color: #09d;
     }
-    .info, .description {
+    .info {
         font-size: .9rem;
         color: $text-muted;
         @include text-truncate;
         transition: color $leafpub-transition-speed;
         padding: 5px;
-         .tag.enable{
-            visibility: hidden;
-        }
+        visibility: hidden;
+        text-align: left;
     }
     &:hover {
         background-color: #f2f2f2;
@@ -73,10 +72,12 @@ $media-list-item-image-size: 8rem;
         text-decoration: none;
     }
     &.selected {
+        height: $media-list-item-image-size + 10rem;
         background-color: $leafpub-blue;
         color: white;
-        .info, .description, .name h4 {
+        .info {
             color: white;
+            visibility: visible;
         }
     }
     .info a {
@@ -87,11 +88,6 @@ $media-list-item-image-size: 8rem;
     }
 }
 
-.media-list-item.enabled {
-    .info .tag.enable {
-        visibility: visible;
-    }
-}
 // Fix sticky hovers in iOS
 .ios .media-list-item:hover:not(.selected) {
     background-color: inherit;

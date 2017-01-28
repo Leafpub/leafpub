@@ -1,7 +1,37 @@
 {{#each uploads}}
     <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6">
-       <div class="preview">
+        <div class="preview">
             <img class="preview-image" src="{{#is thumbnail}}{{url thumbnail}}{{else}}{{url path}}{{/is}}">
+        </div>
+        <div class="info">
+            <div class="meta">
+                <div>
+                    <label><i class="fa fa-arrows-h"></i></label>
+                    {{width}}
+                    <label><i class="fa fa-arrows-v"></i></label>
+                    {{height}}
+                </div>
+            </div>
+            <div class="posts">
+                <label><i class="fa fa-sitemap"></i></label>
+                {{#is posts}}
+                {{#each posts}}
+                <a href="{{url link}}">{{title}}</a>,
+                {{/each}}
+                {{else}}
+                {{L 'no_posts'}}
+                {{/is}}
+            </div>
+            <div class="tags">
+                <i class="fa fa-tags"></i>
+                {{#is tags}}
+                {{#each tags}}
+                <a href="{{url link}}">{{title}}</a>,
+                {{/each}}
+                {{else}}
+                {{L 'no_tags'}}
+                {{/is}}
+            </div>
         </div>
     </div>
 {{else}}
