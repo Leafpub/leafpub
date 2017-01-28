@@ -277,7 +277,8 @@ class APIController extends Controller {
             foreach((array) $properties['tag_data'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
                     Tag::add($tag['slug'], [
-                        'name' => $tag['name']
+                        'name' => $tag['name'],
+                        'type' => 'post'
                     ]);
                 }
             }
@@ -698,6 +699,7 @@ class APIController extends Controller {
             'meta_title' => $params['meta-title'],
             'meta_description' => $params['meta-description'],
             'cover' => $params['cover'],
+            'type' => $params['type']
         ];
 
         // Add/update the tag
@@ -1486,9 +1488,21 @@ class APIController extends Controller {
 
         $file = $args['file'];
         $params = $request->getParams();
-        $data = $params['data'];
+        var_dump($params); exit;
+         // Create tags that don't exist yet
+        if(Session::isRole(['owner', 'admin', 'editor'])) {
+            foreach((array) $params['tags'] as $tag) {
+                if(!Tag::exists($tag['slug'])) {
+                    Tag::add($tag['slug'], [
+                        'name' => $tag['name'],
+                        'type' => 'upload'
+                    ]);
+                }
+            }
+        }
 
-        
+        $caption = $params['caption'];
+        $tags = (array) $params['tags'];
     }
     /**
     * Handles GET api/oembed

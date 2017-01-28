@@ -104,7 +104,8 @@ class Tag extends Leafpub {
                     description = :description,
                     cover = :cover,
                     meta_title = :meta_title,
-                    meta_description = :meta_description
+                    meta_description = :meta_description,
+                    type = :type
             ');
             $st->bindParam(':slug', $slug);
             $st->bindParam(':name', $tag['name']);
@@ -112,6 +113,7 @@ class Tag extends Leafpub {
             $st->bindParam(':cover', $tag['cover']);
             $st->bindParam(':meta_title', $tag['meta_title']);
             $st->bindParam(':meta_description', $tag['meta_description']);
+            $st->bindParam(':type', $tag['type']);
             $st->execute();
             $ret = ($st->rowCount() > 0);
         } catch(\PDOException $e) {
@@ -205,7 +207,7 @@ class Tag extends Leafpub {
 
         try {
             $st = self::$database->prepare('
-                SELECT id, created, slug, name, description, cover, meta_title, meta_description
+                SELECT id, created, slug, name, description, cover, meta_title, meta_description, type
                 FROM __tags
                 WHERE slug = :slug
             ');
@@ -249,7 +251,7 @@ class Tag extends Leafpub {
 
         // Generate select SQL
         $select_sql = '
-            SELECT id, created, slug, name, description, cover, meta_title, meta_description
+            SELECT id, created, slug, name, description, cover, meta_title, meta_description, type
             FROM __tags
         ';
 
@@ -263,6 +265,11 @@ class Tag extends Leafpub {
                 meta_description LIKE :query
             )
         ';
+
+        if (isset($options['type'])){
+            $type = $options['type'];
+            $where_sql .= ' AND type = :type';
+        }
 
         // Generate order SQL
         $order_sql = ' ORDER BY name ' . $options['sort'];
@@ -283,6 +290,9 @@ class Tag extends Leafpub {
             // Get count of all matching rows
             $st = self::$database->prepare($count_sql);
             $st->bindParam(':query', $query);
+            if ($type){
+                $st->bindParam(':type', $type);
+            }
             $st->execute();
             $total_items = (int) $st->fetch()[0];
         } catch(\PDOException $e) {
@@ -299,6 +309,7 @@ class Tag extends Leafpub {
         // Run the data query
         try {
             $query = '%' . Database::escapeLikeWildcards($options['query']) . '%';
+
             $offset = ($pagination['current_page'] - 1) * $pagination['items_per_page'];
             $count = $pagination['items_per_page'];
 
@@ -307,6 +318,9 @@ class Tag extends Leafpub {
             $st->bindParam(':query', $query);
             $st->bindParam(':offset', $offset, \PDO::PARAM_INT);
             $st->bindParam(':count', $count, \PDO::PARAM_INT);
+            if ($type){
+                $st->bindParam(':type', $type);
+            }
             $st->execute();
             $tags = $st->fetchAll(\PDO::FETCH_ASSOC);
         } catch(\PDOException $e) {
@@ -324,9 +338,11 @@ class Tag extends Leafpub {
     }
 
     // Returns an array of all tag names and corresponding slugs
-    public static function getNames() {
+    public static function getNames($type = 'post') {
         try {
-            $st = self::$database->query('SELECT slug, name FROM __tags ORDER BY name');
+            $st = self::$database->prepare('SELECT slug, name FROM __tags WHERE type = :type ORDER BY name');
+            $st->bindParam(':type', $type);
+            $st->execute();
             $tags = $st->fetchAll(\PDO::FETCH_ASSOC);
         } catch(\PDOException $e) {
             return false;
@@ -487,7 +503,8 @@ class Tag extends Leafpub {
                     description = :description,
                     cover = :cover,
                     meta_title = :meta_title,
-                    meta_description = :meta_description
+                    meta_description = :meta_description,
+                    type = :type
                 WHERE slug = :original_slug
             ');
             $st->bindParam(':slug', $tag['slug']);
@@ -497,6 +514,7 @@ class Tag extends Leafpub {
             $st->bindParam(':meta_title', $tag['meta_title']);
             $st->bindParam(':meta_description', $tag['meta_description']);
             $st->bindParam(':original_slug', $slug);
+            $st->bindParam(':type', $tag['type']);
             $st->execute();
             $ret = $st->rowCount() > 0;
         } catch(\PDOException $e) {
