@@ -1,5 +1,5 @@
 {{#each uploads}}
-    <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6">
+    <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6" data-slug="{{filename}}">
         <div class="preview">
             <img class="preview-image" src="{{#is thumbnail}}{{url thumbnail}}{{else}}{{url path}}{{/is}}">
         </div>
@@ -26,7 +26,7 @@
                 <i class="fa fa-tags"></i>
                 {{#is tags}}
                 {{#each tags}}
-                <a href="{{url link}}">{{title}}</a>,
+                <span class="badge badge-warning">{{this}}</span>,
                 {{/each}}
                 {{else}}
                 {{L 'no_tags'}}
