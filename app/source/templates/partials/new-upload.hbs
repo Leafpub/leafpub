@@ -21,17 +21,6 @@
 <div class="media-panel panel panel-right">
     <form class="image-form" autocomplete="off" novalidate>
         <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
-        <!--div class="form-group">
-            <label for="image-src">{{L 'source'}}</label>
-            <div class="inner-addon-group">
-                <span class="inner-addon"><i class="fa fa-picture-o"></i></span>
-                <input class="form-control" type="url" name="src" id="image-src">
-                <label class="inner-addon upload-image">
-                    <i class="fa fa-camera"></i>
-                    <input type="file" accept="image/*" style="display: none;">
-                </label>
-            </div>
-        </div-->
         <div class="form-group">
             <label>{{L 'image'}}</label>
             <div class="picture card">
@@ -44,10 +33,13 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="image-caption">{{L 'caption'}}</label>
+            <input class="form-control" type="text" name="image-caption" id="image-caption">
+        </div>
+        <div class="form-group">
             <label for="image-alt">{{L 'tags'}}</label>
             <input class="form-control" type="text" name="image-tags" id="image-tags"
                 data-all-tags="{{json_encode all_tags}}"
-                data-post-tags="{{json_encode post_tags}}"
                 data-can-create-tags="{{can_create_tags}}"
             >
         </div>
@@ -55,13 +47,19 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="image-width">{{L 'width'}}</label>
-                    <input class="form-control" type="number" name="image-width" id="image-width" min="0">
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-arrows-h"></i></span>
+                        <input class="form-control" type="number" name="image-width" id="image-width" min="0">
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="image-height">{{L 'height'}}</label>
-                    <input class="form-control" type="number" name="image-height" id="image-height" min="0">
+                    <div class="inner-addon-group">
+                        <span class="inner-addon"><i class="fa fa-arrows-v"></i></span>
+                        <input class="form-control" type="number" name="image-height" id="image-height" min="0">
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,7 +70,6 @@
             </label>
         </div>
         <div class="form-group mt-2">
-            <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
             <input type="hidden" id="image-slug" name="image-slug">
