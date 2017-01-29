@@ -81,6 +81,7 @@ $app->group("/api", function() {
     $this->get('/uploads', 'Leafpub\Controller\APIController:getUploads');
     $this->put('/uploads/{file}', 'Leafpub\Controller\APIController:editUpload');
     $this->delete('/uploads/{file}', 'Leafpub\Controller\APIController:deleteUpload');
+    $this->get('/upload/{file}', 'Leafpub\Controller\APIController:getUpload');
 
     // Utilities
     $this->get('/oembed', 'Leafpub\Controller\APIController:getOembed');
