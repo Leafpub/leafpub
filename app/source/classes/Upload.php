@@ -490,6 +490,43 @@ class Upload extends Leafpub {
     }
 
     /**
+    * Returns the total number of uploads that exist
+    *
+    * @param array $options
+    * @return mixed
+    *
+    **/
+    public static function count($options = null) {
+        // Merge options
+        $options = array_merge([
+            'tag' => null,
+            'width' => null,
+            'height' => null
+        ], (array) $options);
+
+        // Build count query
+        $sql = 'SELECT COUNT(*) FROM __uploads WHERE 1 = 1';
+
+        if($options['tag']) $sql .= '
+            AND (
+                SELECT COUNT(*) from __tags
+                LEFT JOIN __upload_tags ON __upload_tags.tag = __tags.id
+                WHERE __upload_tags.upload = __uploads.id AND slug = :tag
+            ) = 1
+        ';
+
+        // Fetch results
+        try {
+            $st = self::$database->prepare($sql);
+            if($options['tag']) $st->bindParam(':tag', $options['tag']);
+            $st->execute();
+            return (int) $st->fetch()[0];
+        } catch(\PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
     * Returns the maximum allowed upload size in bytes (per PHP's settings)
     *
     * @return int

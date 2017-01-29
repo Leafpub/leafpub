@@ -347,6 +347,11 @@ return [
         return \Leafpub\Post::count($options['hash']);
     },
 
+    'upload_count' => function($options){
+        // See Upload::count() for available options
+        return \Leafpub\Upload::count($options['hash']);
+    },
+
     // Returns the correct string based on a number
     'plural' => function($value, $options = null) {
         // If only one argument was passed in, adjust options and set the default $value
