@@ -55,6 +55,8 @@ class Upload extends Leafpub {
 
         // Convert dates from UTC to local
         $upload['created'] = self::utcToLocal($upload['created']);
+        
+        $upload['tags'] = self::getTags($upload['id']);
 
         return $upload;
     }
@@ -208,7 +210,7 @@ class Upload extends Leafpub {
             ');
             $st->bindParam(':path', $relative_path);
             $st->bindParam(':thumb_path', $relative_thumb);
-            $st->bindParam(':filename', $filename);
+            $st->bindParam(':filename', self::fileName($filename));
             $st->bindParam(':extension', $extension);
             $st->bindParam(':size', $size, \PDO::PARAM_INT);
             $st->bindParam(':width', $width, \PDO::PARAM_INT);
@@ -226,6 +228,46 @@ class Upload extends Leafpub {
         } catch(\PDOException $e) {
             throw new \Exception('Database error: ' . $e->getMessage());
         }
+    }
+
+    public static function edit($filename, $data){
+        $evt = new Update(array_merge($data, array('filename' => $filename)));
+        Leafpub::dispatchEvent(Update::NAME, $evt);
+        $data = $evt->getEventData();
+        unset($data['filename']);
+
+        $dbData = self::get($filename);
+
+        if (($dbData['width'] !== $data['width']) || ($dbData['height'] !== $data['height'])){
+            // Create a new image
+        }
+        
+        $tags = $data['tags'];
+
+        try {
+             $st = self::$database->prepare('
+                UPDATE __uploads SET
+                    caption = :caption,
+                    width = :width,
+                    height = :height
+                WHERE filename = :filename;
+            ');
+            $st->bindParam(':caption', $data['caption']);
+            $st->bindParam(':width', $data['width']);
+            $st->bindParam(':height', $data['height']);
+            $st->bindParam(':filename', $filename);
+            $st->execute();
+        } catch(\PDOException $e){
+            throw new \Exception('Database error: ' . $e->getMessage());
+        }
+
+         // Set upload tags
+        self::setTags($dbData['id'], $tags);
+
+        $evt = new Updated($filename);
+        Leafpub::dispatchEvent(Updated::NAME, $evt);
+
+        return true;
     }
 
     /**
@@ -269,7 +311,7 @@ class Upload extends Leafpub {
 
         try {
             $st = self::$database->prepare('
-                SELECT id, caption, path, created, filename, extension, size, width, height
+                SELECT id, caption, path, thumbnail, created, filename, extension, size, width, height
                 FROM __uploads
                 WHERE filename = :file
             ');
@@ -379,6 +421,72 @@ class Upload extends Leafpub {
         Leafpub::dispatchEvent(ManyRetrieved::NAME, $evt);
         
         return $uploads;
+    }
+
+     /**
+    * Gets the tags for the specified media file.
+    *
+    * @param int $upload_id
+    * @return mixed
+    *
+    **/
+    private static function getTags($upload_id) {
+        try {
+           // Get a list of slugs
+           $st = self::$database->prepare('
+               SELECT slug FROM __tags
+               LEFT JOIN __upload_tags ON __upload_tags.tag = __tags.id
+               WHERE __upload_tags.upload = :upload_id
+               ORDER BY name
+           ');
+           $st->bindParam(':upload_id', $upload_id);
+           $st->execute();
+           return $st->fetchAll(\PDO::FETCH_COLUMN);
+       } catch(\PDOException $e) {
+           return false;
+       }
+    }
+
+    /**
+    * Sets the tags for the specified media file. To remove all tags, call this method with $tags = null.
+    *
+    * @param int $upload_id
+    * @param null $tags
+    * @return bool
+    *
+    **/
+    private static function setTags($upload_id, $tags = null) {
+        // Remove old tags
+        try {
+            $st = self::$database->prepare('DELETE FROM __upload_tags WHERE upload = :upload_id');
+            $st->bindParam(':upload_id', $upload_id);
+            $st->execute();
+        } catch(\PDOException $e) {
+            return false;
+        }
+
+        // Assign new tags
+        if(count($tags)) {
+            // Escape slugs
+            foreach($tags as $key => $value) {
+                $tags[$key] = self::$database->quote($value);
+            }
+
+            // Assign tags
+            try {
+                $st = self::$database->prepare('
+                    INSERT INTO __upload_tags (upload, tag)
+                    SELECT :upload_id, id FROM __tags
+                    WHERE slug IN(' . implode(',', $tags) . ')
+                ');
+                $st->bindParam(':upload_id', $upload_id);
+                $st->execute();
+            } catch(\PDOException $e) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

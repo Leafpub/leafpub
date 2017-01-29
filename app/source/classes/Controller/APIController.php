@@ -1393,6 +1393,21 @@ class APIController extends Controller {
         ]);
     }
 
+    public function getUpload($request, $response, $args){
+        $filename = $args['file'];
+
+        if(!$filename){
+            return $response->withStatus(404);
+        }
+
+        $data = Upload::get($filename);
+
+        return $response->withJson([
+            'success' => true,
+            'file' => $data
+        ]);
+    }
+
     /**
     * Handles POST api/upload
     *
@@ -1483,15 +1498,15 @@ class APIController extends Controller {
 
     public function editUpload($request, $response, $args){
         if (!isset($args['file'])){
-            return $response->withStatus(403);
+            return $response->NotFound($request, $response);
         }
 
         $file = $args['file'];
         $params = $request->getParams();
-        var_dump($params); exit;
+    
          // Create tags that don't exist yet
         if(Session::isRole(['owner', 'admin', 'editor'])) {
-            foreach((array) $params['tags'] as $tag) {
+            foreach((array) $params['tagData'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
                     Tag::add($tag['slug'], [
                         'name' => $tag['name'],
@@ -1501,8 +1516,12 @@ class APIController extends Controller {
             }
         }
 
-        $caption = $params['caption'];
-        $tags = (array) $params['tags'];
+        Upload::edit($file, $params);
+
+        return $response->withJson([
+            'success' => true,
+            'message' => Language::term('success')
+        ]);
     }
     /**
     * Handles GET api/oembed

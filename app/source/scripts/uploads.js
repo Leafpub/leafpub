@@ -88,10 +88,10 @@ $(function() {
             $('.delete').prop('disabled', values.length === 0);
         },
         doubleClick: function(value, element) {
-            //toggleState(element);
+            prepareEdit(element);
         },
         getValue: function() {
-            return $(this).attr('data-dir');
+            return $(this).attr('data-slug');
         }
     });
 
@@ -190,7 +190,7 @@ $(function() {
     // Edit
     $('.edit').on('click', function(){
         var element = $('.media-list').selectable('getElements', true)[0];
-        return; // toggleState(element);
+        prepareEdit(element);
     });
 
     // Delete
@@ -277,8 +277,10 @@ $(function() {
     function getImageFormData(){
         var selectize = $('#image-tags').get(0).selectize,
             tagData = [],
+            tags = selectize.items,
             width = $('#image-width').val(),
             height = $('#image-height').val(),
+            caption = $('#image-caption').val(),
             i;
 
         // Get array of tag data
@@ -290,9 +292,11 @@ $(function() {
         }
 
         return {
-            tags: tagData,
+            tags: tags,
+            tagData: tagData,
             width: width,
-            height: height
+            height: height,
+            caption: caption
         };
     }
 
@@ -310,6 +314,10 @@ $(function() {
         .done(function(res) {
             if (res.success === true){
 
+                // Show message
+                if(res.message) {
+                    $.alertable.alert(res.message);
+                }
             }
                 
         })
@@ -324,10 +332,42 @@ $(function() {
         showPanel();
     });
 
+    function prepareEdit(el){
+        var slug = el.getAttribute('data-slug');
+        progress.go(50);
+        $.ajax({
+            url: Leafpub.url('api/upload/' + slug),
+            type: 'GET'
+        })
+        .done(function(res) {
+            if (res.success === true){
+                $('.picture').css('background-image', 'url(\'' + Leafpub.url(res.file.thumbnail) + '\')');
+                $('#image-caption').val(res.file.caption);
+                $('#image-width').val(res.file.width);
+                $('#image-height').val(res.file.height);
+                $('#image-slug').val(slug);
+
+                if (res.file.tags.length){
+                    var tags = res.file.tags,
+                        it = $('#image-tags').get(0).selectize;
+
+                    for(var i = 0; i < tags.length; i++){
+                        it.addItem(tags[i]);
+                    }
+                }
+            }
+            showPanel();
+        })
+        .always(function() {
+            // Show progress
+            progress.go(100);
+        });
+    }
+
     // Shows the specified panel
     function showPanel() {
         // Hide existing panels
-        hidePanel();
+        //hidePanel();
         var panel = $('.media-panel');
         // Trigger show event
         panel.trigger('show.leafpub.panel');
@@ -389,6 +429,13 @@ $(function() {
         // Trigger hide event
         $(panel).trigger('hide.leafpub.panel');
 
+        $('.picture').css('background-image', '');
+        $('#image-caption').val('');
+        $('#image-width').val('');
+        $('#image-height').val('');
+        $('#image-slug').val('');
+        $('#image-tags').get(0).selectize.clear(true);
+
         // Show the specified panel
         $(panel).on('transitionend.leafpub.panel', function() {
             $(panel).off('transitionend.leafpub.panel').trigger('hidden.leafpub.panel');
@@ -404,7 +451,7 @@ $(function() {
 
     // Tags via Selectize
     $('#image-tags').selectize({
-        items: JSON.parse($('#image-tags').attr('data-post-tags')),
+        items: [], //JSON.parse($('#image-tags').attr('data-post-tags')),
         options: JSON.parse($('#image-tags').attr('data-all-tags')),
         valueField: 'slug',
         labelField: 'name',
