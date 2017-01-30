@@ -109,6 +109,7 @@ CREATE TABLE `__tags` (
   `cover` text NOT NULL,
   `meta_title` text NOT NULL,
   `meta_description` text NOT NULL,
+  `type` enum('post','upload') NOT NULL DEFAULT 'post',
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
@@ -133,6 +134,13 @@ CREATE TABLE `__uploads` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `path` (`path`),
   UNIQUE KEY `filename` (`filename`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `__upload_tags` (
+  `upload` int(11) NOT NULL,
+  `tag` int(11) NOT NULL,
+  KEY `upload` (`upload`),
+  KEY `tag` (`tag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 ####################################################################################################
