@@ -130,7 +130,7 @@ class Admin extends Leafpub {
             $items[] = [
                 'title' => Language::term('tags'),
                 'link' => Admin::url('tags'),
-                'icon' => 'fa fa-tag'
+                'icon' => 'fa fa-tags'
             ];
         }
 
