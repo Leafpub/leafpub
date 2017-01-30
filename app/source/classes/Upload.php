@@ -345,6 +345,7 @@ class Upload extends Leafpub {
     public static function getMany($options = null, &$pagination = null) {
         // Merge options with defaults
         $options = array_merge([
+            'tag' => null,
             'query' => null,
             'page' => 1,
             'items_per_page' => 10
@@ -363,6 +364,13 @@ class Upload extends Leafpub {
         // Generate where SQL
         $where_sql = ' WHERE (filename LIKE :query OR extension LIKE :query OR caption LIKE :query)';
 
+        if($options['tag']) $where_sql .= '
+            AND (
+                SELECT COUNT(*) from __tags
+                LEFT JOIN __upload_tags ON __upload_tags.tag = __tags.id
+                WHERE __upload_tags.upload = __uploads.id AND slug = :tag
+            ) = 1
+        ';
         // Generate order SQL
         $order_sql = ' ORDER BY created DESC';
 
@@ -382,6 +390,7 @@ class Upload extends Leafpub {
             // Get count of all matching rows
             $st = self::$database->prepare($count_sql);
             $st->bindParam(':query', $query);
+            if($options['tag']) $st->bindParam(':tag', $options['tag']);
             $st->execute();
             $total_items = (int) $st->fetch()[0];
         } catch(\PDOException $e) {
@@ -406,6 +415,7 @@ class Upload extends Leafpub {
             $st->bindParam(':query', $query);
             $st->bindParam(':offset', $offset, \PDO::PARAM_INT);
             $st->bindParam(':count', $count, \PDO::PARAM_INT);
+            if($options['tag']) $st->bindParam(':tag', $options['tag']);
             $st->execute();
             $uploads = $st->fetchAll(\PDO::FETCH_ASSOC);
         } catch(\PDOException $e) {
