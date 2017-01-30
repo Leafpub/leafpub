@@ -26,7 +26,7 @@
                 <i class="fa fa-tags"></i>
                 {{#is tags}}
                 {{#each tags}}
-                <span class="badge badge-warning">{{this}}</span>,
+                <!--a class="tag" href="{{url '/api/uploads/tag/'}}{{encode this}}""--><span class="badge badge-warning">{{this}}</span><!--/a-->
                 {{/each}}
                 {{else}}
                 {{L 'no_tags'}}
