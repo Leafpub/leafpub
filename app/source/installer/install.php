@@ -245,7 +245,8 @@ try {
 try {
     Tag::add('getting-started', [
         'name' => 'Getting Started',
-        'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!'
+        'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!',
+        'type' => 'post'
     ]);
 } catch(\Exception $e) {
     // Cleanup database.php so we can try again
