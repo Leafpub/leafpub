@@ -242,7 +242,7 @@ class Tag extends Leafpub {
             'query' => null,
             'page' => 1,
             'items_per_page' => 10,
-            'sort' => 'DESC'
+            'sort' => 'ASC'
         ], (array) $options);
 
         $evt = new ManyRetrieve($options);
@@ -272,8 +272,8 @@ class Tag extends Leafpub {
         }
 
         // Generate order SQL
-        $order_sql = ' ORDER BY name ' . $options['sort'];
-
+        $order_sql = ' ORDER BY type ' . $options['sort'] . ', name ' . $options['sort'];
+        //$order_sql = ' ORDER BY type, name ' . $options['sort'];
         // Generate limit SQL
         $limit_sql = ' LIMIT :offset, :count';
 
