@@ -101,7 +101,7 @@ class Upload extends Leafpub {
         }
 
         // Create uploads folder if it doesn't exist
-        $target_dir = "content/uploads/$year/$month";
+        $target_dir = "content/uploads/$year/$month/";
         if(!self::makeDir(self::path($target_dir))) {
             throw new \Exception(
                 'Unable to create directory: ' . $target_dir,
@@ -116,7 +116,7 @@ class Upload extends Leafpub {
         }
 
         // Generate relative and full paths to the file
-        $relative_path = "$target_dir/$filename";
+        $relative_path = "$target_dir$filename";
         $full_path = self::path($relative_path);
 
         // Write it
@@ -127,14 +127,14 @@ class Upload extends Leafpub {
             );
         }
 
-        $target_dir .= '/thumbnails';
-        if(!self::makeDir(self::path($target_dir))) {
+        //$target_dir .= '/thumbnails';
+        if(!self::makeDir(self::path($target_dir.'thumbnails'))) {
             throw new \Exception(
                 'Unable to create directory: ' . $target_dir,
                 self::UNABLE_TO_CREATE_DIRECTORY
             );
         }
-        $relative_thumb = "$target_dir/$filename";
+        $relative_thumb = "$target_dir"."thumbnails/$filename";
         $thumb_path = self::path($relative_thumb);
         // Create a thumbnail
         $image = new \claviska\SimpleImage($full_path);
@@ -200,16 +200,15 @@ class Upload extends Leafpub {
             $st = self::$database->prepare('
                 INSERT INTO __uploads SET
                     path = :path,
-                    thumbnail = :thumb_path,
                     created = NOW(),
                     filename = :filename,
                     extension = :extension,
                     size = :size,
                     width = :width,
                     height = :height
-            ');
-            $st->bindParam(':path', $relative_path);
-            $st->bindParam(':thumb_path', $relative_thumb);
+            '); //thumbnail = :thumb_path,
+            $st->bindParam(':path', $target_dir);
+            //$st->bindParam(':thumb_path', $relative_thumb);
             $st->bindParam(':filename', self::fileName($filename));
             $st->bindParam(':extension', $extension);
             $st->bindParam(':size', $size, \PDO::PARAM_INT);
@@ -311,7 +310,7 @@ class Upload extends Leafpub {
 
         try {
             $st = self::$database->prepare('
-                SELECT id, caption, path, thumbnail, created, filename, extension, size, width, height
+                SELECT id, caption, CONCAT_WS(\'.\', CONCAT(path, filename), extension) as path, CONCAT_WS(\'.\', CONCAT(path, \'thumbnails/\' , filename), extension) as thumbnail, created, filename, extension, size, width, height
                 FROM __uploads
                 WHERE filename = :file
             ');
@@ -357,7 +356,7 @@ class Upload extends Leafpub {
 
         // Generate select SQL
         $select_sql = '
-            SELECT id, caption, path, thumbnail, created, filename, extension, size, width, height
+            SELECT id, caption, CONCAT_WS(\'.\', CONCAT(path, filename), extension) as path, CONCAT_WS(\'.\', CONCAT(path, \'thumbnails/\' , filename), extension) as thumbnail, created, filename, extension, size, width, height
             FROM __uploads
         ';
 
