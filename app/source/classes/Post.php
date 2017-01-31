@@ -373,13 +373,21 @@ class Post extends Leafpub {
 
         // Retrieve the post
         try {
-            $st = self::$database->prepare('
+            /*$st = self::$database->prepare('
                 SELECT
                     id, slug, created, pub_date,
                     (SELECT slug FROM __users WHERE id = __posts.author) AS author,
                     title, content, image, meta_title, meta_description, status, page,
                     featured, sticky
                 FROM __posts
+                WHERE slug = :slug
+            ');*/
+            $st = self::$database->prepare('
+                SELECT
+                    id, slug, created, pub_date, author,
+                    title, content, image, meta_title, meta_description, status, page,
+                    featured, sticky
+                FROM __view_posts
                 WHERE slug = :slug
             ');
             $st->bindParam(':slug', $slug);
@@ -425,7 +433,7 @@ class Post extends Leafpub {
         if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
 
         // Build query
-        $sql = '
+        /*$sql = '
             SELECT
                 id, slug, pub_date AS date,
                 (SELECT slug FROM __users WHERE id = __posts.author) AS author,
@@ -433,10 +441,21 @@ class Post extends Leafpub {
                 featured, sticky
             FROM __posts
             WHERE 1 = 1
+        ';*/
+        $sql = '
+            SELECT
+                id, slug, pub_date AS date, author,
+                title, content, image, meta_title, meta_description, status, page,
+                featured, sticky
+            FROM __view_posts
+            WHERE 1 = 1
         ';
 
-        if($options['author']) $sql .= '
+        /*if($options['author']) $sql .= '
             AND author = (SELECT id FROM __users WHERE slug = :author)
+        ';*/
+        if($options['author']) $sql .= '
+            AND author = :author
         ';
         if($options['tag']) $sql .= '
             AND (
@@ -459,11 +478,21 @@ class Post extends Leafpub {
         $sort = $options['direction'] === 'next' ? 'ASC' : 'DESC';
         $compare = $options['direction'] === 'next' ? '>=' : '<=';
 
-        $sql .= '
+        /*$sql .= '
             AND slug != :slug
             AND CONCAT(pub_date, id) ' . $compare . ' (
                 SELECT CONCAT(pub_date, id)
                 FROM __posts
+                WHERE slug = :slug
+            )
+            ORDER BY pub_date ' . $sort . '
+            LIMIT 1
+        ';*/
+        $sql .= '
+            AND slug != :slug
+            AND CONCAT(pub_date, id) ' . $compare . ' (
+                SELECT CONCAT(pub_date, id)
+                FROM __view_posts
                 WHERE slug = :slug
             )
             ORDER BY pub_date ' . $sort . '
@@ -534,10 +563,17 @@ class Post extends Leafpub {
         $is_fulltext = mb_strlen($options['query']) > 3;
 
         // Generate select SQL
+        /*
         $select_sql = '
             SELECT
                 id, slug, created, pub_date,
                 (SELECT slug FROM __users WHERE id = __posts.author) AS author,
+                title, content, image, meta_title, meta_description, status, page,
+                featured, sticky
+        ';*/
+         $select_sql = '
+            SELECT
+                id, slug, created, pub_date, author,
                 title, content, image, meta_title, meta_description, status, page,
                 featured, sticky
         ';
@@ -547,7 +583,7 @@ class Post extends Leafpub {
                 MATCH(content) AGAINST (:query) AS content_score
             ';
         }
-        $select_sql .= ' FROM __posts';
+        $select_sql .= ' FROM __view_posts';
 
         // Generate where SQL
         $where_sql = ' WHERE 1 = 1';
@@ -571,12 +607,12 @@ class Post extends Leafpub {
         if($options['ignore_pages']) $where_sql .= ' AND page != 1';
         if($options['start_date']) $where_sql .= ' AND pub_date >= :start_date';
         if($options['end_date']) $where_sql .= ' AND pub_date <= :end_date';
-        if($options['author']) $where_sql .= ' AND author = (SELECT id FROM __users WHERE slug = :author)';
+        if($options['author']) $where_sql .= ' AND author = :author';
         if($options['tag']) $where_sql .= '
             AND (
                 SELECT COUNT(*) from __tags
                 LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
-                WHERE __post_tags.post = __posts.id AND slug = :tag
+                WHERE __post_tags.post = __view_posts.id AND slug = :tag
             ) = 1
         ';
 
@@ -591,7 +627,7 @@ class Post extends Leafpub {
         $limit_sql = ' LIMIT :offset, :count';
 
         // Assemble count query to determine total matching posts
-        $count_sql = "SELECT COUNT(*) FROM __posts $where_sql";
+        $count_sql = "SELECT COUNT(*) FROM __view_posts $where_sql";
 
         // Assemble data query to fetch posts
         $data_sql = "$select_sql $where_sql $order_sql $limit_sql";
@@ -678,7 +714,7 @@ class Post extends Leafpub {
         if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
 
         // Build query
-        $sql = '
+        /*$sql = '
             SELECT
                 __posts.id,
                 __posts.slug,
@@ -699,12 +735,23 @@ class Post extends Leafpub {
             LEFT JOIN __post_tags
                 ON __post_tags.post = __posts.id
             WHERE __posts.slug != :slug
+        ';*/
+        $sql = '
+            SELECT
+                *
+            FROM __view_posts
+            LEFT JOIN __post_tags
+                ON __post_tags.post = __view_posts.id
+            WHERE __view_posts.slug != :slug
         ';
 
-        if($options['author']) $sql .= '
+        /*if($options['author']) $sql .= '
             AND author = (SELECT id FROM __users WHERE slug = :author)
+        ';*/
+        if($options['author']) $sql .= '
+            AND author = :author
         ';
-        if($options['tag']) $sql .= '
+        /*if($options['tag']) $sql .= '
             AND (
                 SELECT COUNT(*) from __tags
                 LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
@@ -714,12 +761,25 @@ class Post extends Leafpub {
         if($options['status']) {
             $sql .= ' AND FIND_IN_SET(__posts.status, :status) > 0';
             $status = implode(',', (array) $options['status']);
+        }*/
+        if($options['tag']) $sql .= '
+            AND (
+                SELECT COUNT(*) from __tags
+                LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
+                WHERE __post_tags.post = __view_posts.id AND slug = :tag
+            ) = 1
+        ';
+        if($options['status']) {
+            $sql .= ' AND FIND_IN_SET(__view_posts.status, :status) > 0';
+            $status = implode(',', (array) $options['status']);
         }
         if($options['ignore_featured']) $sql .= ' AND featured != 1';
         if($options['ignore_sticky']) $sql .= ' AND sticky != 1';
         if($options['ignore_pages']) $sql .= ' AND page != 1';
-        if($options['start_date']) $sql .= ' AND __posts.pub_date >= :start_date';
-        if($options['end_date']) $sql .= ' AND __posts.pub_date <= :end_date';
+        /*if($options['start_date']) $sql .= ' AND __posts.pub_date >= :start_date';
+        if($options['end_date']) $sql .= ' AND __posts.pub_date <= :end_date';*/
+        if($options['start_date']) $sql .= ' AND __view_posts.pub_date >= :start_date';
+        if($options['end_date']) $sql .= ' AND __view_posts.pub_date <= :end_date';
 
         $sql .= '
             AND __post_tags.tag IN(
