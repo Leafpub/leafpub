@@ -150,4 +150,13 @@ $media-list-item-image-size: 8rem;
     .media-list {
         padding: 1rem 0;
     }
+
+    .media-panel {
+        width: 100%;
+        padding: 1rem;
+        .close {
+            top: .5rem;
+            right: .5rem;
+        }
+    }
 }
