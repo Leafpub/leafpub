@@ -125,14 +125,14 @@ CREATE TABLE `__uploads` (
   `caption` varchar(191) DEFAULT NULL,
   `created` datetime NOT NULL,
   `path` varchar(191) NOT NULL,
-  `thumbnail` varchar(191) NOT NULL,
+  #`thumbnail` varchar(191) NOT NULL,
   `filename` varchar(191) NOT NULL,
   `extension` varchar(191) NOT NULL,
   `size` int(11) NOT NULL,
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `path` (`path`),
+  #UNIQUE KEY `path` (`path`),
   UNIQUE KEY `filename` (`filename`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
@@ -167,3 +167,23 @@ CREATE TABLE `__users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+####################################################################################################
+# view_posts
+####################################################################################################
+
+CREATE VIEW __view_posts AS
+    SELECT  
+    a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
+    a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
+    CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
+    FROM 
+    `__posts` a
+    LEFT JOIN 
+    `__uploads` b
+    ON 
+    a.image = b.id
+    INNER JOIN
+    `__users` c
+    ON
+    a.author = c.id
