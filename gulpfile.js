@@ -370,7 +370,10 @@ gulp.task('release:make', 'Generate a release.', function() {
         path.join(target, 'content/themes/*'), 
         '!' + path.join(target, 'content/themes/range')
     ]);
-    del.sync(path.join(target, 'content/uploads/*'));
+    del.sync([
+        path.join(target, 'content/uploads/*'),
+        '!' + path.join(target, 'content/uploads/2016')
+    ]);
     del.sync(path.join(target, 'content/plugins/*'));
 
     // Prune source/images, source/scripts, and source/styles
