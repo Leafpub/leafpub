@@ -215,14 +215,20 @@
         <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
         <h3>{{L 'image'}}</h3>
         <div class="form-group">
-            <label for="image-src">{{L 'source'}}</label>
-            <div class="inner-addon-group">
-                <span class="inner-addon"><i class="fa fa-picture-o"></i></span>
-                <input class="form-control" type="url" name="src" id="image-src">
-                <label class="inner-addon upload-image">
-                    <i class="fa fa-camera"></i>
-                    <input type="file" accept="image/*" style="display: none;">
-                </label>
+            <label>{{L 'image'}}</label>
+            <div class="picture card">
+                <div class="media-list row" data-type="image">
+
+                </div>
+                <div class="controls">
+                    <label class="media-file btn btn-success">
+                        <i class="fa fa-picture-o" title="{{L 'select_a_media_file'}}"></i>
+                    </label>
+                    <label class="upload-picture btn btn-translucent-dark">
+                        <i class="fa fa-fw fa-camera"></i>
+                        <input type="file" accept="image/*" style="display: none;">
+                    </label>                    
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -283,6 +289,7 @@
             <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+            <input class="form-control" type="url" name="src" id="image-src" hidden>
         </div>
     </form>
 </div>
@@ -388,7 +395,13 @@
                     <label for="image">{{L 'image'}}</label>
                     <input type="hidden" name="image" id="image" value="{{post.image}}">
                     <div class="post-image card"{{#if post.image}} style="background-image: url('{{url post.image}}');"{{/if}}>
+                         <div class="media-list row" data-type="post-image">
+
+                        </div>
                         <div class="controls">
+                            <label class="media-file btn btn-success">
+                                <i class="fa fa-picture-o" title="{{L 'select_a_media_file'}}"></i>
+                            </label>
                             <label class="upload-post-image btn btn-translucent-dark">
                                 <i class="fa fa-fw fa-camera"></i>
                                 <input type="file" accept="image/*" style="display: none;">

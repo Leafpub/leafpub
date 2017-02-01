@@ -941,7 +941,11 @@ $(function() {
             bookmark,
             image,
             width,
-            height;
+            height,
+            query = '',
+            more = true,
+            page = 1,
+            request;
 
         // Image panel
         $('.image-panel')
@@ -970,6 +974,7 @@ $(function() {
             }
 
             // Set fields
+            $('.picture').css('background-image', 'url(' + Leafpub.url(src) + ')');
             $('#image-src').val(src);
             $('#image-href').val(href);
             $('#image-alt').val(alt);
@@ -986,9 +991,97 @@ $(function() {
             $('#image-src').focus();
         })
         .on('hide.leafpub.panel', function() {
+            $('.media-list').css('display', 'none').html('');
             $(btn).removeClass('active');
             contentEditor.focus();
         });
+
+        $('.media-file').on('click', function(){
+            page = 1;
+            $('.picture').css('background-image', '');
+            $.ajax({
+                url: Leafpub.url('api/uploads'),
+                type: 'GET',
+                data: {
+                    page: ++page,
+                    query: query
+                }
+            })
+            .done(function(res){
+                $('.media-list').css('display', 'flex').html(res.html);
+            });
+        });
+
+        $('.media-list').selectable({
+            items: '.media-list-item',
+            multiple: false,
+            change: function(values) {
+                // Disable toolbar buttons
+                var type = this.getAttribute('data-type');
+                prepareEdit(values, type);
+            },
+            getValue: function() {
+                return $(this).attr('data-slug');
+            }
+        });
+
+         $('.media-list').on('scroll', function() {
+            var list = this,
+                scrollTop = $(list).scrollTop(),
+                scrollHeight = list.scrollHeight,
+                height = $(list).height(),
+                padding = 150,
+                query = $('.media-search').val();
+
+            if(!request && more && scrollTop + height + padding >= scrollHeight) {
+                // Show progress
+                //progress.go(50);
+
+                // Load next page
+                if(request) request.abort();
+                request = $.ajax({
+                    url: Leafpub.url('api/uploads'),
+                    type: 'GET',
+                    data: {
+                        page: ++page,
+                        query: query
+                    }
+                })
+                .done(function(res) {
+                    request = null;
+
+                    // Are there more pages to load?
+                    more = page < res.pagination.total_pages;
+
+                    // Append plugins if the page is in range
+                    if(page <= res.pagination.total_pages) {
+                        $(list).append(res.html);
+                    }
+                })
+                .always(function() {
+                    // Hide progress
+                    //progress.go(100);
+                });
+            }
+        });
+
+        function prepareEdit(el, type){
+            $.ajax({
+                url: Leafpub.url('api/upload/' + el),
+                type: 'GET'
+            })
+            .done(function(res) {
+                if (res.success === true){
+                    if (type === 'post-image'){
+                        $('.media-list').css('display', 'none').html('');
+                        setPostImage(res.file.path);
+                    } else {
+                        $('#image-src').val(res.file.path).trigger('change');
+                        $('#image-alt').val(res.file.caption);
+                    }
+                }
+            })
+        }
 
         // Submit
         $('.image-form').on('submit', function(event) {
@@ -1026,7 +1119,7 @@ $(function() {
         });
 
         // Upload image
-        $('.upload-image').on('change', 'input[type="file"]', function(event) {
+        $('.upload-picture').on('change', 'input[type="file"]', function(event) {
             var input = this;
             if(!event.target.files.length) return;
 
@@ -1045,6 +1138,8 @@ $(function() {
                 // Update the image
                 if(res.uploaded.length) {
                     if(res.uploaded.length) {
+                        $('.picture').css('background-image', 'url(\'' + res.uploaded[0].thumbnail + '\')');
+                        $('.media-list').css('display', 'none').html('');
                         $('#image-src').val(res.uploaded[0].relative_path).trigger('change');
                     }
                 }
