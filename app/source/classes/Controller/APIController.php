@@ -1523,6 +1523,22 @@ class APIController extends Controller {
             'message' => Language::term('success')
         ]);
     }
+
+    public function deleteUpload($request, $response, $args){
+        if (!isset($args['file'])){
+            return $response->NotFound($request, $response);
+        }
+
+        $file = $args['file'];
+
+        Upload::delete($file);
+        
+        return $response->withJson([
+            'success' => true,
+            'message' => Language::term('success')
+        ]);
+    }
+
     /**
     * Handles GET api/oembed
     *

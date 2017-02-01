@@ -280,7 +280,11 @@ class Upload extends Leafpub {
     public static function delete($filename) {
         $evt = new Delete($filename);
         Leafpub::dispatchEvent(Delete::NAME, $evt);
-
+        
+        $file = self::get($filename);
+        unlink(self::path($file['path']));
+        unlink(self::path($file['thumbnail']));
+        
         try {
             $st = self::$database->prepare('DELETE FROM __uploads WHERE filename = :filename');
             $st->bindParam(':filename', $filename);
