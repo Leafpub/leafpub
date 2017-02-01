@@ -14,7 +14,8 @@ use Leafpub\Post,
     Leafpub\Tag,
     Leafpub\Upload,
     Leafpub\User,
-    Leafpub\Database;
+    Leafpub\Database,
+    Leafpub\Session;
 
 /**
 * AbstractImporter
@@ -73,7 +74,7 @@ abstract class AbstractImporter {
         // Every file in todays folder (year/month/day)?
         $mediaFile = fopen ($this->_tmpPath . '/' . $filename, 'w+');
         $handle = curl_init(str_replace(" ","%20",$url));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+        curl_setopt($handle, CURLOPT_TIMEOUT, 50);
         
         curl_setopt($handle, CURLOPT_FILE, $mediaFile); 
         curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
