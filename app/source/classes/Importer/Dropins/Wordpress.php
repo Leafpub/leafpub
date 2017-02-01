@@ -22,7 +22,9 @@ class Wordpress extends AbstractImporter {
 	* Properties
 	**/
     private $namespaces = array();
-    
+    private $_isDotCom = false;
+    private $_dotComFilesUrl = '';
+
     public function parseFile(){
         
         if (extension_loaded('simplexml')){
@@ -34,7 +36,7 @@ class Wordpress extends AbstractImporter {
 		foreach($this->_posts as &$post){
 			if (isset($post['image'])){
 				$id = $post['image']; 
-				$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
+				//$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
 			}
 		}
 
@@ -71,9 +73,14 @@ class Wordpress extends AbstractImporter {
     
 		unset( $dom );
         
-        $base_url = $parser->xpath('/rss/channel/wp:base_site_url');
+        $base_url = $parser->xpath('/rss/channel/wp:base_blog_url');
 		$this->_oldBlogUrl = (string) trim($base_url[0]);
 
+        if (strpos($parser->xpath('/rss/channel/wp:base_site_url')[0], 'wordpress.com') !== false){
+            $this->_isDotCom = true;
+            $this->_dotComFilesUrl = $this->_createDotComFilesUrl();
+        }
+    
         $this->namespaces = $parser->getDocNamespaces();
         
         // 1. authors/users
@@ -98,7 +105,8 @@ class Wordpress extends AbstractImporter {
 				'slug' => (string) $t->category_nicename,
 				'parent' => (string) $t->category_parent,
 				'name' => $cat_name,
-				'description' => (string) $t->category_description
+				'description' => (string) $t->category_description,
+                'type' => 'post'
 			);
 
 			$this->_categories[$cat_name] = $category;
@@ -111,7 +119,8 @@ class Wordpress extends AbstractImporter {
 				'id' => (int) $t->term_id,
 				'slug' => (string) $t->tag_slug,
 				'name' => $tag_name,
-				'description' => (string) $t->tag_description
+				'description' => (string) $t->tag_description,
+                'type' => 'post'
 			);
 
 			$this->_tags[$tag_name] = $tag;
@@ -150,7 +159,11 @@ class Wordpress extends AbstractImporter {
 		);
 		
 		$dc = $item->children('http://purl.org/dc/elements/1.1/');
-		$post['author'] = (string) $dc->creator; //Should we insert the author/user id here? $this->users[(string) $dc->creator]['id'];
+        if (!$this->_loadUser){
+            $post['author'] = \Leafpub\Session::user('slug');
+        } else {
+		    $post['author'] = (string) $dc->creator; //Should we insert the author/user id here? $this->users[(string) $dc->creator]['id'];
+        }
 
 		$content = $item->children('http://purl.org/rss/1.0/modules/content/');
 		$post['content'] = $this->filterContent((string) $content->encoded); // --> CONTENT FILTERING!
@@ -229,18 +242,24 @@ class Wordpress extends AbstractImporter {
     protected function filterContent($content){
 		$year = date('Y');
         $month = date('m');
+        $searchUrl = '';
 		
+        if ($this->_isDotCom){
+            $searchUrl = addcslashes($this->_dotComFilesUrl, ':/');
+        } else {
+            $searchUrl = addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/';
+        }
 		// Filter the old url, wp-content and year/month to our folder structure
 		if (preg_match('/[0-9]{4}\/[0-9]{2}/', $content)){
 			// Replace year/month to actual year / actual month
 			$content = preg_replace(
-				'/(?:' . addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/)*[0-9]{4}\/[0-9]{2}/', 
+				'/(?:' . $searchUrl . ')*[0-9]{4}\/[0-9]{2}/', 
 				'/content/uploads/' . $year . '/' . $month, 
 				$content
 			);
 		} else {
 			$content = preg_replace(
-				'/(?:' . addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/)/', 
+				'/(?:' . $searchUrl .')/', 
 				'/content/uploads/' . $year . '/' . $month, 
 				$content
 			);
@@ -253,5 +272,16 @@ class Wordpress extends AbstractImporter {
 		//$content = preg_replace('/' . "\[\w(.+?)?\](?:(.+?)\[\/\w(.+?)?\])?" . '/', '', $content);
 		return $content;
     } 
+
+    private function _createDotComFilesUrl(){
+        $dotCom = [];
+        $oldBlog = explode('.', $this->_oldBlogUrl);
+        array_push($dotCom, array_pop($oldBlog));
+        array_push($dotCom, array_pop($oldBlog));
+        rsort($dotCom);
+        array_push($oldBlog, 'files');
+        $oldBlog = array_merge($oldBlog, $dotCom);
+        return implode('.', $oldBlog) . '/';
+    }
 }
 ?>
