@@ -1080,7 +1080,7 @@ $(function() {
                         $('#image-alt').val(res.file.caption);
                     }
                 }
-            })
+            });
         }
 
         // Submit
