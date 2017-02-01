@@ -265,7 +265,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Welcome to Leafpub',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.welcome.html')),
-        'image' => 'source/assets/img/leaves.jpg',
+        'image' => 1, //'source/assets/img/leaves.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
         'sticky' => true
@@ -275,7 +275,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'The Editor',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.editor.html')),
-        'image' => 'source/assets/img/sunflower.jpg',
+        'image' => 2, //'source/assets/img/sunflower.jpg',
         'status' => 'published',
         'tags' => ['getting-started']
     ]);
@@ -284,7 +284,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Themes & Plugins',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.themes.html')),
-        'image' => 'source/assets/img/autumn.jpg',
+        'image' => 3, //'source/assets/img/autumn.jpg',
         'status' => 'published',
         'tags' => ['getting-started']
     ]);
@@ -293,7 +293,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Help & Support',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.support.html')),
-        'image' => 'source/assets/img/ladybug.jpg',
+        'image' => 4, //'source/assets/img/ladybug.jpg',
         'status' => 'published',
         'tags' => ['getting-started']
     ]);
