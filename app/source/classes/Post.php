@@ -127,6 +127,55 @@ class Post extends Leafpub {
     }
 
     /**
+    * Save the image relations
+    *
+    * @param int $post_id
+    * @param String $content
+    * @return bool
+    *
+    */
+    private static function setImageToPost($post_id, $content){
+        try {
+            $st = self::$database->prepare('DELETE FROM __post_uploads WHERE post = :post_id');
+            $st->bindParam(':post_id', $post_id);
+            $st->execute();
+        } catch(\PDOException $e) {
+            return false;
+        }
+
+        $matches = [];
+        $doc = new \DOMDocument();
+        @$doc->loadHTML($content);
+
+        $tags = $doc->getElementsByTagName('img');
+
+        foreach ($tags as $tag) {
+             array_push($matches, $tag->getAttribute('src'));
+        }
+
+        if (count($matches)){
+            // Escape slugs
+            foreach($matches as $key => $value) {
+                $matches[$key] = self::$database->quote($value);
+            }
+            // Assign tags
+            try {
+                $st = self::$database->prepare('
+                    INSERT INTO __post_uploads (post, upload)
+                    SELECT :post_id, id FROM __uploads
+                    WHERE CONCAT_WS(\'.\', CONCAT(path, filename), extension) IN (' . implode(',', $matches) . ')
+                ');
+                $st->bindParam(':post_id', $post_id);
+                $st->execute();
+            } catch(\PDOException $e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
     * Adds a post
     *
     * @param String $slug
@@ -169,7 +218,7 @@ class Post extends Leafpub {
         }
 
         // Don't allow null properties
-        $post['image'] = (string) $post['image'];
+        $post['image'] = self::getImageId($post['image']);
         $post['meta_title'] = (string) $post['meta_title'];
         $post['meta_description'] = (string) $post['meta_description'];
 
@@ -224,6 +273,7 @@ class Post extends Leafpub {
 
         // Set post tags
         self::setTags($post_id, $post['tags']);
+        self::setImageToPost($post_id, $post['content']);
 
         // Create the initial revision
         History::add($slug, true);
@@ -232,6 +282,25 @@ class Post extends Leafpub {
         Leafpub::dispatchEvent(Added::NAME, $evt);
         
         return $post_id;
+    }
+
+    /**
+    * Returns the Upload id
+    *
+    * @param String $path
+    * @return int
+    *
+    */
+    private static function getImageId($path){
+        if ($path == ''){
+            return '';
+        }
+        $st = self::$database->prepare(
+            'SELECT id FROM __uploads WHERE CONCAT_WS(\'.\', CONCAT(path, filename), extension) = :path'
+        );
+        $st->bindParam(':path', $path);
+        $st->execute();
+        return (int) $st->fetch()[0];
     }
 
     /**
@@ -322,6 +391,14 @@ class Post extends Leafpub {
             // Cleanup post_tags
             $st = self::$database->prepare('
                 DELETE FROM __post_tags WHERE
+                post = (SELECT id FROM __posts WHERE slug = :slug)
+            ');
+            $st->bindParam(':slug', $slug);
+            $st->execute();
+
+            // Cleanup post_uploads
+            $st = self::$database->prepare('
+                DELETE FROM __post_uploads WHERE
                 post = (SELECT id FROM __posts WHERE slug = :slug)
             ');
             $st->bindParam(':slug', $slug);
@@ -1076,7 +1153,7 @@ class Post extends Leafpub {
         }
 
         // Don't allow null properties
-        $post['image'] = (string) $post['image'];
+        $post['image'] = self::getImageId($post['image']);
         $post['meta_title'] = (string) $post['meta_title'];
         $post['meta_description'] = (string) $post['meta_description'];
 
@@ -1151,6 +1228,7 @@ class Post extends Leafpub {
 
         // Set post tags
         self::setTags($post['id'], $post['tags']);
+        self::setImageToPost($post['id'], $post['content']);
 
         // Create a revision
         History::add($post['slug']);
