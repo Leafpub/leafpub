@@ -16,7 +16,7 @@
                 <label><i class="fa fa-sitemap"></i></label>
                 {{#is posts}}
                 {{#each posts}}
-                <a href="{{url link}}">{{title}}</a>,
+                {{this}},
                 {{/each}}
                 {{else}}
                 {{L 'no_posts'}}

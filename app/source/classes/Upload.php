@@ -57,6 +57,7 @@ class Upload extends Leafpub {
         $upload['created'] = self::utcToLocal($upload['created']);
         
         $upload['tags'] = self::getTags($upload['id']);
+        $upload['posts'] = self::getPosts($upload['id']);
 
         return $upload;
     }
@@ -432,8 +433,32 @@ class Upload extends Leafpub {
         return $uploads;
     }
 
-     /**
-    * Gets the tags for the specified media file.
+    /**
+    * Get the posts for the specified media file.
+    *
+    * @param int $upload_id
+    * @return mixed
+    *
+    **/
+    private static function getPosts($upload_id){
+         try {
+           // Get a list of slugs
+           $st = self::$database->prepare('
+               SELECT title FROM __posts
+               LEFT JOIN __post_uploads ON __post_uploads.post = __posts.id
+               WHERE __post_uploads.upload = :upload_id
+               ORDER BY title
+           ');
+           $st->bindParam(':upload_id', $upload_id);
+           $st->execute();
+           return $st->fetchAll(\PDO::FETCH_COLUMN);
+       } catch(\PDOException $e) {
+           return false;
+       }
+    }
+
+    /**
+    * Get the tags for the specified media file.
     *
     * @param int $upload_id
     * @return mixed
