@@ -143,6 +143,12 @@ CREATE TABLE IF NOT EXISTS `__upload_tags` (
   KEY `tag` (`tag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `__uploads` (`id`, `caption`, `created`, `path`, `filename`, `extension`, `size`, `width`, `height`) VALUES
+(1, '', '2017-02-01 12:23:45', 'content/uploads/2016/10/', 'leaves', 'jpg', 254734, 3000, 2008),
+(2, '', '2017-02-01 12:24:28', 'content/uploads/2016/10/', 'sunflower', 'jpg', 280779, 3000, 1990),
+(3, '', '2017-02-01 12:24:40', 'content/uploads/2016/10/', 'autumn', 'jpg', 383879, 3000, 2000),
+(4, '', '2017-02-01 12:24:54', 'content/uploads/2016/10/', 'ladybug', 'jpg', 277815, 3000, 1993);
+
 ####################################################################################################
 # users
 ####################################################################################################
