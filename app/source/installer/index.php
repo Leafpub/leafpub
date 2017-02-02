@@ -37,7 +37,7 @@ if(Leafpub::isInstalled()) {
                 <form id="installer-form" class="mt-3" action="<?=htmlspecialchars(Leafpub::url('source/installer/install.php'))?>" autocomplete="off">
                     <!-- Owner -->
                     <div class="form-group">
-                        <label for="name">Site Name</label>
+                        <label for="name">Your Name</label>
                         <input type="text" class="form-control" name="name" id="name" autofocus>
                     </div>
                     <div class="form-group">
