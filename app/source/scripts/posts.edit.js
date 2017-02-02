@@ -1003,7 +1003,7 @@ $(function() {
                 url: Leafpub.url('api/uploads'),
                 type: 'GET',
                 data: {
-                    page: ++page,
+                    page: page++,
                     query: query
                 }
             })
