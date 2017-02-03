@@ -1484,7 +1484,7 @@ class APIController extends Controller {
             } catch(\Exception $e) {
                 $failed[] = [
                     'filename' => $upload->getClientFilename(),
-                    'message' => $e->getMessage() //Language::term('unable_to_upload_file')
+                    'message' =>  Language::term('unable_to_upload_file')
                 ];
             }
         }
@@ -1520,7 +1520,7 @@ class APIController extends Controller {
 
         return $response->withJson([
             'success' => true,
-            'message' => Language::term('success')
+            'message' => Language::term('file_uploaded_successfully')
         ]);
     }
 
@@ -1535,7 +1535,7 @@ class APIController extends Controller {
         
         return $response->withJson([
             'success' => true,
-            'message' => Language::term('success')
+            'message' => Language::term('file_deleted_successfully')
         ]);
     }
 

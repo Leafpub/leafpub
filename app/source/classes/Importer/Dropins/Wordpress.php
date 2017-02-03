@@ -23,7 +23,6 @@ class Wordpress extends AbstractImporter {
 	**/
     private $namespaces = array();
     private $_isDotCom = false;
-    private $_dotComFilesUrl = '';
 
     public function parseFile(){
         
@@ -36,7 +35,7 @@ class Wordpress extends AbstractImporter {
 		foreach($this->_posts as &$post){
 			if (isset($post['image'])){
 				$id = $post['image']; 
-				//$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
+				$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
 			}
 		}
 
@@ -78,7 +77,6 @@ class Wordpress extends AbstractImporter {
 
         if (strpos($parser->xpath('/rss/channel/wp:base_site_url')[0], 'wordpress.com') !== false){
             $this->_isDotCom = true;
-            $this->_dotComFilesUrl = $this->_createDotComFilesUrl();
         }
     
         $this->namespaces = $parser->getDocNamespaces();
@@ -245,7 +243,7 @@ class Wordpress extends AbstractImporter {
         $searchUrl = '';
 		
         if ($this->_isDotCom){
-            $searchUrl = addcslashes($this->_dotComFilesUrl, ':/');
+            $searchUrl = 'https?:\/\/[^\/]+[files.wordpress.com]';
         } else {
             $searchUrl = addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/';
         }
@@ -253,7 +251,7 @@ class Wordpress extends AbstractImporter {
 		if (preg_match('/[0-9]{4}\/[0-9]{2}/', $content)){
 			// Replace year/month to actual year / actual month
 			$content = preg_replace(
-				'/(?:' . $searchUrl . ')*[0-9]{4}\/[0-9]{2}/', 
+				'/(?:' . $searchUrl . ')*\/([0-9]{4}\/[0-9]{2})/', 
 				'/content/uploads/' . $year . '/' . $month, 
 				$content
 			);
@@ -272,16 +270,5 @@ class Wordpress extends AbstractImporter {
 		//$content = preg_replace('/' . "\[\w(.+?)?\](?:(.+?)\[\/\w(.+?)?\])?" . '/', '', $content);
 		return $content;
     } 
-
-    private function _createDotComFilesUrl(){
-        $dotCom = [];
-        $oldBlog = explode('.', $this->_oldBlogUrl);
-        array_push($dotCom, array_pop($oldBlog));
-        array_push($dotCom, array_pop($oldBlog));
-        rsort($dotCom);
-        array_push($oldBlog, 'files');
-        $oldBlog = array_merge($oldBlog, $dotCom);
-        return implode('.', $oldBlog) . '/';
-    }
 }
 ?>
