@@ -111,13 +111,13 @@ class Setting extends Leafpub {
             $st->bindParam(':name', $name);
             $st->bindParam(':value', $value);
             $st->execute();
+
+            // Update cache
+            self::$settings[$name] = $value;
         } catch(\PDOException $e) {
             return false;
         }
-        // Update cache
-        self::$settings[$name] = $value;
 
         return true;
     }
-
 }
