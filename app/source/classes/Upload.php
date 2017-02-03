@@ -131,22 +131,14 @@ class Upload extends Leafpub {
         //$target_dir .= '/thumbnails';
         if(!self::makeDir(self::path($target_dir.'thumbnails'))) {
             throw new \Exception(
-                'Unable to create directory: ' . $target_dir,
+                'Unable to create directory: ' . $target_dir.'thumbnails',
                 self::UNABLE_TO_CREATE_DIRECTORY
             );
         }
         $relative_thumb = "$target_dir"."thumbnails/$filename";
         $thumb_path = self::path($relative_thumb);
-        // Create a thumbnail
-        $image = new \claviska\SimpleImage($full_path);
-        try{
-            $image->thumbnail(400, 300)->toFile($thumb_path);
-        } catch(\Exception $e){
-            throw new \Exception(
-                'Unable to create thumbnail: ' . $filename,
-                self::UNABLE_TO_WRITE_FILE
-            );
-        }
+        
+        self::generateThumbnail($full_path, $thumb_path);
 
         // Get file size
         $size = (int) @filesize($full_path);
@@ -561,6 +553,19 @@ class Upload extends Leafpub {
             return (int) $st->fetch()[0];
         } catch(\PDOException $e) {
             return false;
+        }
+    }
+
+    public static function generateThumbnail($sourcePath, $thumbPath){
+        // Create a thumbnail
+        $image = new \claviska\SimpleImage($sourcePath);
+        try{
+            $image->thumbnail(400, 300)->toFile($thumbPath);
+        } catch(\Exception $e){
+            throw new \Exception(
+                'Unable to create thumbnail: ' . $filename,
+                self::UNABLE_TO_WRITE_FILE
+            );
         }
     }
 
