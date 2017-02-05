@@ -18,7 +18,8 @@ use Leafpub\Events\Upload\Add,
     Leafpub\Events\Upload\Retrieve,
     Leafpub\Events\Upload\Retrieved,
     Leafpub\Events\Upload\ManyRetrieve,
-    Leafpub\Events\Upload\ManyRetrieved;
+    Leafpub\Events\Upload\ManyRetrieved,
+    Leafpub\Events\Upload\GenerateThumbnail;
     //Leafpub\Events\Upload\BeforeRender;
 
 /**
@@ -138,7 +139,15 @@ class Upload extends Leafpub {
         $relative_thumb = "$target_dir"."thumbnails/$filename";
         $thumb_path = self::path($relative_thumb);
         
-        self::generateThumbnail($full_path, $thumb_path);
+        // Generate thumbnails via event to give
+        // developers the possibility to overwrite the thumbnail generation
+        $evt = new GenerateThumbnail([
+            'fullPath' => $full_path,
+            'thumbPath' => $thumb_path
+        ]);
+        Leafpub::dispatchEvent(GenerateThumbnail::NAME, $evt);
+        
+        //self::generateThumbnail($full_path, $thumb_path);
 
         // Get file size
         $size = (int) @filesize($full_path);
@@ -592,4 +601,15 @@ class Upload extends Leafpub {
 		return (int) $size;
     }
 
+    /**
+    * Handles the generateThumbnail Event
+    *
+    * @param GenerateThumbnail $evt
+    * @return void
+    *
+    */
+    public static function handleThumbnail(GenerateThumbnail $evt){
+        $path = $evt->getEventData();
+        return self::generateThumbnail($path['fullPath'], $path['thumbPath']);
+    }
 }
