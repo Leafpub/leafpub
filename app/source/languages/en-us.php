@@ -50,6 +50,7 @@ return [
     'default_content' => 'Default Content',
     'default_title' => 'Default Title',
     'delete_tag' => 'Delete Tag',
+    'delete_the_selected_files' => 'Delete the selected files?',
     'delete_the_selected_plugins' => 'Delete the selected plugins?',
     'delete_the_selected_posts' => 'Delete the selected posts?',
     'delete_the_selected_tags' => 'Delete the selected tags?',

@@ -50,6 +50,7 @@ return [
     'default_content' => 'Standardinhalt',
     'default_title' => 'Standardtitel',
     'delete_tag' => 'Schlagwort löschen',
+    'delete_the_selected_files' => 'Ausgewählte Dateien löschen?',
     'delete_the_selected_plugins' => 'Die gewählten Plugins löschen?',
     'delete_the_selected_posts' => 'Ausgewählten Post löschen?',
     'delete_the_selected_tags' => 'Ausgewählte Schlagwörter löschen?',
