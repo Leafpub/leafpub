@@ -1520,7 +1520,7 @@ class APIController extends Controller {
 
         return $response->withJson([
             'success' => true,
-            'message' => Language::term('file_uploaded_successfully')
+            'message' => Language::term('file_edited_successfully')
         ]);
     }
 
