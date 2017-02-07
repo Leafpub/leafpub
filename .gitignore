@@ -5,6 +5,7 @@ npm-debug.log
 
 # Folders
 /app/database.php
+/app/db_upload_fix.php
 /app/source/assets
 /app/source/vendor
 /design
