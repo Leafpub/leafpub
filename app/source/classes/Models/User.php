@@ -92,13 +92,16 @@ class User implements ModelInterface {
 
         $select->order('name');
 
-        $users = self::getModel()->selectWith($select);
-        
+        $users = self::getModel()->selectWith($select)->toArray();
+
+        foreach($users as $key => $value){
+            $users[$key] = self::normalize($value);
+        }
         return $users;
     }
 
     public static function getOne($user){
-        return self::getModel()->select($user)->current();
+        return self::normalize(self::getModel()->select(['slug' => $user])->current());
     }
 
     public static function create($data){
