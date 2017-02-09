@@ -22,10 +22,10 @@ use Leafpub\Admin,
     Leafpub\Search,
     Leafpub\Session,
     Leafpub\Setting,
-    Leafpub\Tag,
+    Leafpub\Models\Tag,
     Leafpub\Theme,
     Leafpub\Upload,
-    Leafpub\User,
+    Leafpub\Models\User,
     Leafpub\Plugin,
     Leafpub\Mailer;
 
@@ -375,7 +375,7 @@ class AdminController extends Controller {
             return $this->notFound($request, $response);
         }
 
-        $tag = Tag::get($args['slug']);
+        $tag = Tag::getOne($args['slug']);
         if(!$tag) {
             return $this->notFound($request, $response);
         }
@@ -486,7 +486,7 @@ class AdminController extends Controller {
         }
 
         // Get the user
-        $user = User::get($args['slug']);
+        $user = User::getOne(['slug' => $args['slug']]);
         if(!$user) {
             return $this->notFound($request, $response);
         }

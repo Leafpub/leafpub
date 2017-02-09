@@ -25,7 +25,7 @@ use Leafpub\Admin,
     Leafpub\Tag,
     Leafpub\Theme,
     Leafpub\Upload,
-    Leafpub\User,
+    Leafpub\Models\User,
     Leafpub\Importer,
     Leafpub\Plugin,
     Leafpub\Mailer,
@@ -912,9 +912,9 @@ class APIController extends Controller {
         // Add/update the user
         try {
             if($action === 'add') {
-                User::add($slug, $user);
+                User::create($user);
             } else {
-                User::update($slug, $user);
+                User::edit($user);
             }
         } catch(\Exception $e) {
             // Handle errors
@@ -1006,7 +1006,10 @@ class APIController extends Controller {
 
         // Delete the user
         try {
-            User::delete($args['slug']);
+            User::delete([
+                'slug' => $args['slug'],
+                'recipient' => null    
+            ]);
 
             // Did you delete yourself? If so, cya!
             if($args['slug'] === Session::user()['slug']) Session::logout();
