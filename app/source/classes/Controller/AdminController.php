@@ -486,7 +486,7 @@ class AdminController extends Controller {
         }
 
         // Get the user
-        $user = User::getOne(['slug' => $args['slug']]);
+        $user = User::getOne($args['slug']);
         if(!$user) {
             return $this->notFound($request, $response);
         }
