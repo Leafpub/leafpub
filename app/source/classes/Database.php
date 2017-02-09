@@ -9,6 +9,9 @@
 
 namespace Leafpub;
 
+use Zend\Db\Adapter\Adapter,
+    Zend\Db\TableGateway\Feature\GlobalAdapterFeature,
+    Leafpub\Models\Tables\TableGateway;
 /**
 * Database
 *
@@ -66,11 +69,15 @@ class Database extends Leafpub {
                     "dbname={$config[database]};" .
                     "charset=utf8mb4"
                 ),
-                $config['user'],
+                $config['username'],
                 $config['password'],
                 $pdo_options,
                 $config['prefix']
             );
+            
+            GlobalAdapterFeature::setStaticAdapter(new Adapter($config));
+            TableGateway::$prefix = $config['prefix'];
+            
             self::$database->exec('SET time_zone = "+00:00"');
         } catch(\PDOException $e) {
             switch($e->getCode()) {
