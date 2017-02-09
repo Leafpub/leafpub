@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "714413cd18e8e143698268ab189f9a43",
-    "content-hash": "0b013562f6f764c7b87400da1e3f7c3f",
+    "content-hash": "bcbca2a592d03991d44401c4295ea1a6",
     "packages": [
         {
             "name": "claviska/simpleimage",
-            "version": "3.1.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "da1e98f3fa7ffa78dc897ba7586f233a0c4901a0"
+                "reference": "10331f5a299f92c67ccfe0981cf6ac6590d029fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/da1e98f3fa7ffa78dc897ba7586f233a0c4901a0",
-                "reference": "da1e98f3fa7ffa78dc897ba7586f233a0c4901a0",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/10331f5a299f92c67ccfe0981cf6ac6590d029fd",
+                "reference": "10331f5a299f92c67ccfe0981cf6ac6590d029fd",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +43,7 @@
                 }
             ],
             "description": "A PHP class that makes working with images as simple as possible.",
-            "time": "2017-01-11 22:17:12"
+            "time": "2017-01-18T19:22:00+00:00"
         },
         {
             "name": "composer/semver",
@@ -106,7 +105,7 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2016-08-30 16:08:34"
+            "time": "2016-08-30T16:08:34+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -133,7 +132,7 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "time": "2014-12-30T15:22:37+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -175,7 +174,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2016-11-02 15:56:58"
+            "time": "2016-11-02T15:56:58+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -218,7 +217,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2015-07-22 18:31:08"
+            "time": "2015-07-22T18:31:08+00:00"
         },
         {
             "name": "league/color-extractor",
@@ -272,7 +271,7 @@
                 "image",
                 "palette"
             ],
-            "time": "2016-12-15 09:30:02"
+            "time": "2016-12-15T09:30:02+00:00"
         },
         {
             "name": "mpratt/embera",
@@ -323,20 +322,20 @@
                 "vine",
                 "youtube"
             ],
-            "time": "2016-07-15 15:57:44"
+            "time": "2016-07-15T15:57:44+00:00"
         },
         {
             "name": "nikic/fast-route",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/FastRoute.git",
-                "reference": "f3dcf5130e634b6123d40727d612ec6aa4f61fb3"
+                "reference": "b5f95749071c82a8e0f58586987627054400cdf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/f3dcf5130e634b6123d40727d612ec6aa4f61fb3",
-                "reference": "f3dcf5130e634b6123d40727d612ec6aa4f61fb3",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/b5f95749071c82a8e0f58586987627054400cdf6",
+                "reference": "b5f95749071c82a8e0f58586987627054400cdf6",
                 "shasum": ""
             },
             "require": {
@@ -366,7 +365,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2016-10-20 17:36:47"
+            "time": "2017-01-19T11:35:12+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -412,7 +411,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:10:35"
+            "time": "2015-09-11T15:10:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -462,7 +461,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "slim/slim",
@@ -532,20 +531,20 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-20 20:30:47"
+            "time": "2016-12-20T20:30:47+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.2.1",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283"
+                "reference": "9137eb3a3328e413212826d63eeeb0217836e2b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
-                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9137eb3a3328e413212826d63eeeb0217836e2b6",
+                "reference": "9137eb3a3328e413212826d63eeeb0217836e2b6",
                 "shasum": ""
             },
             "require": {
@@ -592,20 +591,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-13 06:29:04"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.5.2",
+            "version": "4.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6"
+                "reference": "2e662f527e6d776627b9b6c6c854d0a557169a70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6",
-                "reference": "7b45b6de0b8835d5b54dafbd4a3c5a0e11abc3d6",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/2e662f527e6d776627b9b6c6c854d0a557169a70",
+                "reference": "2e662f527e6d776627b9b6c6c854d0a557169a70",
                 "shasum": ""
             },
             "type": "component",
@@ -638,20 +637,122 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2017-01-04 13:58:37"
+            "time": "2017-02-01T14:27:24+00:00"
         },
         {
-            "name": "zordius/lightncandy",
-            "version": "v1.0.0",
+            "name": "zendframework/zend-db",
+            "version": "2.8.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "42a3683aba7867a6b30b7179ab26ebcef93d34cc"
+                "url": "https://github.com/zendframework/zend-db.git",
+                "reference": "5926a1a2e7e035546b690cb7d4c11a3c47db2c98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/42a3683aba7867a6b30b7179ab26ebcef93d34cc",
-                "reference": "42a3683aba7867a6b30b7179ab26ebcef93d34cc",
+                "url": "https://api.github.com/repos/zendframework/zend-db/zipball/5926a1a2e7e035546b690cb7d4c11a3c47db2c98",
+                "reference": "5926a1a2e7e035546b690cb7d4c11a3c47db2c98",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5 || ^7.0",
+                "zendframework/zend-stdlib": "^2.7 || ^3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "1.7.*",
+                "phpunit/phpunit": "~4.0",
+                "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
+                "zendframework/zend-hydrator": "^1.1 || ^2.1",
+                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
+            },
+            "suggest": {
+                "zendframework/zend-eventmanager": "Zend\\EventManager component",
+                "zendframework/zend-hydrator": "Zend\\Hydrator component for using HydratingResultSets",
+                "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev",
+                    "dev-develop": "2.9-dev"
+                },
+                "zf": {
+                    "component": "Zend\\Db",
+                    "config-provider": "Zend\\Db\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Db\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "homepage": "https://github.com/zendframework/zend-db",
+            "keywords": [
+                "db",
+                "zf2"
+            ],
+            "time": "2016-08-09T19:28:55+00:00"
+        },
+        {
+            "name": "zendframework/zend-stdlib",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-stdlib.git",
+                "reference": "debedcfc373a293f9250cc9aa03cf121428c8e78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/debedcfc373a293f9250cc9aa03cf121428c8e78",
+                "reference": "debedcfc373a293f9250cc9aa03cf121428c8e78",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "^2.6.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev",
+                    "dev-develop": "3.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Stdlib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "homepage": "https://github.com/zendframework/zend-stdlib",
+            "keywords": [
+                "stdlib",
+                "zf2"
+            ],
+            "time": "2016-09-13T14:38:50+00:00"
+        },
+        {
+            "name": "zordius/lightncandy",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zordius/lightncandy.git",
+                "reference": "202f7f191d5c7bc61265b10b61a924dc73d79376"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/202f7f191d5c7bc61265b10b61a924dc73d79376",
+                "reference": "202f7f191d5c7bc61265b10b61a924dc73d79376",
                 "shasum": ""
             },
             "require": {
@@ -663,7 +764,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.0-dev"
+                    "dev-master": "1.0.3-dev"
                 }
             },
             "autoload": {
@@ -690,7 +791,7 @@
                 "php",
                 "template"
             ],
-            "time": "2016-12-30 04:28:45"
+            "time": "2017-01-28T03:37:07+00:00"
         }
     ],
     "packages-dev": [],

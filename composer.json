@@ -14,7 +14,8 @@
         "tinymce/tinymce": "^4.3",
         "mpratt/embera": "^1.9",
         "symfony/event-dispatcher": "^3.1",
-        "composer/semver": "^1.4.2"
+        "composer/semver": "^1.4.2",
+        "zendframework/zend-db": "^2.7"
     },
     "config": {
         "vendor-dir": "app/source/vendor"
