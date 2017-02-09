@@ -101,9 +101,13 @@ class Tag implements ModelInterface {
 
         // Run the data query
         try {
-            $tags = $model->selectWith($select);
+            $tags = $model->selectWith($select)->toArray();
         } catch(\PDOException $e) {
             return false;
+        }
+
+        foreach($tags as $key => $value){
+            $tags[$key] = self::normalize($value);
         }
 
         $evt = new ManyRetrieved($tags);
@@ -131,7 +135,7 @@ class Tag implements ModelInterface {
         }
 
         // Normalize fields
-        //$tag = self::normalize($tag);
+        $tag = self::normalize($tag);
 
         $evt = new Retrieved($tag);
         Leafpub::dispatchEvent(Retrieved::NAME, $evt);
@@ -250,7 +254,46 @@ class Tag implements ModelInterface {
 
         return $ret;
     }
-    
+    //$model->getSql()->getSqlStringForSqlObject($select)
+    public static function getTagsToPost($postId){
+        try {
+            $table = new Tables\PostTags();
+            $select1 = $table->getSql()->select()
+                                        ->columns(['tag'])
+                                        ->where(function($wh) use($postId){
+                                            $wh->equalTo('post', $postId);
+                                        });
+
+            $model = self::getModel();
+            $select = self::getModel()->getSql()->select()
+                                                ->columns(['slug'])
+                                                ->where(function($wh) use($select1){
+                                                    $wh->in('id', $select1);
+                                                });
+           
+            return $model->selectWith($select)->toArray();
+        } catch(\Exception $e){
+            return false;
+        }
+    }
+
+    /**
+    * Normalize data types for certain fields
+    *
+    * @param array $tag
+    * @return array
+    *
+    **/ 
+    private static function normalize($tag) {
+        // Cast to integer
+        $tag['id'] = (int) $tag['id'];
+
+        // Convert dates from UTC to local
+        $tag['created'] = Leafpub::utcToLocal($tag['created']);
+
+        return $tag;
+    }
+
     /**
     * Returns the total number of tags that exist
     *

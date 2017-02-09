@@ -26,4 +26,25 @@ class Upload implements ModelInterface {
     public static function save(Zend\Db\RowGateway\RowGatewayInterface $row){}
     public static function delete(Zend\Db\RowGateway\RowGatewayInterface $row){}
     
+    public static function getUploadsToPost($postId){
+        try {
+            $table = new Tables\PostUploads();
+            $select1 = $table->getSql()->select()
+                                        ->columns(['upload'])
+                                        ->where(function($wh) use($postId){
+                                            $wh->equalTo('post', $postId);
+                                        });
+
+            $model = self::getModel();
+            $select = self::getModel()->getSql()->select()
+                                                ->columns(['slug'])
+                                                ->where(function($wh) use($select1){
+                                                    $wh->in('id', $select1);
+                                                });
+           
+            return $model->selectWith($select)->toArray();
+        } catch(\Exception $e){
+            return false;
+        }
+    }
 }

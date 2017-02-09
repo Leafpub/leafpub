@@ -163,9 +163,13 @@ class Post implements ModelInterface {
 
         // Run the data query
         try {
-            $posts = $model->selectWith($select);
+            $posts = $model->selectWith($select)->toArray();
         } catch(\PDOException $e) {
             return false;
+        }
+
+        foreach($posts as $key => $value){
+            $posts[$key] = self::normalize($value);
         }
 
         $evt = new ManyRetrieved($posts);
@@ -946,6 +950,50 @@ class Post implements ModelInterface {
         return $html;
     }
 
+    public static function getPostsToTag($tagId){
+        try {
+            $table = new Tables\PostTags();
+            $select1 = $table->getSql()->select()
+                                        ->columns(['post'])
+                                        ->where(function($wh) use($tagId){
+                                            $wh->equalTo('tag', $tagId);
+                                        });
+
+            $model = self::getModel();
+            $select = self::getModel()->getSql()->select()
+                                                ->columns(['slug'])
+                                                ->where(function($wh) use($select1){
+                                                    $wh->in('id', $select1);
+                                                });
+           
+            return $model->selectWith($select)->toArray();
+        } catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public static function getPostsToUpload($mediaId){
+        try {
+            $table = new Tables\PostUploads();
+            $select1 = $table->getSql()->select()
+                                        ->columns(['post'])
+                                        ->where(function($wh) use($mediaId){
+                                            $wh->equalTo('upload', $mediaId);
+                                        });
+
+            $model = self::getModel();
+            $select = self::getModel()->getSql()->select()
+                                                ->columns(['slug'])
+                                                ->where(function($wh) use($select1){
+                                                    $wh->in('id', $select1);
+                                                });
+           
+            return $model->selectWith($select)->toArray();
+        } catch(\Exception $e){
+            return false;
+        }
+    }
+
     /**
     * Gets the tags for the specified post.
     *
@@ -955,16 +1003,22 @@ class Post implements ModelInterface {
     **/
     private static function getTags($post_id) {
         try {
-           // Get a list of slugs
-           $st = self::$database->prepare('
-               SELECT slug FROM __tags
-               LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
-               WHERE __post_tags.post = :post_id
-               ORDER BY name
-           ');
-           $st->bindParam(':post_id', $post_id);
-           $st->execute();
-           return $st->fetchAll(\PDO::FETCH_COLUMN);
+           return Tags::getTagsToPost($post_id);
+       } catch(\PDOException $e) {
+           return false;
+       }
+    }
+
+    /**
+    * Gets the uploads for the specified post.
+    *
+    * @param int $post_id
+    * @return mixed
+    *
+    **/
+    private static function getUploads($post_id) {
+        try {
+           return Upload::getUploadsToPost($post_id);
        } catch(\PDOException $e) {
            return false;
        }
@@ -985,11 +1039,12 @@ class Post implements ModelInterface {
         $post['sticky'] = (int) $post['sticky'];
 
         // Convert dates from UTC to local
-        $post['created'] = self::utcToLocal($post['created']);
-        $post['pub_date'] = self::utcToLocal($post['pub_date']);
+        $post['created'] = Leafpub::utcToLocal($post['created']);
+        $post['pub_date'] = Leafpub::utcToLocal($post['pub_date']);
 
         // Append tags
         $post['tags'] = self::getTags($post['id']);
+        $posts['media'] = self::getUploads($post['id']);
 
         return $post;
     }
@@ -1003,11 +1058,11 @@ class Post implements ModelInterface {
     *
     **/
     private static function setTags($post_id, $tags = null) {
+        $table = new Tables\PostTags();
+        
         // Remove old tags
         try {
-            $st = self::$database->prepare('DELETE FROM __post_tags WHERE post = :post_id');
-            $st->bindParam(':post_id', $post_id);
-            $st->execute();
+            $table->delete(['post' => $post_id]);
         } catch(\PDOException $e) {
             return false;
         }
@@ -1015,18 +1070,15 @@ class Post implements ModelInterface {
         // Assign new tags
         if(count($tags)) {
             // Escape slugs
-            foreach($tags as $key => $value) {
+            /*foreach($tags as $key => $value) {
                 $tags[$key] = self::$database->quote($value);
-            }
+            }*/
             // Assign tags
             try {
-                $st = self::$database->prepare('
-                    INSERT INTO __post_tags (post, tag)
-                    SELECT :post_id, id FROM __tags
-                    WHERE slug IN(' . implode(',', $tags) . ')
-                ');
-                $st->bindParam(':post_id', $post_id);
-                $st->execute();
+                foreach($tags as $tag){
+                    $data = ['post' => $post_id, 'tag' => Tag::getId($tag)];
+                    $table->insert($data);
+                }
             } catch(\PDOException $e) {
                 return false;
             }
@@ -1044,10 +1096,10 @@ class Post implements ModelInterface {
     *
     */
     private static function setImageToPost($post_id, $content){
+        $table = new Table\PostUploads();
+
         try {
-            $st = self::$database->prepare('DELETE FROM __post_uploads WHERE post = :post_id');
-            $st->bindParam(':post_id', $post_id);
-            $st->execute();
+            $table->delete(['post' => $post_id]);
         } catch(\PDOException $e) {
             return false;
         }
@@ -1064,18 +1116,15 @@ class Post implements ModelInterface {
 
         if (count($matches)){
             // Escape slugs
-            foreach($matches as $key => $value) {
+           /* foreach($matches as $key => $value) {
                 $matches[$key] = self::$database->quote($value);
-            }
+            }*/
             // Assign tags
             try {
-                $st = self::$database->prepare('
-                    INSERT INTO __post_uploads (post, upload)
-                    SELECT :post_id, id FROM __uploads
-                    WHERE CONCAT_WS(\'.\', CONCAT(path, filename), extension) IN (' . implode(',', $matches) . ')
-                ');
-                $st->bindParam(':post_id', $post_id);
-                $st->execute();
+                foreach($matches as $media){
+                    $data = ['post' => $post_id, 'upload' => Upload::getId($media)];
+                    $table->insert($data);
+                }
             } catch(\PDOException $e) {
                 return false;
             }
