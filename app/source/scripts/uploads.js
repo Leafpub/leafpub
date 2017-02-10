@@ -223,9 +223,9 @@ $(function() {
                     }
 
                     // Show message
-                    if(res.message) {
+                    /*if(res.message) {
                         $.alertable.alert(res.message);
-                    }
+                    }*/
                 })
                 .always(function() {
                     // Advance progress
