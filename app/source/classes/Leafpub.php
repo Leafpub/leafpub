@@ -97,7 +97,7 @@ class Leafpub {
         self::on(Events\Post\BeforeRender::NAME, array($postListener, 'onBeforeRender'));
 
         // Handle thumbnail generation
-        self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Upload::handleThumbnail', -999);
+        self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Models\Upload::handleThumbnail', -999);
     }
 
     public static function registerPlugins(\Slim\App $app){
