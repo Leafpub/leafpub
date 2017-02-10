@@ -14,7 +14,7 @@ use Leafpub\Admin,
     Leafpub\Cache,
     Leafpub\Error,
     Leafpub\Feed,
-    Leafpub\History,
+    Leafpub\Models\History,
     Leafpub\Language,
     Leafpub\Models\Post,
     Leafpub\Leafpub,
@@ -26,7 +26,7 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Models\Upload,
     Leafpub\Models\User,
-    Leafpub\Plugin,
+    Leafpub\Models\Plugin,
     Leafpub\Mailer;
 
 /**
@@ -252,7 +252,6 @@ class AdminController extends Controller {
     *
     **/
     public function editPost($request, $response, $args) {
-        //var_dump(Post::getAdjacent('welcome-to-leafpub', ['tag' => 'getting-started']));exit;
         $post = Post::getOne($args['slug']);
         if(!$post) {
             return $this->notFound($request, $response);
@@ -295,7 +294,7 @@ class AdminController extends Controller {
     *
     **/
     public function history($request, $response, $args) {
-        $history = History::get($args['id']);
+        $history = History::getOne($args['id']);
         // Is there a history object and does the post's slug match the slug argument?
         if(!$history || $history['post_data']['slug'] !== $args['slug']) {
             return $this->notFound($request, $response);
@@ -412,7 +411,7 @@ class AdminController extends Controller {
             'title' => Language::term('navigation'),
             'scripts' => 'navigation.min.js',
             'styles' => 'navigation.css',
-            'navigation' => json_decode(Setting::get('navigation'), true)
+            'navigation' => json_decode(Setting::getOne('navigation'), true)
         ]);
 
         return $response->write($html);

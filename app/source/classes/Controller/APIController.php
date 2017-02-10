@@ -14,7 +14,7 @@ use Leafpub\Admin,
     Leafpub\Cache,
     Leafpub\Error,
     Leafpub\Feed,
-    Leafpub\History,
+    Leafpub\Models\History,
     Leafpub\Language,
     Leafpub\Models\Post,
     Leafpub\Leafpub,
@@ -24,10 +24,10 @@ use Leafpub\Admin,
     Leafpub\Models\Setting,
     Leafpub\Models\Tag,
     Leafpub\Theme,
-    Leafpub\Upload,
+    Leafpub\Models\Upload,
     Leafpub\Models\User,
     Leafpub\Importer,
-    Leafpub\Plugin,
+    Leafpub\Models\Plugin,
     Leafpub\Mailer,
     Leafpub\Mailer\Mail\MailFactory,
     Leafpub\Mailer\Mail\AddressFactory,
@@ -480,7 +480,7 @@ class APIController extends Controller {
             ]);
         } else {
             $dir = $args['plugin'];
-            $plugin = Plugin::get($dir);
+            $plugin = Plugin::getOne($dir);
 
             if (!$plugin){
                 return $response->withJson([
@@ -581,7 +581,7 @@ class APIController extends Controller {
     public function deleteHistory($request, $response, $args) {
         // Get the history item and the affected post so we can verify privileges
         $history = History::getOne($args['id']);
-        $post = Post::get($history['slug']);
+        $post = Post::getOne($history['slug']);
         if(!$history || !$post) {
             return $response->withJson([
                 'success' => false
@@ -1003,7 +1003,8 @@ class APIController extends Controller {
         if(!Session::isRole(['owner', 'admin'])) {
             return $response->withStatus(403);
         }
-
+        
+        //TODO: Add recipient!!
         // Delete the user
         try {
             User::delete([
@@ -1403,7 +1404,7 @@ class APIController extends Controller {
             return $response->withStatus(404);
         }
 
-        $data = Upload::get($filename);
+        $data = Upload::getOne($filename);
 
         return $response->withJson([
             'success' => true,
@@ -1478,10 +1479,10 @@ class APIController extends Controller {
 
             try {
                 // Add the file to uploads
-                $id = Upload::add(
+                $id = Upload::create([
                     $upload->getClientFilename(),
                     file_get_contents($upload->file),
-                    $info
+                    &$info]
                 );
                 $uploaded[] = $info;
             } catch(\Exception $e) {
@@ -1506,12 +1507,13 @@ class APIController extends Controller {
 
         $file = $args['file'];
         $params = $request->getParams();
-    
+        $params['filename'] = $file;
+
          // Create tags that don't exist yet
         if(Session::isRole(['owner', 'admin', 'editor'])) {
             foreach((array) $params['tagData'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
-                    Tag::add($tag['slug'], [
+                    Tag::create($tag['slug'], [
                         'name' => $tag['name'],
                         'type' => 'upload'
                     ]);
@@ -1519,7 +1521,7 @@ class APIController extends Controller {
             }
         }
 
-        Upload::edit($file, $params);
+        Upload::edit($params);
 
         return $response->withJson([
             'success' => true,

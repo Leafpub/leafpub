@@ -147,7 +147,7 @@ return [
         }
         
         if ($continue){
-            $string .= '... </br><a class="read-more" href="' .  \Leafpub\Post::url($options['_this']['slug']) . '">' . \Leafpub\Language::term('read_more') . '</a>';
+            $string .= '... </br><a class="read-more" href="' .  \Leafpub\Models\Post::url($options['_this']['slug']) . '">' . \Leafpub\Language::term('read_more') . '</a>';
         }
         // We've stripped HTML tags, so return as-is
         return new \LightnCandy\SafeString($string);
@@ -344,12 +344,12 @@ return [
         }
 
         // See Post::count() for available options
-        return \Leafpub\Post::count($options['hash']);
+        return \Leafpub\Models\Post::count($options['hash']);
     },
 
     'upload_count' => function($options){
         // See Upload::count() for available options
-        return \Leafpub\Upload::count($options['hash']);
+        return \Leafpub\Models\Upload::count($options['hash']);
     },
 
     // Returns the correct string based on a number
@@ -413,7 +413,7 @@ return [
                 }
                 $searchFor['sort'] = $sort;
             }
-            $posts = \Leafpub\Post::getMany($searchFor);
+            $posts = \Leafpub\Models\Post::getMany($searchFor);
         }
         if(count($posts)) {
             return $options['fn'](['posts' => $posts]);
