@@ -24,7 +24,8 @@ use Leafpub\Events\Tag\Add,
     Leafpub\Renderer,
     Leafpub\Theme;
 
-class Tag implements ModelInterface {
+class Tag extends AbstractModel {
+    protected static $_instance;
     /**
     * Constants
     **/
@@ -34,9 +35,7 @@ class Tag implements ModelInterface {
         INVALID_SLUG = 3,
         NOT_FOUND = 4;
 
-    protected static $_instance = '';
-
-    public static function getModel(){
+    protected static function getModel(){
 		if (self::$_instance == null){
 			self::$_instance	=	new Tables\Tag();
 		}
@@ -144,6 +143,14 @@ class Tag implements ModelInterface {
         return $evt->getEventData();
     }
 
+     /**
+    * Creates a tag
+    *
+    * @param array $tag
+    * @return bool
+    * @throws \Exception
+    *
+    **/
     public static function create($tag){
         $slug = $tag['slug'];
         // Enforce slug syntax
@@ -187,6 +194,14 @@ class Tag implements ModelInterface {
         return $ret;
     }
 
+    /**
+    * Updates a tag
+    *
+    * @param array $properties
+    * @return bool
+    * @throws \Exception
+    *
+    **/
     public static function edit($properties){
         // Get the tag
         $slug = $properties['slug'];
@@ -241,6 +256,13 @@ class Tag implements ModelInterface {
         return $ret;
     }
 
+    /**
+    * Deletes a tag
+    *
+    * @param String $slug
+    * @return bool
+    *
+    **/
     public static function delete($slug){
         $evt = new Delete($slug);
         Leafpub::dispatchEvent(Delete::NAME, $evt);
@@ -256,7 +278,14 @@ class Tag implements ModelInterface {
 
         return $ret;
     }
-    //$model->getSql()->getSqlStringForSqlObject($select)
+    
+    /**
+    * Gets tags to a given post
+    *
+    * @param int $postId
+    * @return array
+    *
+    **/
     public static function getTagsToPost($postId){
         try {
             $table = new Tables\PostTags();
@@ -275,7 +304,41 @@ class Tag implements ModelInterface {
            
             return $model->selectWith($select)->toArray();
         } catch(\Exception $e){
-            return false;
+            return [];
+        }
+    }
+
+    /**
+    * Gets tags to a given media file
+    *
+    * @param int $mediaId
+    * @return array
+    *
+    **/
+    public static function getTagsToUpload($mediaId){
+        $tags = [];
+        try {
+            $table = new Tables\UploadTags();
+            $select1 = $table->getSql()->select()
+                                        ->columns(['tag'])
+                                        ->where(function($wh) use($mediaId){
+                                            $wh->equalTo('upload', $mediaId);
+                                        });
+
+            $model = self::getModel();
+            $select = self::getModel()->getSql()->select()
+                                                ->columns(['slug'])
+                                                ->where(function($wh) use($select1){
+                                                    $wh->in('id', $select1);
+                                                });
+           
+            $ret = $model->selectWith($select)->toArray();
+            foreach ($ret as $itm){
+                $tags[] = $itm['slug'];
+            }
+            return $tags;
+        } catch(\Exception $e){
+            return [];
         }
     }
 

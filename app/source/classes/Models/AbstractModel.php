@@ -9,10 +9,9 @@
 
 namespace Leafpub\Models;
 
-interface ModelInterface {
-    public static function getMany(array $options = [], &$pagination = null);
-    public static function getOne($data);
-    public static function create($data);
-    public static function edit($data);
-    public static function delete($data);
+use Leafpub\Leafpub;
+
+abstract class AbstractModel implements ModelInterface {
+    
+    abstract protected static function getModel();
 }

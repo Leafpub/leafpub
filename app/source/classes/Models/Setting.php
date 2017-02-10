@@ -9,25 +9,45 @@
 
 namespace Leafpub\Models;
 
-class Setting implements ModelInterface {
-    protected static $_instance = '';
+class Setting extends AbstractModel {
+    protected static $_instance;
     protected static $settings = [];
 
-    public static function getModel(){
+    protected static function getModel(){
 		if (self::$_instance == null){
 			self::$_instance	=	new Tables\Setting();
 		}
 		return self::$_instance;
 	}
 
+    /**
+    * Returns all settings in an array
+    *
+    * @return array
+    *
+    **/
     public static function getMany(array $options = [], &$pagination = null){
         return self::$settings;
     }
 
+    /**
+    * Gets a single setting
+    *
+    * @param null $name
+    * @return mixed
+    *
+    **/
     public static function getOne($name){
         return isset(self::$settings[$name]) ? self::$settings[$name] : null;
     }
 
+    /**
+    * Alias for edit
+    *
+    * @param array $data
+    * @return bool
+    *
+    **/
     public static function create($data){
         return self::edit($data);
     }
@@ -44,6 +64,14 @@ class Setting implements ModelInterface {
 
         return true;
     }
+
+    /**
+    * Delete a setting
+    *
+    * @param String $name
+    * @return bool
+    *
+    **/
     public static function delete($name){
         try{
             self::getModel()->delete(['name' => $name]);
