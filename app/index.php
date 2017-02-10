@@ -15,6 +15,9 @@ Session::init();
 
 // Initialize the app
 $container = new \Slim\Container();
+if (LEAFPUB_DEV){
+    $container['settings']['displayErrorDetails'] = true;
+}
 $app = new \Slim\App($container);
 
 require __DIR__ . '/source/config/routes.php';
