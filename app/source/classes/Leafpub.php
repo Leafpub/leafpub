@@ -9,7 +9,8 @@
 
 namespace Leafpub;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Leafpub\Models\Setting,
+    Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
 * Leafpub
@@ -23,7 +24,7 @@ class Leafpub {
     /**
     * Properties
     **/
-    protected static $database, $language, $listeners, $settings, $dispatcher;
+    protected static $database, $language, $listeners, $dispatcher;
 
     /**
     * Initialize the app
@@ -65,7 +66,7 @@ class Leafpub {
 
         // Load the language pack
         try {
-            Language::load(Setting::get('language'));
+            Language::load(Setting::getOne('language'));
         } catch(\Exception $e) {
             exit(Error::system([
                 'title' => 'Translation Pack Error',
@@ -77,7 +78,7 @@ class Leafpub {
         mb_internal_encoding('UTF-8');
 
         // Set timezone
-        date_default_timezone_set(Setting::get('timezone'));
+        date_default_timezone_set(Setting::getOne('timezone'));
 
          // Create the Symfony EventDispatcher
         self::$dispatcher = new EventDispatcher();
@@ -256,13 +257,13 @@ class Leafpub {
         return in_array($slug, [
             'api',      // reserved for the API
             'leafpub', // reserved for future use
-            Setting::get('frag_admin'),
-            Setting::get('frag_author'),
-            Setting::get('frag_blog'),
-            Setting::get('frag_feed'),
-            Setting::get('frag_page'),
-            Setting::get('frag_search'),
-            Setting::get('frag_tag')
+            Setting::getOne('frag_admin'),
+            Setting::getOne('frag_author'),
+            Setting::getOne('frag_blog'),
+            Setting::getOne('frag_feed'),
+            Setting::getOne('frag_page'),
+            Setting::getOne('frag_search'),
+            Setting::getOne('frag_tag')
         ]);
     }
 
@@ -308,7 +309,7 @@ class Leafpub {
     *
     **/
     public static function localToUtc($local_date) {
-        $dt = new \DateTime($local_date, new \DateTimeZone(Setting::get('timezone')));
+        $dt = new \DateTime($local_date, new \DateTimeZone(Setting::getOne('timezone')));
         $dt->setTimeZone(new \DateTimeZone('UTC'));
         return $dt->format('Y-m-d H:i:s');
     }
@@ -726,7 +727,7 @@ class Leafpub {
     **/
     public static function utcToLocal($utc_date) {
         $dt = new \DateTime($utc_date, new \DateTimeZone('UTC'));
-        $dt->setTimeZone(new \DateTimeZone(Setting::get('timezone')));
+        $dt->setTimeZone(new \DateTimeZone(Setting::getOne('timezone')));
         return $dt->format('Y-m-d H:i:s');
     }
 

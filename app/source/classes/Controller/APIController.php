@@ -16,13 +16,13 @@ use Leafpub\Admin,
     Leafpub\Feed,
     Leafpub\History,
     Leafpub\Language,
-    Leafpub\Post,
+    Leafpub\Models\Post,
     Leafpub\Leafpub,
     Leafpub\Renderer,
     Leafpub\Search,
     Leafpub\Session,
-    Leafpub\Setting,
-    Leafpub\Tag,
+    Leafpub\Models\Setting,
+    Leafpub\Models\Tag,
     Leafpub\Theme,
     Leafpub\Upload,
     Leafpub\Models\User,
@@ -82,7 +82,7 @@ class APIController extends Controller {
         $params = $request->getParams();
 
         // Get the user
-        $user = User::get($params['username']);
+        $user = User::getOne($params['username']);
         if(!$user) {
             return $response->withJson([
                 'success' => false,
@@ -92,7 +92,7 @@ class APIController extends Controller {
         }
 
         // Generate and set a password reset token
-        User::update($user['slug'], [
+        User::edit($user['slug'], [
             'reset_token' => $token = Leafpub::randomBytes(50)
         ]);
 
@@ -100,7 +100,7 @@ class APIController extends Controller {
         try {
             $emailData = MailFactory::create([
                 'to' => AddressFactory::create($user['email']),
-                'subject' => '[' . Setting::get('title') . '] ' . Language::term('password_reset'),
+                'subject' => '[' . Setting::getOne('title') . '] ' . Language::term('password_reset'),
                 'message' =>
                     Language::term('a_password_reset_has_been_requested_for_this_account') . "\n\n" .
                     $user['name'] . ' — ' . $user['slug'] . "\n\n" .
@@ -146,7 +146,7 @@ class APIController extends Controller {
         $params = $request->getParams();
 
         // Get the user
-        $user = User::get($params['username']);
+        $user = User::getOne($params['username']);
         if(!$user) {
             return $response->withJson([
                 'success' => false,
@@ -173,7 +173,7 @@ class APIController extends Controller {
 
         // Change password and remove token
         try {
-            User::update($user['slug'], [
+            User::edit($user['slug'], [
                 'password' => $params['password'],
                 'reset_token' => ''
             ]);
@@ -259,7 +259,7 @@ class APIController extends Controller {
         if(
             $action === 'update' &&
             !Session::isRole(['owner', 'admin', 'editor']) &&
-            Post::get($params['post'])['author'] !== Session::user('slug')
+            Post::getOne($params['post'])['author'] !== Session::user('slug')
         ) {
             return $response->withStatus(403);
         }
@@ -276,7 +276,7 @@ class APIController extends Controller {
         if(Session::isRole(['owner', 'admin', 'editor'])) {
             foreach((array) $properties['tag_data'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
-                    Tag::add($tag['slug'], [
+                    Tag::create($tag['slug'], [
                         'name' => $tag['name'],
                         'type' => 'post'
                     ]);
@@ -287,9 +287,9 @@ class APIController extends Controller {
         // Update the post
         try {
             if($action === 'add') {
-                Post::add($slug, $properties);
+                Post::create($slug, $properties);
             } else {
-                Post::update($slug, $properties);
+                Post::edit($slug, $properties);
             }
         } catch(\Exception $e) {
             switch($e->getCode()) {
@@ -361,7 +361,7 @@ class APIController extends Controller {
         // If you're not an owner, admin, or editor then you can only delete your own posts
         if(
             Session::isRole(['owner', 'admin', 'editor']) ||
-            Post::get($args['slug'])['author'] === Session::user('slug')
+            Post::getOne($args['slug'])['author'] === Session::user('slug')
         ) {
             return $response->withJson([
                 'success' => Post::delete($args['slug'])
@@ -417,8 +417,8 @@ class APIController extends Controller {
                 // New post
                 $post = [
                     'slug' => ':new',
-                    'title' => Setting::get('default_title'),
-                    'content' => Leafpub::markdownToHtml(Setting::get('default_content')),
+                    'title' => Setting::getOne('default_title'),
+                    'content' => Leafpub::markdownToHtml(Setting::getOne('default_content')),
                     'author' => Session::user(),
                     'pub_date' => date('Y-m-d H:i:s')
                 ];
@@ -580,7 +580,7 @@ class APIController extends Controller {
     **/
     public function deleteHistory($request, $response, $args) {
         // Get the history item and the affected post so we can verify privileges
-        $history = History::get($args['id']);
+        $history = History::getOne($args['id']);
         $post = Post::get($history['slug']);
         if(!$history || !$post) {
             return $response->withJson([
@@ -614,7 +614,7 @@ class APIController extends Controller {
     *
     **/
     public function getHistory($request, $response, $args) {
-        $history = History::get($args['id']);
+        $history = History::getOne($args['id']);
         if(!$history) {
             return $response->withJson([
                 'success' => false
@@ -705,9 +705,9 @@ class APIController extends Controller {
         // Add/update the tag
         try {
             if($action === 'add') {
-                Tag::add($slug, $tag);
+                Tag::create($tag);
             } else {
-                Tag::update($slug, $tag);
+                Tag::edit($tag);
             }
         } catch(\Exception $e) {
             // Handle errors
@@ -820,7 +820,7 @@ class APIController extends Controller {
         }
 
         // Update navigation in settings
-        Setting::update('navigation', json_encode($navigation));
+        Setting::edit(['name' =>'navigation', 'value' => json_encode($navigation)]);
 
         // Send response
         return $response->withJson([
@@ -1069,7 +1069,7 @@ class APIController extends Controller {
 
         // Update settings
         foreach($settings as $name => $value) {
-            Setting::update($name, $value);
+            Setting::edit(['name' => $name, 'value' => $value]);
         }
 
         // Send response

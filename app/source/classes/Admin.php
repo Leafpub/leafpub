@@ -9,7 +9,8 @@
 
 namespace Leafpub;
 
-use Leafpub\Events\Navigation\AdminMenu;
+use Leafpub\Events\Navigation\AdminMenu,
+    Leafpub\Models\Setting;
 
 /**
 * Admin
@@ -207,7 +208,7 @@ class Admin extends Leafpub {
     *
     **/
     public static function url($path = null) {
-        return parent::url(Setting::get('frag_admin'), $path);
+        return parent::url(Setting::getOne('frag_admin'), $path);
     }
 
 }

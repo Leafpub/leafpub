@@ -9,7 +9,8 @@
 
 namespace Leafpub;
 
-use DirectoryIterator;
+use DirectoryIterator,
+    Leafpub\Models\Setting;
 
 /**
 * Theme
@@ -55,7 +56,7 @@ class Theme extends Leafpub {
     **/
     public static function getPath() {
         $paths = func_get_args();
-        $base_path = 'content/themes/' . Setting::get('theme');
+        $base_path = 'content/themes/' . Setting::getOne('theme');
 
         return self::path($base_path, implode('/', $paths));
     }
@@ -64,7 +65,7 @@ class Theme extends Leafpub {
         if (!self::$_themeOptions){
             self::$_themeOptions = json_decode(
                                         file_get_contents(
-                                            self::path('content/themes/' . Setting::get('theme') . '/theme.json')
+                                            self::path('content/themes/' . Setting::getOne('theme') . '/theme.json')
                                             , true
                                         )
                                     );

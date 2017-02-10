@@ -12,12 +12,12 @@ namespace Leafpub\Controller;
 use Leafpub\Blog,
     Leafpub\Error,
     Leafpub\Feed,
-    Leafpub\Post,
+    Leafpub\Models\Post,
     Leafpub\Search,
     Leafpub\Session,
-    Leafpub\Setting,
-    Leafpub\Tag,
-    Leafpub\User;
+    Leafpub\Models\Setting,
+    Leafpub\Models\Tag,
+    Leafpub\Models\User;
 
 /**
 * ThemeController
@@ -54,7 +54,7 @@ class ThemeController extends Controller {
     *
     **/
     public function customHomepage($request, $response, $args) {
-        $html = Post::render(Setting::get('homepage'));
+        $html = Post::render(Setting::getOne('homepage'));
 
         return $html === false ?
             $this->notFound($request, $response) :

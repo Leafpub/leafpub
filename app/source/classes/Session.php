@@ -9,6 +9,9 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Setting,
+    Leafpub\Models\User;
+
 /**
 * Session
 *
@@ -40,7 +43,7 @@ class Session extends Leafpub {
             'data' => [
                 'username' => $username
             ]
-        ], Setting::get('auth_key'));
+        ], Setting::getOne('auth_key'));
 
         // Save token in a cookie
         setcookie('authToken', $token, $expires, '/');
@@ -70,7 +73,7 @@ class Session extends Leafpub {
         // Decode the token
         try {
             \Firebase\JWT\JWT::$leeway = 60;
-            $token = \Firebase\JWT\JWT::decode($_COOKIE['authToken'], Setting::get('auth_key'), ['HS256']);
+            $token = \Firebase\JWT\JWT::decode($_COOKIE['authToken'], Setting::getOne('auth_key'), ['HS256']);
         } catch(\Exception $e) {
             return false;
         }
@@ -79,7 +82,7 @@ class Session extends Leafpub {
         self::createJWT($token->data->username);
 
         // Fetch and store user data
-        self::$user = User::get($token->data->username);
+        self::$user = User::getOne($token->data->username);
 
         return true;
     }
@@ -116,7 +119,7 @@ class Session extends Leafpub {
     public static function login($username, $password) {
         if(User::verifyPassword($username, $password)) {
             // Store user data
-            self::$user = User::get($username);
+            self::$user = User::getOne($username);
 
             // Create the token
             self::createJWT($username);
@@ -151,11 +154,11 @@ class Session extends Leafpub {
         // Has the username (slug) changed?
         if($new_username !== Session::user()['slug']) {
             // Yep, update user data and token
-            self::$user = User::get($new_username);
+            self::$user = User::getOne($new_username);
             self::createJWT($new_username);
         } else {
             // Nope, only update user data
-            self::$user = User::get(self::$user['slug']);
+            self::$user = User::getOne(self::$user['slug']);
         }
     }
 

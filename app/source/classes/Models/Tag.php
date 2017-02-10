@@ -20,7 +20,9 @@ use Leafpub\Events\Tag\Add,
     Leafpub\Events\Tag\ManyRetrieve,
     Leafpub\Events\Tag\ManyRetrieved,
     Leafpub\Events\Tag\BeforeRender,
-    Leafpub\Leafpub;
+    Leafpub\Leafpub,
+    Leafpub\Renderer,
+    Leafpub\Theme;
 
 class Tag implements ModelInterface {
     /**
@@ -128,7 +130,7 @@ class Tag implements ModelInterface {
         Leafpub::dispatchEvent(Retrieve::NAME, $evt);
 
         try {
-            $tag = self::getModel()->select(['slug' => $slug])->current();
+            $tag = self::getModel()->select(['slug' => $slug])->current()->getArrayCopy();
             if(!$tag) return false;
         } catch(\PDOException $e) {
             return false;
@@ -334,11 +336,11 @@ class Tag implements ModelInterface {
         try {
             $model = self::getModel();
             $select = $model->getSql()->select();
-            $select->columns(['slug, name'])
+            $select->columns(['slug', 'name'])
                    ->where(['type' => $type])
                    ->order('name');
             
-            $tags = $model->selectWith($select);
+            $tags = $model->selectWith($select)->toArray();
         } catch(\PDOException $e) {
             return false;
         }
@@ -357,7 +359,7 @@ class Tag implements ModelInterface {
         $posts = Post::getMany([
             'tag' => $slug,
             'page' => $page,
-            'items_per_page' => Setting::get('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page')
         ], $pagination);
 
         // Make sure the requested page exists
@@ -379,46 +381,46 @@ class Tag implements ModelInterface {
                     'ld_json' => [
                         '@context' => 'https://schema.org',
                         '@type' => 'Series',
-                        'publisher' => Setting::get('title'),
+                        'publisher' => Setting::getOne('title'),
                         'url' => self::url($tag['slug']),
                         'image' => empty($tag['cover']) ? null : [
                                     '@type' => 'ImageObject',
-                                    'url' => parent::url($tag['cover'])
+                                    'url' => Leafpub::url($tag['cover'])
                                 ],
                         'name' => !empty($tag['meta_description']) ?
                             $tag['meta_title'] :
                             $tag['name'],
                         'description' => !empty($tag['meta_description']) ?
                             $tag['meta_description'] :
-                            strip_tags(self::markdownToHtml($tag['description'])),
+                            strip_tags(Leafpub::markdownToHtml($tag['description'])),
                     ],
                     // Open Graph
                     'open_graph' => [
                         'og:type' => 'website',
-                        'og:site_name' => Setting::get('title'),
+                        'og:site_name' => Setting::getOne('title'),
                         'og:title' => !empty($tag['meta_title']) ?
                             $tag['meta_title'] :
-                            $tag['name'] . ' &middot; ' . Setting::get('title'),
+                            $tag['name'] . ' &middot; ' . Setting::getOne('title'),
                         'og:description' => !empty($tag['meta_description']) ?
                             $tag['meta_description'] : $tag['description'],
                         'og:url' => self::url($tag['slug']),
                         'og:image' => !empty($tag['cover']) ?
-                            parent::url($tag['cover']) : null
+                            Leafpub::url($tag['cover']) : null
                     ],
                     // Twitter Card
                     'twitter_card' => [
                         'twitter:card' => !empty($tag['cover']) ?
                             'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
+                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
+                            '@' . Setting::getOne('twitter') : null,
                         'twitter:title' => !empty($tag['meta_title']) ?
                             $tag['meta_title'] :
-                            $tag['name'] . ' &middot; ' . Setting::get('title'),
+                            $tag['name'] . ' &middot; ' . Setting::getOne('title'),
                         'twitter:description' => !empty($tag['meta_description']) ?
                             $tag['meta_description'] : $tag['description'],
                         'twitter:url' => self::url($tag['slug']),
                         'twitter:image' => !empty($tag['cover']) ?
-                            parent::url($tag['cover']) : null
+                            Leafpub::url($tag['cover']) : null
                     ]
                 ]
             ]
@@ -452,12 +454,12 @@ class Tag implements ModelInterface {
         return $page > 1 ?
             // example.com/tag/name/page/2
             Leafpub::url(
-                Setting::get('frag_tag'),
+                Setting::getOne('frag_tag'),
                 $slug,
-                Setting::get('frag_page'),
+                Setting::getOne('frag_page'),
                 $page
             ) :
             // example.com/tag/name
-            Leafpub::url(Setting::get('frag_tag'), $slug);
+            Leafpub::url(Setting::getOne('frag_tag'), $slug);
     }
 }

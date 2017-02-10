@@ -38,7 +38,7 @@ class Mailer extends Leafpub {
      * @throws MailerException
      */
     static public function sendEmail(Mail $mail){
-        $mailerClass = self::getMailerClass(Setting::get('mailer'));
+        $mailerClass = self::getMailerClass(Setting::getOne('mailer'));
         /** @var MailerInterface $mailer */
         $mailer = new $mailerClass();
 

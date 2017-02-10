@@ -10,6 +10,9 @@
 namespace Leafpub\Models;
 
 use Leafpub\Leafpub,
+    Leafpub\Theme,
+    Leafpub\Renderer,
+    Leafpub\Session,
     Leafpub\Events\Post\Add,
     Leafpub\Events\Post\Added,
     Leafpub\Events\Post\Update,
@@ -83,21 +86,24 @@ class Post implements ModelInterface {
         }
 
         $prefix = Tables\TableGateway::$prefix;
-        $select = self::getModel()->getSql()->select($prefix.'view_posts');
+        $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
+        $select = $select->select();
+        $select->from($prefix.'view_posts');
         $select->columns($columns);
 
         $where = function($wh) use($options, $is_fulltext, $prefix){
-            $wh->equalTo(1, 1);
+            // PDO doesn't want to execute the select with 1 = 1'... -_-
+            //$wh->expression('1 = 1');
 
             if($is_fulltext) {
                 // Fulltext search
                 $wh->expression('MATCH(slug, title, content) AGAINST(?)', $options['query']);
             } else {
-                $wh->like('CONCAT(slug, title)', '%' . $options['query'] . '%');
+                $wh->expression('CONCAT(slug, title) LIKE ?', '%' . $options['query'] . '%');
             }
 
             if($options['author']){
-                $wh->equalTo('author', User::getId($options['author']));
+                $wh->equalTo('author', $options['author']);
             } 
 
             if($options['tag']){
@@ -106,14 +112,15 @@ class Post implements ModelInterface {
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
                         LEFT JOIN ' . $prefix . 'post_tags ON ' . $prefix . 'post_tags.tag = ' . $prefix . 'tags.id
-                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'posts.id AND slug = ?
-                    ) = 1'
-                    , $options['tag']
+                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'view_posts.id AND ' . $prefix . 'tags.slug = ?
+                    ) = 1',
+                    $options['tag']
                 );
             } 
             
             if($options['status']) {
-                $wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                //$wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                $wh->equalTo('status', $options['status']);
             }
 
             if($options['ignore_featured']){
@@ -129,10 +136,11 @@ class Post implements ModelInterface {
             } 
 
             if($options['start_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_GTE, $options['start_date']);
-            } 
+                $wh->greateThanOrEqualTo('pub_date', $options['start_date']);
+            }
+            
             if($options['end_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_LTE, $options['end_date']);
+                $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             }
         };
 
@@ -141,10 +149,8 @@ class Post implements ModelInterface {
         // Generate order SQL
         if($is_fulltext) {
             $select->order('(title_score * 1.5 + content_score)');
-            $order_sql = ' ORDER BY (title_score * 1.5 + content_score) ' . $options['sort'];
         } else {
-            $select->order('sticky')->order('pub_date')->order('id');
-            $order_sql = ' ORDER BY sticky ' . $options['sort'] . ', pub_date ' . $options['sort'] . ', id ' . $options['sort'];
+            $select->order('sticky '. $options['sort'])->order('pub_date '. $options['sort'])->order('id '. $options['sort']);
         }
 
         $total_items = self::count($options);
@@ -160,10 +166,9 @@ class Post implements ModelInterface {
 
         $select->offset($offset);
         $select->limit($count);
-
         // Run the data query
         try {
-            $posts = $model->selectWith($select)->toArray();
+            $posts = self::getModel()->selectWith($select)->toArray();
         } catch(\PDOException $e) {
             return false;
         }
@@ -186,8 +191,11 @@ class Post implements ModelInterface {
         // Retrieve the post
         try {
             $prefix = Tables\TableGateway::$prefix;
-            $post = self::getModel()->selectWith(self::getModel()->getSql()->select($prefix . 'view_posts')->where(['slug' => $slug])->current());
-            $post = $st->fetch(\PDO::FETCH_ASSOC);
+            $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
+            $select = $select->select();
+            $select->from($prefix.'view_posts')
+                   ->where(['slug' => $slug]);
+            $post = self::getModel()->selectWith($select)->current()->getArrayCopy();
             if(!$post) return false;
         } catch(\PDOException $e) {
             return false;
@@ -227,12 +235,12 @@ class Post implements ModelInterface {
 
         // Empty title defaults to settings.default_title
         if(empty($post['title'])) {
-            $post['title'] = Setting::get('default_title');
+            $post['title'] = Setting::getOne('default_title');
         }
 
         // Empty content defaults to settings.default_content
         if(empty($post['content'])) {
-            $post['content'] = Setting::get('default_content');
+            $post['content'] = Setting::getOne('default_content');
         }
 
         // Don't allow null properties
@@ -296,12 +304,12 @@ class Post implements ModelInterface {
 
         // Empty title defaults to settings.default_title
         if(empty($post['title'])) {
-            $post['title'] = Setting::get('default_title');
+            $post['title'] = Setting::getOne('default_title');
         }
 
         // Empty content defaults to settings.default_content
         if(empty($post['content'])) {
-            $post['content'] = Setting::get('default_content');
+            $post['content'] = Setting::getOne('default_content');
         }
 
         // Don't allow null properties
@@ -333,7 +341,7 @@ class Post implements ModelInterface {
             }
 
             // If this is the custom homepage, update settings
-            if(Setting::get('homepage') === $slug) {
+            if(Setting::getOne('homepage') === $slug) {
                 Setting::update('homepage', $post['slug']);
             }
         }
@@ -363,7 +371,7 @@ class Post implements ModelInterface {
 
     public static function delete($slug){
         // If this post is the custom homepage, update settings
-        if($slug === Setting::get('homepage')) {
+        if($slug === Setting::getOne('homepage')) {
             Setting::update('homepage', '');
         }
 
@@ -411,30 +419,35 @@ class Post implements ModelInterface {
             'tag' => null
         ], (array) $options);
 
+        $prefix = Tables\TableGateway::$prefix;
+        $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
+        $select = $select->select();
+        $select->from($prefix.'view_posts');
+
         // Convert dates to UTC
         if($options['start_date']) $start_date = Leafpub::localToUtc($options['start_date']);
         if($options['end_date']) $end_date = Leafpub::localToUtc($options['end_date']);
 
-        $where = function($wh) use($options){
+        $where = function($wh) use($options, $prefix){
             // Add options to query
             if($options['author']){
-                $wh->equalTo('author', User::getId($options['author']));
+                $wh->equalTo('author', $options['author']);
             } 
 
             if($options['tag']){
-                $prefix = Tables\TableGateway::$prefix;
                 $wh->expression(
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
                         LEFT JOIN ' . $prefix . 'post_tags ON ' . $prefix . 'post_tags.tag = ' . $prefix . 'tags.id
-                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'posts.id AND slug = ?
-                    ) = 1'
-                    , $options['tag']
+                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'view_posts.id AND ' . $prefix . 'tags.slug = ?
+                    ) = 1',
+                    $options['tag']
                 );
             } 
             
             if($options['status']) {
-                $wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                //$wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                $wh->equalTo('status', $options['status']);
             }
 
             if($options['ignore_featured']){
@@ -450,17 +463,18 @@ class Post implements ModelInterface {
             } 
 
             if($options['start_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_GTE, $options['start_date']);
-            } 
+                $wh->greateThanOrEqualTo('pub_date', $options['start_date']);
+            }
+            
             if($options['end_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_LTE, $options['end_date']);
-            } 
+                $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
+            }
         };
 
         // Fetch results
         try {
             $model = self::getModel();
-            $select = $model->getSql()->select()->columns(['num' => new \Zend\Db\Sql\Expression('COUNT(*)')]);
+            $select->columns(['num' => new \Zend\Db\Sql\Expression('COUNT(*)')]);
             if ($where !== null){
                 $select->where($where);
             }
@@ -510,14 +524,17 @@ class Post implements ModelInterface {
         ], (array) $options);
 
         $model = self::getModel();
+        
         $prefix = Tables\TableGateway::$prefix;
+        $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
+        $select = $select->select();
+        $select->from($prefix.'view_posts');
 
-        $select = $model->getSql()->select($prefix . 'view_posts');
         // Convert dates to UTC
         if($options['start_date']) $start_date = Leafpub::localToUtc($options['start_date']);
         if($options['end_date']) $end_date = Leafpub::localToUtc($options['end_date']);
 
-        $where = function($wh) use($options, $prefix){
+        $where = function($wh) use($options, $prefix, $slug){
             if($options['author']){
                 $wh->equalTo('author', $options['author']);
             }
@@ -527,9 +544,9 @@ class Post implements ModelInterface {
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
                         LEFT JOIN ' . $prefix . 'post_tags ON ' . $prefix . 'post_tags.tag = ' . $prefix . 'tags.id
-                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'posts.id AND slug = ?
-                    ) = 1'
-                    , $options['tag']
+                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'view_posts.id AND ' . $prefix . 'tags.slug = ?
+                    ) = 1',
+                    $options['tag']
                 );
             } 
 
@@ -550,16 +567,17 @@ class Post implements ModelInterface {
             } 
 
             if($options['start_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_GTE, $options['start_date']);
+                $wh->greaterThanOrEqualTo('pub_date', $options['start_date']);
             } 
+
             if($options['end_date']){
-                $wh->operator('pub_date', \Zend\Db\Sql\Predicate\Operator::OP_LTE, $options['end_date']);
+                $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             } 
 
             // Determine direction
             $sort = $options['direction'] === 'next' ? 'ASC' : 'DESC';
             $compare = $options['direction'] === 'next' ? '>=' : '<=';
-
+        
             $wh->notEqualTo('slug', $slug);
 
             $wh->expression(
@@ -567,20 +585,8 @@ class Post implements ModelInterface {
                     SELECT CONCAT(pub_date, id)
                     FROM ' . $prefix . 'view_posts
                     WHERE slug = ?
-                )'
-                , $slug);
-            
-
-            $sql .= '
-                AND slug != :slug
-                AND CONCAT(pub_date, id) ' . $compare . ' (
-                    SELECT CONCAT(pub_date, id)
-                    FROM __view_posts
-                    WHERE slug = :slug
-                )
-                ORDER BY pub_date ' . $sort . '
-                LIMIT 1
-            ';
+                )',
+                $slug);
         };
 
         $select->where($where);
@@ -588,14 +594,14 @@ class Post implements ModelInterface {
         $select->limit(1);
 
         try {
-            $post = $model->selectWith($select);
+            $post = $model->selectWith($select)->toArray()[0];
             if(!$post) return false;
         } catch(\PDOException $e) {
             return false;
         }
 
         // Normalize fields
-        //$post = self::normalize($post);
+        $post = self::normalize($post);
 
         return $post;
     }
@@ -623,102 +629,76 @@ class Post implements ModelInterface {
         ], (array) $options);
 
         // Convert dates to UTC
-        if($options['start_date']) $start_date = self::localToUtc($options['start_date']);
-        if($options['end_date']) $end_date = self::localToUtc($options['end_date']);
+        if($options['start_date']) $start_date = Leafpub::localToUtc($options['start_date']);
+        if($options['end_date']) $end_date = Leafpub::localToUtc($options['end_date']);
 
-        // Build query
-        /*$sql = '
-            SELECT
-                __posts.id,
-                __posts.slug,
-                __posts.pub_date,
-                (SELECT slug FROM __users WHERE id = __posts.author) AS author,
-                __posts.title,
-                __posts.content,
-                __posts.image,
-                __posts.meta_title,
-                __posts.meta_description,
-                __posts.status,
-                __posts.page,
-                __posts.featured,
-                __posts.sticky
-            FROM __posts
-            LEFT JOIN __users
-                ON __users.id = __posts.author
-            LEFT JOIN __post_tags
-                ON __post_tags.post = __posts.id
-            WHERE __posts.slug != :slug
-        ';*/
-        $sql = '
-            SELECT
-                *
-            FROM __view_posts
-            LEFT JOIN __post_tags
-                ON __post_tags.post = __view_posts.id
-            WHERE __view_posts.slug != :slug
-        ';
+        $prefix = Tables\TableGateway::$prefix;
+        $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
+        $select = $select->select();
+        $select->from($prefix.'view_posts');
+        $select->join(['b' => $prefix.'post_tags'], 'b.post = ' . $prefix . 'view_posts.id', [], 'left');
 
-        /*if($options['author']) $sql .= '
-            AND author = (SELECT id FROM __users WHERE slug = :author)
-        ';*/
-        if($options['author']) $sql .= '
-            AND author = :author
-        ';
-        /*if($options['tag']) $sql .= '
-            AND (
-                SELECT COUNT(*) from __tags
-                LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
-                WHERE __post_tags.post = __posts.id AND slug = :tag
-            ) = 1
-        ';
-        if($options['status']) {
-            $sql .= ' AND FIND_IN_SET(__posts.status, :status) > 0';
-            $status = implode(',', (array) $options['status']);
-        }*/
-        if($options['tag']) $sql .= '
-            AND (
-                SELECT COUNT(*) from __tags
-                LEFT JOIN __post_tags ON __post_tags.tag = __tags.id
-                WHERE __post_tags.post = __view_posts.id AND slug = :tag
-            ) = 1
-        ';
-        if($options['status']) {
-            $sql .= ' AND FIND_IN_SET(__view_posts.status, :status) > 0';
-            $status = implode(',', (array) $options['status']);
-        }
-        if($options['ignore_featured']) $sql .= ' AND featured != 1';
-        if($options['ignore_sticky']) $sql .= ' AND sticky != 1';
-        if($options['ignore_pages']) $sql .= ' AND page != 1';
-        /*if($options['start_date']) $sql .= ' AND __posts.pub_date >= :start_date';
-        if($options['end_date']) $sql .= ' AND __posts.pub_date <= :end_date';*/
-        if($options['start_date']) $sql .= ' AND __view_posts.pub_date >= :start_date';
-        if($options['end_date']) $sql .= ' AND __view_posts.pub_date <= :end_date';
+        $where = function($wh) use($options, $prefix, $slug){
+            $wh->notEqualTo($prefix.'view_posts.slug', $slug);
 
-        $sql .= '
-            AND __post_tags.tag IN(
-                SELECT __post_tags.tag
-                FROM __post_tags
-                LEFT JOIN __posts
-                    __posts ON __post_tags.post = __posts.id
-                WHERE __posts.slug = :slug
-            )
-            GROUP BY __posts.id
-            ORDER BY __posts.pub_date DESC
-            LIMIT :max
-        ';
+            if($options['author']){
+                $wh->equalTo('author', $options['author']);
+            }
+
+            if($options['tag']){
+                $wh->expression(
+                    '(
+                        SELECT COUNT(*) from ' . $prefix . 'tags
+                        LEFT JOIN ' . $prefix . 'post_tags ON ' . $prefix . 'post_tags.tag = ' . $prefix . 'tags.id
+                        WHERE ' . $prefix . 'post_tags.post = ' . $prefix . 'view_posts.id AND slug = ?
+                    ) = 1',
+                    $options['tag']
+                );
+            } 
+
+            if($options['status']) {
+                $wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+            }
+
+            if($options['ignore_featured']){
+                $wh->notEqualTo('featured', 1);
+            } 
+
+            if($options['ignore_sticky']){
+                $wh->notEqualTo('sticky', 1);
+            } 
+
+            if($options['ignore_pages']){
+                $wh->notEqualTo('page', 1);
+            } 
+
+            if($options['start_date']){
+                $wh->greaterThanOrEqualTo('pub_date', $options['start_date']);
+            } 
+
+            if($options['end_date']){
+                $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
+            } 
+
+            $table = new Tables\PostTags();
+            $select1 = $table->getSql()->select()
+                                       ->columns(['tag'])
+                                       ->join(['c' => $prefix.'posts'], $prefix.'post_tags.post = c.id', [], 'left')
+                                       ->where(function($wh) use($slug){
+                                            $wh->equalTo('c.slug', $slug);
+                                       });
+            
+            $wh->in('b.tag', $select1);
+        };
+
+        $select->where($where)
+               ->order($prefix.'view_posts.pub_date')
+               ->limit($options['max']);
 
         // Get matching posts
         try {
-            $st = self::$database->prepare($sql);
-            $st->bindParam(':slug', $slug);
-            $st->bindParam(':max', $options['max'], \PDO::PARAM_INT);
-            if($options['author']) $st->bindParam(':author', $options['author']);
-            if($options['tag']) $st->bindParam(':tag', $options['tag']);
-            if($options['status']) $st->bindParam(':status', $status);
-            if($options['start_date']) $st->bindParam(':start_date', $start_date);
-            if($options['end_date']) $st->bindParam(':end_date', $end_date);
-            $st->execute();
-            $posts = $st->fetchAll(\PDO::FETCH_ASSOC);
+            $model = self::getModel();
+            $posts = $model->selectWith($select)->toArray();
             if(!$posts) return false;
         } catch(\PDOException $e) {
             return false;
@@ -741,11 +721,11 @@ class Post implements ModelInterface {
     **/
     public static function isVisible($post_or_slug) {
         // Get the post
-        $post = is_string($post_or_slug) ? Post::get($post_or_slug) : $post_or_slug;
+        $post = is_string($post_or_slug) ? self::getOne($post_or_slug) : $post_or_slug;
         if(!$post) return false;
 
         // Make sure pub date is a valid date format
-        $post['pub_date'] = self::parseDate($post['pub_date']);
+        $post['pub_date'] = Leafpub::parseDate($post['pub_date']);
         $pub_date = new \DateTime($post['pub_date']);
         $pub_date->setTimeZone(new \DateTimeZone('UTC'));
 
@@ -773,22 +753,22 @@ class Post implements ModelInterface {
         if(is_array($slug_or_post)) {
             $post = $slug_or_post;
         } else {
-            $post = self::get($slug_or_post);
+            $post = self::getOne($slug_or_post);
             if(!$post) return false;
         }
 
         // Get the author
-        $author = User::get($post['author']);
+        $author = User::getOne($post['author']);
 
         // Make sure pub date is a valid date format
-        $post['pub_date'] = self::parseDate($post['pub_date']);
+        $post['pub_date'] = Leafpub::parseDate($post['pub_date']);
 
         // Only render if it's visible to the public or a preview
-        if(!Post::isVisible($post) && !$options['preview']) return false;
+        if(!self::isVisible($post) && !$options['preview']) return false;
 
         // Determine which template to use
         if($options['zen']) {
-            $template = self::path('source/templates/editor.zen.hbs');
+            $template = Leafpub::path('source/templates/editor.zen.hbs');
         } else {
             $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
         }
@@ -803,7 +783,7 @@ class Post implements ModelInterface {
                     'title'=> !empty($post['meta_title']) ? $post['meta_title'] : $post['title'],
                     'description' => !empty($post['meta_description']) ?
                         $post['meta_description'] :
-                        self::getChars(strip_tags($post['content']), 160),
+                        Leafpub::getChars(strip_tags($post['content']), 160),
                     // JSON linked data (schema.org)
                     'ld_json' => [
                         '@context' => 'https://schema.org',
@@ -814,21 +794,21 @@ class Post implements ModelInterface {
                         ],
                         'publisher' => [
                             '@type' => 'Organization',
-                            'name' => Setting::get('title'),
-                            'logo' => !empty(Setting::get('logo')) ?
+                            'name' => Setting::getOne('title'),
+                            'logo' => !empty(Setting::getOne('logo')) ?
                                 [
                                     '@type' => 'ImageObject',
-                                    'url' => parent::url(Setting::get('logo'))
+                                    'url' => Leafpub::url(Setting::getOne('logo'))
                                  ] : null
                             ],
                         'author' => [
                             '@type' => 'Person',
                             'name' => $author['name'],
-                            'description' => strip_tags(self::markdownToHtml($author['bio'])),
+                            'description' => strip_tags(Leafpub::markdownToHtml($author['bio'])),
                             'image' => !empty($author['avatar']) ?
                                 [
                                     '@type' => 'ImageObject',
-                                    'url' => parent::url($author['avatar'])
+                                    'url' => Leafpub::url($author['avatar'])
                                 ] : null,
                             'sameAs' => !empty($author['website']) ?
                                 [$author['website']] : null,
@@ -839,31 +819,31 @@ class Post implements ModelInterface {
                             $post['title'],
                         'description' => !empty($post['meta_description']) ?
                             $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
+                            Leafpub::getWords(strip_tags($post['content']), 50),
                         'image' => empty($post['image']) ? null : [
                                 '@type' => 'ImageObject',
-                                'url' => parent::url($post['image']),
+                                'url' => Leafpub::url($post['image']),
                                 'width' => 0,
                                 'height' => 0
                             ],
-                        'datePublished' => self::strftime('%FT%TZ', strtotime($post['pub_date'])),
-                        'dateModified' => self::strftime('%FT%TZ', strtotime($post['pub_date']))
+                        'datePublished' => Leafpub::strftime('%FT%TZ', strtotime($post['pub_date'])),
+                        'dateModified' => Leafpub::strftime('%FT%TZ', strtotime($post['pub_date']))
                     ],
                     'open_graph' => [
                         'og:type' => 'article',
-                        'og:site_name' => Setting::get('title'),
+                        'og:site_name' => Setting::getOne('title'),
                         'og:title' => !empty($post['meta_title']) ?
                             $post['meta_title'] :
                             $post['title'],
                         'og:description' => !empty($post['meta_description']) ?
                             $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
+                            Leafpub::getWords(strip_tags($post['content']), 50),
                         'og:url' => self::url($post['slug']),
-                        'og:image' => empty($post['image']) ? '' : parent::url($post['image']),
+                        'og:image' => empty($post['image']) ? '' : Leafpub::url($post['image']),
                         'article:published_time' => $post['page'] ?
-                            null : self::strftime('%FT%TZ', strtotime($post['pub_date'])),
+                            null : Leafpub::strftime('%FT%TZ', strtotime($post['pub_date'])),
                         'article:modified_time' => $post['page'] ?
-                            null : self::strftime('%FT%TZ', strtotime($post['pub_date'])),
+                            null : Leafpub::strftime('%FT%TZ', strtotime($post['pub_date'])),
                         'article:tag' => $post['page'] ?
                             null : implode(', ', (array) $post['tags'])
                     ],
@@ -871,19 +851,19 @@ class Post implements ModelInterface {
                         'twitter:card' => !empty($post['image']) ?
                             'summary_large_image' :
                             'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
+                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
+                            '@' . Setting::getOne('twitter') : null,
                         'twitter:title' => !empty($post['meta_title']) ?
                             $post['meta_title'] :
                             $post['title'],
                         'twitter:description' => !empty($post['meta_description']) ?
                             $post['meta_description'] :
-                            self::getWords(strip_tags($post['content']), 50),
+                            Leafpub::getWords(strip_tags($post['content']), 50),
                         'twitter:creator' => !empty($author) ?
                             '@' . $author['twitter'] : null,
                         'twitter:url' => self::url($post['slug']),
                         'twitter:image' => !empty($post['image']) ?
-                            parent::url($post['image']) :
+                            Leafpub::url($post['image']) :
                             null,
                         'twitter:label1' => !$post['page'] ?
                             'Written by' : null,
@@ -1003,7 +983,7 @@ class Post implements ModelInterface {
     **/
     private static function getTags($post_id) {
         try {
-           return Tags::getTagsToPost($post_id);
+           return Tag::getTagsToPost($post_id);
        } catch(\PDOException $e) {
            return false;
        }

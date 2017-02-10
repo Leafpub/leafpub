@@ -9,6 +9,9 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Post,
+    Leafpub\Models\Setting;
+
 /**
 * Blog
 *
@@ -29,7 +32,7 @@ class Blog extends Leafpub {
         // Get the posts
         $posts = Post::getMany([
             'page' => $page,
-            'items_per_page' => Setting::get('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page')
         ], $pagination);
 
         // Make sure the requested page exists
@@ -50,39 +53,39 @@ class Blog extends Leafpub {
             ],
             'special_vars' => [
                 'meta' => [
-                    'title'=> Setting::get('title'),
-                    'description' => Setting::get('tagline'),
+                    'title'=> Setting::getOne('title'),
+                    'description' => Setting::getOne('tagline'),
                     // JSON linked data (schema.org)
                     'ld_json' => [
                         '@context' => 'https://schema.org',
                         '@type' => 'Website',
-                        'publisher' => Setting::get('title'),
+                        'publisher' => Setting::getOne('title'),
                         'url' => parent::url(),
-                        'image' => !empty(Setting::get('cover')) ?
-                            parent::url(Setting::get('cover')) : null,
-                        'description' => Setting::get('tagline')
+                        'image' => !empty(Setting::getOne('cover')) ?
+                            parent::url(Setting::getOne('cover')) : null,
+                        'description' => Setting::getOne('tagline')
                     ],
                     // Open Graph
                     'open_graph' => [
                         'og:type' => 'website',
-                        'og:site_name' => Setting::get('title'),
-                        'og:title' => Setting::get('title'),
-                        'og:description' => Setting::get('tagline'),
+                        'og:site_name' => Setting::getOne('title'),
+                        'og:title' => Setting::getOne('title'),
+                        'og:description' => Setting::getOne('tagline'),
                         'og:url' => parent::url(),
-                        'og:image' => !empty(Setting::get('cover')) ?
-                            parent::url(Setting::get('cover')) : null
+                        'og:image' => !empty(Setting::getOne('cover')) ?
+                            parent::url(Setting::getOne('cover')) : null
                     ],
                     // Twitter Card
                     'twitter_card' => [
-                        'twitter:card' => !empty(Setting::get('cover')) ?
+                        'twitter:card' => !empty(Setting::getOne('cover')) ?
                             'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
-                        'twitter:title' => Setting::get('title'),
-                        'twitter:description' => Setting::get('tagline'),
+                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
+                            '@' . Setting::getOne('twitter') : null,
+                        'twitter:title' => Setting::getOne('title'),
+                        'twitter:description' => Setting::getOne('tagline'),
                         'twitter:url' => parent::url(),
-                        'twitter:image' => !empty(Setting::get('cover')) ?
-                            parent::url(Setting::get('cover')) : null
+                        'twitter:image' => !empty(Setting::getOne('cover')) ?
+                            parent::url(Setting::getOne('cover')) : null
                     ]
                 ],
             ],
@@ -98,11 +101,11 @@ class Blog extends Leafpub {
     *
     **/
     public static function url($page = 1) {
-        if(!mb_strlen(Setting::get('homepage'))) {
+        if(!mb_strlen(Setting::getOne('homepage'))) {
             // Default homepage
             return $page > 1 ?
                 // example.com/page/2
-                parent::url(Setting::get('frag_page'), $page) :
+                parent::url(Setting::getOne('frag_page'), $page) :
                 // example.com
                 parent::url();
         } else {
@@ -110,12 +113,12 @@ class Blog extends Leafpub {
             return $page > 1 ?
                 // example.com/posts/page/2
                 parent::url(
-                    Setting::get('frag_blog'),
-                    Setting::get('frag_page'),
+                    Setting::getOne('frag_blog'),
+                    Setting::getOne('frag_page'),
                     $page
                 ) :
                 // example.com/posts/
-                parent::url(Setting::get('frag_blog'));
+                parent::url(Setting::getOne('frag_blog'));
         }
     }
 

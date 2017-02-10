@@ -10,6 +10,8 @@
 namespace Leafpub\Models;
 
 use Leafpub\Leafpub,
+    Leafpub\Theme,
+    Leafpub\Renderer,
     Leafpub\Events\User\Add,
     Leafpub\Events\User\Added,
     Leafpub\Events\User\Update,
@@ -101,7 +103,7 @@ class User implements ModelInterface {
     }
 
     public static function getOne($user){
-        return self::normalize(self::getModel()->select(['slug' => $user])->current());
+        return self::normalize(self::getModel()->select(['slug' => $user])->current()->getArrayCopy());
     }
 
     public static function create($data){
@@ -132,9 +134,9 @@ class User implements ModelInterface {
         }
 
         // Must have a long enough password
-        if(mb_strlen($user['password']) < Setting::get('password_min_length')) {
+        if(mb_strlen($user['password']) < Setting::getOne('password_min_length')) {
             throw new Exception(
-                'Passwords must be at least ' . Setting::get('password_min_length') . ' characters long',
+                'Passwords must be at least ' . Setting::getOne('password_min_length') . ' characters long',
                 self::PASSWORD_TOO_SHORT
             );
         }
@@ -252,9 +254,9 @@ class User implements ModelInterface {
         // Change the password?
         if(is_string($properties['password'])) {
             // Must have a long enough password
-            if(mb_strlen($properties['password']) < Setting::get('password_min_length')) {
+            if(mb_strlen($properties['password']) < Setting::getOne('password_min_length')) {
                 throw new Exception(
-                    'Passwords must be at least ' . Setting::get('password_min_length') . ' characters long',
+                    'Passwords must be at least ' . Setting::getOne('password_min_length') . ' characters long',
                     self::PASSWORD_TOO_SHORT
                 );
             }
@@ -429,7 +431,7 @@ class User implements ModelInterface {
     **/
     public static function getId($slug) {
         try {
-            return (int) self::getOne(['slug' => $slug])->current()['id'];
+            return (int) self::getOne($slug)['id'];
         } catch(PDOException $e) {
             return false;
         }
@@ -481,13 +483,13 @@ class User implements ModelInterface {
         return $page > 1 ?
             // example.com/author/name/page/2
             Leafpub::url(
-                Setting::get('frag_author'),
+                Setting::getOne('frag_author'),
                 $slug,
-                Setting::get('frag_page'),
+                Setting::getOne('frag_page'),
                 $page
             ) :
             // example.com/author/name
-            Leafpub::url(Setting::get('frag_author'), $slug);
+            Leafpub::url(Setting::getOne('frag_author'), $slug);
     }
 
     /**
@@ -500,7 +502,7 @@ class User implements ModelInterface {
     **/
     public static function verifyPassword($slug, $password) {
         // Get the user
-        $user = self::get(['slug' => $slug]);
+        $user = self::getOne($slug);
         if(!$user) return false;
 
         // Verify the password
@@ -556,14 +558,14 @@ class User implements ModelInterface {
     **/
     public static function render($slug, $page = 1) {
         // Get the author
-        $author = self::get(['slug' => $slug]);
+        $author = self::getOne($slug);
         if(!$author) return false;
 
         // Get the author's posts
         $posts = Post::getMany([
             'author' => $slug,
             'page' => $page,
-            'items_per_page' => Setting::get('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page')
         ], $pagination);
 
         // Make sure the requested page exists
@@ -580,18 +582,18 @@ class User implements ModelInterface {
             'special_vars' => [
                 'meta' => [
                     'title'=> $author['name'],
-                    'description' => self::getChars($author['bio'], 160),
+                    'description' => Leafpub::getChars($author['bio'], 160),
                     // JSON linked data (schema.org)
                     'ld_json' => [
                         '@context' => 'https://schema.org',
                         '@type' => 'Person',
                         'name' => $author['name'],
-                        'description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'description' => strip_tags(Leafpub::markdownToHtml($author['bio'])),
                         'url' => self::url($author['slug']),
                         'image' => !empty($author['avatar']) ?
                                 [
                                     '@type' => 'ImageObject',
-                                    'url' => parent::url($author['avatar'])
+                                    'url' => Leafpub::url($author['avatar'])
                                 ] : null,
                         'sameAs' => !empty($author['website']) ?
                             [$author['website']] : null
@@ -599,26 +601,26 @@ class User implements ModelInterface {
                     // Open Graph
                     'open_graph' => [
                         'og:type' => 'profile',
-                        'og:site_name' => Setting::get('title'),
-                        'og:title' => $author['name'] . ' &middot; ' . Setting::get('title'),
-                        'og:description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'og:site_name' => Setting::getOne('title'),
+                        'og:title' => $author['name'] . ' &middot; ' . Setting::getOne('title'),
+                        'og:description' => strip_tags(Leafpub::markdownToHtml($author['bio'])),
                         'og:url' => self::url($author['slug']),
                         'og:image' => !empty($author['avatar']) ?
-                            parent::url($author['avatar']) : null
+                            Leafpub::url($author['avatar']) : null
                     ],
                     // Twitter Card
                     'twitter_card' => [
                         'twitter:card' => !empty($author['cover']) ?
                             'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
-                        'twitter:title' => $author['name'] . ' &middot; ' . Setting::get('title'),
-                        'twitter:description' => strip_tags(self::markdownToHtml($author['bio'])),
+                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
+                            '@' . Setting::getOne('twitter') : null,
+                        'twitter:title' => $author['name'] . ' &middot; ' . Setting::getOne('title'),
+                        'twitter:description' => strip_tags(Leafpub::markdownToHtml($author['bio'])),
                         'twitter:creator' => !empty($author['twitter']) ?
                             '@' . $author['twitter'] : null,
                         'twitter:url' => self::url($author['slug']),
                         'twitter:image' => !empty($author['cover']) ?
-                            parent::url($author['cover']) : null
+                            Leafpub::url($author['cover']) : null
                     ]
                 ]
             ]

@@ -11,6 +11,7 @@ namespace Leafpub\Models;
 
 class Setting implements ModelInterface {
     protected static $_instance = '';
+    protected static $settings = [];
 
     public static function getModel(){
 		if (self::$_instance == null){
@@ -20,10 +21,53 @@ class Setting implements ModelInterface {
 	}
 
     public static function getMany(array $options = [], &$pagination = null){
-        return self::getModel()->select();
+        return self::$settings;
     }
-    public static function getOne($data){}
-    public static function create($data){}
-    public static function delete($data){}
-    
+
+    public static function getOne($name){
+        return isset(self::$settings[$name]) ? self::$settings[$name] : null;
+    }
+
+    public static function create($data){
+        return self::edit($data);
+    }
+
+    public static function edit($data){
+        // Update the database
+        try {
+            self::getModel()->update(['value' => $data['value']], ['name' => $data['name']]);
+        } catch(\PDOException $e) {
+            return false;
+        }
+        // Update cache
+        self::$settings[$name] = $value;
+
+        return true;
+    }
+    public static function delete($name){
+        try{
+            self::getModel()->delete(['name' => $name]);
+        } catch (\Exception $e){
+            return false;
+        }
+        unset(self::$settings[$name]);
+        return true;
+    }
+
+    /**
+    * Load settings from the database and store in a static variable for quick access
+    *
+    * @return array
+    *
+    **/
+    public static function load() {
+        try {
+            $ret = self::getModel()->select()->toArray();
+            foreach($ret as $ds){
+                self::$settings[$ds['name']] = $ds['value'];
+            }
+        } catch(\PDOException $e) {
+            throw new \Exception('Unable to load settings from the database.');
+        }
+    }
 }

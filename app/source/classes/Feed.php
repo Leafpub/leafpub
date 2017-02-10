@@ -9,6 +9,7 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Setting;
 /**
 * Feed
 *
@@ -36,16 +37,16 @@ class Feed extends Leafpub {
         $posts = Post::getMany([
             'author' => $options['author'],
             'tag' => $options['tag'],
-            'items_per_page' => Setting::get('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page')
         ]);
 
         // Open feed
         $feed  = '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . "\n";
         $feed .= '    <channel>' . "\n";
-        $feed .= '      <title>' . htmlspecialchars(Setting::get('title')) . '</title>' . "\n";
+        $feed .= '      <title>' . htmlspecialchars(Setting::getOne('title')) . '</title>' . "\n";
         $feed .= '      <atom:link href="' . htmlspecialchars(self::url($options)) . '" rel="self" type="application/rss+xml" />' . "\n";
         $feed .= '      <link>' . htmlspecialchars(self::url()) . '</link>' . "\n";
-        $feed .= '      <description>' . htmlspecialchars(Setting::get('tagline')) . '</description>' . "\n";
+        $feed .= '      <description>' . htmlspecialchars(Setting::getOne('tagline')) . '</description>' . "\n";
 
         // Add feed items
         foreach($posts as $post) {
@@ -86,12 +87,12 @@ class Feed extends Leafpub {
         if(count($options)) {
             // example.com/feed?author=name&tag=name
             return
-                parent::url(Setting::get('frag_feed')) .
+                parent::url(Setting::getOne('frag_feed')) .
                 '?' .
                 http_build_query($options, null, '&', PHP_QUERY_RFC3986);
         } else {
             // example.com/feed
-            return parent::url(Setting::get('frag_feed'));
+            return parent::url(Setting::getOne('frag_feed'));
         }
     }
 

@@ -139,7 +139,7 @@ class Backup extends Leafpub {
         // Generate pathname. Ex: backups/a-leafpub-blog.2016-06-15.tar
         $pathname = self::path(
             'backups/' .
-            self::safeFilename(Setting::get('title')) .
+            self::safeFilename(Setting::getOne('title')) .
             '.' . date('Y-m-d') . '.tar'
         );
         // Loop until we find a unique filename
@@ -147,7 +147,7 @@ class Backup extends Leafpub {
         while(file_exists($pathname)) {
             $pathname = self::path(
                 'backups/' .
-                self::safeFilename(Setting::get('title')) .
+                self::safeFilename(Setting::getOne('title')) .
                 '.' . date('Y-m-d') . '_' . $i++ . '.tar'
             );
         }

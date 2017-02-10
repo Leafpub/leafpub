@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Setting;
+
 /**
 * Middleware
 *
@@ -30,7 +32,7 @@ class Middleware {
     public function adjustPageNumbers($request, $response, $next) {
         $uri = $request->getUri();
         $path = $uri->getPath();
-        $pagination = Setting::get('frag_page');
+        $pagination = Setting::getOne('frag_page');
         $length = strlen("/$pagination/0");
         $suffix = substr($path, -$length);
 
@@ -126,7 +128,7 @@ class Middleware {
     *
     **/
     public static function maintenance($request, $response, $next){
-        $siteInMaintenanceMode = (Setting::get('maintenance') == 'on');
+        $siteInMaintenanceMode = (Setting::getOne('maintenance') == 'on');
         
         $allowedRoutes = array('/admin', '/admin/login', '/api/login', '/logout');
         $tryToLogin = in_array($request->getUri()->getPath(), $allowedRoutes);
@@ -134,7 +136,7 @@ class Middleware {
         if ($siteInMaintenanceMode && !$tryToLogin ){
             if (!Session::isAuthenticated() || (Session::isAuthenticated() && !Session::isRole(array('owner', 'admin')))){
                 $data = array(
-                    'content' => Setting::get('maintenance_message')
+                    'content' => Setting::getOne('maintenance_message')
                 );
 
                 $special = array(

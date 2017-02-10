@@ -36,7 +36,7 @@ return [
             }
         }
 
-        return \Leafpub\User::url($author, (int) $options['hash']['page']);
+        return \Leafpub\Models\User::url($author, (int) $options['hash']['page']);
     },
 
     // Returns the blog index URL
@@ -71,7 +71,7 @@ return [
             }
         }
 
-        return \Leafpub\Post::url($slug);
+        return \Leafpub\Models\Post::url($slug);
     },
 
     // Returns a search URL
@@ -98,14 +98,14 @@ return [
             }
         }
 
-        return \Leafpub\Tag::url($tag, (int) $options['hash']['page']);
+        return \Leafpub\Models\Tag::url($tag, (int) $options['hash']['page']);
     },
 
     // Returns the current theme's URL
     'theme_url' => function($path, $options = null) {
         return $options ?
-            \Leafpub\Leafpub::url('content/themes', \Leafpub\Setting::get('theme'), $path) :
-            \Leafpub\Leafpub::url('content/themes', \Leafpub\Setting::get('theme'));
+            \Leafpub\Leafpub::url('content/themes', \Leafpub\Models\Setting::getOne('theme'), $path) :
+            \Leafpub\Leafpub::url('content/themes', \Leafpub\Models\Setting::getOne('theme'));
     },
 
     // Returns the website's base URL

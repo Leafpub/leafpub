@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Setting;
+
 /**
 * Renderer
 *
@@ -55,7 +57,7 @@ class Renderer extends Leafpub {
         $template_dir = dirname($template);          // ex: /path/to/theme
         $template_file = basename($template);        // ex: post.hbs
         $template_name = self::fileName($template); // ex: post
-        $theme_slug = self::slug(Setting::get('theme'));
+        $theme_slug = self::slug(Setting::getOne('theme'));
 
         // admin dir
         $admin_dir = self::path('source/templates');
@@ -74,7 +76,7 @@ class Renderer extends Leafpub {
         // render the template. However, when caching is disabled the template will be recompiled
         // on every request, regardless of whether or not a cache file exists.
         //
-        if(!Cache::get($cache_file) || Setting::get('hbs_cache') !== 'on') {
+        if(!Cache::get($cache_file) || Setting::getOne('hbs_cache') !== 'on') {
             // Compile the template
             try {
                 $output = '<?php ' . \LightnCandy\LightnCandy::compile($source, [
@@ -138,7 +140,7 @@ class Renderer extends Leafpub {
                 'uri' => $_SERVER['REQUEST_URI'],
                 'user_agent' => $_SERVER['HTTP_USER_AGENT']
             ],
-            'settings' => Setting::getAll(),
+            'settings' => Setting::getMany(),
             'template' => $template_name,
             'user' => isset($options['user']) ? $options['user'] : Session::user()
         ]);

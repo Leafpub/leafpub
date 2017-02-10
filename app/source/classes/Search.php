@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Leafpub\Models\Setting;
+
 /**
 * Search
 *
@@ -32,7 +34,7 @@ class Search extends Leafpub {
             $posts = Post::getMany([
                 'query' => (string) $query,
                 'page' => $page,
-                'items_per_page' => Setting::get('posts_per_page')
+                'items_per_page' => Setting::getOne('posts_per_page')
             ], $pagination);
         } else {
             $posts = false;
@@ -82,26 +84,26 @@ class Search extends Leafpub {
                     // Open Graph
                     'open_graph' => [
                         'og:type' => 'website',
-                        'og:site_name' => Setting::get('title'),
-                        'og:title' => 'Search &middot; ' . Setting::get('title'),
+                        'og:site_name' => Setting::getOne('title'),
+                        'og:title' => 'Search &middot; ' . Setting::getOne('title'),
                         'og:description' => !empty($query) ?
                             'Search results for “' . htmlspecialchars($query) . '”' : null,
                         'og:url' => self::url($query),
-                        'og:image' => !empty(Setting::get('cover')) ?
-                            parent::url(Setting::get('cover')) : null
+                        'og:image' => !empty(Setting::getOne('cover')) ?
+                            parent::url(Setting::getOne('cover')) : null
                     ],
                     // Twitter Card
                     'twitter_card' => [
-                        'twitter:card' => !empty(Setting::get('cover')) ?
+                        'twitter:card' => !empty(Setting::getOne('cover')) ?
                             'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::get('twitter')) ?
-                            '@' . Setting::get('twitter') : null,
-                        'twitter:title' => 'Search &middot; ' . Setting::get('title'),
+                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
+                            '@' . Setting::getOne('twitter') : null,
+                        'twitter:title' => 'Search &middot; ' . Setting::getOne('title'),
                         'twitter:description' => !empty($query) ?
                             'Search results for “' . htmlspecialchars($query) . '”' : null,
                         'twitter:url' => self::url($query),
-                        'twitter:image' => !empty(Setting::get('cover')) ?
-                            parent::url(Setting::get('cover')) : null
+                        'twitter:image' => !empty(Setting::getOne('cover')) ?
+                            parent::url(Setting::getOne('cover')) : null
                     ]
                 ]
             ],
@@ -116,13 +118,13 @@ class Search extends Leafpub {
         return $page > 1 && mb_strlen($query) ?
             // example.com/search/query/page/2
             parent::url(
-                Setting::get('frag_search'),
+                Setting::getOne('frag_search'),
                 rawurlencode($query),
-                Setting::get('frag_page'),
+                Setting::getOne('frag_page'),
                 $page
             ) :
             // example.com/search/query
-            parent::url(Setting::get('frag_search'), rawurlencode($query));
+            parent::url(Setting::getOne('frag_search'), rawurlencode($query));
     }
 
 }

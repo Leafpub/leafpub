@@ -26,4 +26,11 @@ abstract class TableGateway extends AbstractTableGateway {
         
         $this->initialize();
     }
+
+    public function showSqlAndExit($select){
+        var_dump(
+            $this->getSql()->getSqlStringForSqlObject($select)
+        );
+        exit;
+    }
 }

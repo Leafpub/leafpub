@@ -16,15 +16,15 @@ use Leafpub\Admin,
     Leafpub\Feed,
     Leafpub\History,
     Leafpub\Language,
-    Leafpub\Post,
+    Leafpub\Models\Post,
     Leafpub\Leafpub,
     Leafpub\Renderer,
     Leafpub\Search,
     Leafpub\Session,
-    Leafpub\Setting,
+    Leafpub\Models\Setting,
     Leafpub\Models\Tag,
     Leafpub\Theme,
-    Leafpub\Upload,
+    Leafpub\Models\Upload,
     Leafpub\Models\User,
     Leafpub\Plugin,
     Leafpub\Mailer;
@@ -252,7 +252,8 @@ class AdminController extends Controller {
     *
     **/
     public function editPost($request, $response, $args) {
-        $post = Post::get($args['slug']);
+        //var_dump(Post::getAdjacent('welcome-to-leafpub', ['tag' => 'getting-started']));exit;
+        $post = Post::getOne($args['slug']);
         if(!$post) {
             return $this->notFound($request, $response);
         }

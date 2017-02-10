@@ -1,15 +1,16 @@
 <?php
 namespace Leafpub;
+use Leafpub\Models\Setting;
 
 // Get base slugs from settings
 $frags = (object) [
-    'admin' => Setting::get('frag_admin'),
-    'author' => Setting::get('frag_author'),
-    'blog' => Setting::get('frag_blog'),
-    'feed' => Setting::get('frag_feed'),
-    'page' => Setting::get('frag_page'),
-    'search' => Setting::get('frag_search'),
-    'tag' => Setting::get('frag_tag')
+    'admin' => Setting::getOne('frag_admin'),
+    'author' => Setting::getOne('frag_author'),
+    'blog' => Setting::getOne('frag_blog'),
+    'feed' => Setting::getOne('frag_feed'),
+    'page' => Setting::getOne('frag_page'),
+    'search' => Setting::getOne('frag_search'),
+    'tag' => Setting::getOne('frag_tag')
 ];
 
 /**
@@ -141,7 +142,7 @@ $app->group("/$frags->admin", function() {
 **/
 
 /** Homepage **/
-if(Setting::get('homepage')) {
+if(Setting::getOne('homepage')) {
     // Custom homepage
     $app->get('/', 'Leafpub\Controller\ThemeController:customHomepage');
 

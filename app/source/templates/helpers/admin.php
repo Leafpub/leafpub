@@ -5,7 +5,7 @@
 return [
     // Gets an author and changes context
     'admin_author' => function($slug, $options = null) {
-        $author = \Leafpub\User::get($slug);
+        $author = \Leafpub\Models\User::getOne($slug);
 
         // Do {{else}} if no author is found
         if(!$author) {

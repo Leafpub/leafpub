@@ -14,11 +14,11 @@ return [
                 $author = $options['_this']['author'];
             } elseif(is_string($options['_this']['author'])) {
                 // Try this.author
-                $author = \Leafpub\User::get($options['_this']['author']);
+                $author = \Leafpub\Models\User::getOne($options['_this']['author']);
             }
         } else {
             // Get the author by slug
-            $author = \Leafpub\User::get($slug);
+            $author = \Leafpub\Models\User::getOne($slug);
         }
 
         // Do {{else}} if no author is found
@@ -91,7 +91,7 @@ return [
     // Gets the website's navigation
     'navigation' => function($options) {
         // Decode nav from settings
-        $items = (array) json_decode(\Leafpub\Setting::get('navigation'), true);
+        $items = (array) json_decode(\Leafpub\Models\Setting::getOne('navigation'), true);
 
         // Generate `slug` and `current` values for each nav item
         foreach($items as $key => $value) {
@@ -127,7 +127,7 @@ return [
         }
 
         // Get the previous post
-        $post = \Leafpub\Post::getAdjacent($slug, [
+        $post = \Leafpub\Models\Post::getAdjacent($slug, [
             'direction' => 'next',
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -154,7 +154,7 @@ return [
             }
         } else {
             // Get the post by slug
-            $post = \Leafpub\Post::get($slug);
+            $post = \Leafpub\Models\Post::getOne($slug);
         }
 
         // Do {{else}} if no post is found
@@ -206,7 +206,7 @@ return [
         }
 
         // Inject foot code
-        $html .= "\n" . \Leafpub\Setting::get('foot_code');
+        $html .= "\n" . \Leafpub\Models\Setting::getOne('foot_code');
 
         // Inject admin toolbar if the user is logged in and the post isn't editable or a preview
         if(
@@ -242,7 +242,7 @@ return [
         \Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubHead::NAME, $event);
         $html = $event->getEventData();
 
-        if (\Leafpub\Setting::get('generator') == 'on'){
+        if (\Leafpub\Models\Setting::getOne('generator') == 'on'){
             $html .= '<meta name="generator" content="Leafpub v' . LEAFPUB_VERSION . '">';
         }
         
@@ -278,7 +278,7 @@ return [
         }
 
         // Inject head code
-        $html .= "\n" . \Leafpub\Setting::get('head_code');
+        $html .= "\n" . \Leafpub\Models\Setting::getOne('head_code');
 
         // Inject JSON linked data (schema.org)
         if(isset($options['data']['meta']['ld_json'])) {
@@ -326,7 +326,7 @@ return [
         }
 
         // Get the previous post
-        $post = \Leafpub\Post::getAdjacent($slug, [
+        $post = \Leafpub\Models\Post::getAdjacent($slug, [
             'direction' => 'previous',
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -373,7 +373,7 @@ return [
         if($count < 1) $count = 5;
 
         // Get recent posts
-        $posts = \Leafpub\Post::getMany([
+        $posts = \Leafpub\Models\Post::getMany([
             'items_per_page' => $count,
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -410,7 +410,7 @@ return [
         if($count < 1) $count = 5;
 
         // Get suggested posts
-        $posts = \Leafpub\Post::getSuggested($slug, [
+        $posts = \Leafpub\Models\Post::getSuggested($slug, [
             'max' => $count,
             'author' => $options['hash']['author'],
             'tag' => $options['hash']['tag']
@@ -435,11 +435,11 @@ return [
                 $tag = $options['_this']['tag'];
             } elseif(isset($options['_this']['slug'])) {
                 // Try this.slug
-                $tag = \Leafpub\Tag::get($options['_this']['slug']);
+                $tag = \Leafpub\Models\Tag::getOne($options['_this']['slug']);
             }
         } else {
             // Get the tag by slug
-            $tag = \Leafpub\Tag::get($slug);
+            $tag = \Leafpub\Models\Tag::getOne($slug);
         }
 
         // Do {{else}} if no tag is found
@@ -471,7 +471,7 @@ return [
         // Get data for each tag
         $tags = [];
         foreach((array) $slugs as $slug) {
-            $tag = \Leafpub\Tag::get($slug);
+            $tag = \Leafpub\Models\Tag::getOne($slug);
             if($tag) $tags[] = $tag;
         }
 
@@ -495,7 +495,7 @@ return [
             $c = '';
             if($autolink) {
                 $c .=
-                    '<a href="' . htmlspecialchars( \Leafpub\Tag::url($tag['slug']) ) . '">' .
+                    '<a href="' . htmlspecialchars( \Leafpub\Models\Tag::url($tag['slug']) ) . '">' .
                     htmlspecialchars($tag['name']) .
                     '</a>';
             } else {
@@ -567,9 +567,9 @@ return [
                 $searchFor['sort'] = $sort;
             }
 
-            $tags = \Leafpub\Tag::getMany($searchFor);
+            $tags = \Leafpub\Models\Tag::getMany($searchFor);
         } else {
-            $tags = \Leafpub\Tag::getNames();
+            $tags = \Leafpub\Models\Tag::getNames();
         }
         if(count($tags)) {
             return $options['fn'](['tc' => $tags]);
@@ -586,7 +586,7 @@ return [
             $searchFor['query'] = $options['hash']['query'];
         }
         
-        $authors = \Leafpub\User::getAuthors($searchFor);
+        $authors = \Leafpub\Models\User::getAuthors($searchFor);
     
         if(count($authors)) {
             return $options['fn'](['authors' => $authors]);
