@@ -9,7 +9,8 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Setting;
+use Leafpub\Models\Setting,
+    Leafpub\Models\Post;
 /**
 * Feed
 *
