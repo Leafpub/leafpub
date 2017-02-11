@@ -55,7 +55,7 @@ if(!Leafpub::isValidEmail($_REQUEST['email'])) {
 // Test database connection
 try {
     Database::connect([
-        'driver' => 'Pdo_Mysql',
+        'driver' => $_REQUEST['driver'],
         'host' => $_REQUEST['db-host'],
         'port' => $_REQUEST['db-port'],
         'database' => $_REQUEST['db-database'],
@@ -152,7 +152,7 @@ if(!file_exists(Leafpub::path('.htaccess'))) {
 // Create database.php from default.database.php
 $db_pathname = Leafpub::path('database.php');
 $db_config = file_get_contents(Leafpub::path('source/defaults/default.database.php'));
-$db_config = str_replace('{{driver}}', 'Pdo_Mysql', $db_config);
+$db_config = str_replace('{{driver}}', $_REQUEST['driver'], $db_config);
 $db_config = str_replace('{{host}}', $_REQUEST['db-host'], $db_config);
 $db_config = str_replace('{{port}}', $_REQUEST['db-port'], $db_config);
 $db_config = str_replace('{{database}}', $_REQUEST['db-database'], $db_config);

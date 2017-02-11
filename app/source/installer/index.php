@@ -71,13 +71,22 @@ if(Leafpub::isInstalled()) {
                     <!-- Database -->
                     <h4 class="mt-3">Database</h4>
                     <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="driver">Database System</label>
+                                <select class="form-control" name="driver" id="driver">
+                                    <option value="Mysqli">Mysqli</option>
+                                    <option value="Sqlsrv">Sqlsrv</optionn> 
+                                    <option value="Pdo_Sqlite">SQLite</option> 
+                                    <option value="Pdo_Mysql" selected>MySQL</option>
+                                    <option value="Pdo_Pgsql">PostgreSQL</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label for="db-host">Host</label>
                                 <input type="text" class="form-control" name="db-host" id="db-host" placeholder="localhost">
-                                <small class="text-muted">
-                                    MySQL and MariaDB are supported
-                                </small>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -100,6 +109,9 @@ if(Leafpub::isInstalled()) {
                             <div class="form-group">
                                 <label for="db-database">Database Name</label>
                                 <input type="text" class="form-control" name="db-database" id="db-database">
+                                 <small class="text-muted">
+                                    Database name or path to SQLite file
+                                </small>
                             </div>
                         </div>
                         <div class="col-sm-6">
