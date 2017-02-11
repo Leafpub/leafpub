@@ -8,6 +8,7 @@
  */
 
 namespace Leafpub;
+use Leafpub\Models\Setting;
 
 /**
 * Backup
@@ -41,9 +42,9 @@ class Backup extends Leafpub {
     **/
     private static function dbToJson($table) {
         try {
-            $st = self::$database->prepare("SELECT * FROM __$table");
-            $st->execute();
-            $result = $st->fetchAll(\PDO::FETCH_ASSOC);
+            $x = '\\Leafpub\\Models\\Tables\\' . ucfirst($table);
+            $dbTable = new $x();
+            $result = $dbTable->select()->toArray();
         } catch(\PDOException $e) {
             return false;
         }
@@ -58,7 +59,7 @@ class Backup extends Leafpub {
     *
     **/
     private static function getTableNames() {
-        return ['history', 'post_tags', 'posts', 'settings', 'tags', 'uploads', 'users'];
+        return ['History', 'PostUploads', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
     }
 
     /**
@@ -74,31 +75,17 @@ class Backup extends Leafpub {
         $rows = json_decode($json, true);
         if($rows === null) return false;
 
+        $x = '\\Leafpub\\Models\\Tables\\' . $table;
+        $dbTable = new $x();
+        
         // Restore the table
         try {
-            // Get column names
-            $st = self::$database->prepare("DESCRIBE __$table");
-            $st->execute();
-            $fields = $st->fetchAll(\PDO::FETCH_COLUMN);
-
             // Truncate the table
-            $st = self::$database->exec("TRUNCATE TABLE __$table");
+           $dbTable->truncate();
 
             // Insert each row
             foreach($rows as $row) {
-                // Generate insert SQL
-                $sql = "INSERT INTO __$table SET ";
-                foreach($fields as $field) {
-                    $sql .= "$field = :$field, ";
-                }
-                $sql = preg_replace('/, $/', '', $sql);
-
-                // Bind values and execute it
-                $st = self::$database->prepare($sql);
-                foreach($fields as $field) {
-                    $st->bindParam($field, $row[$field]);
-                }
-                $st->execute();
+                $dbTable->insert($row);
             }
         } catch(\PDOException $e) {
             return false;
@@ -129,6 +116,7 @@ class Backup extends Leafpub {
             $json = self::dbToJson($table);
             $written = file_put_contents("$tmp_dir/$table.json", $json);
             if(!$json || !$written) {
+                            var_dump($json);
                 throw new \Exception(
                     'Unable to backup database table: ' . $table,
                     self::UNABLE_TO_BACKUP_DATABASE
