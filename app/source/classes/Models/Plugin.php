@@ -9,7 +9,9 @@
 
 namespace Leafpub\Models;
 
-use \DirectoryIterator,
+use DirectoryIterator,
+    ZipArchive,
+    Composer\Semver\Comparator,
     Leafpub\Leafpub,
     Leafpub\Model\Setting,
     Leafpub\Renderer;
@@ -109,17 +111,9 @@ class Plugin implements ModelInterface {
         return $plugins;
     }
     
-    public static function getOne($data){
+    public static function getOne($plugin){
         try {
-           // Get a plugin from database
-           $st = self::$database->prepare('
-               SELECT * FROM __plugins
-               WHERE dir = :dir
-               ORDER BY name
-           ');
-           $st->bindParam(':dir', $plugin);
-           $st->execute();
-           $plugin = $st->fetch(\PDO::FETCH_ASSOC);
+           $plugin = self::getModel()->select(['dir' => $plugin])->current();
            if (!$plugin){
                return false;
            }
@@ -131,16 +125,16 @@ class Plugin implements ModelInterface {
        return $plugin;
     }
     
-    public static function create($data){
+    public static function create($plugin){
         // Is the name valid?
-        if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
+        if(!mb_strlen($plugin['name']) || Leafpub::isProtectedSlug($plugin['name'])) {
             throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
         if(
             !mb_strlen($plugin['dir']) || 
-            self::isProtectedSlug($plugin['dir']) || 
-            !is_dir(self::path('content/plugins/' . $plugin['dir']))
+            Leafpub::isProtectedSlug($plugin['dir']) || 
+            !is_dir(Leafpub::path('content/plugins/' . $plugin['dir']))
         ) {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
@@ -157,37 +151,8 @@ class Plugin implements ModelInterface {
         $plugin = self::normalize($plugin);
 
         try {
-           // Get a plugin from database
-           $st = self::$database->prepare('
-               INSERT INTO __plugins SET
-                 name = :name,
-                 description = :description,
-                 author = :author,
-                 version = :version,
-                 dir = :dir,
-                 img = :img,
-                 link = :link,
-                 isAdminPlugin = :isAdminPlugin,
-                 isMiddleware = :isMiddleware,
-                 requires = :requires,
-                 license = :license,
-                 install_date = NOW()
-           ');
-
-           $st->bindParam(':name', $plugin['name']);
-           $st->bindParam(':description', $plugin['description']);
-           $st->bindParam(':author', $plugin['author']);
-           $st->bindParam(':version', $plugin['version']);
-           $st->bindParam(':dir', $plugin['dir']);
-           $st->bindParam(':img', $plugin['image']);
-           $st->bindParam(':link', $plugin['link']);
-           $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
-           $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
-           $st->bindParam(':requires', $plugin['requires']);
-           $st->bindParam(':license', $plugin['license']);
-           $st->execute();
-           
-           $plugin_id = (int) self::$database->lastInsertId();
+           self::getModel()->insert($plugin);
+           $plugin_id = (int) self::getModel()->getLastInsertValue();
            if($plugin_id <= 0) return false;
        } catch(\PDOException $e) {
            return false;
@@ -196,16 +161,16 @@ class Plugin implements ModelInterface {
        return true;
     }
     
-    public static function edit($data){
+    public static function edit($plugin){
         // Is the name valid?
-        if(!mb_strlen($plugin['name']) || self::isProtectedSlug($plugin['name'])) {
+        if(!mb_strlen($plugin['name']) || Leafpub::isProtectedSlug($plugin['name'])) {
             throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
         if(
             !mb_strlen($plugin['dir']) || 
-            self::isProtectedSlug($plugin['dir']) || 
-            !is_dir(self::path('content/plugins/' . $plugin['dir']))
+            Leafpub::isProtectedSlug($plugin['dir']) || 
+            !is_dir(Leafpub::path('content/plugins/' . $plugin['dir']))
         ) {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
@@ -218,59 +183,24 @@ class Plugin implements ModelInterface {
                 );
             }
         }
+        $dbPlugin = self::getOne($plugin['dir']);
+        $plugin = array_merge($dbPlugin, $plugin);
+        $id = $plugin['id'];
+        unset($plugin['id']);
 
         try {
-           // Get a plugin from database
-           $st = self::$database->prepare('
-               UPDATE __plugins SET
-                 name = :name,
-                 description = :description,
-                 author = :author,
-                 version = :version,
-                 dir = :dir,
-                 img = :img,
-                 link = :link,
-                 isAdminPlugin = :isAdminPlugin,
-                 isMiddleware = :isMiddleware,
-                 requires = :requires,
-                 license = :license
-                WHERE
-                  1 = 1
-                AND
-                  id = :id
-           ');
-
-           $st->bindParam(':name', $plugin['name']);
-           $st->bindParam(':description', $plugin['description']);
-           $st->bindParam(':author', $plugin['author']);
-           $st->bindParam(':version', $plugin['version']);
-           $st->bindParam(':dir', $plugin['dir']);
-           $st->bindParam(':img', $plugin['image']);
-           $st->bindParam(':link', $plugin['link']);
-           $st->bindParam(':isAdminPlugin', $plugin['isAdminPlugin']);
-           $st->bindParam(':isMiddleware', $plugin['isMiddleware']);
-           $st->bindParam(':requires', $plugin['requires']);
-           $st->bindParam(':license', $plugin['license']);
-           $st->bindParam(':id', $plugin['id']);
-           
-           $st->execute();
-       } catch(\PDOException $e) {
+            self::getModel()->update($plugin, ['id' => $id]);
+        } catch(\PDOException $e) {
            return false;
-       }
+        }
 
-       return true;
+        return true;
     }
     
-    public static function delete($data){
+    public static function delete($plugin){
         try {
-           // Get a plugin from database
-           $st = self::$database->prepare('
-               DELETE FROM __plugins
-               WHERE dir = :dir
-           ');
-           $st->bindParam(':dir', $dir);
-           $st->execute();
-           return ($st->rowCount() > 0);
+           $rowCount = self::getModel()->delete(['dir' => $plugin]);
+           return ($rowCount > 0);
        } catch(\PDOException $e) {
            return false;
        }
@@ -323,11 +253,8 @@ class Plugin implements ModelInterface {
     */
     public static function getActivatedPlugins(){
         try {
-           // Get a list of slugs
-           $st = self::$database->query('
-               SELECT * FROM __plugins WHERE enabled = 1
-           ');
-           return $st->fetchAll(\PDO::FETCH_ASSOC);
+           return self::getModel()->select(['enabled' => '1'])->toArray();
+           
        } catch(\PDOException $e) {
            return false;
        }
@@ -381,19 +308,19 @@ class Plugin implements ModelInterface {
         $ns = $zip->getNameIndex(0);
         
         // Plugin exists already
-        if (is_dir(self::path('content/plugins/' . $ns))){
+        if (is_dir(Leafpub::path('content/plugins/' . $ns))){
             // We're doing an update'
-            self::removeDir(self::path('content/plugins/' . $ns));
+            Leafpub::removeDir(Leafpub::path('content/plugins/' . $ns));
             $bUpdate = true;
         }
         
-        if (!$zip->extractTo(self::path('content/plugins'))){
+        if (!$zip->extractTo(Leafpub::path('content/plugins'))){
             throw new \Exception('Unable to extract zip');
         }
         
         $plugin = json_decode(
             file_get_contents(
-                self::path("content/plugins/$ns/plugin.json")
+                Leafpub::path("content/plugins/$ns/plugin.json")
             ), true
         );
         $plugin['dir'] = $ns;
@@ -401,7 +328,7 @@ class Plugin implements ModelInterface {
         if ($bUpdate){
             $res = self::edit($plugin);
         } else {
-            $res = self::add($plugin);
+            $res = self::create($plugin);
         }
 
         return $res;
@@ -415,7 +342,11 @@ class Plugin implements ModelInterface {
     *
     */
     public static function deinstall($plugin){
-        $plugin = self::get($plugin);
+        if (!is_dir(Leafpub::path("content/plugins/$plugin"))){
+            return false;
+        }
+
+        $plugin = self::getOne($plugin);
         if (!$plugin){
             return false;
         }
@@ -426,7 +357,7 @@ class Plugin implements ModelInterface {
 
         self::delete($plugin['dir']);
 
-        parent::removeDir(self::path('content/plugins/' . $plugin['dir']));
+        Leafpub::removeDir(self::path('content/plugins/' . $plugin['dir']));
 
         return true;
     }
@@ -439,16 +370,27 @@ class Plugin implements ModelInterface {
     *
     */
     public static function activate($dir){
-        $plugin = self::get($dir);
+        // Always sanitize user input ;-)
+        if (!is_dir(Leafpub::path("content/plugins/$dir"))){
+            return false;
+        }
+
+        $plugin = self::getOne($dir);
+        
         if (!$plugin){
             $plugin = json_decode(
                 file_get_contents(
-                    self::path("content/plugins/$dir/plugin.json")
+                    Leafpub::path("content/plugins/$dir/plugin.json")
                 ), true
             );
             $plugin['dir'] = $dir;
+
+            $plugin['img'] = $plugin['image'];
+
+            unset($plugin['image']);
+            unset($plugin['routes']);
             try{
-                self::add($plugin);
+                self::create($plugin);
             } catch (\Exception $e){
                 echo $e->getMessage();
                 return false;
@@ -461,18 +403,13 @@ class Plugin implements ModelInterface {
 
         // Update database
         try {
-            $st = self::$database->prepare('
-                UPDATE __plugins SET
-                  enabled = 1,
-                  enable_date = NOW()
-                WHERE
-                  1 = 1
-                AND
-                  dir = :dir;
-            ');
-            $st->bindParam(':dir', $dir);
-            $st->execute();
-            return ($st->rowCount() > 0);
+            $rowCount = self::getModel()->update([
+                                'enabled' => '1',
+                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()')
+                            ],
+                            ['dir' => $dir]
+                        );
+            return ($rowCount > 0);
         } catch(\PDOException $e) {
            return false;
        }    
@@ -486,7 +423,11 @@ class Plugin implements ModelInterface {
     *
     */
     public static function deactivate($dir){
-        $plugin = self::get($dir);
+        if (!is_dir(Leafpub::path("content/plugins/$dir"))){
+            return false;
+        }
+
+        $plugin = self::getOne($dir);
         if (!$plugin){
             return false;
         }
@@ -498,18 +439,13 @@ class Plugin implements ModelInterface {
 
         // Update database
         try {
-            $st = self::$database->prepare('
-                UPDATE __plugins SET
-                  enabled = 0,
-                  enable_date = NOW()
-                WHERE
-                  1 = 1
-                AND
-                  dir = :dir;
-            ');
-            $st->bindParam(':dir', $dir);
-            $st->execute();
-            return ($st->rowCount() > 0);
+            $rowCount = self::getModel()->update([
+                                'enabled' => '0',
+                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()')
+                            ],
+                            ['dir' => $dir]
+                        );
+            return ($rowCount > 0);
         } catch(\PDOException $e) {
            return false;
        }   
@@ -530,8 +466,8 @@ class Plugin implements ModelInterface {
         $plugin['enabled'] = (int) $plugin['enabled'];
 
         // Convert dates from UTC to local
-        $plugin['install_date'] = self::utcToLocal($plugin['install_date']);
-        $plugin['enable_date'] = self::utcToLocal($plugin['enable_date']);
+        $plugin['install_date'] = Leafpub::utcToLocal($plugin['install_date']);
+        $plugin['enable_date'] = Leafpub::utcToLocal($plugin['enable_date']);
 
         return $plugin;
     }
@@ -545,15 +481,7 @@ class Plugin implements ModelInterface {
     */
     public static function exists($dir){
         try {
-           // Get a plugin from database
-           $st = self::$database->prepare('
-               SELECT * FROM __plugins
-               WHERE dir = :dir
-               ORDER BY name
-           ');
-           $st->bindParam(':dir', $dir);
-           $st->execute();
-           return !!$st->fetch(\PDO::FETCH_ASSOC);
+           return !!self::getOne($dir);
        } catch(\PDOException $e) {
            return false;
        }
