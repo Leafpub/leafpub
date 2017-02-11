@@ -33,4 +33,8 @@ abstract class TableGateway extends AbstractTableGateway {
         );
         exit;
     }
+
+    public function truncate(){
+        return $this->getSql()->prepareStatementForSqlObject(new TruncateTable($this->getTable()))->execute();
+    }
 }
