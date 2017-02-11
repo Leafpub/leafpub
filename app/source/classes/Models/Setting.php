@@ -42,14 +42,18 @@ class Setting extends AbstractModel {
     }
 
     /**
-    * Alias for edit
+    * Create a setting
     *
     * @param array $data
     * @return bool
     *
     **/
     public static function create($data){
-        return self::edit($data);
+        try {
+            return self::getModel()->insert($data);
+        } catch(\Exception $e){
+            return false;
+        }
     }
 
     public static function edit($data){
