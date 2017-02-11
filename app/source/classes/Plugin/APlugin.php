@@ -10,7 +10,7 @@
 namespace Leafpub\Plugin;
 
 use Leafpub\Leafpub,
-    Leafpub\Setting,
+    Leafpub\Models\Setting,
     Leafpub\Renderer;
 
 abstract class APlugin {
@@ -76,7 +76,7 @@ abstract class APlugin {
     private function addRoutes(array $routes){
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin){
-            $admin = Setting::get('frag_admin');
+            $admin = Setting::getOne('frag_admin');
             $this->_app->group("/$admin/$safeName" , function() use($routes){
                 foreach($routes as $route){
                     $method = $route["method"];
@@ -189,7 +189,7 @@ abstract class APlugin {
     public function url($path = null){
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin){
-            $admin = Setting::get('frag_admin');
+            $admin = Setting::getOne('frag_admin');
             return Leafpub::url("/$admin/$safeName/$path");
         } else {
             return Leafpub::url("/$safeName/$path");
@@ -197,16 +197,16 @@ abstract class APlugin {
     }
 
     public static function getSetting($name){
-        return Setting::get($name);
+        return Setting::getOne($name);
     }
 
     public static function setSetting($name, $option){
-        $ret = Setting::get($name);
+        $ret = Setting::getOne($name);
 
-        if ($ret === ''){
-            return Setting::add($name, $option);
+        if ($ret === null){
+            return Setting::create(['name' => $name, 'value' => $option]);
         } else {
-            return Setting::update($name, $option);
+            return Setting::edit(['name' => $name, 'value' => $option]);
         }
     }
 
