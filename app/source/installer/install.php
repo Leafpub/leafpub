@@ -55,6 +55,7 @@ if(!Leafpub::isValidEmail($_REQUEST['email'])) {
 // Test database connection
 try {
     Database::connect([
+        'driver' => 'Pdo_Mysql',
         'host' => $_REQUEST['db-host'],
         'port' => $_REQUEST['db-port'],
         'database' => $_REQUEST['db-database'],
@@ -151,6 +152,7 @@ if(!file_exists(Leafpub::path('.htaccess'))) {
 // Create database.php from default.database.php
 $db_pathname = Leafpub::path('database.php');
 $db_config = file_get_contents(Leafpub::path('source/defaults/default.database.php'));
+$db_config = str_replace('{{driver}}', 'Pdo_Mysql', $db_config);
 $db_config = str_replace('{{host}}', $_REQUEST['db-host'], $db_config);
 $db_config = str_replace('{{port}}', $_REQUEST['db-port'], $db_config);
 $db_config = str_replace('{{database}}', $_REQUEST['db-database'], $db_config);
@@ -180,52 +182,53 @@ try {
 }
 
 // Insert default settings
-Setting::add('auth_key', Leafpub::randomBytes(32)); // create a unique and secure auth key
-Setting::add('allowed_upload_types', 'pdf,doc,docx,ppt,pptx,pps,ppsx,odt,xls,xlsx,psd,txt,md,csv,jpg,jpeg,png,gif,ico,svg,mp3,m4a,ogg,wav,mp4,m4v,mov,wmv,avi,mpg,ogv,3gp,3g2');
-Setting::add('cover', 'source/assets/img/leaves.jpg');
-Setting::add('default_content', 'Start writing here...');
-Setting::add('default_title', 'Untitled Post');
-Setting::add('favicon', 'source/assets/img/logo-color.png');
-Setting::add('foot_code', '');
-Setting::add('frag_admin', 'admin');
-Setting::add('frag_author', 'author');
-Setting::add('frag_blog', 'blog');
-Setting::add('frag_feed', 'feed');
-Setting::add('frag_page', 'page');
-Setting::add('frag_search', 'search');
-Setting::add('frag_tag', 'tag');
-Setting::add('generator', 'on');
-Setting::add('hbs_cache', 'on');
-Setting::add('head_code', '');
-Setting::add('homepage', '');
-Setting::add('language', 'en-us');
-Setting::add('logo', 'source/assets/img/logo-color.png');
-Setting::add('maintenance', 'off');
-Setting::add('maintenance_message', '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>');
-Setting::add('navigation', '[{"label":"Home","link":"/"}]');
-Setting::add('posts_per_page', '10');
-Setting::add('tagline', 'Go forth and create!');
-Setting::add('theme', 'range');
-Setting::add('timezone', 'America/New_York');
-Setting::add('title', 'A Leafpub Blog');
-Setting::add('twitter', '');
-Setting::add('password_min_length', '8');
-Setting::add('mailer', 'default');
+Models\Setting::create(['name' => 'auth_key', 'value' => Leafpub::randomBytes(32)]); // create a unique and secure auth key
+Models\Setting::create(['name' => 'allowed_upload_types', 'value' => 'pdf,doc,docx,ppt,pptx,pps,ppsx,odt,xls,xlsx,psd,txt,md,csv,jpg,jpeg,png,gif,ico,svg,mp3,m4a,ogg,wav,mp4,m4v,mov,wmv,avi,mpg,ogv,3gp,3g2']);
+Models\Setting::create(['name' => 'cover', 'value' => 'source/assets/img/leaves.jpg']);
+Models\Setting::create(['name' => 'default_content', 'value' => 'Start writing here...']);
+Models\Setting::create(['name' => 'default_title', 'value' => 'Untitled Post']);
+Models\Setting::create(['name' => 'favicon', 'value' => 'source/assets/img/logo-color.png']);
+Models\Setting::create(['name' => 'foot_code', 'value' => '']);
+Models\Setting::create(['name' => 'frag_admin', 'value' => 'admin']);
+Models\Setting::create(['name' => 'frag_author', 'value' => 'author']);
+Models\Setting::create(['name' => 'frag_blog', 'value' => 'blog']);
+Models\Setting::create(['name' => 'frag_feed', 'value' => 'feed']);
+Models\Setting::create(['name' => 'frag_page', 'value' =>  'page']);
+Models\Setting::create(['name' => 'frag_search', 'value' => 'search']);
+Models\Setting::create(['name' => 'frag_tag', 'value' => 'tag']);
+Models\Setting::create(['name' => 'generator', 'value' => 'on']);
+Models\Setting::create(['name' => 'hbs_cache', 'value' => 'on']);
+Models\Setting::create(['name' => 'head_code', 'value' => '']);
+Models\Setting::create(['name' => 'homepage', 'value' =>  '']);
+Models\Setting::create(['name' => 'language', 'value' => 'en-us']);
+Models\Setting::create(['name' => 'maintenance', 'value' => 'off']);
+Models\Setting::create(['name' => 'maintenance_message', 'value' => '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>']);
+Models\Setting::create(['name' => 'navigation', 'value' => '[{"label":"Home","link":"/"}]']);
+Models\Setting::create(['name' => 'posts_per_page', 'value' => '10']);
+Models\Setting::create(['name' => 'tagline', 'value' => 'Go forth and create!']);
+Models\Setting::create(['name' => 'theme', 'value' => 'range']);
+Models\Setting::create(['name' => 'timezone', 'value' => 'America/New_York']);
+Models\Setting::create(['name' => 'title', 'value' => 'A Leafpub Blog']);
+Models\Setting::create(['name' => 'twitter', 'value' => '']);
+Models\Setting::create(['name' => 'password_min_length', 'value' => '8']);
+Models\Setting::create(['name' => 'mailer', 'value' => 'default']);
 
 // Insert owner
 try {
-    User::add($_REQUEST['username'], [
+    Models\User::create([
+        'slug' => $_REQUEST['username'],
         'name' => $_REQUEST['name'],
         'email' => $_REQUEST['email'],
         'password' => $_REQUEST['password'],
-        'role' => 'owner'
+        'role' => 'owner',
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
 } catch(\Exception $e) {
     // Cleanup database.php so we can try again
     unlink($db_pathname);
 
     switch($e->getCode()) {
-        case User::INVALID_SLUG:
+        case Models\User::INVALID_SLUG:
             $invalid = ['username'];
             $message = 'This username is reserved and cannot be used.';
             break;
@@ -243,10 +246,12 @@ try {
 
 // Insert default tag
 try {
-    Tag::add('getting-started', [
+    Models\Tag::create([
+        'slug' => 'getting-started', 
         'name' => 'Getting Started',
         'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!',
-        'type' => 'post'
+        'type' => 'post',
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
 } catch(\Exception $e) {
     // Cleanup database.php so we can try again
@@ -260,7 +265,8 @@ try {
 
 // Insert initial posts
 try {
-    Post::add('welcome-to-leafpub', [
+    Models\Post::create([
+        'slug' => 'welcome-to-leafpub',
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Welcome to Leafpub',
@@ -268,34 +274,41 @@ try {
         'image' => 'content/uploads/2016/10/leaves.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
-        'sticky' => true
+        'sticky' => true,
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
-    Post::add('the-editor', [
+    Models\Post::create([
+        'slug' => 'the-editor', 
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'The Editor',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.editor.html')),
         'image' => 'content/uploads/2016/10/sunflower.jpg',
         'status' => 'published',
-        'tags' => ['getting-started']
+        'tags' => ['getting-started'],
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
-    Post::add('themes-and-plugins', [
+    Models\Post::create([
+        'slug' => 'themes-and-plugins', 
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Themes & Plugins',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.themes.html')),
         'image' => 'content/uploads/2016/10/autumn.jpg',
         'status' => 'published',
-        'tags' => ['getting-started']
+        'tags' => ['getting-started'],
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
-    Post::add('help-and-support', [
+    Models\Post::create([
+        'slug' => 'help-and-support', 
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Help & Support',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.support.html')),
         'image' => 'content/uploads/2016/10/ladybug.jpg',
         'status' => 'published',
-        'tags' => ['getting-started']
+        'tags' => ['getting-started'],
+        'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
 } catch(\Exception $e) {
     // Cleanup database.php so we can try again
