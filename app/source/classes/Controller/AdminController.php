@@ -271,7 +271,7 @@ class AdminController extends Controller {
             'scripts' => ['editor.min.js', 'posts.edit.min.js'],
             'styles' => 'posts.edit.css',
             'post' => $post,
-            'history' => History::getAll($post['slug']),
+            'history' => History::getMany(['slug' => $post['slug']]),
             'authors' => User::getNames(),
             'all_tags' => Tag::getNames(),
             'post_tags' => $post['tags'],

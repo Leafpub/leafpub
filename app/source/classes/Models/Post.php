@@ -287,6 +287,7 @@ class Post extends AbstractModel {
         $post = $evt->getEventData();
         $tags = $post['tags'];
         unset($post['tags']);
+        unset($post['tag_data']);
 
         try {
             $model = self::getModel();
@@ -322,7 +323,7 @@ class Post extends AbstractModel {
     public static function edit($properties){
         $slug = $properties['slug'];
         // Get the post
-        $post = self::get($slug);
+        $post = self::getOne($slug);
         if(!$post) {
             throw new \Exception('Post not found: ' . $slug, self::NOT_FOUND);
         }
@@ -331,6 +332,7 @@ class Post extends AbstractModel {
         $post = array_merge($post, $properties);
         $tags = $post['tags'];
         unset($post['tags']);
+        unset($post['tag_data']);
 
         // Parse publish date format and convert to UTC
         $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));

@@ -247,6 +247,7 @@ class APIController extends Controller {
         $params = $request->getParams();
         $properties = $params['properties'];
         $slug = $action === 'add' ? $properties['slug'] : $args['slug'];
+        $properties['slug'] = $slug;
 
         // If you're not an owner, admin, or editor then you can only add/update your own posts
         if(
@@ -288,9 +289,9 @@ class APIController extends Controller {
         // Update the post
         try {
             if($action === 'add') {
-                Post::create($slug, $properties);
+                Post::create($properties);
             } else {
-                Post::edit($slug, $properties);
+                Post::edit($properties);
             }
         } catch(\Exception $e) {
             switch($e->getCode()) {

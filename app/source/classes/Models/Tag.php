@@ -302,7 +302,11 @@ class Tag extends AbstractModel {
                                                     $wh->in('id', $select1);
                                                 });
            
-            return $model->selectWith($select)->toArray();
+            $ret = $model->selectWith($select)->toArray();
+            foreach($ret as $itm){
+                $tags[] = $itm['slug'];
+            }
+            return $tags;
         } catch(\Exception $e){
             return [];
         }
