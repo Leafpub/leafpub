@@ -10,6 +10,7 @@ ini_set('log_errors', 1);
 // Autoloader
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 $loader->setPsr4('Leafpub\\', __DIR__ . '/classes');
+$loader->setPsr4('Leafpub\\Plugins\\', __DIR__ . '/../content/plugins');
 $loader->register();
 
 // Check PHP version
