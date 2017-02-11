@@ -62,7 +62,7 @@ class Database extends Leafpub {
 
         // Connect to the database
         try {
-            self::$database = new LeafpubPDO(
+            /*self::$database = new LeafpubPDO(
                 (
                     "mysql:host={$config[host]};" .
                     "port={$config[port]};" .
@@ -73,12 +73,12 @@ class Database extends Leafpub {
                 $config['password'],
                 $pdo_options,
                 $config['prefix']
-            );
+            );*/
             
             GlobalAdapterFeature::setStaticAdapter(new Adapter($config));
             TableGateway::$prefix = $config['prefix'];
             
-            self::$database->exec('SET time_zone = "+00:00"');
+            //self::$database->exec('SET time_zone = "+00:00"');
         } catch(\PDOException $e) {
             switch($e->getCode()) {
                 case 1044: // Access denied for database
@@ -128,7 +128,12 @@ class Database extends Leafpub {
     **/
     public static function resetTables() {
         try {
-            self::$database->exec(file_get_contents(Leafpub::path('source/defaults/default.database.sql')));
+            $adapter = GlobalAdapterFeature::getStaticAdapter();
+            $adapter->query(
+                str_replace('__', TableGateway::$prefix, file_get_contents(self::path('source/defaults/default.database.sql'))),
+                Adapter::QUERY_MODE_EXECUTE
+            );
+            //self::$database->exec(file_get_contents(Leafpub::path('source/defaults/default.database.sql')));
         } catch(\PDOException $e) {
             throw new \Exception(
                 'Unable to create database schema: ' . $e->getMessage(),
