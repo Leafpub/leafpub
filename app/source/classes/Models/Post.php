@@ -213,14 +213,14 @@ class Post extends AbstractModel {
             $select = $select->select();
             $select->from($prefix.'view_posts')
                    ->where(['slug' => $slug]);
-            $post = self::getModel()->selectWith($select)->current()->getArrayCopy();
+            $post = self::getModel()->selectWith($select)->current();
             if(!$post) return false;
         } catch(\PDOException $e) {
             return false;
         }
 
         // Normalize fields
-        $post = self::normalize($post);
+        $post = self::normalize($post->getArrayCopy());
 
         $evt = new Retrieved($post);
         Leafpub::dispatchEvent(Retrieved::NAME, $evt);
@@ -251,7 +251,7 @@ class Post extends AbstractModel {
         }
 
         // Parse publish date format and convert to UTC
-        $post['pub_date'] = Leafpub::localToUtc(self::parseDate($post['pub_date']));
+        $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
 
         // Translate author slug to ID
         $post['author'] = User::getId($post['author']);
@@ -285,18 +285,20 @@ class Post extends AbstractModel {
         $evt = new Add($post);
         Leafpub::dispatchEvent(Add::NAME, $evt);
         $post = $evt->getEventData();
+        $tags = $post['tags'];
+        unset($post['tags']);
 
         try {
             $model = self::getModel();
             $model->insert($post);
-            $post_id = (int) $model->lastInsertValue();
+            $post_id = (int) $model->getLastInsertValue();
             if($post_id <= 0) return false;
         } catch(\PDOException $e) {
             throw new \Exception('Database error: ' . $e->getMessage());
         }
 
         // Set post tags
-        self::setTags($post_id, $post['tags']);
+        self::setTags($post_id, $tags);
         self::setImageToPost($post_id, $post['content']);
 
         // Create the initial revision
@@ -327,9 +329,11 @@ class Post extends AbstractModel {
 
         // Merge options
         $post = array_merge($post, $properties);
+        $tags = $post['tags'];
+        unset($post['tags']);
 
         // Parse publish date format and convert to UTC
-        $post['pub_date'] = Leafpub::localToUtc(self::parseDate($post['pub_date']));
+        $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
 
         // Translate author slug to ID
         $post['author'] = User::getId($post['author']);
@@ -392,7 +396,7 @@ class Post extends AbstractModel {
         }
 
         // Set post tags
-        self::setTags($post['id'], $post['tags']);
+        self::setTags($post['id'], $tags);
         self::setImageToPost($post['id'], $post['content']);
 
         // Create a revision
@@ -1128,7 +1132,7 @@ class Post extends AbstractModel {
             // Assign tags
             try {
                 foreach($tags as $tag){
-                    $data = ['post' => $post_id, 'tag' => Tag::getId($tag)];
+                    $data = ['post' => $post_id, 'tag' => Tag::getOne($tag)['id']];
                     $table->insert($data);
                 }
             } catch(\PDOException $e) {
@@ -1148,7 +1152,7 @@ class Post extends AbstractModel {
     *
     */
     private static function setImageToPost($post_id, $content){
-        $table = new Table\PostUploads();
+        $table = new Tables\PostUploads();
 
         try {
             $table->delete(['post' => $post_id]);

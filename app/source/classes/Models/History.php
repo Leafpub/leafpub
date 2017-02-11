@@ -54,7 +54,9 @@ class History extends AbstractModel {
     **/
     public static function getOne($id){
         try {
-            return self::getModel()->select(['id' => $id])->current()->getArrayCopy();
+            $history = self::getModel()->select(['id' => $id])->current();
+            if (!$history) return false;
+            return $history->getArrayCopy();
         } catch(\Exception $e){
             return false;
         }

@@ -121,7 +121,7 @@ class Plugin implements ModelInterface {
            return false;
        }
 
-       $plugin = self::normalize($plugin);
+       $plugin = self::normalize($plugin->getArrayCopy());
        return $plugin;
     }
     

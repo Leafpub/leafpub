@@ -166,14 +166,14 @@ class Upload extends AbstractModel {
             )
             ->where(['filename' => $file]);
             
-            $upload = $model->selectWith($select)->current()->getArrayCopy();
+            $upload = $model->selectWith($select)->current();
             if(!$upload) return false;
         } catch(\PDOException $e) {
             return false;
         }
 
         // Normalize fields
-        $upload = self::normalize($upload);
+        $upload = self::normalize($upload->getArrayCopy());
 
         $evt = new Retrieved($upload);
         Leafpub::dispatchEvent(Retrieved::NAME, $evt);

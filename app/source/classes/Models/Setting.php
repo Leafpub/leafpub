@@ -50,7 +50,8 @@ class Setting extends AbstractModel {
     **/
     public static function create($data){
         try {
-            return self::getModel()->insert($data);
+            self::getModel()->insert($data);
+            self::$settings[$data['name']] = $data['value'];
         } catch(\Exception $e){
             return false;
         }

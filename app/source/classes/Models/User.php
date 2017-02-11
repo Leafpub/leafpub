@@ -119,7 +119,9 @@ class User extends AbstractModel {
     *
     **/
     public static function getOne($user){
-        return self::normalize(self::getModel()->select(['slug' => $user])->current()->getArrayCopy());
+        $user = self::getModel()->select(['slug' => $user])->current();
+        if (!$user) return false;
+        return self::normalize($user->getArrayCopy());
     }
 
      /**
@@ -137,22 +139,22 @@ class User extends AbstractModel {
 
         // Is the slug valid?
         if(!mb_strlen($slug) || Leafpub::isProtectedSlug($slug)) {
-            throw new Exception('Invalid slug: ' . $slug, self::INVALID_SLUG);
+            throw new \Exception('Invalid slug: ' . $slug, self::INVALID_SLUG);
         }
 
         // Does a user already exist here?
         if(self::exists($slug)) {
-            throw new Exception('User already exists: ' . $slug, self::ALREADY_EXISTS);
+            throw new \Exception('User already exists: ' . $slug, self::ALREADY_EXISTS);
         }
 
         // Must have a name
         if(!mb_strlen($user['name'])) {
-            throw new Exception('No name specified', self::INVALID_NAME);
+            throw new \Exception('No name specified', self::INVALID_NAME);
         }
 
         // Must have a valid email address
         if(!Leafpub::isValidEmail($user['email'])) {
-            throw new Exception(
+            throw new \Exception(
                 'Invalid email address: ' . $user['email'],
                 self::INVALID_EMAIL
             );
@@ -160,7 +162,7 @@ class User extends AbstractModel {
 
         // Must have a long enough password
         if(mb_strlen($user['password']) < Setting::getOne('password_min_length')) {
-            throw new Exception(
+            throw new \Exception(
                 'Passwords must be at least ' . Setting::getOne('password_min_length') . ' characters long',
                 self::PASSWORD_TOO_SHORT
             );
@@ -168,7 +170,7 @@ class User extends AbstractModel {
 
         // Cannot create an owner if one already exists
         if($user['role'] === 'owner' && self::getOwner()) {
-            throw new Exception(
+            throw new \Exception(
                 'The owner role cannot be revoked or reassigned',
                 self::CANNOT_CHANGE_OWNER
             );
@@ -198,13 +200,13 @@ class User extends AbstractModel {
         // Hash the password
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
         if($user['password'] === false) {
-            throw new Exception('Invalid password', self::INVALID_PASSWORD);
+            throw new \Exception('Invalid password', self::INVALID_PASSWORD);
         }
 
         try {
             $ret = (self::getModel()->insert($user) > 0);
-        } catch(PDOException $e) {
-            throw new Exception('Database error: ' . $e->getMessage());
+        } catch(\PDOException $e) {
+            throw new \Exception('Database error: ' . $e->getMessage());
         }
 
         $evt = new Added($user);
@@ -232,7 +234,7 @@ class User extends AbstractModel {
         $user = self::getOne(['slug' => $slug]);
 
         if(!$user) {
-            throw new Exception('User not found: ' . $slug, self::NOT_FOUND);
+            throw new \Exception('User not found: ' . $slug, self::NOT_FOUND);
         }
 
         // The owner role cannot be revoked or reassigned
@@ -244,7 +246,7 @@ class User extends AbstractModel {
                 ($user['role'] !== 'owner' && $properties['role'] === 'owner')
             )
         ) {
-            throw new Exception(
+            throw new \Exception(
                 'The owner role cannot be revoked or reassigned',
                 self::CANNOT_CHANGE_OWNER
             );
@@ -259,12 +261,12 @@ class User extends AbstractModel {
 
         // Must have a name
         if(!mb_strlen($user['name'])) {
-            throw new Exception('No name specified', self::INVALID_NAME);
+            throw new \Exception('No name specified', self::INVALID_NAME);
         }
 
         // Must have an email address
         if(!Leafpub::isValidEmail($user['email'])) {
-            throw new Exception('Invalid email address: ' . $user['email'], self::INVALID_EMAIL);
+            throw new \Exception('Invalid email address: ' . $user['email'], self::INVALID_EMAIL);
         }
 
         // Don't allow null properties
@@ -288,7 +290,7 @@ class User extends AbstractModel {
         if(is_string($properties['password'])) {
             // Must have a long enough password
             if(mb_strlen($properties['password']) < Setting::getOne('password_min_length')) {
-                throw new Exception(
+                throw new \Exception(
                     'Passwords must be at least ' . Setting::getOne('password_min_length') . ' characters long',
                     self::PASSWORD_TOO_SHORT
                 );
@@ -297,7 +299,7 @@ class User extends AbstractModel {
             // Hash the password
             $user['password'] = password_hash($properties['password'], PASSWORD_DEFAULT);
             if($user['password'] === false) {
-                throw new Exception('Invalid password', self::INVALID_PASSWORD);
+                throw new \Exception('Invalid password', self::INVALID_PASSWORD);
             }
         }
 
@@ -308,19 +310,19 @@ class User extends AbstractModel {
 
             // Is the slug valid?
             if(!mb_strlen($user['slug']) || Leafpub::isProtectedSlug($user['slug'])) {
-                throw new Exception('Invalid slug: ' . $user['slug'], self::INVALID_SLUG);
+                throw new \Exception('Invalid slug: ' . $user['slug'], self::INVALID_SLUG);
             }
 
             // Does a user already exist here?
             if(self::exists($user['slug'])) {
-                throw new Exception('User already exists: ' . $user['slug'], self::ALREADY_EXISTS);
+                throw new \Exception('User already exists: ' . $user['slug'], self::ALREADY_EXISTS);
             }
         }
 
         // Update the user
         try {
             $rowCount = self::getModel()->update($user, ['slug' => $slug]);
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
 
@@ -352,11 +354,11 @@ class User extends AbstractModel {
 
         // Get target user
         $user = self::getOne(['slug' => $slug]);
-        if(!$user) throw new Exception('Invalid user.', self::INVALID_USER);
+        if(!$user) throw new \Exception('Invalid user.', self::INVALID_USER);
 
         // Can't delete the owner
         if($user['role'] === 'owner') {
-            throw new Exception('Cannot delete the owner account.', self::CANNOT_DELETE_OWNER);
+            throw new \Exception('Cannot delete the owner account.', self::CANNOT_DELETE_OWNER);
         }
 
         // Get the user that will receive the orphaned posts
@@ -368,7 +370,7 @@ class User extends AbstractModel {
             $recipient = self::getOwner();
         }
         if(!$recipient) {
-            throw new Exception(
+            throw new \Exception(
                 'Invalid recipient: ' . $recipient['slug'],
                 self::UNABLE_TO_ASSIGN_POSTS
             );
@@ -377,8 +379,8 @@ class User extends AbstractModel {
         // Assign posts to new user
         try {
             Post::updateRecepient($user['id'], $recipient['id']);
-        } catch(PDOException $e) {
-            throw new Exception(
+        } catch(\PDOException $e) {
+            throw new \Exception(
                 'Unable to assign posts to new user: ' . $recipient['slug'],
                 self::UNABLE_TO_ASSIGN_POSTS
             );
@@ -392,7 +394,7 @@ class User extends AbstractModel {
                         });
 
             $ret = ($rowCount() > 0);
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
 
@@ -434,7 +436,7 @@ class User extends AbstractModel {
             }
             $ret =  $model->selectWith($select);
             return $ret->current()['num'];
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
     }
@@ -450,7 +452,7 @@ class User extends AbstractModel {
         try {
             $ret = self::getModel()->select(['slug' => $slug]);
             return !!$ret->current();
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
     }
@@ -465,7 +467,7 @@ class User extends AbstractModel {
     public static function getId($slug) {
         try {
             return (int) self::getOne($slug)['id'];
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
     }
@@ -483,7 +485,7 @@ class User extends AbstractModel {
                             ->columns(['slug', 'name'])
                             ->order('name')
                      );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             return false;
         }
 
@@ -498,8 +500,8 @@ class User extends AbstractModel {
     **/
     public static function getOwner() {
         try {
-            return self::getModel()->select(['role' => 'owner']);
-        } catch(PDOException $e) {
+            return self::getModel()->select(['role' => 'owner'])->current();
+        } catch(\PDOException $e) {
             return false;
         }
     }
@@ -575,7 +577,7 @@ class User extends AbstractModel {
         try {   
             $authors = self::getModel()->selectWith($select);
         }
-        catch(PDOException $e) {
+        catch(\PDOException $e) {
             return false;
         }
         return $authors;

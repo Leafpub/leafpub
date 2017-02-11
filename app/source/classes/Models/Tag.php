@@ -129,14 +129,14 @@ class Tag extends AbstractModel {
         Leafpub::dispatchEvent(Retrieve::NAME, $evt);
 
         try {
-            $tag = self::getModel()->select(['slug' => $slug])->current()->getArrayCopy();
+            $tag = self::getModel()->select(['slug' => $slug])->current();
             if(!$tag) return false;
         } catch(\PDOException $e) {
             return false;
         }
 
         // Normalize fields
-        $tag = self::normalize($tag);
+        $tag = self::normalize($tag->getArrayCopy());
 
         $evt = new Retrieved($tag);
         Leafpub::dispatchEvent(Retrieved::NAME, $evt);
