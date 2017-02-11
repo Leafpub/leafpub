@@ -135,6 +135,7 @@ $app->group("/$frags->admin", function() {
 
     // Uploads
     $this->get('/uploads', 'Leafpub\Controller\AdminController:uploads');
+    $this->get('/regenerateThumbnails', 'Leafpub\Controller\AdminController:regenerateThumbnails');
 })->add('Leafpub\Middleware:requireAuth');
 
 /**

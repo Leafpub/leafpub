@@ -580,4 +580,13 @@ class AdminController extends Controller {
         return $response->write($html);
     }
 
+    public function regenerateThumbnails($request, $response, $args){
+        $generatedThumbnails = Upload::regenerateThumbnails();
+        // Send response
+        return $response->withJson([
+            'success' => true,
+            'num' => $generatedThumbnails
+        ]);
+    }
+
 }

@@ -627,4 +627,43 @@ class Upload extends AbstractModel {
         $path = $evt->getEventData();
         return self::generateThumbnail($path['fullPath'], $path['thumbPath']);
     }
+
+    public static function regenerateThumbnails(){
+        $counter = 0;
+        $model = self::getModel();
+        $select = $model->getSql()->select();
+        $select->columns(
+            [
+                'id',
+                'caption',
+                'path' => new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, filename), extension)"),
+                'thumbnail' => new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, 'thumbnails/' , filename), extension)"),
+                'created',
+                'filename',
+                'extension',
+                'size',
+                'width',
+                'height'
+            ]
+        );
+        $uploads = self::getModel()->selectWith($select)->toArray();
+
+        foreach($uploads as $upload){
+            try {
+                $thumb_path = Leafpub::path($upload['thumbnail']);
+                if (!is_file($thumb_path)){
+                    $full_path = Leafpub::path($upload['path']);
+                    $evt = new GenerateThumbnail([
+                        'fullPath' => $full_path,
+                        'thumbPath' => $thumb_path
+                    ]);
+                    Leafpub::dispatchEvent(GenerateThumbnail::NAME, $evt);
+                    $counter++;
+                }
+            } catch(\Exception $e){
+                continue;
+            }
+        }
+        return $counter;
+    }
 }
