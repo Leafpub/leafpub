@@ -10,6 +10,7 @@
 namespace Leafpub;
 
 use Leafpub\Models\Setting,
+    Leafpub\Models\Plugin,
     Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -107,7 +108,6 @@ class Leafpub {
                 $plugins = Plugin::getActivatedPlugins();
 
                 foreach($plugins as $plugin){
-                    //$ns = ucfirst($plugin['dir']);
                     $ns = $plugin['dir'];
                     $class = 'Leafpub\\Plugins\\' . $ns . '\\Plugin';
                     $pls[$ns] = new $class($app);
