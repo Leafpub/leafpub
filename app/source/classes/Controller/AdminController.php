@@ -14,20 +14,21 @@ use Leafpub\Admin,
     Leafpub\Cache,
     Leafpub\Error,
     Leafpub\Feed,
-    Leafpub\Models\History,
     Leafpub\Language,
-    Leafpub\Models\Post,
     Leafpub\Leafpub,
     Leafpub\Renderer,
     Leafpub\Search,
     Leafpub\Session,
+    Leafpub\Theme,
+    Leafpub\Importer,
+    Leafpub\Mailer,
+    Leafpub\Models\History,
+    Leafpub\Models\Post,
     Leafpub\Models\Setting,
     Leafpub\Models\Tag,
-    Leafpub\Theme,
     Leafpub\Models\Upload,
     Leafpub\Models\User,
-    Leafpub\Models\Plugin,
-    Leafpub\Mailer;
+    Leafpub\Models\Plugin;
 
 /**
 * AdminController
