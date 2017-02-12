@@ -53,16 +53,6 @@ class Backup extends Leafpub {
     }
 
     /**
-    * Returns an array of all known database table names
-    *
-    * @return array
-    *
-    **/
-    private static function getTableNames() {
-        return ['History', 'PostUploads', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
-    }
-
-    /**
     * Truncates a database table and restores values from JSON
     *
     * @param String $table

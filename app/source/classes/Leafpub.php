@@ -765,4 +765,13 @@ class Leafpub {
         }
     }
 
+    /**
+    * Returns an array of all known database table names
+    *
+    * @return array
+    *
+    **/
+    public static function getTableNames() {
+        return ['History', 'PostUploads', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
+    }
 }
