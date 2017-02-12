@@ -79,7 +79,7 @@ if(Leafpub::isInstalled()) {
                                     <option value="Sqlsrv">Sqlsrv</optionn> 
                                     <option value="Pdo_Sqlite">SQLite</option> 
                                     <option value="Pdo_Mysql" selected>MySQL</option>
-                                    <option value="Pdo_Pgsql">PostgreSQL</option>
+                                    <option value="Pdo">PostgreSQL</option>
                                 </select>
                             </div>
                         </div>
