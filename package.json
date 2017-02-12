@@ -1,6 +1,6 @@
 {
   "name": "leafpub",
-  "version": "1.1.0-beta3",
+  "version": "1.1.0-beta4",
   "private": true,
   "devDependencies": {
     "del": "^2.2.1",
