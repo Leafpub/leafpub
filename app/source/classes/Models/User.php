@@ -81,7 +81,7 @@ class User extends AbstractModel {
                ->unnest();
 
             if($options['role']) {
-                $wh->expression('FIND_IN_SET(role, ?) > 0', implode(',', (array) $options['role']));
+                $wh->in('role', implode(',', (array) $options['role']));
             }
         };
 

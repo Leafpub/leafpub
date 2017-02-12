@@ -130,8 +130,7 @@ class Post extends AbstractModel {
             } 
             
             if($options['status']) {
-                //$wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
-                $wh->equalTo('status', $options['status']);
+                $wh->in('status', implode(',', (array) $options['status']));
             }
 
             if($options['ignore_featured']){
@@ -501,7 +500,6 @@ class Post extends AbstractModel {
             } 
             
             if($options['status']) {
-                //$wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
                 $wh->equalTo('status', $options['status']);
             }
 
@@ -606,7 +604,7 @@ class Post extends AbstractModel {
             } 
 
             if($options['status']) {
-                $wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                $wh->in('status', implode(',', (array) $options['status']));
             }
 
             if($options['ignore_featured']){
@@ -712,7 +710,7 @@ class Post extends AbstractModel {
             } 
 
             if($options['status']) {
-                $wh->expression('FIND_IN_SET(status, ?) > 0', implode(',', (array) $options['status']));
+                $wh->expression('status', implode(',', (array) $options['status']));
             }
 
             if($options['ignore_featured']){
