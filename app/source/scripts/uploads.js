@@ -195,19 +195,19 @@ $(function() {
 
     // Delete
     $('.delete').on('click', function() {
-        var plugins = $('.media-list').selectable('value'),
+        var media = $('.media-list').selectable('value'),
             confirm = $('.delete').attr('data-confirm'),
             numDeleted = 0;
 
-        if(plugins.length === 0) return;
+        if(media.length === 0) return;
 
         // Confirmation
         $.alertable.confirm(confirm).then(function() {
             // Start progress to show the request is processing
-            progress.go(100 / plugins.length / 2);
+            progress.go(100 / media.length / 2);
 
             // Delete each plugin
-            $.each(plugins, function(index, value) {
+            $.each(media, function(index, value) {
                 // Add deferreds to the queue
                 $.ajax({
                     url: Leafpub.url('api/uploads/' + encodeURIComponent(value)),
@@ -229,7 +229,7 @@ $(function() {
                 })
                 .always(function() {
                     // Advance progress
-                    progress.go(100 * (++numDeleted / plugins.length));
+                    progress.go(100 * (++numDeleted / media.length));
                 });
             });
         });
@@ -313,7 +313,16 @@ $(function() {
         })
         .done(function(res) {
             if (res.success === true){
-
+                // Show feedback
+                Leafpub.announce(
+                    $('meta[name="leafpub:language"]').attr('data-changes-saved'),
+                    { style: 'success' }
+                ).then(function() {
+                    // Remove save confirmation and redirect
+                    window.onbeforeunload = null;
+                    location.href = Leafpub.adminUrl('uploads');
+                });
+            } else {
                 // Show message
                 if(res.message) {
                     $.alertable.alert(res.message);
