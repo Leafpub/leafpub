@@ -79,10 +79,15 @@ var Editor;
             document_base_url: Leafpub.url().replace(/\/$/, '') + '/',
             element_format: 'html',
             entity_encoding: 'raw',
-            extended_valid_elements: 'i[class],iframe[*],script[*]',
+            extended_valid_elements: 'i[class],iframe[*],script[*],figure',
             formats: {
                 // Align left
                 alignleft: [
+                    {
+						selector: 'figure.image',
+						classes: 'align-left',
+						ceFalseOverride: true,
+					},
                     {
                         // Standard elements
                         selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
@@ -98,6 +103,11 @@ var Editor;
                 // Align center
                 aligncenter: [
                     {
+						selector: 'figure.image',
+						classes: 'align-center',
+						ceFalseOverride: true,
+					},
+                    {
                         // Standard elements
                         selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
                         classes: 'align-center'
@@ -111,6 +121,11 @@ var Editor;
                 ],
                 // Align right
                 alignright: [
+                    {
+						selector: 'figure.image',
+						classes: 'align-right',
+						ceFalseOverride: true,
+					},
                     {
                         // Standard elements
                         selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img',
@@ -546,14 +561,20 @@ var Editor;
         },
 
         image: function(cmd, options) {
-            var editor = this.editor,
+            var editor = this.editor, 
                 image = editor.dom.getParent(editor.selection.getNode(), 'img'),
+                figure = editor.dom.getParent(image, 'figure'),
+                figcaption = editor.dom.getNext(editor.selection.getNode(), 'figcaption'),
                 link = editor.dom.getParent(editor.selection.getNode(), 'a');
+
+                if (figure) {
+                    //editor.dom.select('img', figure)[0];
+                }
 
             options = options || {};
 
             if(cmd === 'test') {
-                return !!image;
+                return !!figure;
             } else if(cmd === 'insert') {
                 // Is there an existing image?
                 if(image) {
@@ -563,7 +584,8 @@ var Editor;
                             src: options.src || '',
                             alt: options.alt || '',
                             width: options.width || null,
-                            height: options.height || null
+                            height: options.height || null,
+                            "class": options.class || null
                         });
 
                         // Handle alignment
@@ -574,6 +596,11 @@ var Editor;
                         if(options.align === 'left') editor.formatter.apply('alignleft');
                         if(options.align === 'center') editor.formatter.apply('aligncenter');
                         if(options.align === 'right') editor.formatter.apply('alignright');
+
+                        /*if (figure){
+                            $(figure).attr('class', options.class);
+                            figcaption.innerHTML = options.caption || '';
+                        }*/
 
                         // Handle link
                         if(options.href) {
@@ -613,7 +640,8 @@ var Editor;
                             src: options.src || '',
                             alt: options.alt || '',
                             width: options.width || null,
-                            height: options.height || null
+                            height: options.height || null,
+                            "class": options.class || null
                         });
 
                         // Wrap with link
@@ -622,9 +650,23 @@ var Editor;
                                 href: options.href
                             }, image.outerHTML);
                         }
+                        
+                        /*if (options.caption){
+                            figcaption = editor.dom.create('figcaption',{}, (options.caption || null));
+                            //figcaption.contentEditable = false;
 
+                            figure = editor.dom.create('figure', {
+                                "class": 'image ' + (options.class || null)
+                            });
+                            figure.appendChild(image);
+                            figure.appendChild(figcaption);
+                            figure.contentEditable = false;
+                        } else {
+                            figure = image;
+                        }*/
+                
                         editor.insertContent(image.outerHTML);
-
+                        //editor.insertContent(figure.outerHTML);
                         // Handle alignment
                         if(options.align === 'left') editor.formatter.apply('alignleft');
                         if(options.align === 'center') editor.formatter.apply('aligncenter');

@@ -939,9 +939,13 @@ $(function() {
     (function() {
         var btn = $('[data-editor="image"]'),
             bookmark,
+            figure,
+            figcaption,
             image,
             width,
             height,
+            cssClass,
+            caption,
             query = '',
             more = true,
             page = 1,
@@ -957,6 +961,8 @@ $(function() {
             // Get bookmark and selected element
             bookmark = contentEditor.getBookmark();
             image = $(contentEditor.getSelectedElement()).closest('img');
+            figure = $(contentEditor.getSelectedElement()).closest('figure');
+            figcaption = figure.find('figcaption');
 
             // Get attributes
             src = decodeURI($(image).attr('src') || '');
@@ -964,6 +970,8 @@ $(function() {
             alt = $(image).attr('alt') || '';
             width = $(image).attr('width') || null;
             height = $(image).attr('height') || null;
+            cssClass = $(figure).attr('class') || null;
+            caption = $(figcaption).html();
 
             // Set alignment radios
             $('.image-align-none').trigger('click');
@@ -974,12 +982,17 @@ $(function() {
             }
 
             // Set fields
-            $('.picture').css('background-image', 'url(' + Leafpub.url(src) + ')');
+            if (src){
+                $('.picture').css('background-image', 'url(' + Leafpub.url(src) + ')');
+            }
+            
             $('#image-src').val(src);
             $('#image-href').val(href);
             $('#image-alt').val(alt);
             $('#image-width').val(width);
             $('#image-height').val(height);
+            $('#image-class').val(cssClass);
+            $('#image-caption').val(caption);
             $('#image-constrain').prop('checked', true);
             $('.image-open').prop('hidden', href.length === 0);
             $('.delete-image').prop('hidden', !image.length);
@@ -1077,7 +1090,7 @@ $(function() {
                         setPostImage(res.file.path);
                     } else {
                         $('#image-src').val(res.file.path).trigger('change');
-                        $('#image-alt').val(res.file.caption);
+                        $('#image-caption').val(res.file.caption);
                     }
                 }
             });
@@ -1090,7 +1103,9 @@ $(function() {
                 alt = $('#image-alt').val(),
                 newWidth = $('#image-width').val(),
                 newHeight = $('#image-height').val(),
+                cssClass = $('#image-class').val(),
                 align = $('.image-form').find('input[name="align"]:checked').val();
+                caption = $('#image-caption').val();
 
             event.preventDefault();
 
@@ -1105,7 +1120,9 @@ $(function() {
                     alt: alt,
                     width: newWidth,
                     height: newHeight,
-                    align: align
+                    align: align,
+                    "class": cssClass,
+                    caption: caption
                 });
             } else {
                 contentEditor.image('remove');
