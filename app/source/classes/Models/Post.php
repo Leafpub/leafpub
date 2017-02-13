@@ -130,7 +130,7 @@ class Post extends AbstractModel {
             } 
             
             if($options['status']) {
-                $wh->in('status', implode(',', (array) $options['status']));
+                $wh->in('status', (array) $options['status']);
             }
 
             if($options['ignore_featured']){
@@ -176,6 +176,7 @@ class Post extends AbstractModel {
 
         $select->offset($offset);
         $select->limit($count);
+        
         // Run the data query
         try {
             $posts = self::getModel()->selectWith($select)->toArray();
@@ -250,7 +251,7 @@ class Post extends AbstractModel {
         }
 
         // Parse publish date format and convert to UTC
-        $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
+        $post['pub_date'] = $post['created'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
 
         // Translate author slug to ID
         $post['author'] = User::getId($post['author']);
@@ -604,7 +605,7 @@ class Post extends AbstractModel {
             } 
 
             if($options['status']) {
-                $wh->in('status', implode(',', (array) $options['status']));
+                $wh->in('status', (array) $options['status']);
             }
 
             if($options['ignore_featured']){
@@ -1178,7 +1179,7 @@ class Post extends AbstractModel {
             // Assign tags
             try {
                 foreach($matches as $media){
-                    $data = ['post' => $post_id, 'upload' => Upload::getId($media)];
+                    $data = ['post' => $post_id, 'upload' => Upload::getIdFromPath($media)];
                     $table->insert($data);
                 }
             } catch(\PDOException $e) {
