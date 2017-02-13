@@ -278,7 +278,8 @@ class APIController extends Controller {
         if(Session::isRole(['owner', 'admin', 'editor'])) {
             foreach((array) $properties['tag_data'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
-                    Tag::create($tag['slug'], [
+                    Tag::create([
+                        'slug' => $tag['slug'],
                         'name' => $tag['name'],
                         'type' => 'post'
                     ]);
@@ -1515,7 +1516,8 @@ class APIController extends Controller {
         if(Session::isRole(['owner', 'admin', 'editor'])) {
             foreach((array) $params['tagData'] as $tag) {
                 if(!Tag::exists($tag['slug'])) {
-                    Tag::create($tag['slug'], [
+                    Tag::create([
+                        'slug' => $tag['slug'],
                         'name' => $tag['name'],
                         'type' => 'upload'
                     ]);
