@@ -666,4 +666,10 @@ class Upload extends AbstractModel {
         }
         return $counter;
     }
+
+    public static function getIdFromPath($path){
+        $select = self::getModel()->getSql()->select();
+        $select->where->equalTo(new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, filename), extension)"), $path);
+        return self::getModel()->selectWith($select)->current()['id'];
+    }
 }
