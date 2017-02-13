@@ -325,7 +325,8 @@ class Upload extends AbstractModel {
                 'extension' => $extension,
                 'size' => $size,
                 'width' => $width,
-                'height' => $height
+                'height' => $height,
+                'caption' => ''
             ];
             
             $model = self::getModel();
