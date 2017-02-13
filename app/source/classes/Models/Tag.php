@@ -177,6 +177,10 @@ class Tag extends AbstractModel {
         $tag['cover'] = (string) $tag['cover'];
         $tag['meta_title'] = (string) $tag['meta_title'];
         $tag['meta_description'] = (string) $tag['meta_description'];
+        
+        if (!$tag['created']){ 
+            $tag['created'] = new \Zend\Db\Sql\Expression('NOW()');
+        }
 
         $evt = new Add($tag);
         Leafpub::dispatchEvent(Add::NAME, $evt);
