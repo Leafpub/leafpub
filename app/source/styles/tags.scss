@@ -32,21 +32,29 @@
     .name {
         margin-bottom: .3rem;
         @include text-truncate;
+        color: #000;
     }
     .description {
         font-size: .9rem;
-        color: $text-muted;
+        //color: $text-muted;
+        color: #000;
         @include text-truncate;
     }
     .cover {
-        width: 1.4rem;
-        height: 1.4rem;
-        border-radius: 50%;
+        //width: 1.4rem;
+        //height: 1.4rem;
+        //border-radius: 50%;
         background-size: cover;
         background-position: center;
         vertical-align: middle;
-        margin-right: .25rem;
+        //margin-right: .25rem;
         display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.15;
     }
     .badge {
         float: right;

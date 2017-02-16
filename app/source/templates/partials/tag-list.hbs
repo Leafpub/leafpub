@@ -5,6 +5,9 @@
         data-slug="{{slug}}"
         data-url="{{tag_url}}"
     >
+        {{#if cover}}
+            <span class="cover" style="background-image: url('{{url cover}}');"></span>
+        {{/if}}
         <span class="badge badge-info" title="Tag type"><i class="fa {{#is type 'post'}}fa-file-text{{else}}fa-camera{{/is}}"></i></span>
         <span class="post-count badge badge-default">
             {{#is type 'post'}}
@@ -17,9 +20,9 @@
             {{name}}
         </div>
         <div class="description">
-            {{#if cover}}
+            {{!--#if cover}}
                 <span class="cover" style="background-image: url('{{url cover}}');"></span>
-            {{/if}}
+            {{/if--}}
             {{text (markdown description)}}
         </div>
     </a>
