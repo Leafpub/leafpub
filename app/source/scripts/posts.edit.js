@@ -961,8 +961,8 @@ $(function() {
             // Get bookmark and selected element
             bookmark = contentEditor.getBookmark();
             image = $(contentEditor.getSelectedElement()).closest('img');
-            figure = $(contentEditor.getSelectedElement()).closest('figure');
-            figcaption = figure.find('figcaption');
+            //figure = $(contentEditor.getSelectedElement()).closest('figure');
+            //figcaption = figure.find('figcaption');
 
             // Get attributes
             src = decodeURI($(image).attr('src') || '');
@@ -970,8 +970,8 @@ $(function() {
             alt = $(image).attr('alt') || '';
             width = $(image).attr('width') || null;
             height = $(image).attr('height') || null;
-            cssClass = $(figure).attr('class') || null;
-            caption = $(figcaption).html();
+            cssClass = $(image).attr('class') || null;
+            //caption = $(figcaption).html();
 
             // Set alignment radios
             $('.image-align-none').trigger('click');
@@ -1105,7 +1105,7 @@ $(function() {
                 newHeight = $('#image-height').val(),
                 cssClass = $('#image-class').val(),
                 align = $('.image-form').find('input[name="align"]:checked').val();
-                caption = $('#image-caption').val();
+                //caption = $('#image-caption').val();
 
             event.preventDefault();
 
@@ -1122,7 +1122,7 @@ $(function() {
                     height: newHeight,
                     align: align,
                     "class": cssClass,
-                    caption: caption
+                    //caption: caption
                 });
             } else {
                 contentEditor.image('remove');

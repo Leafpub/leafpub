@@ -652,11 +652,11 @@ var Editor;
                         }
                         
                         /*if (options.caption){
-                            figcaption = editor.dom.create('figcaption',{}, (options.caption || null));
-                            //figcaption.contentEditable = false;
+                            figcaption = editor.dom.create('figcaption',{}, (options.caption));
+                            figcaption.contentEditable = false;
 
                             figure = editor.dom.create('figure', {
-                                "class": 'image ' + (options.class || null)
+                                'class': 'image'
                             });
                             figure.appendChild(image);
                             figure.appendChild(figcaption);
@@ -666,7 +666,7 @@ var Editor;
                         }*/
                 
                         editor.insertContent(image.outerHTML);
-                        //editor.insertContent(figure.outerHTML);
+                        
                         // Handle alignment
                         if(options.align === 'left') editor.formatter.apply('alignleft');
                         if(options.align === 'center') editor.formatter.apply('aligncenter');
