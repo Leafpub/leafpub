@@ -131,57 +131,57 @@ class Database extends Leafpub {
         $sql = new \Zend\Db\Sql\Sql($adapter);
         $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
 
-        foreach(self::getTableNames() as $table){
-            $x = '\\Leafpub\\Models\\Ddl\\' . $table;
-            $ddl = new $x();
-            $tableSQL = $sql->getSqlStringForSqlObject(new \Zend\Db\Sql\Ddl\DropTable($ddl->getTable())) . '; ';
-            $tableSQL .= $sql->getSqlStringForSqlObject($ddl);
-            if ($isMySQL){
-                $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
-            }
-            
-            try {
+            foreach(self::getTableNames() as $table){
+                $x = '\\Leafpub\\Models\\Ddl\\' . $table;
+                $ddl = new $x();
+                $tableSQL = $sql->getSqlStringForSqlObject(new \Zend\Db\Sql\Ddl\DropTable($ddl->getTable())) . '; ';
+                $tableSQL .= $sql->getSqlStringForSqlObject($ddl);
+                if ($isMySQL){
+                    $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+                }
+                
+                try {
 
-                $adapter->query(
-                    $tableSQL,
+                    $adapter->query(
+                        $tableSQL,
+                        Adapter::QUERY_MODE_EXECUTE
+                    );
+
+                    if ($table == 'Upload'){
+                        $dbTable = new Models\Tables\Upload();
+                        $dbTable->insert(['id' => 1, 'caption' => '', 'created' => '2017-02-01 12:23:45', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaves', 'extension' => 'jpg', 'size' => 254734, 'width' => 3000, 'height' => 2008]);
+                        $dbTable->insert(['id' => 2, 'caption' => '', 'created' => '2017-02-01 12:24:28', 'path' => 'content/uploads/2016/10/', 'filename' => 'sunflower', 'extension' => 'jpg', 'size' => 280779, 'width' => 3000, 'height' => 1990]);
+                        $dbTable->insert(['id' => 3, 'caption' => '', 'created' => '2017-02-01 12:24:40', 'path' => 'content/uploads/2016/10/', 'filename' => 'autumn', 'extension' => 'jpg', 'size' => 383879, 'width' => 3000, 'height' => 2000]);
+                        $dbTable->insert(['id' => 4, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'ladybug', 'extension' => 'jpg', 'size' => 277815, 'width' => 3000, 'height' => 1993]);
+                        
+                    }
+                } catch(\PDOException $e){
+                    throw new \Exception(
+                        'Unable to create database schema [' . $ddl->getTable() . ']: ' . $e->getMessage(),
+                        self::INIT_FAILED
+                    );
+                }
+            }
+            $adapter->query('DROP VIEW IF EXISTS ' . TableGateway::$prefix . 'view_posts;', Adapter::QUERY_MODE_EXECUTE);
+            $adapter->query(
+                    str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
+                        SELECT  
+                        a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
+                        a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
+                        CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
+                        FROM 
+                        `__posts` a
+                        LEFT JOIN 
+                        `__uploads` b
+                        ON 
+                        a.image = b.id
+                        INNER JOIN
+                        `__users` c
+                        ON
+                        a.author = c.id
+                        "), 
                     Adapter::QUERY_MODE_EXECUTE
                 );
-
-                if ($table == 'Upload'){
-                    $dbTable = new Models\Tables\Upload();
-                    $dbTable->insert(['id' => 1, 'caption' => '', 'created' => '2017-02-01 12:23:45', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaves', 'extension' => 'jpg', 'size' => 254734, 'width' => 3000, 'height' => 2008]);
-                    $dbTable->insert(['id' => 2, 'caption' => '', 'created' => '2017-02-01 12:24:28', 'path' => 'content/uploads/2016/10/', 'filename' => 'sunflower', 'extension' => 'jpg', 'size' => 280779, 'width' => 3000, 'height' => 1990]);
-                    $dbTable->insert(['id' => 3, 'caption' => '', 'created' => '2017-02-01 12:24:40', 'path' => 'content/uploads/2016/10/', 'filename' => 'autumn', 'extension' => 'jpg', 'size' => 383879, 'width' => 3000, 'height' => 2000]);
-                    $dbTable->insert(['id' => 4, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'ladybug', 'extension' => 'jpg', 'size' => 277815, 'width' => 3000, 'height' => 1993]);
-                    
-                }
-            } catch(\PDOException $e){
-                throw new \Exception(
-                    'Unable to create database schema: ' . $e->getMessage(),
-                    self::INIT_FAILED
-                );
-            }
-        }
-        $adapter->query('DROP VIEW ' . TableGateway::$prefix . 'view_posts;', Adapter::QUERY_MODE_EXECUTE);
-        $adapter->query(
-                str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
-                    SELECT  
-                    a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
-                    a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
-                    CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
-                    FROM 
-                    `__posts` a
-                    LEFT JOIN 
-                    `__uploads` b
-                    ON 
-                    a.image = b.id
-                    INNER JOIN
-                    `__users` c
-                    ON
-                    a.author = c.id
-                    "), 
-                Adapter::QUERY_MODE_EXECUTE
-            );
     }
 
     /**

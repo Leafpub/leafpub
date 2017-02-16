@@ -327,8 +327,8 @@ class User extends AbstractModel {
         }
 
         // Update session data for the authenticated user
-        if(Session::user()['slug'] === $slug) {
-            Session::update($user['slug']);
+        if(\Leafpub\Session::user()['slug'] === $slug) {
+            \Leafpub\Session::update($user['slug']);
         }
 
         $evt = new Updated($user);
