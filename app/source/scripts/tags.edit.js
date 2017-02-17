@@ -194,12 +194,7 @@ $(function() {
     $('.media-list').selectable({
             items: '.media-list-item',
             multiple: false,
-            change: function(values) {
-                // Disable toolbar buttons
-                var type = this.getAttribute('data-type');
-                //prepareEdit(values, type);
-            },
-            doubleClick: function(value, element) {
+            doubleClick: function(value) {
                 setImage(value);
                 
             },
