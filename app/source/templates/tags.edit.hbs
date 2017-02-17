@@ -46,6 +46,9 @@
                 {{#if this}}style="background-image:url('{{url tag.cover}}');"{{/if}}
             {{/if}}
         >
+            <div class="media-list row" data-type="image">
+
+            </div>
             <div class="cover-name">
                 {{#if tag.name}}
                     {{tag.name}}
@@ -53,6 +56,9 @@
             </div>
             {{!-- Cover upload button --}}
             <div class="cover-controls">
+                <label class="media-file btn btn-success">
+                    <i class="fa fa-picture-o" title="{{L 'select_a_media_file'}}"></i>
+                </label>
                 <label class="upload-cover btn btn-translucent-dark">
                     <i class="fa fa-fw fa-camera"></i>
                     <input type="file" accept="image/*" style="display: none;">
