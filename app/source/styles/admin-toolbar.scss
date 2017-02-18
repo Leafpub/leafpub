@@ -1,13 +1,13 @@
 @import 'partials/variables';
 
-$pl-item-image-size: 24px;
-$pl-item-padding: 10px;
-$pl-item-width: $pl-item-image-size + ($pl-item-padding * 2);
-$pl-item-height: $pl-item-width;
+$lp-item-image-size: 24px;
+$lp-item-padding: 10px;
+$lp-item-width: $lp-item-image-size + ($lp-item-padding * 2);
+$lp-item-height: $lp-item-width;
 
 // Basic reset for toolbar
-.pl-toolbar,
-.pl-toolbar * {
+.lp-toolbar,
+.lp-toolbar * {
     background: none;
     border: none;
     box-sizing: border-box;
@@ -17,7 +17,7 @@ $pl-item-height: $pl-item-width;
 }
 
 // Toolbar
-.pl-toolbar {
+.lp-toolbar {
     position: fixed;
     z-index: 9999;
     bottom: 20px;
@@ -28,17 +28,17 @@ $pl-item-height: $pl-item-width;
 }
 
 // Toolbar items
-.pl-item {
+.lp-item {
     background-repeat: no-repeat;
     background-position: center;
-    background-size: $pl-item-image-size $pl-item-image-size;
+    background-size: $lp-item-image-size $lp-item-image-size;
     color: white;
     text-decoration: none;
     display: inline-block;
     text-align: center;
-    width: $pl-item-width;
-    height: $pl-item-height;
-    line-height: $pl-item-height;
+    width: $lp-item-width;
+    height: $lp-item-height;
+    line-height: $lp-item-height;
     float: left;
     transition: .2s transform ease;
     &:hover {
@@ -48,6 +48,6 @@ $pl-item-height: $pl-item-width;
 }
 
 // Icons via SVG
-.pl-home { background-image: url('../img/logo-color.svg'); }
-.pl-new-post { background-image: url('../img/icon-plus-white.svg'); }
-.pl-edit-post, .pl-edit-author, .pl-edit-tag { background-image: url('../img/icon-pencil-white.svg'); }
+.lp-home { background-image: url('../img/logo-color.svg'); }
+.lp-new-post { background-image: url('../img/icon-plus-white.svg'); }
+.lp-edit-post, .lp-edit-author, .lp-edit-tag { background-image: url('../img/icon-pencil-white.svg'); }

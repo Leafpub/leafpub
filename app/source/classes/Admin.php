@@ -36,14 +36,14 @@ class Admin extends Leafpub {
         $items[] = [
             'label' => 'Leafpub',
             'link' => self::url(),
-            'class' => 'pl-home'
+            'class' => 'lp-home'
         ];
 
         // New post
         $items[] = [
             'label' => Language::term('new_post'),
             'link' => self::url('posts/new'),
-            'class' => 'pl-new-post'
+            'class' => 'lp-new-post'
         ];
 
         // Edit post (owners, admins, editors, and the post author)
@@ -56,7 +56,7 @@ class Admin extends Leafpub {
             $items[] = [
                 'label' => Language::term('edit'),
                 'link' => self::url('posts/' . rawurlencode($data['post']['slug'])),
-                'class' => 'pl-edit-post'
+                'class' => 'lp-edit-post'
             ];
         }
 
@@ -71,7 +71,7 @@ class Admin extends Leafpub {
             $items[] = [
                 'label' => Language::term('edit'),
                 'link' => self::url('users/' . rawurlencode($data['author']['slug'])),
-                'class' => 'pl-edit-author'
+                'class' => 'lp-edit-author'
             ];
         }
 
@@ -80,7 +80,7 @@ class Admin extends Leafpub {
             $items[] = [
                 'label' => Language::term('edit'),
                 'link' => self::url('tags/' . rawurlencode($data['tag']['slug'])),
-                'class' => 'pl-edit-tag'
+                'class' => 'lp-edit-tag'
             ];
         }
 
