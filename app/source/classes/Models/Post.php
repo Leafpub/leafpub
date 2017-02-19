@@ -1172,15 +1172,17 @@ class Post extends AbstractModel {
         }
 
         if (count($matches)){
-            // Escape slugs
-           /* foreach($matches as $key => $value) {
-                $matches[$key] = self::$database->quote($value);
-            }*/
             // Assign tags
             try {
                 foreach($matches as $media){
-                    $data = ['post' => $post_id, 'upload' => Upload::getIdFromPath($media)];
-                    $table->insert($data);
+                    // After an import, it's possible that not all image paths could be updated.
+                    // An image path that couldn't be found returns false, so the table insert would fail without
+                    // an upload id
+                    $imageId = Upload::getImageId($media);
+                    if ($imageId){
+                        $data = ['post' => $post_id, 'upload' => $imageId];
+                        $table->insert($data);
+                    }
                 }
             } catch(\PDOException $e) {
                 return false;
