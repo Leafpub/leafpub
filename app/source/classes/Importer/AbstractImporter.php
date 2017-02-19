@@ -9,12 +9,11 @@
 
 namespace Leafpub\Importer;
 
-use Leafpub\Post,
+use Leafpub\Models\Post,
     Leafpub\Leafpub,
-    Leafpub\Tag,
-    Leafpub\Upload,
-    Leafpub\User,
-    Leafpub\Database,
+    Leafpub\Models\Tag,
+    Leafpub\Models\Upload,
+    Leafpub\Models\User,
     Leafpub\Session;
 
 /**
@@ -93,28 +92,34 @@ abstract class AbstractImporter {
     // parseFile fills our protected arrays with data.
     // We are now saving the array data to DB; 
     public function importData(){
-        Database::beginTransaction();
-        if ($this->_truncateTables){
-            Database::truncate('__post_tags');
-            Database::truncate('__posts');
-            Database::truncate('__tags');
+        $adapter = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
+        $adapter->beginTransaction();
+        try {
+            if ($this->_truncateTables){
+                Post::truncate();
+                Tag::truncate();
+                Upload::truncate();
+            }
+            if ($this->_loadUser){
+                $this->_importUser();
+            }
+            $this->_importTags();
+            $this->_importPosts();
+            if ($this->_loadMediaFilesRemote || $this->_loadMediaFilesLocal){
+                $this->_importMedia();
+            }
+            $adapter->commit();
+        } catch (\Exception $e){
+            $adapter->rollback();
+            return false;
         }
-        if ($this->_loadUser){
-            $this->_importUser();
-        }
-        $this->_importTags();
-        $this->_importPosts();
-        if ($this->_loadMediaFilesRemote || $this->_loadMediaFilesLocal){
-            $this->_importMedia();
-        }
-        Database::commit();
         return array('succeed' => $this->_succeed, 'failed' => $this->_failed);
     }
 
     private function _importUser(){
         foreach($this->_user as $slug => $ds){
             try {
-                User::add($slug, $ds);
+                User::create($ds);
                 $this->_succeed[] = 'user: ' . $slug;
             } catch (\Exception $e){
                 $this->_failed[] = [
@@ -138,7 +143,7 @@ abstract class AbstractImporter {
         }
         foreach($data as $slug => $ds){
             try {
-                Tag::add($slug, $ds);
+                Tag::create($ds);
                 $this->_succeed[] = $key . ': ' . $slug;
             } catch (\Exception $e){
                 $this->_failed[] = [
@@ -153,7 +158,7 @@ abstract class AbstractImporter {
     private function _importPosts(){
         foreach($this->_posts as $slug => $ds){
             try {
-                Post::add($slug, $ds);
+                Post::create($ds);
                 $this->_succeed[] = 'post: ' . $slug;
             } catch (\Exception $e){
                 $this->_failed[] = [
@@ -199,7 +204,7 @@ abstract class AbstractImporter {
             }
             if (is_file($path)){
                 try {
-                    Upload::add($filename, file_get_contents($path), $info);
+                    Upload::create([$filename, file_get_contents($path), $info]);
                     $this->_succeed[] = 'media: ' . $filename;
                 }
                 catch (\Exception $e){

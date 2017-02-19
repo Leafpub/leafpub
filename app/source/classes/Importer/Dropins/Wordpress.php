@@ -35,7 +35,7 @@ class Wordpress extends AbstractImporter {
 		foreach($this->_posts as &$post){
 			if (isset($post['image'])){
 				$id = $post['image']; 
-				$post['image'] = '/content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
+				$post['image'] = 'content/uploads/' . date('Y') . '/' . date('m') . '/' . $this->_media[(int) $id]['filename'] . '.' . $this->_media[(int) $id]['extension'];
 			}
 		}
 
@@ -101,10 +101,11 @@ class Wordpress extends AbstractImporter {
 			$category = array(
 				'id' => (int) $t->term_id,
 				'slug' => (string) $t->category_nicename,
-				'parent' => (string) $t->category_parent,
+				//'parent' => (string) $t->category_parent,
 				'name' => $cat_name,
 				'description' => (string) $t->category_description,
-                'type' => 'post'
+                'type' => 'post',
+				'created' => new \Zend\Db\Sql\Expression('NOW()')
 			);
 
 			$this->_categories[$cat_name] = $category;
@@ -118,7 +119,8 @@ class Wordpress extends AbstractImporter {
 				'slug' => (string) $t->tag_slug,
 				'name' => $tag_name,
 				'description' => (string) $t->tag_description,
-                'type' => 'post'
+                'type' => 'post',
+				'created' => new \Zend\Db\Sql\Expression('NOW()')
 			);
 
 			$this->_tags[$tag_name] = $tag;
@@ -245,7 +247,7 @@ class Wordpress extends AbstractImporter {
         if ($this->_isDotCom){
             $searchUrl = 'https?:\/\/[^\/]+[files.wordpress.com]';
         } else {
-            $searchUrl = addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads\/';
+            $searchUrl = addcslashes($this->_oldBlogUrl, ':/') . '\/wp-content\/uploads';
         }
 		// Filter the old url, wp-content and year/month to our folder structure
 		if (preg_match('/[0-9]{4}\/[0-9]{2}/', $content)){
