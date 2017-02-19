@@ -14,4 +14,12 @@ use Leafpub\Leafpub;
 abstract class AbstractModel implements ModelInterface {
     
     abstract protected static function getModel();
+
+    public static function truncate(){
+        if (!Session::isRole(['owner', 'admin'])){
+            throw new \Exception('Only owner and admin are allowed to truncate tables!');
+        }
+
+        return self::getModel()->truncate();
+    }
 }
