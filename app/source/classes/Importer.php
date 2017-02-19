@@ -11,7 +11,7 @@ class Importer extends Leafpub {
         $dropin = $options['importer'];
         $file = $options['file'];
         // 1. Set site in maintenance mode
-        Setting::update('maintenance', 'on');
+        Models\Setting::edit(['name' => 'maintenance', 'value' => 'off']);
         // 2. ini_set
         $old_execution_time = ini_get('max_execution_time');
         ini_set('max_execution_time', '600');        
@@ -24,7 +24,7 @@ class Importer extends Leafpub {
         unlink($file);
         // 9. Set maintenance mode off
         ini_set('max_execution_time', $old_execution_time);
-        Setting::update('maintenance', 'off');
+        Models\Setting::edit(['name' => 'maintenance', 'value' => 'off']);
         return $ret;
     }
 }
