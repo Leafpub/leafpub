@@ -201,6 +201,7 @@ Models\Setting::create(['name' => 'hbs_cache', 'value' => 'on']);
 Models\Setting::create(['name' => 'head_code', 'value' => '']);
 Models\Setting::create(['name' => 'homepage', 'value' =>  '']);
 Models\Setting::create(['name' => 'language', 'value' => 'en-us']);
+Models\Setting::create(['name' => 'logo', 'value' => 'source/assets/img/logo-color.png']);
 Models\Setting::create(['name' => 'maintenance', 'value' => 'off']);
 Models\Setting::create(['name' => 'maintenance_message', 'value' => '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>']);
 Models\Setting::create(['name' => 'navigation', 'value' => '[{"label":"Home","link":"/"}]']);
