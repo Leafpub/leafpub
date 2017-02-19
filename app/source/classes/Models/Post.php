@@ -453,7 +453,7 @@ class Post extends AbstractModel {
         return true;
     }
 
-     /**
+    /**
     * Returns the total number of posts that exist
     *
     * @param array $options
