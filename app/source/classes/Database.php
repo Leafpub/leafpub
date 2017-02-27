@@ -134,7 +134,7 @@ class Database extends Leafpub {
             foreach(self::getTableNames() as $table){
                 $x = '\\Leafpub\\Models\\Ddl\\' . $table;
                 $ddl = new $x();
-                $tableSQL = $sql->getSqlStringForSqlObject(new \Zend\Db\Sql\Ddl\DropTable($ddl->getTable())) . '; ';
+                $tableSQL = $sql->getSqlStringForSqlObject(new Models\Ddl\Drop($ddl->getTable())) . '; ';
                 $tableSQL .= $sql->getSqlStringForSqlObject($ddl);
                 if ($isMySQL){
                     $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
