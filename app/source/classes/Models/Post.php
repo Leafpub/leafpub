@@ -82,8 +82,8 @@ class Post extends AbstractModel {
         if($options['start_date']) $start_date = Leafpub::localToUtc($options['start_date']);
         if($options['end_date']) $end_date = Leafpub::localToUtc($options['end_date']);
 
-        // If there's a query of > 3 chars, make it a fulltext search
-        $is_fulltext = mb_strlen($options['query']) > 3;
+        // If there's a query of > 4 chars, make it a fulltext search
+        $is_fulltext = mb_strlen($options['query']) >= 4;
 
         $columns = [
             'id', 'slug', 'created', 'pub_date', 'author',
@@ -92,8 +92,8 @@ class Post extends AbstractModel {
         ];
          
         if($is_fulltext) {
-                $columns[] = ['title_score' , new \Zend\Db\Sql\Expression('MATCH(slug, title) AGAINST (' . $options['query'] . ')')];
-                $columns[] = ['content_score' , new \Zend\Db\Sql\Expression('MATCH(content) AGAINST (' . $options['query'] . ')')];
+                $columns['title_score'] = new \Zend\Db\Sql\Expression('MATCH(slug, title) AGAINST (\'' . $options['query'] . '\')');
+                $columns['content_score'] = new \Zend\Db\Sql\Expression('MATCH(content) AGAINST (\'' . $options['query'] . '\')');
         }
 
         $prefix = Tables\TableGateway::$prefix;
@@ -158,7 +158,7 @@ class Post extends AbstractModel {
 
         // Generate order SQL
         if($is_fulltext) {
-            $select->order('(title_score * 1.5 + content_score)');
+            $select->order(new \Zend\Db\Sql\Expression("(title_score * 1.5 + content_score)"));
         } else {
             $select->order('sticky '. $options['sort'])->order('pub_date '. $options['sort'])->order('id '. $options['sort']);
         }
@@ -463,6 +463,7 @@ class Post extends AbstractModel {
     public static function count($options = null) {
         // Merge options
         $options = array_merge([
+            'query' => null,
             'author' => null,
             'end_date' => date('Y-m-d H:i:s'),
             'status' => 'published',
@@ -474,6 +475,7 @@ class Post extends AbstractModel {
             'tag' => null
         ], (array) $options);
 
+        $is_fulltext = mb_strlen($options['query']) >= 4;
         $prefix = Tables\TableGateway::$prefix;
         $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
         $select = $select->select();
@@ -483,7 +485,14 @@ class Post extends AbstractModel {
         if($options['start_date']) $start_date = Leafpub::localToUtc($options['start_date']);
         if($options['end_date']) $end_date = Leafpub::localToUtc($options['end_date']);
 
-        $where = function($wh) use($options, $prefix){
+        $where = function($wh) use($options, $prefix, $is_fulltext){
+            if($is_fulltext) {
+                // Fulltext search
+                $wh->expression('MATCH(slug, title, content) AGAINST(?)', $options['query']);
+            } else {
+                $wh->expression('CONCAT(slug, title) LIKE ?', '%' . $options['query'] . '%');
+            }
+
             // Add options to query
             if($options['author']){
                 $wh->equalTo('author', $options['author']);
