@@ -14,8 +14,8 @@ $loader->setPsr4('Leafpub\\Plugins\\', __DIR__ . '/../content/plugins');
 $loader->register();
 
 // Check PHP version
-if(version_compare(PHP_VERSION, '5.5.0') < 0) {
-    exit('Leafpub requires PHP 5.5 or above.');
+if(version_compare(PHP_VERSION, '5.6.0') < 0) {
+    exit('Leafpub requires PHP 5.6 or above.');
 }
 
 // Check for curl extension
