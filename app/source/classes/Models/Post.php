@@ -211,8 +211,12 @@ class Post extends AbstractModel {
             $prefix = Tables\TableGateway::$prefix;
             $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
             $select = $select->select();
-            $select->from($prefix.'view_posts')
-                   ->where(['slug' => $slug]);
+            $select->from($prefix.'view_posts');
+            if (is_integer($slug)){
+                $select->where(['id' => $slug]);
+            } else {
+                $select->where(['slug' => $slug]);
+            }
             $post = self::getModel()->selectWith($select)->current();
             if(!$post) return false;
         } catch(\PDOException $e) {
