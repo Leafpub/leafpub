@@ -56,8 +56,8 @@ class History extends AbstractModel {
         try {
             $history = self::getModel()->select(['id' => $id])->current();
             if (!$history) return false;
-            $history['post_data']=json_decode($history['post_data'],true);
-	    return $history->getArrayCopy();
+            $revision = self::normalize($history->getArrayCopy());
+	    return $revision;
         } catch(\Exception $e){
             return false;
         }
