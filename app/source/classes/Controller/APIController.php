@@ -584,7 +584,7 @@ class APIController extends Controller {
     public function deleteHistory($request, $response, $args) {
         // Get the history item and the affected post so we can verify privileges
         $history = History::getOne($args['id']);
-        $post = Post::getOne($history['slug']);
+        $post = Post::getOne((int) $history['post']);
         if(!$history || !$post) {
             return $response->withJson([
                 'success' => false
