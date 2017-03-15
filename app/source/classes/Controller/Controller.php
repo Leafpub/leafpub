@@ -29,4 +29,7 @@ class Controller {
         return $response->withStatus(404);
     }
 
+    protected function returnJson($request){
+        return (bool) ($request->getParam('returnJson') != null);
+    }
 }

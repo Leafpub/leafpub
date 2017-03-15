@@ -221,17 +221,27 @@ class APIController extends Controller {
             'query' => empty($params['query']) ? null : $params['query']
         ], $pagination);
 
-        // Render post list
-        $html = Admin::render('partials/post-list', [
-            'posts' => $posts
-        ]);
+        if ($this->returnJson($request)){
+            $postArray = [
+                'success' => true,
+                'posts' => $posts,
+                'pagination' => $pagination
+            ];
+        } else {
+            // Render post list
+            $html = Admin::render('partials/post-list', [
+                'posts' => $posts
+            ]);
+
+            $postArray = [
+                'success' => true,
+                'html' => $html,
+                'pagination' => $pagination
+            ];
+        }
 
         // Send response
-        return $response->withJson([
-            'success' => true,
-            'html' => $html,
-            'pagination' => $pagination
-        ]);
+        return $response->withJson($postArray);
     }
 
     /**
@@ -559,17 +569,27 @@ class APIController extends Controller {
             'query' => empty($params['query']) ? null : $params['query']
         ], $pagination);
 
-        // Render post list
-        $html = Admin::render('partials/plugin-list', [
-            'plugins' => $plugins
-        ]);
+        if ($this->returnJson($request)){
+            $pluginArray = [
+                'success' => true,
+                'plugins' => $plugins,
+                'pagination' => $pagination
+            ];
+        } else {
+            // Render post list
+            $html = Admin::render('partials/plugin-list', [
+                'plugins' => $plugins
+            ]);
+
+            $pluginArray = [
+                'success' => true,
+                'html' => $html,
+                'pagination' => $pagination
+            ];
+        }
 
         // Send response
-        return $response->withJson([
-            'success' => true,
-            'html' => $html,
-            'pagination' => $pagination
-        ]);
+        return $response->withJson($pluginArray);
     }
 
     /**
@@ -662,17 +682,27 @@ class APIController extends Controller {
             'query' => empty($params['query']) ? null : $params['query']
         ], $pagination);
 
-        // Render tag list
-        $html = Admin::render('partials/tag-list', [
-            'tags' => $tags
-        ]);
+        if ($this->returnJson($request)){
+            $tagArray = [
+                'success' => true,
+                'tags' => $tags,
+                'pagination' => $pagination
+            ];
+        } else {
+            // Render tag list
+            $html = Admin::render('partials/tag-list', [
+                'tags' => $tags
+            ]);
+
+            $tagArray = [
+                'success' => true,
+                'html' => $html,
+                'pagination' => $pagination
+            ];
+        }
 
         // Send response
-        return $response->withJson([
-            'success' => true,
-            'html' => $html,
-            'pagination' => $pagination
-        ]);
+        return $response->withJson($tagArray);
     }
 
     /**
@@ -855,17 +885,27 @@ class APIController extends Controller {
             'query' => empty($params['query']) ? null : $params['query']
         ], $pagination);
 
-        // Render post list
-        $html = Admin::render('partials/user-list', [
-            'users' => $users
-        ]);
+        if ($this->returnJson($request)){
+            $userArray = [
+                'success' => true,
+                'user' => $users,
+                'pagination' => $pagination
+            ];
+        } else {
+            // Render post list
+            $html = Admin::render('partials/user-list', [
+                'users' => $users
+            ]);
 
-        // Send response
-        return $response->withJson([
-            'success' => true,
-            'html' => $html,
-            'pagination' => $pagination
-        ]);
+            // Send response
+            $userArray = [
+                'success' => true,
+                'html' => $html,
+                'pagination' => $pagination
+            ];
+        }
+
+        return $response->withJson($userArray);
     }
 
     /**
@@ -1387,17 +1427,27 @@ class APIController extends Controller {
             'query' => empty($params['query']) ? null : $params['query']
         ], $pagination);
 
-        // Render post list
-        $html = Admin::render('partials/media-list', [
-            'uploads' => $uploads
-        ]);
+        if ($this->returnJson($request)){
+            $uploadArray = [
+                'success' => true,
+                'uploads' => $uploads,
+                'pagination' => $pagination
+            ];
+        } else {
+            // Render post list
+            $html = Admin::render('partials/media-list', [
+                'uploads' => $uploads
+            ]);
 
-        // Send response
-        return $response->withJson([
-            'success' => true,
-            'html' => $html,
-            'pagination' => $pagination
-        ]);
+            // Send response
+            $uploadArray = [
+                'success' => true,
+                'html' => $html,
+                'pagination' => $pagination
+            ];
+        }
+
+        return $response->withJson($uploadArray);
     }
 
     public function getUpload($request, $response, $args){
