@@ -57,7 +57,7 @@ class History extends AbstractModel {
             $history = self::getModel()->select(['id' => $id])->current();
             if (!$history) return false;
             $revision = self::normalize($history->getArrayCopy());
-	    return $revision;
+	        return $revision;
         } catch(\Exception $e){
             return false;
         }
