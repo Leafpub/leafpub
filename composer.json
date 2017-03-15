@@ -15,7 +15,8 @@
         "mpratt/embera": "^1.9",
         "symfony/event-dispatcher": "^3.1",
         "composer/semver": "^1.4.2",
-        "zendframework/zend-db": "^2.7"
+        "zendframework/zend-db": "^2.7",
+        "monolog/monolog": "^1.0"
     },
     "config": {
         "vendor-dir": "app/source/vendor"
