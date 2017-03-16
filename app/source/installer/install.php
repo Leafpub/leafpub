@@ -213,6 +213,7 @@ Models\Setting::create(['name' => 'title', 'value' => 'A Leafpub Blog']);
 Models\Setting::create(['name' => 'twitter', 'value' => '']);
 Models\Setting::create(['name' => 'password_min_length', 'value' => '8']);
 Models\Setting::create(['name' => 'mailer', 'value' => 'default']);
+Models\Setting::create(['name' => 'schemeVersion', 'value' => LEAFPUB_SCHEME_VERSION]);
 
 // Insert owner
 try {
