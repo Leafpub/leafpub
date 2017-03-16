@@ -86,7 +86,11 @@ $app->group("/api", function() {
 
     // Utilities
     $this->get('/oembed', 'Leafpub\Controller\APIController:getOembed');
-})->add('Leafpub\Middleware:requireAuth');
+
+    // Database update
+    $this->post('/update', 'Leafpub\Controller\APIController:updateLeafpubDatabase');
+    
+})->add('Leafpub\Middleware:requireAuth')->add('Leafpub\Middleware:checkDBScheme');
 
 /**
 * Admin views
@@ -136,7 +140,10 @@ $app->group("/$frags->admin", function() {
     // Uploads
     $this->get('/uploads', 'Leafpub\Controller\AdminController:uploads');
     $this->get('/regenerateThumbnails', 'Leafpub\Controller\AdminController:regenerateThumbnails');
-})->add('Leafpub\Middleware:requireAuth');
+
+    $this->get('/updateLeafpub', 'Leafpub\Controller\AdminController:updateLeafpub');
+
+})->add('Leafpub\Middleware:requireAuth')->add('Leafpub\Middleware:checkDBScheme');
 
 /**
 * Theme views
