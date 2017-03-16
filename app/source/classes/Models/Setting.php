@@ -60,12 +60,16 @@ class Setting extends AbstractModel {
     public static function edit($data){
         // Update the database
         try {
-            self::getModel()->update(['value' => $data['value']], ['name' => $data['name']]);
+            if (isset(self::$settings[$data['name']])){
+                self::getModel()->update(['value' => $data['value']], ['name' => $data['name']]);
+            } else {
+                self::create($data);
+            }
         } catch(\PDOException $e) {
             return false;
         }
         // Update cache
-        self::$settings[$name] = $value;
+        self::$settings[$data['name']] = $data['value'];
 
         return true;
     }
