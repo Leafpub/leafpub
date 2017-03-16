@@ -1685,4 +1685,18 @@ class APIController extends Controller {
         ]);
     }
 
+    public function updateLeafpubDatabase($request, $response, $args){
+        try {
+            \Leafpub\Database::updateDatabase();
+            \Leafpub\Leafpub::getLogger()->info('setting new scheme version');
+            \Leafpub\Models\Setting::edit(['name' => 'schemeVersion', 'value' => LEAFPUB_SCHEME_VERSION]);
+        } catch (\Exception $e){
+            
+        }
+
+        return $response->withJson([
+            'success' => true,
+            'newScheme' => LEAFPUB_SCHEME_VERSION
+        ]);
+    }
 }

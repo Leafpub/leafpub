@@ -589,4 +589,15 @@ class AdminController extends Controller {
         ]);
     }
 
+    public function updateLeafpub($request, $response, $args){
+        $html = Admin::render('update', [
+            'title' => Language::term('update'),
+            'scripts' => 'update.min.js',
+            //'styles' => 'update.css',
+            'dbScheme' => \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0,
+            'schemeVersion' => LEAFPUB_SCHEME_VERSION
+        ]);
+
+        return $response->write($html);
+    }
 }
