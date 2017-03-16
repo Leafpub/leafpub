@@ -62,19 +62,6 @@ class Database extends Leafpub {
 
         // Connect to the database
         try {
-            /*self::$database = new LeafpubPDO(
-                (
-                    "mysql:host={$config[host]};" .
-                    "port={$config[port]};" .
-                    "dbname={$config[database]};" .
-                    "charset=utf8mb4"
-                ),
-                $config['username'],
-                $config['password'],
-                $pdo_options,
-                $config['prefix']
-            );*/
-            
             GlobalAdapterFeature::setStaticAdapter(new Adapter($config));
             TableGateway::$prefix = $config['prefix'];
             
@@ -225,4 +212,33 @@ class Database extends Leafpub {
         return self::$database->exec('TRUNCATE ' . $table);
     }
 
+    /**
+    *
+    **/
+
+    public static function updateDatabase(){
+        self::$logger->info('=== Begin database update ===');
+        $dbScheme = \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0;
+        $diff = LEAFPUB_SCHEME_VERSION - $dbScheme;
+
+        for ($i = $dbScheme + 1; $i <= $diff; $i++){
+            $method = 'updateToVersion' . $i;
+            self::$method();
+        }
+    }
+
+    protected static function updateToVersion1(){
+        self::$logger->info('=== start updateToVersion1 ===');
+        self::$logger->info('=== end updateToVersion1 ===');
+    }
+
+    protected static function updateToVersion2(){
+        self::$logger->info('=== start updateToVersion2 ===');
+        self::$logger->info('=== end updateToVersion2 ===');
+    }
+
+    protected static function updateToVersion3(){
+        self::$logger->info('=== start updateToVersion3 ===');
+        self::$logger->info('=== end updateToVersion3 ===');
+    }
 }
