@@ -236,6 +236,7 @@ return [
     'unable_to_write_to_the_file_system' => 'Fehler beim Schreiben ins Dateisystem',
     'underline' => 'Unterstreichen',
     'undo' => 'Rückgängig machen',
+    'update' => 'Leafpub Update',
     'upload_failed' => 'Hochladen fehlgeschlagen',
     'upload' => 'Hochladen',
     'uploads' => 'Medien',

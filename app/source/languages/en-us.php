@@ -236,6 +236,7 @@ return [
     'unable_to_write_to_the_file_system' => 'Unable to write to the file system',
     'underline' => 'Underline',
     'undo' => 'Undo',
+    'update' => 'Update Leafpub',
     'upload_failed' => 'Upload failed',
     'upload' => 'Upload',
     'uploads' => 'Uploads',
