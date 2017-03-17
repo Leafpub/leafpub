@@ -133,7 +133,11 @@ class Leafpub {
                     self::$logger->debug('Register plugin \'' . $ns . '\'');
                 }
                 Plugin::$plugins = $pls;
-            } catch (\Exception $e){
+            }
+            catch (\Zend\Db\Adapter\Exception\InvalidQueryException $ze){
+
+            } 
+            catch (\Exception $e){
                 exit(Error::system([
                     'title' => 'Register Plugin Error',
                     'message' => $e->getMessage()
