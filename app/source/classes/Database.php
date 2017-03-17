@@ -217,7 +217,7 @@ class Database extends Leafpub {
     **/
 
     public static function updateDatabase(){
-        self::$logger->info('=== Begin database update ===');
+        self::$logger->info(' Begin database update ');
         $dbScheme = \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0;
         $diff = LEAFPUB_SCHEME_VERSION - $dbScheme;
 
@@ -227,18 +227,138 @@ class Database extends Leafpub {
         }
     }
 
+    /**
+    * Create __plugins table
+    *
+    **/
     protected static function updateToVersion1(){
-        self::$logger->info('=== start updateToVersion1 ===');
-        self::$logger->info('=== end updateToVersion1 ===');
+        self::$logger->info(' start updateToVersion1 ');
+        
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new \Zend\Db\Sql\Sql($adapter);
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        
+        $table = new \Leafpub\Models\Ddl\Plugin();
+        $tableSQL = $sql->getSqlStringForSqlObject($table);
+        if ($isMySQL){
+            $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+        }
+        
+        $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
+        
+        self::$logger->info(' end updateToVersion1 ');
     }
 
     protected static function updateToVersion2(){
-        self::$logger->info('=== start updateToVersion2 ===');
-        self::$logger->info('=== end updateToVersion2 ===');
+        self::$logger->info(' start updateToVersion2 ');
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new \Zend\Db\Sql\Sql($adapter);
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        try {
+            self::$logger->info('updating table __uploads');
+            $atu = new \Zend\Db\Sql\Ddl\AlterTable(TableGateway::$prefix . 'uploads');
+            $atu->addColumn(new \Zend\Db\Sql\Ddl\Column\Varchar('caption', 91, true));
+            $atu->addConstraint(new \Zend\Db\Sql\Ddl\Constraint\UniqueKey('filename'));
+            $adapter->query($sql->getSqlStringForSqlObject($atu), Adapter::QUERY_MODE_EXECUTE);
+            /*
+            $atu = new \Zend\Db\Sql\Ddl\AlterTable(TableGateway::$prefix . 'uploads');
+            $atu->dropConstraint('path');
+            */
+            $adapter->query('ALTER TABLE ' . TableGateway::$prefix . 'uploads DROP INDEX path', Adapter::QUERY_MODE_EXECUTE);
+
+            self::$logger->info('updating table __tags');
+            $att = new \Zend\Db\Sql\Ddl\AlterTable(TableGateway::$prefix . 'tags');
+            $att->addColumn(new \Leafpub\Models\Ddl\Column\Enum('type', ["'post'", "'upload'"], false, 'post'));
+            $adapter->query($sql->getSqlStringForSqlObject($att), Adapter::QUERY_MODE_EXECUTE);
+
+            self::$logger->info('creating table __upload_tags');
+            $ut = new \Leafpub\Models\Ddl\UploadTags();
+            $tableSQL = $sql->getSqlStringForSqlObject($ut);
+            if ($isMySQL){
+                $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+            }
+
+            $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
+
+            self::$logger->info('creating table __post_uploads');
+            $pu = new \Leafpub\Models\Ddl\PostUploads();
+            $tableSQL = $sql->getSqlStringForSqlObject($pu);
+            if ($isMySQL){
+                $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+            }
+
+            $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
+        } catch (\Exception $e){
+            self::$logger->error($e->getMessage());
+        }
+
+        self::$logger->info(' Generating thumbnails and edit path ');
+
+        $uploads = $adapter->query('SELECT * FROM ' . TableGateway::$prefix . 'uploads;');
+
+        foreach($uploads as $upload){
+            if (strpos($upload['filename'], $upload['extension']) > 0){
+                $extLength = strlen($upload['extension']) + 1;
+
+                $newFilename = substr($upload['filename'], 0, strlen($upload['filename']) - $extLength);
+                $newPath = substr($upload['path'], 0, strlen($upload['path']) - strlen($upload['filename']));
+
+                self::$logger->info("new Filename: $newFilename\nnew Path: $newPath");
+
+                try {
+                    $sSQL = 'UPDATE ' . TableGateway::$prefix . 'uploads SET path = \'' . $newPath . '\', filename = \'' . $newFilename . '\' WHERE id = ' . $upload['id'] . ';';
+                    $adapter->query($sSQL, Adapter::QUERY_MODE_EXECUTE);
+                    
+                    if(!self::makeDir(self::path($newPath.'thumbnails'))) {
+                        throw new \Exception(
+                            'Unable to create directory: ' . $newPath.'thumbnails',
+                            self::UNABLE_TO_CREATE_DIRECTORY
+                        );
+                    }
+                    $relativeThumb = "$newPath"."thumbnails/" . $upload['filename'];
+                    $thumbPath = self::path($relativeThumb);
+                    $imgPath = self::path($upload['path']);
+
+                    if (is_file($imgPath)){
+                        Upload::generateThumbnail($imgPath, $thumbPath);
+                    }
+                    self::$logger->info("Updated $newFilename and generated a thumbnail");
+                } catch (\PDOException $e){
+                    self::$logger->error($e->getMessage());
+                }
+            }
+        }
+
+        self::$logger->info(' creating view __view_posts ');
+        try {
+            $adapter->query(
+                        str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
+                            SELECT  
+                            a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
+                            a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
+                            CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
+                            FROM 
+                            `__posts` a
+                            LEFT JOIN 
+                            `__uploads` b
+                            ON 
+                            a.image = b.id
+                            INNER JOIN
+                            `__users` c
+                            ON
+                            a.author = c.id
+                            "), 
+                        Adapter::QUERY_MODE_EXECUTE
+                    );
+
+            self::$logger->info(' end updateToVersion2 ');
+        } catch (\Exception $e){
+            self::$logger->error($e->getMessage());
+        }
     }
 
     protected static function updateToVersion3(){
-        self::$logger->info('=== start updateToVersion3 ===');
-        self::$logger->info('=== end updateToVersion3 ===');
+        self::$logger->info(' start updateToVersion3 ');
+        self::$logger->info(' end updateToVersion3 ');
     }
 }
