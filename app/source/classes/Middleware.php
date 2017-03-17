@@ -154,10 +154,12 @@ class Middleware {
 
     public static function checkDBScheme($request, $response, $next){
         if (version_compare(LEAFPUB_SCHEME_VERSION, (\Leafpub\Models\Setting::getOne('schemeVersion') ?: 0)) == 1){
-            $allowedRoutes = array('/api/update', '/admin', '/admin/login', '/admin/updateLeafpub', '/logout', '/api/login');
-            $tryToUpdate = in_array($request->getUri()->getPath(), $allowedRoutes);
-            if (!$tryToUpdate){
-                return $response->withRedirect(Admin::url('updateLeafpub'), 401);
+            if (Session::isRole(['owner', 'admin'])){
+                $allowedRoutes = array('/api/update', '/admin', '/admin/login', '/admin/updateLeafpub', '/logout', '/api/login');
+                $tryToUpdate = in_array($request->getUri()->getPath(), $allowedRoutes);
+                if (!$tryToUpdate){
+                    return $response->withRedirect(Admin::url('updateLeafpub'), 401);
+                }
             }
         }
         return $next($request, $response);

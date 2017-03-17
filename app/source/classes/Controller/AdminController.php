@@ -590,6 +590,14 @@ class AdminController extends Controller {
     }
 
     public function updateLeafpub($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withRedirect(Admin::url());
+        }
+        
+        if (version_compare(LEAFPUB_SCHEME_VERSION, (\Leafpub\Models\Setting::getOne('schemeVersion') ?: 0)) < 1){
+           return $response->withRedirect(Admin::url()); 
+        }
+
         $html = Admin::render('update', [
             'title' => Language::term('update'),
             'scripts' => 'update.min.js',
