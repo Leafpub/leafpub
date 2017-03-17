@@ -1686,6 +1686,14 @@ class APIController extends Controller {
     }
 
     public function updateLeafpubDatabase($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withStatus(403);
+        }
+        
+        if (version_compare(LEAFPUB_SCHEME_VERSION, (\Leafpub\Models\Setting::getOne('schemeVersion') ?: 0)) < 1){
+           return $response->withStatus(403); 
+        }
+
         try {
             \Leafpub\Database::updateDatabase();
             \Leafpub\Leafpub::getLogger()->info('setting new scheme version');
