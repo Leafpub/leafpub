@@ -9,6 +9,7 @@ $(function() {
         cleanState,
         dropTimeout,
         request,
+        saveAction = $('[data-editor=save]').hasClass('btn-warning') ? 'ds' : 'pb',
         zenMode = Cookies.get('zen') === 'true',
         ready = false,
         canCreateTags = $('#tags').attr('data-can-create-tags') === 'true',
@@ -447,6 +448,24 @@ $(function() {
         if(cmd === 'image') showPanel('.image-panel');
     }
 
+    $('[data-save]').on('click', function(){
+        saveAction = $(this).attr('data-save');
+        switch(saveAction){
+            case 'pb':
+                $('[data-editor=save]').removeClass('btn-warning').removeClass('btn-primary').addClass('btn-success');
+                $('.dropdown-toggle-split').removeClass('btn-warning').removeClass('btn-primary').addClass('btn-success');
+                break;
+            case 'ps':
+                $('[data-editor=save]').removeClass('btn-warning').removeClass('btn-success').addClass('btn-primary');
+                $('.dropdown-toggle-split').removeClass('btn-warning').removeClass('btn-success').addClass('btn-primary');
+                break;
+            case 'ds':
+                $('[data-editor=save]').removeClass('btn-success').removeClass('btn-success').addClass('btn-warning');
+                $('.dropdown-toggle-split').removeClass('btn-success').removeClass('btn-success').addClass('btn-warning');
+                break;
+        }
+    });
+
     // Saves the post and redirects to the posts page on success
     function save() {
         var type = post === '' ? 'POST' : 'PUT',
@@ -481,7 +500,9 @@ $(function() {
                 ).then(function() {
                     // Remove save confirmation and redirect
                     window.onbeforeunload = null;
-                    location.href = Leafpub.adminUrl('posts');
+                    if (saveAction === 'pb'){
+                        location.href = Leafpub.adminUrl('posts');
+                    }
                 });
             } else {
                 // Show errors
@@ -519,7 +540,7 @@ $(function() {
             tags: tags,
             tag_data: tagData,
             author: $('#author').val(),
-            status: $('#status').val(),
+            status: (saveAction === 'ds') ? 'draft' : 'published', //$('#status').val(),
             featured: $('#featured').prop('checked'),
             sticky: $('#sticky').prop('checked'),
             page: $('#page').prop('checked'),
@@ -939,8 +960,8 @@ $(function() {
     (function() {
         var btn = $('[data-editor="image"]'),
             bookmark,
-            figure,
-            figcaption,
+            //figure,
+            //figcaption,
             image,
             width,
             height,
@@ -1095,6 +1116,14 @@ $(function() {
                 }
             });
         }
+
+        $('#link-to-image').on('change', function(){
+            if ($(this).prop('checked')){
+                $('#image-href').val($('#image-src').val());
+            } else {
+                $('#image-href').val();
+            }
+        });
 
         // Submit
         $('.image-form').on('submit', function(event) {

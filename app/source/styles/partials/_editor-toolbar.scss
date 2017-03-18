@@ -15,6 +15,7 @@
     // Float the save group to keep it on the right
     .btn-group:last-child {
         float: right;
+        margin-right: 1rem;
     }
     .btn-group {
         margin: .25rem;
@@ -52,6 +53,7 @@
 
     // Dropdown menus
     .dropdown-menu {
+        left: -3.5rem;
         .dropdown-item {
             i {
                 width: 1.2em;
