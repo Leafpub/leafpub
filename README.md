@@ -1,8 +1,7 @@
 # <img src="https://leafpub.org/content/uploads/2016/11/leafpub-logo-1.png" alt="Leafpub" width="300">
-
 **Simple, beautiful publishing.**
 
-###[Website](https://www.leafpub.org/) &nbsp; ###[Documentation](https://leafpub.org/docs) &nbsp;
+### [Website](https://www.leafpub.org/) &nbsp; [Documentation](https://leafpub.org/docs) &nbsp;
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Leafpub/leafpub)  &nbsp; [![Twitter Follow](https://img.shields.io/twitter/follow/leafpub.svg?style=social&maxAge=3600)](https://twitter.com/leafpub)
 
