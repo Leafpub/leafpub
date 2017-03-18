@@ -563,18 +563,18 @@ var Editor;
         image: function(cmd, options) {
             var editor = this.editor, 
                 image = editor.dom.getParent(editor.selection.getNode(), 'img'),
-                figure = editor.dom.getParent(image, 'figure'),
-                figcaption = editor.dom.getNext(editor.selection.getNode(), 'figcaption'),
+                //figure = editor.dom.getParent(image, 'figure'),
+                //figcaption = editor.dom.getNext(editor.selection.getNode(), 'figcaption'),
                 link = editor.dom.getParent(editor.selection.getNode(), 'a');
 
-                if (figure) {
-                    //editor.dom.select('img', figure)[0];
-                }
+                /*if (figure) {
+                    editor.dom.select('img', figure)[0];
+                }*/
 
             options = options || {};
 
             if(cmd === 'test') {
-                return !!figure;
+                return !!image;
             } else if(cmd === 'insert') {
                 // Is there an existing image?
                 if(image) {
