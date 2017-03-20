@@ -11,7 +11,7 @@
         "slim/slim": "^3.0",
         "claviska/simpleimage": "^3.0",
         "erusev/parsedown": "^1.6",
-        "tinymce/tinymce": "^4.3",
+        "tinymce/tinymce": "^4.5",
         "mpratt/embera": "^1.9",
         "symfony/event-dispatcher": "^3.1",
         "composer/semver": "^1.4.2",
