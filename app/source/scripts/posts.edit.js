@@ -981,9 +981,19 @@ $(function() {
 
             // Get bookmark and selected element
             bookmark = contentEditor.getBookmark();
-            image = $(contentEditor.getSelectedElement()).closest('img');
-            //figure = $(contentEditor.getSelectedElement()).closest('figure');
+            image = contentEditor.getSelectedElement();//).closest('img');
+            //figure = $(contentEditor.getSelectedElement()).closest('figure.image');
             //figcaption = figure.find('figcaption');
+            
+            if ($(image).is('figure')) {
+                $('#image-caption').prop('checked', true);
+                if ($(image.firstChild).is('a')){
+                    image = image.firstChild;
+                }
+                image = image.firstChild;
+            } else {
+                $('#image-caption').prop('checked', false);
+            }
 
             // Get attributes
             src = decodeURI($(image).attr('src') || '');
@@ -1013,10 +1023,11 @@ $(function() {
             $('#image-width').val(width);
             $('#image-height').val(height);
             $('#image-class').val(cssClass);
-            $('#image-caption').val(caption);
             $('#image-constrain').prop('checked', true);
             $('.image-open').prop('hidden', href.length === 0);
-            $('.delete-image').prop('hidden', !image.length);
+            //if (image){
+                $('.delete-image').prop('hidden', !image.length);
+            //}
 
             // Toggle button state
             $(btn).addClass('active');
@@ -1134,7 +1145,7 @@ $(function() {
                 newHeight = $('#image-height').val(),
                 cssClass = $('#image-class').val(),
                 align = $('.image-form').find('input[name="align"]:checked').val();
-                //caption = $('#image-caption').val();
+                caption = $('#image-caption').prop('checked');
 
             event.preventDefault();
 
@@ -1151,7 +1162,7 @@ $(function() {
                     height: newHeight,
                     align: align,
                     "class": cssClass,
-                    //caption: caption
+                    caption: caption
                 });
             } else {
                 contentEditor.image('remove');

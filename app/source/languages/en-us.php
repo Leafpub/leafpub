@@ -9,6 +9,7 @@ return [
     'about' => 'About',
     'administrator' => 'Administrator',
     'advanced' => 'Advanced',
+    'add_a_caption' => 'Add a caption',
     'align_center' => 'Align Center',
     'align_left' => 'Align Left',
     'align_right' => 'Align Right',

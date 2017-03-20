@@ -9,6 +9,7 @@ return [
     'about' => 'Über',
     'administrator' => 'Administrator',
     'advanced' => 'Fortgeschritten',
+    'add_a_caption' => 'Beschriftung hinzufügen',
     'align_center' => 'Zentrieren',
     'align_left' => 'Links ausrichten',
     'align_right' => 'Rechts ausrichten',

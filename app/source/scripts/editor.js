@@ -563,116 +563,132 @@ var Editor;
         image: function(cmd, options) {
             var editor = this.editor, 
                 image = editor.dom.getParent(editor.selection.getNode(), 'img'),
-                //figure = editor.dom.getParent(image, 'figure'),
-                //figcaption = editor.dom.getNext(editor.selection.getNode(), 'figcaption'),
-                link = editor.dom.getParent(editor.selection.getNode(), 'a');
+                figure = editor.dom.getParent(editor.selection.getNode(), 'figure.image'),
+                link, oldImg;// = editor.dom.getParent(editor.selection.getNode(), 'a');
 
-                /*if (figure) {
-                    editor.dom.select('img', figure)[0];
-                }*/
+                if (figure) {
+                    image = editor.dom.select('img', figure)[0];
+                }
+                if (image && editor.dom.is(image.parentNode, 'a')){
+                    link = image.parentNode;
+                }
 
             options = options || {};
-
+            
             if(cmd === 'test') {
                 return !!image;
             } else if(cmd === 'insert') {
-                // Is there an existing image?
-                if(image) {
-                    // Update the image
-                    editor.undoManager.transact(function() {
+                editor.undoManager.transact(function () {
+                    if (!image) {
+                        editor.focus();
+                        var tmp = editor.dom.createHTML('img', {
+                            id: '__mcenew',
+                            src: options.src || '',
+                            alt: options.alt || '',
+                            width: options.width || null,
+                            height: options.height || null,
+                            //"class": options.class || null
+                        });
+                        editor.selection.setContent(tmp);
+                        //editor.insertContent(tmp);
+                        image = editor.dom.get('__mcenew');
+                        editor.dom.setAttrib(image, 'id', null);
+                        editor.selection.select(image);
+                        
+                    } else {
                         editor.dom.setAttribs(image, {
                             src: options.src || '',
                             alt: options.alt || '',
                             width: options.width || null,
                             height: options.height || null,
-                            "class": options.class || null
+                            //"class": options.class || null
                         });
+                    }
 
-                        // Handle alignment
-                        editor.formatter.remove('alignleft');
-                        editor.formatter.remove('aligncenter');
-                        editor.formatter.remove('alignright');
-                        editor.formatter.remove('alignjustify');
-                        if(options.align === 'left') editor.formatter.apply('alignleft');
-                        if(options.align === 'center') editor.formatter.apply('aligncenter');
-                        if(options.align === 'right') editor.formatter.apply('alignright');
+                    if(options.href) {
+                        if(link) {
+                            // Update link
+                            editor.dom.setAttribs(link, {
+                                href: options.href
+                            });
+                        } else {
+                            // Wrap with link
+                            oldImg = image;
+                            image = image.cloneNode(true);
+                            link = editor.dom.create('a',{href: options.href});
+                            link.appendChild(image);
+                            editor.dom.replace(
+                                link,
+                                oldImg
+                            );
+                        }
 
-                        /*if (figure){
-                            $(figure).attr('class', options.class);
-                            figcaption.innerHTML = options.caption || '';
-                        }*/
+                        // Add undo state
+                        editor.undoManager.add();
+                    } else if(link) {
+                        // Remove the image
+                        editor.dom.replace(image, link);
+                        editor.undoManager.add();
+                        editor.nodeChanged();
+                    }
 
-                        // Handle link
-                        if(options.href) {
-                            if(link) {
-                                // Update link
-                                editor.dom.setAttribs(link, {
-                                    href: options.href
-                                });
+                    if (options.caption === false) {
+                        if (link){
+                            if (editor.dom.is(link.parentNode, 'figure.image')){
+                                figure = link.parentNode;
+                                editor.dom.insertAfter(link, figure);
+                                editor.dom.remove(figure);
+                            }
+                        } else if (editor.dom.is(image.parentNode, 'figure.image')) {
+                            figure = image.parentNode;
+                            editor.dom.insertAfter(image, figure);
+                            editor.dom.remove(figure);
+                        }
+                    }
+
+                    function isTextBlock(node) {
+                        return editor.schema.getTextBlockElements()[node.nodeName];
+                    }
+
+                    if (options.caption === true) {
+                        if (link){
+                            image = link;
+                        }
+                        if (!editor.dom.is(image.parentNode, 'figure.image')) {
+                            oldImg = image;
+                            image = image.cloneNode(true);
+                            figure = editor.dom.create('figure', { 'class': 'image' });
+                            figure.appendChild(image);
+                            figure.appendChild(editor.dom.create('figcaption', { contentEditable: true }, 'text'));
+                            figure.contentEditable = false;
+
+                            var textBlock = editor.dom.getParent(oldImg, isTextBlock);
+                            if (textBlock) {
+                                editor.dom.split(textBlock, oldImg, figure);
                             } else {
-                                // Wrap with link
-                                editor.dom.replace(
-                                    editor.dom.create(
-                                        'a',
-                                        {
-                                            href: options.href
-                                        },
-                                        image.outerHTML
-                                    ),
-                                    image
-                                );
+                                editor.dom.replace(figure, oldImg);
                             }
 
-                            // Add undo state
-                            editor.undoManager.add();
-                        } else if(link) {
-                            // Remove the image
-                            editor.dom.replace(image, link);
-                            editor.undoManager.add();
-                            editor.nodeChanged();
-                        }
-                    });
-                } else {
-                    // Insert it
-                    editor.undoManager.transact(function() {
-                        // Insert a new image
-                        image = editor.dom.create('img', {
-                            src: options.src || '',
-                            alt: options.alt || '',
-                            width: options.width || null,
-                            height: options.height || null,
-                            "class": options.class || null
-                        });
+                            editor.selection.select(figure);
+                        } 
+                    }
 
-                        // Wrap with link
-                        if(options.href) {
-                            image = editor.dom.create('a', {
-                                href: options.href
-                            }, image.outerHTML);
-                        }
-                        
-                        /*if (options.caption){
-                            figcaption = editor.dom.create('figcaption',{}, (options.caption));
-                            figcaption.contentEditable = false;
+                    editor.formatter.remove('alignleft');
+                    editor.formatter.remove('aligncenter');
+                    editor.formatter.remove('alignright');
+                    editor.formatter.remove('alignjustify');
+                    if(options.align === 'left') {
+                        editor.formatter.apply('alignleft');
+                    }
+                    if(options.align === 'center'){
+                        editor.formatter.apply('aligncenter');
+                    }
+                    if(options.align === 'right'){
+                        editor.formatter.apply('alignright');
+                    }
 
-                            figure = editor.dom.create('figure', {
-                                'class': 'image'
-                            });
-                            figure.appendChild(image);
-                            figure.appendChild(figcaption);
-                            figure.contentEditable = false;
-                        } else {
-                            figure = image;
-                        }*/
-                
-                        editor.insertContent(image.outerHTML);
-                        
-                        // Handle alignment
-                        if(options.align === 'left') editor.formatter.apply('alignleft');
-                        if(options.align === 'center') editor.formatter.apply('aligncenter');
-                        if(options.align === 'right') editor.formatter.apply('alignright');
-                    });
-                }
+                    return;
+                });
             } else if(cmd === 'remove') {
                 editor.dom.remove(image);
                 editor.undoManager.add();
