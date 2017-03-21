@@ -93,7 +93,7 @@ abstract class AbstractImporter {
     // We are now saving the array data to DB; 
     public function importData(){
         $adapter = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
-        $adapter->beginTransaction();
+        $adapter->getDriver()->getConnection()->beginTransaction();
         try {
             if ($this->_truncateTables){
                 Post::truncate();
@@ -108,9 +108,9 @@ abstract class AbstractImporter {
             if ($this->_loadMediaFilesRemote || $this->_loadMediaFilesLocal){
                 $this->_importMedia();
             }
-            $adapter->commit();
+            $adapter->getDriver()->getConnection()->commit();
         } catch (\Exception $e){
-            $adapter->rollback();
+            $adapter->getDriver()->getConnection()->rollback();
             return false;
         }
         return array('succeed' => $this->_succeed, 'failed' => $this->_failed);
