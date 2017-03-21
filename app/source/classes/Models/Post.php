@@ -274,7 +274,7 @@ class Post extends AbstractModel {
         }
 
         // Don't allow null properties
-        $post['image'] = Upload::getImageId($post['image']);
+        $post['image'] = Upload::getImageId($post['image']) ?: 0;
         $post['meta_title'] = (string) $post['meta_title'];
         $post['meta_description'] = (string) $post['meta_description'];
 
