@@ -218,6 +218,8 @@ class Database extends Leafpub {
 
     public static function updateDatabase(){
         self::$logger->info(' Begin database update ');
+        self::$logger->info(' creating backup ');
+        \Leafpub\Backup::create();
         $dbScheme = \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0;
         $diff = LEAFPUB_SCHEME_VERSION - $dbScheme;
 
