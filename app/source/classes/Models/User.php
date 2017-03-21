@@ -202,6 +202,8 @@ class User extends AbstractModel {
         if($user['password'] === false) {
             throw new \Exception('Invalid password', self::INVALID_PASSWORD);
         }
+        
+        $user['created'] = new \Zend\Db\Sql\Expression('NOW()');
 
         try {
             $ret = (self::getModel()->insert($user) > 0);
