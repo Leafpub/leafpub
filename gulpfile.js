@@ -381,6 +381,9 @@ gulp.task('release:make', 'Generate a release.', function() {
     del.sync(path.join(target, 'source/scripts/**'));
     del.sync(path.join(target, 'source/styles/**'));
 
+    // delete log folder
+    del.sync(path.join(target, 'log'));
+    
     // Little message to celebrate
     console.log(
         '\nLeafpub ' + config.version + ' has been released! 🎉\n\n' +
