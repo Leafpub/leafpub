@@ -35,19 +35,27 @@ class Leafpub {
     *
     **/
     public static function run() {
-        self::$logger = new \Monolog\Logger('Leafpub::Logger');
-        $logLvl = \Monolog\Logger::INFO;
-        if(LEAFPUB_DEV == 1){
-            self::$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
-            $logLvl = \Monolog\Logger::DEBUG;
-        }
-        self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(Leafpub::path('log/leafpub.log'), 30, $logLvl));
-        self::$logger->debug('Startup...');
-        // Connect to the database
         try {
+            self::$logger = new \Monolog\Logger('Leafpub::Logger');
+            $logLvl = \Monolog\Logger::INFO;
+            if(LEAFPUB_DEV == 1){
+                self::$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
+                $logLvl = \Monolog\Logger::DEBUG;
+            }
+            self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(Leafpub::path('log/leafpub.log'), 30, $logLvl));
+            self::$logger->debug('Startup...');
+            // Connect to the database
+        
             self::$logger->debug('Connecting to database');
             Database::connect();
-        } catch(\Exception $e) {
+        }
+        catch (\UnexpectedValueException $ue){
+            exit(Error::system([
+                'title' => 'Logger Error',
+                'message' => $ue->getMessage()
+            ]));
+        } 
+        catch(\Exception $e) {
             switch($e->getCode()) {
                 case Database::NOT_CONFIGURED:
                     // Database isn't configured, launch the installer
