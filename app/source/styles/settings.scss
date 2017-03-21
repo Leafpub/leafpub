@@ -1,4 +1,5 @@
 @import "partials/variables";
+$media-list-item-image-size: 4rem;
 
 .settings-form {
     padding: 2rem 1rem;
@@ -72,6 +73,72 @@
         margin-bottom: 1rem;
     }
 }
+
+.media-list {
+        //height: 100%;
+        padding: .2rem 1rem;
+        user-select: none;
+        width: 100%;
+        display: none; // Needed set to important because our search changes display to "block"
+        overflow-y: scroll;
+    }
+
+    .media-list-item {
+        height: $media-list-item-image-size + 1rem;
+        position: relative;
+        text-align: center;
+        border-radius: $border-radius-large;
+        border: solid 1px white;
+        padding: 1rem;
+        padding-top: $media-list-item-image-size + 1.75rem;
+        transition:
+            color $leafpub-transition-speed,
+            background-color $leafpub-transition-speed;
+        .preview {
+            position: absolute;
+            top: 1rem;
+            left: calc(50% - #{$media-list-item-image-size} / 2);
+            width: $media-list-item-image-size;
+            height: $media-list-item-image-size;
+            overflow: hidden;
+            img,
+            i {
+                background: $gray-light;
+                width: $media-list-item-image-size;
+                height: $media-list-item-image-size;
+                line-height: $media-list-item-image-size;
+                font-size: $media-list-item-image-size - 2rem;
+                color: white;
+                //border-radius: 50%;
+                border-radius: $border-radius-large;
+            }
+        }
+        .name h4{
+            font-weight: bold;
+            @include text-truncate;
+            color: #09d;
+        }
+        .info {
+            font-size: .9rem;
+            color: $text-muted;
+            @include text-truncate;
+            transition: color $leafpub-transition-speed;
+            padding: 5px;
+            visibility: hidden;
+            text-align: left;
+        }
+        &:hover {
+            background-color: #f2f2f2;
+        }
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+        &.selected {
+            //height: $media-list-item-image-size + 10rem;
+            background-color: $leafpub-blue;
+        }
+    }
 
 // XS breakpoint
 @include media-breakpoint-down(xs) {

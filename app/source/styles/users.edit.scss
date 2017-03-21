@@ -120,7 +120,7 @@ $media-list-item-image-size: 4rem;
         font-size: $user-avatar-size - 2rem;
         color: white;
     }
-    .upload-avatar {
+    .inner {//.upload-avatar, .media-file {
         position: absolute;
         top: 0;
         left: 0;
@@ -136,8 +136,11 @@ $media-list-item-image-size: 4rem;
         transition: opacity $leafpub-transition-speed;
         cursor: pointer;
     }
+    .media-file, .upload-avatar {
+        cursor: pointer;
+    }
     &:hover {
-        .upload-avatar {
+        .inner {//.upload-avatar, .media-file {
             opacity: 1;
         }
     }

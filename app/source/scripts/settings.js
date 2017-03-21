@@ -2,7 +2,8 @@
 $(function() {
     'use strict';
 
-    var progress = new Nanobar();
+    var progress = new Nanobar(),
+        page = 1, request, more, query;
 
     // Submit
     $('.settings-form').on('submit', function(event) {
@@ -285,4 +286,88 @@ $(function() {
             });
         });
     });
+
+    $('.media-file').on('click', function(){
+        page = 1;
+        $.ajax({
+            url: Leafpub.url('api/uploads'),
+            type: 'GET',
+            data: {
+                page: page++,
+                query: query
+            }
+        })
+        .done(function(res){
+            $('.media-list').css('display', 'flex').html(res.html);
+            $('.cover').css('background-image', '');
+            $('.cover .controls').prop('hidden', true);
+        });
+    });
+
+    $('.media-list').selectable({
+            items: '.media-list-item',
+            multiple: false,
+            doubleClick: function(value) {
+                setImage(value);
+                $('.cover .controls').prop('hidden', false);
+            },
+            getValue: function() {
+                return $(this).attr('data-slug');
+            }
+        });
+
+         $('.media-list').on('scroll', function() {
+            var list = this,
+                scrollTop = $(list).scrollTop(),
+                scrollHeight = list.scrollHeight,
+                height = $(list).height(),
+                padding = 150,
+                query = $('.media-search').val();
+
+            if(!request && more && scrollTop + height + padding >= scrollHeight) {
+                // Show progress
+                //progress.go(50);
+
+                // Load next page
+                if(request) request.abort();
+                request = $.ajax({
+                    url: Leafpub.url('api/uploads'),
+                    type: 'GET',
+                    data: {
+                        page: ++page,
+                        query: query
+                    }
+                })
+                .done(function(res) {
+                    request = null;
+
+                    // Are there more pages to load?
+                    more = page < res.pagination.total_pages;
+
+                    // Append plugins if the page is in range
+                    if(page <= res.pagination.total_pages) {
+                        $(list).append(res.html);
+                    }
+                })
+                .always(function() {
+                    // Hide progress
+                    //progress.go(100);
+                });
+            }
+        });
+
+        function setImage(el){
+            $.ajax({
+                url: Leafpub.url('api/upload/' + el),
+                type: 'GET'
+            })
+            .done(function(res) {
+                if (res.success === true){
+                    $('.media-list').css('display', 'none').html('');
+                    $('input[name="cover"]').val(res.file.path);
+                    $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.path) + '")');
+                    $('.remove-cover').prop('hidden', false);
+                }
+            });
+        }
 });

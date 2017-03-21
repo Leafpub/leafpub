@@ -112,7 +112,13 @@
                             <label>{{L 'cover_photo'}}</label>
                             <input type="hidden" name="cover" value="{{@settings.cover}}">
                             <div class="cover card"{{#if @settings.cover}} style="background-image: url('{{url @settings.cover}}');"{{/if}}>
+                                <div class="media-list row" data-type="image">
+
+                                </div>
                                 <div class="controls">
+                                     <label class="media-file btn btn-translucent-dark">
+                                        <i class="fa fa-picture-o" title="{{L 'select_a_media_file'}}"></i>
+                                    </label>
                                     <label class="upload-cover btn btn-translucent-dark">
                                         <i class="fa fa-fw fa-camera"></i>
                                         <input type="file" accept="image/*" style="display: none;">

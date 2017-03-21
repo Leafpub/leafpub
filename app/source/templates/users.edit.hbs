@@ -56,10 +56,15 @@
                 <img class="image" src="{{url user.avatar}}"{{#unless user.avatar}} hidden{{/unless}}>
                 <i class="none fa fa-user"{{#if user.avatar}} hidden{{/if}}></i>
                 {{!-- Avatar upload button --}}
+                <div class="inner">
+                <label class="media-file" avatar>
+                    <i class="fa fa-picture-o" title="{{L 'select_a_media_file'}}"></i>
+                </label>
                 <label class="upload-avatar">
                     <i class="fa fa-fw fa-camera"></i>
                     <input type="file" accept="image/*" style="display: none;">
                 </label>
+                </div>
             </div>
             {{!-- Cover upload button --}}
             <div class="cover-controls">

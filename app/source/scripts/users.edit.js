@@ -4,6 +4,7 @@ $(function() {
 
     var request,
         query = '',
+        avatar = false,
         more = true,
         page = 1,
         progress = new Nanobar(),
@@ -197,7 +198,10 @@ $(function() {
 
     $('.media-file').on('click', function(){
         page = 1;
-        $('.cover').css('background-image', '');
+        avatar = this.hasAttribute('avatar');
+        if (!avatar){
+            $('.cover').css('background-image', '');
+        }
         $('.avatar').css('display', 'none');
         $.ajax({
             url: Leafpub.url('api/uploads'),
@@ -273,9 +277,15 @@ $(function() {
                 if (res.success === true){
                     $('.media-list').css('display', 'none').html('');
                     $('.avatar').css('display', 'block');
-                    $('input[name="cover"]').val(res.file.path);
-                    $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.path) + '")');
-                    $('.remove-cover').prop('hidden', false);
+                    if (!avatar){
+                        $('input[name="cover"]').val(res.file.path);
+                        $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.path) + '")');
+                        $('.remove-cover').prop('hidden', false);
+                    } else {
+                        $('input[name="avatar"]').val(res.file.path);
+                        $('.avatar .image').attr('src', Leafpub.url(res.file.path)).prop('hidden', false);
+                        $('.avatar .none').prop('hidden', true);
+                    }
                 }
             });
         }
