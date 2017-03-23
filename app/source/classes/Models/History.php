@@ -13,7 +13,11 @@ use Leafpub\Leafpub;
 
 class History extends AbstractModel {
     protected static $_instance;
-    
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\APIController',
+        'Leafpub\\Models\\Post'
+    ];
+
     protected static function getModel(){
 		if (self::$_instance == null){
 			self::$_instance	=	new Tables\History();
@@ -72,6 +76,9 @@ class History extends AbstractModel {
     *
     **/
     public static function create($data){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
         list($slug, $initial) = $data;
         $post = Post::getOne($slug);
         if(!$post) return false;
@@ -108,6 +115,10 @@ class History extends AbstractModel {
     *
     **/
     public static function delete($id){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         try {
             return self::getModel()->delete(['id' => $id]);
         } catch(\Exception $e){
@@ -123,6 +134,10 @@ class History extends AbstractModel {
     *
     **/
     public static function flush($slug){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+        
         $postId = Post::getOne($slug)['id'];
          try {
             return self::getModel()->delete(['post' => $id]);

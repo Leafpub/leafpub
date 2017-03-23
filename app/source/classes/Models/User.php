@@ -26,6 +26,11 @@ use Leafpub\Leafpub,
 
 class User extends AbstractModel {
     protected static $_instance;
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\AdminController', 
+        'Leafpub\\Controller\\APIController'
+    ];
+
     /**
     * Constants
     **/
@@ -133,6 +138,10 @@ class User extends AbstractModel {
     *
     **/
     public static function create($user){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $slug = $user['slug'];
         // Enforce slug syntax
         $slug = Leafpub::slug($slug);
@@ -226,6 +235,10 @@ class User extends AbstractModel {
     *
     **/
     public static function edit($properties){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $slug = $properties['slug'];
         unset($properties['slug']);
 
@@ -348,6 +361,10 @@ class User extends AbstractModel {
     *
     **/
     public static function delete($data){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $slug = $data['slug'];
         $recipient = $data['recipient'];
 

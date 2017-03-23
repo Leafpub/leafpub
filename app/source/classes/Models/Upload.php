@@ -26,6 +26,13 @@ use Leafpub\Leafpub,
 
 class Upload extends AbstractModel {
     protected static $_instance;
+
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\AdminController', 
+        'Leafpub\\Controller\\APIController',
+        'Leafpub\\Models\\Post'
+    ];
+
     /**
     * Constants
     **/
@@ -190,6 +197,10 @@ class Upload extends AbstractModel {
     *
     **/
     public static function create($data){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $filename = $data[0]; 
         $file_data = $data[1]; 
         $info = &$data[2];
@@ -347,6 +358,10 @@ class Upload extends AbstractModel {
     }
 
     public static function edit($data){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $filename = $data['filename'];
         $evt = new Update($data);
         Leafpub::dispatchEvent(Update::NAME, $evt);
@@ -386,6 +401,10 @@ class Upload extends AbstractModel {
     *
     **/
     public static function delete($filename){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+        
         $evt = new Delete($filename);
         Leafpub::dispatchEvent(Delete::NAME, $evt);
         

@@ -27,6 +27,12 @@ use Leafpub\Leafpub,
 
 class Post extends AbstractModel {
     protected static $_instance;
+
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\AdminController', 
+        'Leafpub\\Controller\\APIController'
+    ];
+    
     /**
     * Constants
     **/
@@ -240,6 +246,10 @@ class Post extends AbstractModel {
     *
     **/
     public static function create($post){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         // Enforce slug syntax
         $slug = $post['slug'];
         $slug = Leafpub::slug($slug);
@@ -325,6 +335,10 @@ class Post extends AbstractModel {
     *
     **/ 
     public static function edit($properties){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         $slug = $properties['slug'];
         // Get the post
         $post = self::getOne($slug);
@@ -422,6 +436,10 @@ class Post extends AbstractModel {
     *
     **/
     public static function delete($slug){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+        
         // If this post is the custom homepage, update settings
         if($slug === Setting::getOne('homepage')) {
             Setting::update('homepage', '');
@@ -1207,6 +1225,10 @@ class Post extends AbstractModel {
     
     // Assign posts to new user
     public static function updateRecepient($oldAuthorId, $newAuthorId){
+        if (!self::isAllowedCaller()){
+            return false;
+        }
+
         try {
             return self::getModel()->update(['author' => $newAuthorId], ['author' => $oldAuthorId]);
         } catch (\Exception $e){

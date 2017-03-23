@@ -14,6 +14,7 @@ use Leafpub\Leafpub;
 abstract class AbstractModel implements ModelInterface {
     
     abstract protected static function getModel();
+    protected static $allowedCaller;
 
     public static function truncate(){
         if (!Session::isRole(['owner', 'admin'])){
@@ -21,5 +22,16 @@ abstract class AbstractModel implements ModelInterface {
         }
 
         return self::getModel()->truncate();
+    }
+
+    /**
+    * Checks if the caller is allowed to call a method
+    *
+    * @return bool
+    */
+
+    protected static function isAllowedCaller(){
+        $data = debug_backtrace();
+        return in_array($data[2]['class'], static::$allowedCaller);
     }
 }
