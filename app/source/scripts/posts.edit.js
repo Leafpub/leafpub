@@ -479,6 +479,7 @@ $(function() {
         // Show progress
         progress.go(50);
         Leafpub.highlightErrors('.settings-form');
+        var properties = serializePost();
 
         // Send request
         request = $.ajax({
@@ -486,7 +487,7 @@ $(function() {
             type: type,
             data: {
                 post: post,
-                properties: serializePost()
+                properties: properties
             }
         })
         .done(function(res) {
@@ -502,6 +503,10 @@ $(function() {
                     window.onbeforeunload = null;
                     if (saveAction === 'pb'){
                         location.href = Leafpub.adminUrl('posts');
+                    } else {
+                        if (type === 'POST'){
+                            location.href = Leafpub.adminUrl('posts/' + properties.slug);
+                        }
                     }
                 });
             } else {
