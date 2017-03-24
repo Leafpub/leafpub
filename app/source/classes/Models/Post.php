@@ -674,8 +674,10 @@ class Post extends AbstractModel {
                 $slug);
         };
 
+        $sort = $options['direction'] === 'next' ? 'ASC' : 'DESC';
+
         $select->where($where);
-        $select->order('pub_date');
+        $select->order('pub_date ' . $sort);
         $select->limit(1);
 
         try {
