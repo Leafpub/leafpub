@@ -16,8 +16,14 @@ use DirectoryIterator,
     Leafpub\Model\Setting,
     Leafpub\Renderer;
 
-class Plugin implements ModelInterface {
+class Plugin extends AbstractModel {
     protected static $_instance;
+
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\AdminController', 
+        'Leafpub\\Controller\\APIController',
+        'Leafpub\\Leafpub'
+    ];
 
     /**
     * Constants
