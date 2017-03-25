@@ -22,7 +22,8 @@ use Leafpub\Leafpub,
     Leafpub\Events\Upload\Retrieved,
     Leafpub\Events\Upload\ManyRetrieve,
     Leafpub\Events\Upload\ManyRetrieved,
-    Leafpub\Events\Upload\GenerateThumbnail;
+    Leafpub\Events\Upload\GenerateThumbnail,
+    Leafpub\Events\Upload\SaveImageFile;
 
 class Upload extends AbstractModel {
     protected static $_instance;
@@ -233,6 +234,9 @@ class Upload extends AbstractModel {
             );
         }
 
+        //$evt = new SaveImageFile(['filename' => $filename, 'file_data' => $file_data]);
+        //Leafpub::dispatchEvent(SaveImageFile::NAME, $evt);
+        //TODO: Dispatch an event to save the image. So plugins can overwrite the save function and are able to upload images to S3
         // Create uploads folder if it doesn't exist
         $target_dir = "content/uploads/$year/$month/";
         if(!Leafpub::makeDir(Leafpub::path($target_dir))) {
@@ -277,7 +281,7 @@ class Upload extends AbstractModel {
             'thumbPath' => $thumb_path
         ]);
         Leafpub::dispatchEvent(GenerateThumbnail::NAME, $evt);
-        
+       
         //self::generateThumbnail($full_path, $thumb_path);
 
         // Get file size
