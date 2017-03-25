@@ -32,6 +32,6 @@ abstract class AbstractModel implements ModelInterface {
 
     protected static function isAllowedCaller(){
         $data = debug_backtrace();
-        return in_array($data[2]['class'], static::$allowedCaller);
+        return in_array($data[1]['class'], static::$allowedCaller);
     }
 }
