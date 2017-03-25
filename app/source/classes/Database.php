@@ -221,10 +221,9 @@ class Database extends Leafpub {
         self::$logger->info(' creating backup ');
         \Leafpub\Backup::create();
         $dbScheme = \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0;
-        $diff = LEAFPUB_SCHEME_VERSION - $dbScheme;
 
-        for ($i = $dbScheme + 1; $i <= $diff; $i++){
-            $method = 'updateToVersion' . $i;
+        for ($i = $dbScheme; $i < LEAFPUB_SCHEME_VERSION; $i++){
+            $method = 'updateToVersion' . ($i + 1);
             self::$method();
         }
     }
@@ -296,7 +295,7 @@ class Database extends Leafpub {
 
         self::$logger->info(' Generating thumbnails and edit path ');
 
-        $uploads = $adapter->query('SELECT * FROM ' . TableGateway::$prefix . 'uploads;');
+        $uploads = $adapter->query('SELECT * FROM ' . TableGateway::$prefix . 'uploads;', Adapter::QUERY_MODE_EXECUTE)->toArray();
 
         foreach($uploads as $upload){
             if (strpos($upload['filename'], $upload['extension']) > 0){
