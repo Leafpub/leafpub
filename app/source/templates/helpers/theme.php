@@ -44,6 +44,10 @@ return [
         // Template class
         $class = $options['data']['template'] . '-template';
 
+        if ((bool) $options['data']['meta']['editable'] === true){
+            $class .= ' editor';
+        }
+
         // Homepage class
         if(\Leafpub\Leafpub::isHomepage()) {
             $class .= ' homepage';
