@@ -93,7 +93,7 @@ try {
 }
 
 // Read/write test for special folders
-foreach(['backups', 'content', 'content/cache', 'content/themes', 'content/uploads'] as $folder) {
+foreach(['backups', 'content', 'content/cache', 'content/themes', 'content/uploads', 'log'] as $folder) {
     // Create the folder if it doesn't exist
     if(!Leafpub::makeDir(Leafpub::path($folder))) {
         exit(json_encode([
