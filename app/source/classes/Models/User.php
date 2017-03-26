@@ -28,7 +28,8 @@ class User extends AbstractModel {
     protected static $_instance;
     protected static $allowedCaller = [
         'Leafpub\\Controller\\AdminController', 
-        'Leafpub\\Controller\\APIController'
+        'Leafpub\\Controller\\APIController',
+        'Leafpub\\Models\\User'
     ];
 
     /**
