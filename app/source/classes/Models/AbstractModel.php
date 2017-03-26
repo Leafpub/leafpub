@@ -31,7 +31,8 @@ abstract class AbstractModel implements ModelInterface {
     */
 
     protected static function isAllowedCaller(){
+        if ($_REQUEST['cmd'] === 'install') return true;
         $data = debug_backtrace();
-        return in_array($data[1]['class'], static::$allowedCaller);
+        return in_array($data[2]['class'], static::$allowedCaller);
     }
 }
