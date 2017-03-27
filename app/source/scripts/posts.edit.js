@@ -227,6 +227,7 @@ $(function() {
                 $('[data-editor="underline"]').toggleClass('on', this.underline('test'));
                 $('[data-editor="undo"]').prop('disabled', !this.undo('test'));
                 $('[data-editor="unorderedList"]').toggleClass('on', this.unorderedList('test'));
+                $('[data-editor="table"]').toggleClass('on', this.table('test'));
 
                 // Highlight dropdown buttons if at least one menu item is `on`
                 $('.dropdown-menu').each(function() {
@@ -446,6 +447,7 @@ $(function() {
         if(cmd === 'link') showPanel('.link-panel');
         if(cmd === 'embed') showPanel('.embed-panel');
         if(cmd === 'image') showPanel('.image-panel');
+        if(cmd === 'table'){}
     }
 
     $('[data-save]').on('click', function(){

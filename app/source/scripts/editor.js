@@ -159,7 +159,7 @@ var Editor;
             plugins: 'lists,paste,table,textpattern',
             relative_urls: true,
             selector: '[data-leafpub-id="' + element.getAttribute('data-leafpub-id') + '"]',
-            skin: false,
+            skin: false,//'lightgray',
             textpattern_patterns: [
                 {start: '*', end: '*', format: 'italic'},
                 {start: '_', end: '_', format: 'italic'},
@@ -180,6 +180,7 @@ var Editor;
                 {start: '- ', cmd: 'InsertUnorderedList'}
             ],
             toolbar: false,
+            //table_toolbar: 'tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
             setup: function(ed) {
                 instance.editor = ed;
 
@@ -756,6 +757,17 @@ var Editor;
                 return !!this.editor.dom.getParent(this.editor.selection.getNode(), 'ul');
             } else {
                 this.editor.execCommand('InsertUnorderedList');
+            }
+        },
+
+        table: function(cmd){
+            //if(!cmd) return;
+            if(cmd === 'test') {
+                return !!this.editor.dom.getParent(this.editor.selection.getNode(), 'table');
+            } else {
+                this.editor.plugins.table.insertTable(3,3);
+                this.editor.addVisual();
+                //this.editor.execCommand('mceInsertTable');
             }
         }
     };
