@@ -33,50 +33,19 @@
         </div>
 
         <div class="grid-stack" hidden>
-            {{#each widgets}}
-                {{widget}}
-            {{/each}}
+            {{#if dashboard}}
+                {{#each dashboard}}
+                    {{widget}}
+                {{/each}}
+            {{else}}
+                <div class="valign" style="text-align: center">
+                    <div class="valign-middle">
+                        {{L 'no_widgets_used'}}
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
 </div>
 
-<div class="widget-panel panel panel-right">
-    <form class="link-form" autocomplete="off" novalidate>
-        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
-        <h3>{{L 'link'}}</h3>
-        <div class="form-group">
-            <label for="link-href">{{L 'url'}}</label>
-            <div class="inner-addon-group">
-                <span class="inner-addon"><i class="fa fa-link"></i></span>
-                <input class="form-control" type="url" name="href" id="link-href">
-                <label class="inner-addon upload-file">
-                    <i class="fa fa-upload"></i>
-                    <input type="file" style="display: none;">
-                </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="link-title">{{L 'title'}}</label>
-            <input class="form-control" type="text" name="title" id="link-title">
-        </div>
-        <div class="form-group">
-            <label for="link-class">{{L 'class'}}</label>
-            <input class="form-control" type="text" name="class" id="link-class">
-            <small class="text-muted">{{L 'enter_one_or_more_css_classes'}}</small>
-        </div>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="new-window" id="link-new-window">
-                    {{L 'open_in_a_new_window'}}
-                </label>
-            </div>
-        </div>
-        <div class="form-group mt-2">
-            <button class="btn btn-secondary unlink pull-right" type="button"><i class="fa fa-unlink"></i></button>
-            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
-            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
-        </div>
-    </form>
-</div>
 {{> footer}}
