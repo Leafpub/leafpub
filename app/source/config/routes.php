@@ -92,6 +92,8 @@ $app->group("/api", function() {
     
     $this->post('/dashboard', 'Leafpub\Controller\APIController:setDashboard');
     
+    $this->get('/widget', 'Leafpub\Controller\APIController:getWidget');
+
 })->add('Leafpub\Middleware:requireAuth')->add('Leafpub\Middleware:checkDBScheme');
 
 /**
