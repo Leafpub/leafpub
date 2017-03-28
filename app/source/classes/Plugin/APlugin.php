@@ -24,6 +24,7 @@ abstract class APlugin {
     private $_image = '';
     private $_isAdminPlugin = false;
     private $_dir = '';
+    private $_description = '';
 
     private $_app = null;
 
@@ -46,6 +47,7 @@ abstract class APlugin {
         
         // Fill info vars
         $this->_name = $json['name'];
+        $this->_description = $json['description'];
         $this->_author = $json['author'];
         $this->_version = $json['version'];
         $this->_license = $json['license'];
@@ -164,6 +166,17 @@ abstract class APlugin {
     */
     public function getLicense(){
         return $this->_license;
+    }
+
+    public function getDescription(){
+        return $this->_description;
+    }
+
+    public function getImage(){
+        if ($this->_image === ''){
+            return 'source/assets/img/app-icon.png';
+        }
+        return $this->_image;
     }
 
     /**
