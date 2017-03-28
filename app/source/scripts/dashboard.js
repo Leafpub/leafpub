@@ -18,24 +18,9 @@ $(function() {
 
         gridStack.gridstack(options);
        
-        gridStack.on('removed', function(){
+        gridStack.on('change', function(){
            isDirty = true; 
-           console.log(isDirty);
-        });
-        
-        gridStack.on('dragstart', function(){
-           isDirty = true; 
-           console.log('dragstart', isDirty);
-        });
-        
-        gridStack.on('resizestart', function(){
-           isDirty = true; 
-           console.log('resizestart', isDirty);
-        });
-        
-        gridStack.on('added', function(){
-           isDirty = true; 
-           console.log('added', isDirty);
+           saveDashboard();
         });
         
         $('.widget-loader').prop('hidden', true);
@@ -121,7 +106,8 @@ $(function() {
     }
 
     $('#new-widget').on('click', function(){
-        //showPanel();
+        showPanel();
+        /*
         var grid = gridStack.data('gridstack');
         var html = '<div class="grid-stack-item"><div class="grid-stack-item-content card">';
                 html += '<div class="card-header">';
@@ -132,11 +118,12 @@ $(function() {
                 html += ' <p class="card-text">Goodbye</p>';
                 html += '</div></div></div>';
             grid.addWidget($(html), 0, 0, 2, 3, true);
+        */
     });
 
     makeReady();
 
-    window.onbeforeunload = function(){
+    function saveDashboard(){
         if (!isDirty) return true;
         var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
             el = $(el);
@@ -159,10 +146,27 @@ $(function() {
         })
         .done(function(res){
             if (res.success){
+                isDirty = false;
                 return true;
             } else {
                 return false;   
             }
         });
     };
+
+    function addWidget(name){
+        $.ajax({
+            type: 'GET',
+            url: Leapub.url('api/widget'),
+            data: {
+                widget: name
+            }
+        })
+        .done(function(res){
+            if (res.success){
+                var grid = gridStack.data('gridstack');
+                grid.addWidget($(res.html), 0, 0, 2, 3, true);
+            }
+        });
+    }
 });
