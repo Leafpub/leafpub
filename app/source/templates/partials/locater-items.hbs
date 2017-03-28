@@ -1,5 +1,5 @@
 {{#each items}}
-    <a href="{{link}}">
+    <a href="{{link}}" {{#is link '#'}}data-widget="{{name}}"{{/is}}>
         {{#if avatar}}
             <img class="avatar" src="{{url avatar}}" alt="{{L 'avatar'}}">
         {{else}}

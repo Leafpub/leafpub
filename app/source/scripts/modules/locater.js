@@ -115,7 +115,24 @@ $(function() {
 
                 // Go to the selected item
                 if($('.locater-results .active').length) {
-                    location.href = $('.locater-results .active').attr('href');
+                    if ($('.locater-results .active').attr('href') === '#'){
+                        var name = $('.locater-results .active').attr('data-widget');
+                        $.ajax({
+                            type: 'GET',
+                            url: Leafpub.url('api/widget'),
+                            data: {
+                                widget: name
+                            }
+                        })
+                        .done(function(res){
+                            if (res.success){
+                                var grid = $('.grid-stack').data('gridstack');
+                                grid.addWidget($(res.html), 0, 0, 2, 3, true);
+                            }
+                        });
+                    } else {
+                        location.href = $('.locater-results .active').attr('href');
+                    }
                 }
 
                 hide();
