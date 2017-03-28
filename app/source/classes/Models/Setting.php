@@ -101,6 +101,7 @@ class Setting extends AbstractModel {
         try {
             $ret = self::getModel()->select()->toArray();
             foreach($ret as $ds){
+                \Leafpub\Leafpub::getLogger()->debug('Setting ' . $ds['name'] . ' has value ' . $ds['value']);
                 self::$settings[$ds['name']] = $ds['value'];
             }
         } catch(\PDOException $e) {
