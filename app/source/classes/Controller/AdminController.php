@@ -22,6 +22,7 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Importer,
     Leafpub\Mailer,
+    Leafpub\Widget,
     Leafpub\Models\History,
     Leafpub\Models\Post,
     Leafpub\Models\Setting,
@@ -166,7 +167,34 @@ class AdminController extends Controller {
     *
     **/
     public function dashboard($request, $response, $args) {
-        return $response->withRedirect(Admin::url('posts'));
+        $html = Admin::render('dashboard', [
+            'title' => Language::term('dashboard'),
+            'scripts' => 'dashboard.min.js',
+            'styles' => 'dashboard.css',
+            'widgets' => Widget::renderDashboard(Session::user('slug'))/*[
+            
+                [
+                    'widget' => '<div class="grid-stack-item"
+                data-gs-x="4" data-gs-y="0"
+                data-gs-width="4" data-gs-height="4" id="zwei">
+                <div class="grid-stack-item-content card">
+                    <div class="card-header">
+                        LaLaLand
+                    </div>
+                    <div class="card-block">
+                        <h4 class="card-title">Title2</h4>
+                        <p class="card-text">
+                            Test Text
+                        </p>
+                    </div>
+                </div>
+            </div>'
+                ]
+            ]*/
+        ]);
+
+        return $response->write($html);
+        //return $response->withRedirect(Admin::url('posts'));
     }
 
     public function plugins($request, $response, $args){
