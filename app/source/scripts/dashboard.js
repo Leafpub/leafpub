@@ -1,0 +1,168 @@
+/* globals Nanobar, Leafpub */
+$(function() {
+    'use strict';
+
+    var gridStack = $('.grid-stack'),
+        options = {
+            width: 12,
+            alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+            animate: true,
+            resizable:{
+                handles: 'sw, se'
+            },
+        };
+
+    function makeReady(){
+        $('.widget-loader').prop('hidden', false);
+
+        gridStack.gridstack(options);
+        /*
+        var serialization = [
+            {x: 0, y: 0, width: 2, height: 2, title: 'title1', content: 'content1'},
+            {x: 3, y: 1, width: 1, height: 2, title: 'title2', content: 'content2'},
+            {x: 4, y: 1, width: 1, height: 1, title: 'title3', content: 'content3'},
+            {x: 2, y: 3, width: 3, height: 1, title: 'title4', content: 'content4'},
+            {x: 1, y: 4, width: 1, height: 1, title: 'title5', content: 'content5'},
+            {x: 1, y: 3, width: 1, height: 1, title: 'title6', content: 'content6'},
+            {x: 2, y: 4, width: 1, height: 1, title: 'title7', content: 'content7'},
+            {x: 2, y: 5, width: 1, height: 1, title: 'title8', content: 'content8'}
+        ];
+
+        serialization = GridStackUI.Utils.sort(serialization);
+
+        var grid = gridStack.data('gridstack');
+        grid.removeAll();
+
+        _.each(serialization, function (node) {
+            var html = '<div class="grid-stack-item"><div class="grid-stack-item-content card">';
+                html += '<div class="card-header">';
+                html += 'Featured';
+                html += '</div>';
+                html += '<div class="card-block">';
+                html += '<h4 class="card-title">' + node.title + '</h4>';
+                html += ' <p class="card-text">' + node.content + '</p>';
+                html += '</div></div></div>';
+            grid.addWidget($(html),
+                node.x, node.y, node.width, node.height);
+        });
+        */
+        //gridStack.on('added', function(event, items){
+            $('.widget-loader').prop('hidden', true);
+            gridStack.prop('hidden', false);
+        //});
+    }
+
+    // Shows the specified panel
+    function showPanel() {
+        // Hide existing panels
+        //hidePanel();
+        var panel = $('.widget-panel');
+        // Trigger show event
+        panel.trigger('show.leafpub.panel');
+
+        // Show the specified panel
+        panel.on('transitionend.leafpub.panel', function() {
+            panel.off('transitionend.leafpub.panel').trigger('shown.leafpub.panel');
+        }).addClass('active');
+
+        $(document)
+        // Watch for keypresses or clicks outside the panel
+        .on('touchstart.leafpub.panel keydown.leafpub.panel mousedown.leafpub.panel', function(event) {
+            if(
+                // Is it outside the panel?
+                !$(event.target).parents().addBack().is(panel) &&
+                // Ignore modifier keypresses
+                !(event.metaKey || event.cmdKey || event.shiftKey)
+            ) {
+                hidePanel();
+            }
+        })
+        // Watch for the escape key
+        .on('keydown.leafpub.panel', function(event) {
+            if(event.keyCode === 27) {
+                event.preventDefault();
+                hidePanel();
+            }
+        });
+
+        // Watch for form submission
+        panel.find('form').on('submit.leafpub.panel', function(event) {
+            event.preventDefault();
+            hidePanel();
+        });
+
+        // Watch for clicks on the close button
+        panel.find('[data-panel="hide"]').on('click.leafpub.panel', function(event) {
+            event.preventDefault();
+            hidePanel();
+        });
+    }
+
+    // Hides the specified panel or all panels
+    function hidePanel() {
+        // Hide selected panel OR all panels
+        var panel = '.panel.active';
+
+        // Don't hide the panel is there's an active alertable modal. We do this because we don't
+        // want interactions made while an alertable (alert, confirm, prompt) is open to hide the
+        // active panel.
+        if($('.alertable:visible').length) {
+            return false;
+        }
+
+        // Remove bindings
+        $(panel).find('[data-panel="hide"]').off('.leafpub.panel');
+        $(document).off('.leafpub.panel');
+
+        // Trigger hide event
+        $(panel).trigger('hide.leafpub.panel');
+        /*
+        $('.picture').css('background-image', '');
+        $('#image-caption').val('');
+        $('#image-width').val('');
+        $('#image-height').val('');
+        $('#image-slug').val('');
+        $('#image-tags').get(0).selectize.clear(true);
+        */
+        // Show the specified panel
+        $(panel).on('transitionend.leafpub.panel', function() {
+            $(panel).off('transitionend.leafpub.panel').trigger('hidden.leafpub.panel');
+        }).removeClass('active');
+    }
+
+    $('#new-widget').on('click', function(){
+        //showPanel();
+        var grid = gridStack.data('gridstack');
+        var html = '<div class="grid-stack-item"><div class="grid-stack-item-content card">';
+                html += '<div class="card-header">';
+                html += 'Featured';
+                html += '</div>';
+                html += '<div class="card-block">';
+                html += '<h4 class="card-title">Test</h4>';
+                html += ' <p class="card-text">Goodbye</p>';
+                html += '</div></div></div>';
+            grid.addWidget($(html), 0, 0, 2, 3, true);
+    });
+
+    makeReady();
+
+    window.onbeforeunload = function(){
+        var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            return {
+                id: el.attr('id'),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height
+            };
+        });
+        console.log(JSON.stringify(res));
+        if (confirm()){
+            return true;
+        } else {
+            return false;
+        }
+    };
+});
