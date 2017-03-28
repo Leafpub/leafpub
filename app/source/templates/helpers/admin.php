@@ -83,5 +83,10 @@ return [
         }
 
         return new \LightnCandy\SafeString($html);
-    }
+    },
+
+     'widget' => function($options){
+        $widget = $content = $options['_this']['widget'];
+        return new \LightnCandy\SafeString($widget);
+    },
 ];
