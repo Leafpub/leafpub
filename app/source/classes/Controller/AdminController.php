@@ -171,7 +171,8 @@ class AdminController extends Controller {
             'title' => Language::term('dashboard'),
             'scripts' => 'dashboard.min.js',
             'styles' => 'dashboard.css',
-            'widgets' => Widget::renderDashboard(Session::user('slug'))
+            'dashboard' => Widget::renderDashboard(Session::user('slug')),
+            //'widgets' => Widget::getWidgets()
         ]);
 
         return $response->write($html);
