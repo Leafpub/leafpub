@@ -31,48 +31,46 @@ class Widget extends Leafpub {
     *
     */
     public static function addWidget($widgetData){
-        self::$widgets[$widgetData['name']] = $widgetData['class'];
+        static::$widgets[$widgetData['name']] = $widgetData;
     }
 
     /**
     * Returns a rendered widget
     *
-    * @param String $widgetName
+    * @param String/array $widgetName
     * @return String
     *
     */
-    public static function getWidget($widgetName){
-        $widgetClass = self::$widgets[$widgetName];
+    public static function getWidget($widget){
+        $data = [];
+        if (is_array($widget)){
+            $widgetName = $widget['id'];
+            $data = $widget;
+        } else {
+            $widgetName = $widget;
+            $data['id'] = $widget;
+        }
 
-        return $widgetClass::render();
+        $widgetClass = self::$widgets[$widgetName]['class'];
+
+        return $widgetClass::render($data);
+    }
+
+    public static function getWidgets(){
+        return self::$widgets;
     }
 
     public static function renderDashboard($userSlug){
         $data = Setting::getOne('dashboard_' . $userSlug);
         
-        $widgets = json_decode($data);
-        foreach ($widgets as $widget){
-            self::getLogger()->debug('Widget Id: ' . $widget->id);
+        if ($data){
+            $widgets = json_decode($data, true);
+            foreach ($widgets as $widget){
+                self::getLogger()->debug('Widget Id: ' . $widget->id);
+                $ret[] = ['widget' => self::getWidget($widget)];
+            }
         }
         
-        return [
-            [
-                    'widget' => '<div class="grid-stack-item"
-                data-gs-x="4" data-gs-y="0"
-                data-gs-width="4" data-gs-height="4" id="zwei">
-                <div class="grid-stack-item-content card">
-                    <div class="card-header">
-                        LaLaLand
-                    </div>
-                    <div class="card-block">
-                        <h4 class="card-title">Title2</h4>
-                        <p class="card-text">
-                            Test Text
-                        </p>
-                    </div>
-                </div>
-            </div>'
-            ]
-        ];
+        return $ret;
     }
 }
