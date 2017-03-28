@@ -90,6 +90,8 @@ $app->group("/api", function() {
     // Database update
     $this->post('/update', 'Leafpub\Controller\APIController:updateLeafpubDatabase');
     
+    $this->post('/dashboard', 'Leafpub\Controller\APIController:setDashboard');
+    
 })->add('Leafpub\Middleware:requireAuth')->add('Leafpub\Middleware:checkDBScheme');
 
 /**
