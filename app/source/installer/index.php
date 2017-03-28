@@ -69,7 +69,12 @@ if(Leafpub::isInstalled()) {
                     </div>
 
                     <!-- Database -->
-                    <h4 class="mt-3">Database</h4>
+                    <h4 class="mt-3">
+                        Database
+                    </h4>
+                    <div class="card card-outline-danger mb-3 text-center">
+                        <small><strong>Warning!</strong> All existing data will be deleted!</small>
+                    </div>
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
