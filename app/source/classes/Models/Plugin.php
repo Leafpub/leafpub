@@ -22,7 +22,8 @@ class Plugin extends AbstractModel {
     protected static $allowedCaller = [
         'Leafpub\\Controller\\AdminController', 
         'Leafpub\\Controller\\APIController',
-        'Leafpub\\Leafpub'
+        'Leafpub\\Leafpub',
+        'Leafpub\\Models\\Plugin'
     ];
 
     /**
@@ -422,7 +423,6 @@ class Plugin extends AbstractModel {
             try{
                 self::create($plugin);
             } catch (\Exception $e){
-                echo $e->getMessage();
                 return false;
             }
         }
