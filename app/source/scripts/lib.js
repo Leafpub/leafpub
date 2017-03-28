@@ -1,5 +1,6 @@
 // Libs
 // @include node_modules/jquery/dist/jquery.min.js
+// @include node_modules/jquery-ui/dist/jquery-ui.min.js
 // @include node_modules/tether/dist/js/tether.min.js
 // @include node_modules/bootstrap/dist/js/bootstrap.min.js
 // @include node_modules/nanobar/nanobar.min.js
@@ -12,6 +13,8 @@
 // @include node_modules/@claviska/jquery-alertable/jquery.alertable.min.js
 // @include node_modules/@claviska/jquery-offscreen/jquery.offscreen.js
 // @include node_modules/@claviska/jquery-selectable/jquery.selectable.min.js
+// @include node_modules/lodash/lodash.min.js
+// @include node_modules/gridstack/dist/gridstack.min.js
 
 // Modules
 // @include app/source/scripts/modules/leafpub.js
