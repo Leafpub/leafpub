@@ -22,6 +22,7 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Importer,
     Leafpub\Mailer,
+    Leafpub\Widget,
     Leafpub\Mailer\Mail\MailFactory,
     Leafpub\Mailer\Mail\AddressFactory,
     Leafpub\Events\Application\MailCompose,
@@ -1323,6 +1324,21 @@ class APIController extends Controller {
         $params = $request->getParams();
         $html = '';
         $items = [];
+        $isDashboard = (substr($request->getServerParam('HTTP_REFERER'), -5) == 'admin');
+
+        if ($isDashboard){
+            foreach(Widget::getWidgets() as $widget){
+                if(mb_stristr($widget['name'], $params['query'])){
+                    $items[] = [
+                        'title' => 'Widget: ' . $widget['name'],
+                        'name' => $widget['name'],
+                        'description' => $widget['description'],
+                        'link' => '#',
+                        'icon' => 'fa fa-rocket'
+                    ];
+                }
+            }
+        }
 
         // Search menu items
         foreach(Admin::getMenuItems() as $nav) {
@@ -1721,6 +1737,18 @@ class APIController extends Controller {
             return $response->withJson(['success' => false]);
         } catch(\Exception $e){
             return $response->withJson(['success' => false]);
+        }
+    }
+
+    public function getWidget($request, $response, $next){
+        $widget = $request->getParam('widget');
+
+        $html = Widget::getWidget($widget);
+        if ($html){
+            return $response->withJson([
+                'success' => true,
+                'html' => $html
+            ]);
         }
     }
 }
