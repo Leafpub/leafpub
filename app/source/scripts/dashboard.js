@@ -3,6 +3,7 @@ $(function() {
     'use strict';
 
     var gridStack = $('.grid-stack'),
+        isDirty = false,
         options = {
             width: 12,
             alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -16,40 +17,29 @@ $(function() {
         $('.widget-loader').prop('hidden', false);
 
         gridStack.gridstack(options);
-        /*
-        var serialization = [
-            {x: 0, y: 0, width: 2, height: 2, title: 'title1', content: 'content1'},
-            {x: 3, y: 1, width: 1, height: 2, title: 'title2', content: 'content2'},
-            {x: 4, y: 1, width: 1, height: 1, title: 'title3', content: 'content3'},
-            {x: 2, y: 3, width: 3, height: 1, title: 'title4', content: 'content4'},
-            {x: 1, y: 4, width: 1, height: 1, title: 'title5', content: 'content5'},
-            {x: 1, y: 3, width: 1, height: 1, title: 'title6', content: 'content6'},
-            {x: 2, y: 4, width: 1, height: 1, title: 'title7', content: 'content7'},
-            {x: 2, y: 5, width: 1, height: 1, title: 'title8', content: 'content8'}
-        ];
-
-        serialization = GridStackUI.Utils.sort(serialization);
-
-        var grid = gridStack.data('gridstack');
-        grid.removeAll();
-
-        _.each(serialization, function (node) {
-            var html = '<div class="grid-stack-item"><div class="grid-stack-item-content card">';
-                html += '<div class="card-header">';
-                html += 'Featured';
-                html += '</div>';
-                html += '<div class="card-block">';
-                html += '<h4 class="card-title">' + node.title + '</h4>';
-                html += ' <p class="card-text">' + node.content + '</p>';
-                html += '</div></div></div>';
-            grid.addWidget($(html),
-                node.x, node.y, node.width, node.height);
+       
+        gridStack.on('removed', function(){
+           isDirty = true; 
+           console.log(isDirty);
         });
-        */
-        //gridStack.on('added', function(event, items){
-            $('.widget-loader').prop('hidden', true);
-            gridStack.prop('hidden', false);
-        //});
+        
+        gridStack.on('dragstart', function(){
+           isDirty = true; 
+           console.log('dragstart', isDirty);
+        });
+        
+        gridStack.on('resizestart', function(){
+           isDirty = true; 
+           console.log('resizestart', isDirty);
+        });
+        
+        gridStack.on('added', function(){
+           isDirty = true; 
+           console.log('added', isDirty);
+        });
+        
+        $('.widget-loader').prop('hidden', true);
+        gridStack.prop('hidden', false);
     }
 
     // Shows the specified panel
@@ -147,6 +137,7 @@ $(function() {
     makeReady();
 
     window.onbeforeunload = function(){
+        if (!isDirty) return true;
         var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
             el = $(el);
             var node = el.data('_gridstack_node');
@@ -158,11 +149,20 @@ $(function() {
                 height: node.height
             };
         });
-        console.log(JSON.stringify(res));
-        if (confirm()){
-            return true;
-        } else {
-            return false;
-        }
+        
+        $.ajax({
+            type: 'POST',
+            url: Leafpub.url('api/dashboard'),
+            data: {
+                data: JSON.stringify(res)
+            }
+        })
+        .done(function(res){
+            if (res.success){
+                return true;
+            } else {
+                return false;   
+            }
+        });
     };
 });
