@@ -1707,4 +1707,14 @@ class APIController extends Controller {
             'newScheme' => LEAFPUB_SCHEME_VERSION
         ]);
     }
+
+    public function setDashboard($request, $response, $next){
+        $data = $request->getParam('dashboard');
+        \Leafpub\Models\Setting::edit(
+            [
+                'name' => 'dashboard_' . Session::user('slug'),
+                'value' => $data
+            ]
+        );
+    }
 }
