@@ -1709,12 +1709,18 @@ class APIController extends Controller {
     }
 
     public function setDashboard($request, $response, $next){
-        $data = $request->getParam('dashboard');
-        \Leafpub\Models\Setting::edit(
-            [
-                'name' => 'dashboard_' . Session::user('slug'),
-                'value' => $data
-            ]
-        );
+        try {
+            $data = $request->getParams('data');
+            Leafpub::getLogger()->debug($data['data']);
+            \Leafpub\Models\Setting::edit(
+                [
+                    'name' => 'dashboard_' . Session::user('slug'),
+                    'value' => $data['data']
+                ]
+            );
+            return $response->withJson(['success' => false]);
+        } catch(\Exception $e){
+            return $response->withJson(['success' => false]);
+        }
     }
 }
