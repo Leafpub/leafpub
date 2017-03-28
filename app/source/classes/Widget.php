@@ -49,7 +49,12 @@ class Widget extends Leafpub {
 
     public static function renderDashboard($userSlug){
         $data = Setting::getOne('dashboard_' . $userSlug);
-
+        
+        $widgets = json_decode($data);
+        foreach ($widgets as $widget){
+            self::getLogger()->debug('Widget Id: ' . $widget->id);
+        }
+        
         return [
             [
                     'widget' => '<div class="grid-stack-item"
