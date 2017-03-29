@@ -53,7 +53,7 @@ class Widget extends Leafpub {
 
         $widgetClass = self::$widgets[$widgetName]['class'];
 
-        return $widgetClass::render($data);
+        return $widgetClass::renderWidget($data);
     }
 
     public static function getWidgets(){
