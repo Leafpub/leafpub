@@ -348,6 +348,12 @@ class Plugin extends AbstractModel {
         );
         $plugin['dir'] = $ns;
         
+        $plugin['img'] = $plugin['image'];
+
+        unset($plugin['image']);
+        unset($plugin['routes']);
+        unset($plugin['isWidget']);
+        
         if ($bUpdate){
             $res = self::edit($plugin);
         } else {
@@ -420,6 +426,8 @@ class Plugin extends AbstractModel {
 
             unset($plugin['image']);
             unset($plugin['routes']);
+            unset($plugin['isWidget']);
+            
             try{
                 self::create($plugin);
             } catch (\Exception $e){
