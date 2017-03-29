@@ -12,11 +12,11 @@
             </h1>
         </div>
         {{!-- Right side --}}
-        <div class="top-toolbar-section col-6 text-right">
+        <!--div class="top-toolbar-section col-6 text-right">
             <button title="{{L 'add_new_widget'}}" id="new-widget" class="btn btn-success">
                 <i class="fa fa-plus"></i>
             </button>
-        </div>
+        </div-->
     </div>
 </div>
 
@@ -33,17 +33,9 @@
         </div>
 
         <div class="grid-stack" hidden>
-            {{#if dashboard}}
-                {{#each dashboard}}
-                    {{widget}}
-                {{/each}}
-            {{else}}
-                <div class="valign" style="text-align: center">
-                    <div class="valign-middle">
-                        {{L 'no_widgets_used'}}
-                    </div>
-                </div>
-            {{/if}}
+            {{#each dashboard}}
+                {{widget}}
+            {{/each}}
         </div>
     </div>
 </div>
