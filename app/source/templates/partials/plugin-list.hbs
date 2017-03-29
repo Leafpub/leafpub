@@ -7,7 +7,11 @@
             {{#if image}}
                 <img class="preview-image" src="{{url image}}">
             {{else}}
-                <i class="preview-image fa fa-plug"></i>
+                {{#if isWidget}}
+                    <i class="preview-image fa fa-rocket"></i>
+                {{else}}
+                    <i class="preview-image fa fa-plug"></i>
+                {{/if}}
             {{/if}}
         </div>
         <div class="name">

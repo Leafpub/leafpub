@@ -23,6 +23,7 @@ abstract class APlugin {
     private $_requires = '';
     private $_image = '';
     private $_isAdminPlugin = false;
+    private $_isWidget = false;
     private $_dir = '';
     private $_description = '';
 
@@ -56,6 +57,7 @@ abstract class APlugin {
         $this->_image = $json['image'];
         $this->_isAdminPlugin = $json['isAdminPlugin'];
         $this->_dir = $dir;
+        $this->_isWidget = $json['isWidget'];
 
         if ($json['isMiddleware'] == true){
             $this->_app->add($this);
@@ -179,6 +181,10 @@ abstract class APlugin {
         return $this->_image;
     }
 
+    public function isWidget(){
+        return $this->_isWidget;
+    }
+    
     /**
     * Returns the plugin address
     *
