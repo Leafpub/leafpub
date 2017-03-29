@@ -32,7 +32,8 @@ var assets = 'app/source/assets',
     scripts = {
         source: [
             'app/source/scripts/**/*.js',
-            '!app/source/scripts/modules/**/*.js'
+            '!app/source/scripts/modules/**/*.js',
+            'node_modules/jquery/dist/jquery.js'
         ],
         modules: 'app/source/scripts/modules/**/*.js',
         target: assets + '/js'
