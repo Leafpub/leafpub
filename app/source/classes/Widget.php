@@ -51,9 +51,12 @@ class Widget extends Leafpub {
             $data['id'] = $widget;
         }
 
-        $widgetClass = self::$widgets[$widgetName]['class'];
-
-        return $widgetClass::renderWidget($data);
+        if (isset(self::$widgets[$widgetName])){
+            $widgetClass = self::$widgets[$widgetName]['class'];
+            return $widgetClass::renderWidget($data);
+        } else {
+            return false;
+        }
     }
 
     public static function getWidgets(){
@@ -67,7 +70,10 @@ class Widget extends Leafpub {
             $widgets = json_decode($data, true);
             foreach ($widgets as $widget){
                 self::getLogger()->debug('Widget Id: ' . $widget->id);
-                $ret[] = ['widget' => self::getWidget($widget)];
+                $html = self::getWidget($widget);
+                if ($html){
+                    $ret[] = ['widget' => $html];
+                }
             }
         }
         
