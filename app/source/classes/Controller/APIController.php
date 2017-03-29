@@ -260,6 +260,10 @@ class APIController extends Controller {
         $slug = $action === 'add' ? $properties['slug'] : $args['slug'];
         $properties['slug'] = $slug;
 
+        if ($properties['author'] === '=quick='){
+            $properties['author'] = Session::user('slug');
+        }
+
         // If you're not an owner, admin, or editor then you can only add/update your own posts
         if(
             !Session::isRole(['owner', 'admin', 'editor']) &&
