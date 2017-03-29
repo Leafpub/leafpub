@@ -127,7 +127,7 @@ $(function() {
                         .done(function(res){
                             if (res.success){
                                 var grid = $('.grid-stack').data('gridstack');
-                                grid.addWidget($(res.html), 0, 0, 2, 3, true);
+                                grid.addWidget($(res.html), 0, 0, 3, 4, true);
                             }
                         });
                     } else {
