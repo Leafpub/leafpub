@@ -18,11 +18,18 @@ $(function() {
 
         gridStack.gridstack(options);
        
+        // save dashboard on any change
         gridStack.on('change', function(){
            isDirty = true; 
            saveDashboard();
         });
         
+        // delete widget in dblclick
+        $('.card').on('dblclick', function(ev){
+            var el = $(ev.target).closest('.grid-stack-item');
+            gridStack.data('gridstack').removeWidget(el);
+        });
+
         $('.widget-loader').prop('hidden', true);
         gridStack.prop('hidden', false);
     }
