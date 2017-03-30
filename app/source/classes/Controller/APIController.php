@@ -1113,7 +1113,8 @@ class APIController extends Controller {
             'maintenance' => $params['maintenance'] === 'on' ? 'on' : 'off',
             'maintenance_message' => $params['maintenance-message'],
             'hbs_cache' => $params['hbs-cache'] === 'on' ? 'on' : 'off',
-            'mailer' => $params['mailer']
+            'mailer' => $params['mailer'],
+            'showDashboard' => $params['showDashboard'] === 'on' ? 'on' : 'off'
         ];
 
         // Update settings
