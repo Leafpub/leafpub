@@ -121,6 +121,7 @@ class Leafpub {
 
         // Handle thumbnail generation
         self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Models\Upload::handleThumbnail', -999);
+        //self::on(Events\Upload\SaveImageFile::NAME, __NAMESPACE__ . '\Models\Upload::saveImageToFile', -999);
     }
 
     public static function getLogger(){
@@ -804,6 +805,20 @@ class Leafpub {
     *
     **/
     public static function getTableNames() {
-        return ['History', 'PostUploads', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
+        switch(Models\Setting::getOne('schemeVersion')){
+            case 0:
+                $tables = ['History', 'PostTags', 'Post', 'Setting', 'Tag', 'Upload', 'User'];
+                break;
+            case 1:
+                $tables = ['History', 'PostTags', 'Post', 'Setting', 'Tag', 'Upload', 'User', 'Plugins'];
+                break;
+            case 2:
+                $tables = ['History', 'PostUploads', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
+                break;
+            case 3:
+                $tables = ['History', 'PostUploads', 'PostMeta', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
+                break;
+        }
+        return $tables;
     }
 }
