@@ -231,6 +231,14 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="showDashboard" value="on"{{#is @settings.showDashboard 'on'}} checked{{/is}}>
+                                    {{L 'show_dashboard'}}<br>
+                                </label>
+                            </div>
+                        </div>
                         {{!-- Mail --}}
                         <h3 class="m-t-3">{{L 'mail'}}</h3>
                         {{!-- Mailers --}}

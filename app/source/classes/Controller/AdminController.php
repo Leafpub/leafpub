@@ -167,16 +167,19 @@ class AdminController extends Controller {
     *
     **/
     public function dashboard($request, $response, $args) {
-        $html = Admin::render('dashboard', [
-            'title' => Language::term('dashboard'),
-            'scripts' => 'dashboard.min.js',
-            'styles' => 'dashboard.css',
-            'dashboard' => Widget::renderDashboard(Session::user('slug')),
-            //'widgets' => Widget::getWidgets()
-        ]);
+        if (\Leafpub\Models\Setting::getOne('showDashboard') === 'on'){
+            $html = Admin::render('dashboard', [
+                'title' => Language::term('dashboard'),
+                'scripts' => 'dashboard.min.js',
+                'styles' => 'dashboard.css',
+                'dashboard' => Widget::renderDashboard(Session::user('slug')),
+                //'widgets' => Widget::getWidgets()
+            ]);
 
-        return $response->write($html);
-        //return $response->withRedirect(Admin::url('posts'));
+            return $response->write($html);
+        } else {
+            return $response->withRedirect(Admin::url('posts'));
+        }
     }
 
     public function plugins($request, $response, $args){

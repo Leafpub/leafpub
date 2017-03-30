@@ -105,12 +105,14 @@ class Admin extends Leafpub {
             'avatar' => empty(Session::user('avatar')) ? null : Session::user('avatar')
         ];
 
-        // Home
-        $items[] = [
-            'title' => Language::term('dashboard'),
-            'link' => Admin::url(),
-            'icon' => 'fa fa-home'
-        ];
+        if (Setting::getOne('showDashboard') === 'on'){
+            // Home
+            $items[] = [
+                'title' => Language::term('dashboard'),
+                'link' => Admin::url(),
+                'icon' => 'fa fa-home'
+            ];
+        }
 
         // New post
         $items[] = [
