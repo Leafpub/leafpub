@@ -360,6 +360,19 @@ class Database extends Leafpub {
 
     protected static function updateToVersion3(){
         self::$logger->info(' start updateToVersion3 ');
+
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new \Zend\Db\Sql\Sql($adapter);
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        
+        $table = new \Leafpub\Models\Ddl\PostMeta();
+        $tableSQL = $sql->getSqlStringForSqlObject($table);
+        if ($isMySQL){
+            $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+        }
+        
+        $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
+
         self::$logger->info(' end updateToVersion3 ');
     }
 }
