@@ -17,7 +17,8 @@ use Leafpub\Blog,
     Leafpub\Session,
     Leafpub\Models\Setting,
     Leafpub\Models\Tag,
-    Leafpub\Models\User;
+    Leafpub\Models\User,
+    Leafpub\Events\Post\PostViewed;
 
 /**
 * ThemeController
@@ -129,9 +130,13 @@ class ThemeController extends Controller {
             'preview' => Session::isAuthenticated() && isset($request->getParams()['preview'])
         ]);
 
-        return $html === false ?
-            $this->notFound($request, $response) :
+        if ($html === false){
+            return $this->notFound($request, $response);
+        } else {
+            $ev = new PostViewed(['post' => $args['post'], 'request' => $request]);
+            \Leafpub\Leafpub::dispatchEvent(PostViewed::NAME, $ev);
             $response->write($html);
+        }
     }
 
     /**
