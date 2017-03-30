@@ -193,6 +193,7 @@ return [
     'set_post_image' => 'Set post image',
     'settings' => 'Settings',
     'share_a_sentence_or_two_about_yourself' => 'Share a sentence or two about yourself',
+    'show_dashboard' => 'Show Dashboard',
     'slug' => 'Slug',
     'source' => 'Source',
     'status' => 'Status',
