@@ -1116,6 +1116,19 @@ class Post extends AbstractModel {
        }
     }
 
+    private static function getPostMeta($post_id){
+        try{
+            $meta = PostMeta::getMany(['post' => $post_id]);
+            foreach($meta as $met){
+                $ret[$met['name']] = [$met['value'], $met['created']];
+            }
+            return $ret;
+        } catch(\Exception $e){
+            Leafpub::getLogger()->debug($e->getMessage());
+            return false;
+        }
+    }
+
     /**
     * Normalize data types for certain fields
     *
@@ -1136,7 +1149,8 @@ class Post extends AbstractModel {
 
         // Append tags
         $post['tags'] = self::getTags($post['id']);
-        $posts['media'] = self::getUploads($post['id']);
+        $post['media'] = self::getUploads($post['id']);
+        $post['meta'] = self::getPostMeta($post['id']);
 
         return $post;
     }
@@ -1249,6 +1263,14 @@ class Post extends AbstractModel {
             $vc++;
             return PostMeta::edit(['name' => 'viewCount', 'value' => $vc, 'post' => $id]);
         }
+    }
+
+    public static function lockPostForEdit(){
+
+    }
+
+    public static function unlockPostAfterEdit(){
+
     }
 
     /**
