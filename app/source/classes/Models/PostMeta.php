@@ -89,6 +89,21 @@ class PostMeta extends AbstractModel {
     }
 
     public static function delete($data){
+        $post = $data['post'];
+        $name = $data['name'];
 
+        if (!$post){
+            throw new \Exception('No post present!');
+        }
+
+        if (!$name){
+            throw new \Exception('No post present!');
+        }
+
+        try {
+            return self::getModel()->delete(['post' => $post, 'name' => $name]);
+        } catch(\Exception $e){
+
+        }
     }
 }
