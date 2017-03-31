@@ -24,15 +24,23 @@
             {{title}}
         </div>
         <div class="description">
-            {{#admin_author author}}
-                {{#if avatar}}
-                    <img class="avatar" src="{{url avatar}}" title="{{name}}">
-                {{else}}
-                    <span class="avatar" title="{{name}}">
-                        <i class="fa fa-user"></i>
+            {{#if meta.lock}}
+                {{#admin_author meta.lock.0}}
+                    <span class="avatar" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
+                        <i class="fa fa-lock"></i>
                     </span>
-                {{/if}}
-            {{/admin_author}}
+                {{/admin_author}}
+            {{else}}
+                {{#admin_author author}}
+                    {{#if avatar}}
+                        <img class="avatar" src="{{url avatar}}" title="{{name}}">
+                    {{else}}
+                        <span class="avatar" title="{{name}}">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    {{/if}}
+                {{/admin_author}}
+            {{/if}}
             <span class="date">
                 {{date format="%B %e, %Y"}}
             </span>
