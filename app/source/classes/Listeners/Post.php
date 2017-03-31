@@ -11,10 +11,12 @@ namespace Leafpub\Listeners;
 use Leafpub\Events\Post\Add,
     Leafpub\Events\Post\Added,
     Leafpub\Events\Post\BeforeRender,
+    Leafpub\Events\Post\PostViewed,
     Leafpub\Leafpub,
-    Leafpub\Setting,
-    Leafpub\User,
-    Leafpub\Post as P;
+    Leafpub\Models\Setting,
+    Leafpub\Models\User,
+    Leafpub\Models\Post as P,
+    Leafpub\Models\PostMeta;
 
 class Post {
     
@@ -36,6 +38,12 @@ class Post {
         
         $event->setEventData($data);
         */
+    }
+
+    public function onPostViewed(PostViewed $event){
+        $data = $event->getEventData();
+        $slug = $data['post'];
+        P::increaseViewCount($slug);
     }
 
     private function _generateLDJson($post, $author){
