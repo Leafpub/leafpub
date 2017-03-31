@@ -28,6 +28,8 @@ return [
             // Try this.date
             if(isset($options['_this']['pub_date'])) {
                 $date = $options['_this']['pub_date'];
+            } elseif ($options['hash']['date']) {
+                $date = $options['hash']['date'];
             } else {
                 // Fallback to the current date/time
                 $date = date('Y-m-d H:i:s');
