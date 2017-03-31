@@ -37,6 +37,7 @@ class PostMeta extends AbstractModel {
 
         try {
             $data = self::getModel()->select(['post' => $slug])->toArray();
+            return $data;
         } catch(\Exception $e){
 
         }
