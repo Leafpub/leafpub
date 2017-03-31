@@ -22,7 +22,7 @@ class PostMeta extends CreateTable {
             new \Zend\Db\Sql\Ddl\Column\Integer('post'), 
             new \Zend\Db\Sql\Ddl\Column\Varchar('name', 50), 
             new \Zend\Db\Sql\Ddl\Column\Varchar('value', 191),
-            new \Zend\Db\Sql\Ddl\Column\Datetime('created', false, new \Zend\Db\Sql\Expression('NOW()')),
+            new \Zend\Db\Sql\Ddl\Column\Timestamp('created', false, new \Zend\Db\Sql\Expression('NOW()')),
         ];
 
         $this->constraints = [
