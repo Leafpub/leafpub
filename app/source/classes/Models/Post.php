@@ -1122,6 +1122,15 @@ class Post extends AbstractModel {
             foreach($meta as $met){
                 $ret[$met['name']] = [$met['value'], $met['created']];
             }
+            if (isset($ret['lock'])){
+                $time = strtotime($ret['lock'][1]);
+                $diff = date('U') - $time;
+                // If difference between lock date and now is gt 1 unlock automatically
+                if (round($diff / (3600*24)) >= 1){
+                    self::unlockPostAfterEdit($post_id);
+                    unset($ret['lock']);
+                }    
+            }
             return $ret;
         } catch(\Exception $e){
             Leafpub::getLogger()->debug($e->getMessage());
@@ -1265,12 +1274,24 @@ class Post extends AbstractModel {
         }
     }
 
-    public static function lockPostForEdit(){
-
+    public static function lockPostForEdit($post_id){
+        try{
+            PostMeta::create([
+                'post' => $post_id,
+                'name' => 'lock',
+                'value' => Session::user('slug')
+            ]);
+        } catch(\Exception $e){
+            return false;
+        }
     }
 
-    public static function unlockPostAfterEdit(){
-
+    public static function unlockPostAfterEdit($post_id){
+        try{
+            return PostMeta::delete(['post' => $post_id, 'name' => 'lock']);
+        } catch(\Exception $e){
+            return false;
+        }
     }
 
     /**
