@@ -118,6 +118,7 @@ class Leafpub {
         self::on(Events\Post\Add::NAME, array($postListener, 'onPostAdd'));
         self::on(Events\Post\Added::NAME, array($postListener, 'onPostAdded'));
         self::on(Events\Post\BeforeRender::NAME, array($postListener, 'onBeforeRender'));
+        self::on(Events\Post\PostViewed::NAME, array($postListener, 'onPostViewed'));
 
         // Handle thumbnail generation
         self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Models\Upload::handleThumbnail', -999);
