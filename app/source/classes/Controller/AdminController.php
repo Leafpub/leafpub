@@ -279,6 +279,13 @@ class AdminController extends Controller {
             return $this->notFound($request, $response);
         }
 
+        // Post is locked by another user
+        if (isset($post['meta']['lock']) && $post['meta']['lock'][0] !== Session::user('slug')){
+            return $this->notFound($request, $response);
+        } elseif(!isset($post['meta']['lock'])){
+            Post::lockPostForEdit($post['id']);
+        }
+        
         $html = Admin::render('posts.edit', [
             'title' => Language::term('edit_post'),
             'scripts' => ['editor.min.js', 'posts.edit.min.js'],
