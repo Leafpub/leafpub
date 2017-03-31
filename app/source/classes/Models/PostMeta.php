@@ -55,7 +55,7 @@ class PostMeta extends AbstractModel {
         try {
             $data = self::getModel()->select(['post' => $slug, 'name' => $name]);
             if ($data){
-                return $data->current()['value'];
+                return $data->current();
             }
         } catch(\Exception $e){
 

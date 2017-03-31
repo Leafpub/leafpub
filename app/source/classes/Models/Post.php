@@ -1242,7 +1242,7 @@ class Post extends AbstractModel {
 
     public static function increaseViewCount($slug){
         $id = self::getOne($slug)['id'];
-        $vc = PostMeta::getOne(['post' => $id, 'name' => 'viewCount']);
+        $vc = PostMeta::getOne(['post' => $id, 'name' => 'viewCount'])['value'];
         if (!$vc){
             return PostMeta::create(['name' => 'viewCount', 'value' => 1, 'post' => $id]);
         } else {
