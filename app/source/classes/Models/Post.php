@@ -13,6 +13,7 @@ use Leafpub\Leafpub,
     Leafpub\Theme,
     Leafpub\Renderer,
     Leafpub\Session,
+    Leafpub\Models\PostMeta,
     Leafpub\Events\Post\Add,
     Leafpub\Events\Post\Added,
     Leafpub\Events\Post\Update,
@@ -1236,6 +1237,17 @@ class Post extends AbstractModel {
             return self::getModel()->update(['author' => $newAuthorId], ['author' => $oldAuthorId]);
         } catch (\Exception $e){
             return false;
+        }
+    }
+
+    public static function increaseViewCount($slug){
+        $id = self::getOne($slug)['id'];
+        $vc = PostMeta::getOne(['post' => $id, 'name' => 'viewCount']);
+        if (!$vc){
+            return PostMeta::create(['name' => 'viewCount', 'value' => 1, 'post' => $id]);
+        } else {
+            $vc++;
+            return PostMeta::edit(['name' => 'viewCount', 'value' => $vc, 'post' => $id]);
         }
     }
 
