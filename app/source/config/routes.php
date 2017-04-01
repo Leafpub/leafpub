@@ -38,6 +38,7 @@ $app->group("/api", function() {
     $this->delete('/posts/{slug}', 'Leafpub\Controller\APIController:deletePost');
     $this->get('/posts/render', 'Leafpub\Controller\APIController:renderPost');
     $this->post('/posts/render', 'Leafpub\Controller\APIController:renderPost');
+    $this->get('/posts/unlock/{slug}', 'Leafpub\Controller\APIController:unlockPost');
 
     // Plugins
     $this->get('/plugins', 'Leafpub\\Controller\\APIController:getPlugins');

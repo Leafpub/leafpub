@@ -504,6 +504,12 @@ $(function() {
                     // Remove save confirmation and redirect
                     window.onbeforeunload = null;
                     if (saveAction === 'pb'){
+                        if (post){
+                            $.ajax({
+                                type: 'GET',
+                                url: Leafpub.url('api/posts/unlock/' + encodeURIComponent(post)),
+                            });
+                        }
                         location.href = Leafpub.adminUrl('posts');
                     } else {
                         if (type === 'POST'){

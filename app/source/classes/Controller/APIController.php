@@ -470,6 +470,17 @@ class APIController extends Controller {
             ->write($html);
     }
 
+    public function unlockPost($request, $response, $args){
+        $post = Post::getOne($args['slug']);
+        if($post['meta']['lock'][0] === Session::user('slug')) {
+            return $response->withJson([
+                'success' => Post::unlockPostAfterEdit($post['id'])
+            ]);
+        }
+
+        return $response->withJson(['success' => false]);
+    }
+
     public function activatePlugin($request, $response, $args){
         if (!Session::isRole(['owner', 'admin'])){
             return $response->withJson([
