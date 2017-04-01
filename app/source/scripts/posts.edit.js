@@ -329,7 +329,7 @@ $(function() {
 
                         // Insert into content
                         if(target === 'content') {
-                            if(res.uploaded[0].filename.match(/\.(gif|jpg|jpeg|png|svg)$/i)) {
+                            if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
                                 // Insert image
                                 contentEditor.image('insert', {
                                     src: res.uploaded[0].relative_path,
