@@ -353,7 +353,9 @@ class Post extends AbstractModel {
         $tags = $post['tags'];
         unset($post['tags']);
         unset($post['tag_data']);
-
+        unset($post['media']);
+        unset($post['meta']);
+        
         // Parse publish date format and convert to UTC
         $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
 
