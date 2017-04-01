@@ -505,6 +505,7 @@ $(function() {
                     window.onbeforeunload = null;
                     if (saveAction === 'pb'){
                         if (post){
+                            // Only call unlock if we're saving a post after edit
                             $.ajax({
                                 type: 'GET',
                                 url: Leafpub.url('api/posts/unlock/' + encodeURIComponent(post)),
