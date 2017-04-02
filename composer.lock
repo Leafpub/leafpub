@@ -140,16 +140,16 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "20ff8bbb57205368b4b42d094642a3e52dac85fb"
+                "reference": "1bf24f7334fe16c88bf9d467863309ceaf285b01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/20ff8bbb57205368b4b42d094642a3e52dac85fb",
-                "reference": "20ff8bbb57205368b4b42d094642a3e52dac85fb",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/1bf24f7334fe16c88bf9d467863309ceaf285b01",
+                "reference": "1bf24f7334fe16c88bf9d467863309ceaf285b01",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +178,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2016-11-02T15:56:58+00:00"
+            "time": "2017-03-29T16:04:15+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -774,16 +774,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.5.5",
+            "version": "4.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "d6dda8ceadf741fce2cf808790080a589877d6e6"
+                "reference": "87a20625963d051cce993130c6d8ebd5fbc96314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/d6dda8ceadf741fce2cf808790080a589877d6e6",
-                "reference": "d6dda8ceadf741fce2cf808790080a589877d6e6",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/87a20625963d051cce993130c6d8ebd5fbc96314",
+                "reference": "87a20625963d051cce993130c6d8ebd5fbc96314",
                 "shasum": ""
             },
             "type": "component",
@@ -816,7 +816,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2017-03-07T13:29:55+00:00"
+            "time": "2017-03-30T13:48:40+00:00"
         },
         {
             "name": "zendframework/zend-db",
@@ -922,28 +922,28 @@
         },
         {
             "name": "zordius/lightncandy",
-            "version": "v1.0.3",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "90ab6929d2c2984562dbae748a50a14866f26daa"
+                "reference": "f859bd752699642f4c110ee8b14187ab92200bde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/90ab6929d2c2984562dbae748a50a14866f26daa",
-                "reference": "90ab6929d2c2984562dbae748a50a14866f26daa",
+                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/f859bd752699642f4c110ee8b14187ab92200bde",
+                "reference": "f859bd752699642f4c110ee8b14187ab92200bde",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.0.17"
+                "phpunit/phpunit": "4.8.35"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.4-dev"
+                    "dev-master": "1.1.1-dev"
                 }
             },
             "autoload": {
@@ -970,7 +970,7 @@
                 "php",
                 "template"
             ],
-            "time": "2017-03-07T02:52:29+00:00"
+            "time": "2017-03-22T04:54:38+00:00"
         }
     ],
     "packages-dev": [],
