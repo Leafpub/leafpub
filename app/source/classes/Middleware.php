@@ -165,4 +165,11 @@ class Middleware {
         return $next($request, $response);
     }
 
+    public function updateRegister($request, $response, $next){
+        $time = Setting::getOne('updateTime');
+        if ($time === date('H:i:s')){
+            \Leafpub\Update::updateRegisterFiles();
+        } 
+        return $next($request, $response);
+    }
 }
