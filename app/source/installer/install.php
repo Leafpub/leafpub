@@ -214,6 +214,7 @@ Models\Setting::create(['name' => 'twitter', 'value' => '']);
 Models\Setting::create(['name' => 'password_min_length', 'value' => '8']);
 Models\Setting::create(['name' => 'mailer', 'value' => 'default']);
 Models\Setting::create(['name' => 'schemeVersion', 'value' => LEAFPUB_SCHEME_VERSION]);
+Models\Setting::create(['name' => 'updateTime', 'value' => '03:00:00']);
 
 // Insert owner
 try {
