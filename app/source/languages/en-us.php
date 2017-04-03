@@ -323,5 +323,6 @@ return [
     'thousands_separator' => ',',
 
     'language_code' => 'en-us',
-    'language_name' => 'English (US)'
+    'language_name' => 'English (US)',
+    'language_version' => '1.0.0'
 ];
