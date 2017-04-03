@@ -63,7 +63,8 @@ class Language extends Leafpub {
                 if(isset($lang['language_code']) && isset($lang['language_name'])) {
                     $languages[] = [
                         'name' => $lang['language_name'],
-                        'code' => $lang['language_code']
+                        'code' => $lang['language_code'],
+                        'version' => $lang['language_version'] ?: '0.0.0'
                     ];
                 }
             }
