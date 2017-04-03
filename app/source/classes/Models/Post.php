@@ -13,6 +13,7 @@ use Leafpub\Leafpub,
     Leafpub\Theme,
     Leafpub\Renderer,
     Leafpub\Session,
+    Leafpub\Models\PostMeta,
     Leafpub\Events\Post\Add,
     Leafpub\Events\Post\Added,
     Leafpub\Events\Post\Update,
@@ -340,7 +341,12 @@ class Post extends AbstractModel {
             return false;
         }
 
-        $slug = $properties['slug'];
+        if (isset($properties['oldSlug'])){
+            $slug = $properties['oldSlug'];
+            unset($properties['oldSlug']);
+        } else {
+            $slug = $properties['slug'];
+        }
         // Get the post
         $post = self::getOne($slug);
         if(!$post) {
@@ -352,7 +358,9 @@ class Post extends AbstractModel {
         $tags = $post['tags'];
         unset($post['tags']);
         unset($post['tag_data']);
-
+        unset($post['media']);
+        unset($post['meta']);
+        
         // Parse publish date format and convert to UTC
         $post['pub_date'] = Leafpub::localToUtc(Leafpub::parseDate($post['pub_date']));
 
@@ -388,7 +396,7 @@ class Post extends AbstractModel {
         // Change the slug?
         if($post['slug'] !== $slug) {
             // Enforce slug syntax
-            $post['slug'] = self::slug($post['slug']);
+            $post['slug'] = Leafpub::slug($post['slug']);
 
             // Is the slug valid?
             if(!mb_strlen($post['slug']) || Leafpub::isProtectedSlug($post['slug'])) {
@@ -1115,6 +1123,28 @@ class Post extends AbstractModel {
        }
     }
 
+    private static function getPostMeta($post_id){
+        try{
+            $meta = PostMeta::getMany(['post' => $post_id]);
+            foreach($meta as $met){
+                $ret[$met['name']] = [$met['value'], $met['created']];
+            }
+            if (isset($ret['lock'])){
+                $time = strtotime($ret['lock'][1]);
+                $diff = date('U') - $time;
+                // If difference between lock date and now is gt 1 unlock automatically
+                if (round($diff / (3600*24)) >= 1){
+                    self::unlockPostAfterEdit($post_id);
+                    unset($ret['lock']);
+                }    
+            }
+            return $ret;
+        } catch(\Exception $e){
+            Leafpub::getLogger()->debug($e->getMessage());
+            return false;
+        }
+    }
+
     /**
     * Normalize data types for certain fields
     *
@@ -1135,7 +1165,8 @@ class Post extends AbstractModel {
 
         // Append tags
         $post['tags'] = self::getTags($post['id']);
-        $posts['media'] = self::getUploads($post['id']);
+        $post['media'] = self::getUploads($post['id']);
+        $post['meta'] = self::getPostMeta($post['id']);
 
         return $post;
     }
@@ -1235,6 +1266,37 @@ class Post extends AbstractModel {
         try {
             return self::getModel()->update(['author' => $newAuthorId], ['author' => $oldAuthorId]);
         } catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public static function increaseViewCount($slug){
+        $id = self::getOne($slug)['id'];
+        $vc = PostMeta::getOne(['post' => $id, 'name' => 'viewCount'])['value'];
+        if (!$vc){
+            return PostMeta::create(['name' => 'viewCount', 'value' => 1, 'post' => $id]);
+        } else {
+            $vc++;
+            return PostMeta::edit(['name' => 'viewCount', 'value' => $vc, 'post' => $id]);
+        }
+    }
+
+    public static function lockPostForEdit($post_id){
+        try{
+            PostMeta::create([
+                'post' => $post_id,
+                'name' => 'lock',
+                'value' => Session::user('slug')
+            ]);
+        } catch(\Exception $e){
+            return false;
+        }
+    }
+
+    public static function unlockPostAfterEdit($post_id){
+        try{
+            return PostMeta::delete(['post' => $post_id, 'name' => 'lock']);
+        } catch(\Exception $e){
             return false;
         }
     }
