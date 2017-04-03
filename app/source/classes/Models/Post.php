@@ -341,7 +341,13 @@ class Post extends AbstractModel {
             return false;
         }
 
-        $slug = $properties['slug'];
+        if (isset($properties['oldSlug'])){
+            $slug = $properties['oldSlug'];
+            unset($properties['oldSlug']);
+        } else {
+            $slug = $properties['slug'];
+        }
+
         // Get the post
         $post = self::getOne($slug);
         if(!$post) {
@@ -391,7 +397,7 @@ class Post extends AbstractModel {
         // Change the slug?
         if($post['slug'] !== $slug) {
             // Enforce slug syntax
-            $post['slug'] = self::slug($post['slug']);
+            $post['slug'] = Leafpub::slug($post['slug']);
 
             // Is the slug valid?
             if(!mb_strlen($post['slug']) || Leafpub::isProtectedSlug($post['slug'])) {

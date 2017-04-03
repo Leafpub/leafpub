@@ -258,7 +258,12 @@ class APIController extends Controller {
         $params = $request->getParams();
         $properties = $params['properties'];
         $slug = $action === 'add' ? $properties['slug'] : $args['slug'];
-        $properties['slug'] = $slug;
+        
+        if ($slug !== $properties['slug']){
+            $properties['oldSlug'] = $slug;
+        } else {
+            $properties['slug'] = $slug;
+        }
 
         if ($properties['author'] === '=quick='){
             $properties['author'] = Session::user('slug');
