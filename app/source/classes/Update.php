@@ -9,6 +9,8 @@
 
 namespace Leafpub;
 
+use Composer\Semver\Comparator;
+
 class Update extends Leafpub {
     const GITHUB_API_URL = 'https://api.github.com/repos/';
     //const REPO_URL = 'repos/:owner/:repo/';
@@ -41,8 +43,9 @@ class Update extends Leafpub {
     public static function checkForLeafpubUpdate(){
         $url = self::generateApiUrl('https://github.com/Leafpub/leafpub'. self::RELEASE_UPDATE_URL);
         $cls = json_decode(self::getRemoteData($url));
-        if ($cls->tag_name > LEAFPUB_VERSION){
-            return self::downloadZip($cls->assets[0]->url, self::path('content/uploads/' . $cls->assets[0]->name));
+        if (Comparator::greaterThan($cls->tag_name, LEAFPUB_VERSION)){
+            return $cls->tag_name;
+            //return self::downloadZip($cls->assets[0]->url, self::path('content/uploads/' . $cls->assets[0]->name));
         } else {
             return false;
         }
@@ -51,25 +54,41 @@ class Update extends Leafpub {
     protected function checkPluginsForUpdate(){
         $plugins = \Leafpub\Models\Plugin::getActivatedPlugins();
         $data = self::processJsonFile(self::path('source/config/plugins.json'));
-        $x = [];
+        $updatablePlugins = [];
         foreach($plugins as $plugin){
             if (isset($data[$plugin['name']])){
-                $x[$plugin['name']] = ['url' => $data[$plugin['name']], 'version' => $plugin['version']];
+                $url = self::generateApiUrl($data[$plugin['name']] . self::RELEASE_UPDATE_URL);
+                $cls = json_decode(self::getRemoteData($url));
+                if ($cls){
+                    if (Comparator::greaterThan($cls->tag_name, $plugin['version'])){
+                        $updatablePlugins[$plugin['name']] = ['url' => $data[$plugin['name']], 'oldVersion' => $plugin['version'], 'newVersion'=> $cls->tag_name];
+                    }
+                }
             }
         }
-        exit(
-            var_dump(
-                $x
-            )
-        );
+        return $updatablePlugins;
     }
 
     protected static function checkLanguagesForUpdate(){
-
+        $languages = Language::getAll();
+        $data = self::processJsonFile(self::path('source/config/languages.json'));
+        $updatableLanguages = [];
+        foreach($languages as $language){
+            if (isset($data[$language['code']])){
+                $url = self::generateApiUrl($data[$plugin['code']] . self::RELEASE_UPDATE_URL);
+                $cls = json_decode(self::getRemoteData($url));
+                if ($cls){
+                    if (Comparator::greaterThan($cls->tag_name, $language['version'])){
+                        $updatableLanguages[$language['name']] = ['url' => $data[$plugin['code']], 'oldVersion' => $language['version'], 'newVersion'=> $cls->tag_name];
+                    }
+                }
+            }
+        }
+        return $updatableLanguages;
     }
 
     protected static function checkThemesForUpdate(){
-
+        return false;
     }
     
     protected static function getRemoteData($url){
