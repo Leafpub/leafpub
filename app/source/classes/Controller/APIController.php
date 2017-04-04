@@ -22,6 +22,7 @@ use Leafpub\Admin,
     Leafpub\Theme,
     Leafpub\Importer,
     Leafpub\Mailer,
+    Leafpub\Update,
     Leafpub\Widget,
     Leafpub\Mailer\Mail\MailFactory,
     Leafpub\Mailer\Mail\AddressFactory,
@@ -1745,7 +1746,7 @@ class APIController extends Controller {
         ]);
     }
 
-    public function setDashboard($request, $response, $next){
+    public function setDashboard($request, $response, $args){
         try {
             $data = $request->getParams('data');
             Leafpub::getLogger()->debug($data['data']);
@@ -1761,7 +1762,7 @@ class APIController extends Controller {
         }
     }
 
-    public function getWidget($request, $response, $next){
+    public function getWidget($request, $response, $args){
         $widget = $request->getParam('widget');
 
         $html = Widget::getWidget($widget);
@@ -1771,5 +1772,18 @@ class APIController extends Controller {
                 'html' => $html
             ]);
         }
+    }
+
+    public function updateCheck($request, $response, $args){
+        $updates = Update::checkForUpdates();
+
+        $html = Admin::render('partials/update-table',[
+            'updates' => $updates
+        ]);
+
+        return $response->withJson([
+            'success' => true,
+            'html' => $html
+        ]);
     }
 }

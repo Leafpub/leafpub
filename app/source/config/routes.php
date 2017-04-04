@@ -90,6 +90,7 @@ $app->group("/api", function() {
 
     // Database update
     $this->post('/update', 'Leafpub\Controller\APIController:updateLeafpubDatabase');
+    $this->get('/update-check', 'Leafpub\Controller\APIController:updateCheck');
     
     $this->post('/dashboard', 'Leafpub\Controller\APIController:setDashboard');
     
