@@ -43,6 +43,12 @@
                     <span class="hidden-sm-down">{{L 'backups'}}</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#updates" role="tab" data-toggle="tab">
+                    <i class="fa fa-update hidden-sm-up"></i>
+                    <span class="hidden-sm-down">{{L 'updates'}}</span>
+                </a>
+            </li>
         </ul>
 
         {{!-- Tab panes --}}
@@ -306,6 +312,11 @@
                         <div class="available-backups mt-2">
                             {{> backups-table}}
                         </div>
+                    </div>
+                    {{!-- Updates --}}
+                    <div class="tab-pane" id="updates" role="tabpanel">
+                        <i class="loader loader-lg check-updates-loader" hidden></i>
+                        <div class="available-updates"></div>
                     </div>
                 </div>
             </div>

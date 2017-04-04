@@ -1,0 +1,56 @@
+{{#if updates}}
+
+    {{#if updates.Leafpub}}
+    <h3>Leafpub</h3>
+    <table class="table table-bordered">
+        <tr>
+            <td>Update Leafpub</td>
+            <td>New version: {{updates.Leafpub}}</td>
+            <td><a href="#" class="update-leafpub"><i class="fa fa-cloud-download"></i></a></td>
+        </tr>
+    </table>
+    {{/if}}
+    {{#if updates.plugins}}
+    <h3>Plugins</h3>
+    <table class="table table-bordered">
+    {{#each updates.plugins}}
+        <tr>
+            <td>Update {{name}}</td>
+            <td>New Version: {{newVersion}}</td>
+            <td><a href="{{url}}" class="update-plugin"><i class="fa fa-cloud-download"></i></a></td>
+        </tr>
+    {{/each}}
+    </table>
+    {{/if}}
+    {{#if updates.themes}}
+    <h3>Themes</h3>
+    <table class="table table-bordered">
+    {{#each updates.themes}}
+        <tr>
+            <td>Update {{name}}</td>
+            <td>New Version: {{newVersion}}</td>
+            <td><a href="{{url}}" class="update-theme"><i class="fa fa-cloud-download"></i></a></td>
+        </tr>
+    {{/each}}
+    </table>
+    {{/if}}
+    {{#if updates.languages}}
+    <h3>Languages</h3>
+    <table class="table table-bordered">
+    {{#each updates.languages}}
+        <tr>
+            <td>Update {{name}}</td>
+            <td>New Version: {{newVersion}}</td>
+            <td><a href="{{url}}" class="update-language"><i class="fa fa-cloud-download"></i></a></td>
+        </tr>
+    {{/each}}
+    </table>
+    {{/if}}
+{{else}}
+    <div class="backups-table-none valign">
+        <div class="valign-middle">
+            <i class="fa fa-archive"></i>
+            {{L 'no_backups'}}
+        </div>
+    </div>
+{{/if}}
