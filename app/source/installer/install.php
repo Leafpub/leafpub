@@ -10,6 +10,8 @@ if(Leafpub::isInstalled() || $_REQUEST['cmd'] !== 'install') {
     exit();
 }
 
+define('LEAFPUB_IS_INSTALLING', 1);
+
 // Send a JSON response
 header('Content-Type: application/json');
 

@@ -874,7 +874,13 @@ class Leafpub {
     *
     **/
     public static function getTableNames() {
-        switch(Models\Setting::getOne('schemeVersion')){
+        // If we're installing, we need the latest table version...
+        if (defined(LEAFPUB_IS_INSTALLING)){
+            $version = LEAFPUB_SCHEME_VERSION;
+        } else {
+            $version = Models\Setting::getOne('schemeVersion') ?: 0;
+        }
+        switch($version){
             case 0:
                 $tables = ['History', 'PostTags', 'Post', 'Setting', 'Tag', 'Upload', 'User'];
                 break;
