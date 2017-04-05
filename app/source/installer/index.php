@@ -18,6 +18,7 @@ if(Leafpub::isInstalled()) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, maximum-scale=1, minimal-ui">
     <link rel="shortcut icon" href="../assets/img/logo-color.png">
     <link rel="stylesheet" href="../assets/css/lib.css">
+    <script src="../assets/js/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,600,600italic">
 </head>
 <body class="no-menu">
