@@ -875,7 +875,7 @@ class Leafpub {
     **/
     public static function getTableNames() {
         // If we're installing, we need the latest table version...
-        if (defined(LEAFPUB_IS_INSTALLING)){
+        if (defined('LEAFPUB_IS_INSTALLING')){
             $version = LEAFPUB_SCHEME_VERSION;
         } else {
             $version = Models\Setting::getOne('schemeVersion') ?: 0;
