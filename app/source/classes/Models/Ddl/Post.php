@@ -21,8 +21,8 @@ class Post extends CreateTable {
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]), 
             new \Zend\Db\Sql\Ddl\Column\Varchar('slug', 191), 
-            new \Zend\Db\Sql\Ddl\Column\Datetime('created', false, new \Zend\Db\Sql\Expression('NOW()')),
-            new \Zend\Db\Sql\Ddl\Column\Datetime('pub_date', false, new \Zend\Db\Sql\Expression('NOW()')),
+            new \Zend\Db\Sql\Ddl\Column\Datetime('created', false), //new \Zend\Db\Sql\Expression('NOW()')), NEEDS MySQL 5.6+
+            new \Zend\Db\Sql\Ddl\Column\Datetime('pub_date', false), //new \Zend\Db\Sql\Expression('NOW()')), NEEDS MySQL 5.6+
             new \Zend\Db\Sql\Ddl\Column\Integer('author'),
             new \Zend\Db\Sql\Ddl\Column\Text('title'),
             new Column\Longtext('content'),
