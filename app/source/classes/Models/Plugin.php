@@ -12,9 +12,7 @@ namespace Leafpub\Models;
 use DirectoryIterator,
     ZipArchive,
     Composer\Semver\Comparator,
-    Leafpub\Leafpub,
-    Leafpub\Model\Setting,
-    Leafpub\Renderer;
+    Leafpub\Leafpub;
 
 class Plugin extends AbstractModel {
     protected static $_instance;
