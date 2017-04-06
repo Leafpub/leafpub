@@ -370,6 +370,35 @@ $(function() {
             }
         });
     }
+    
+    var connectEvents = function(){
+        $('.update').on('click', function(e){
+            e.preventDefault();
+            var el = $(this);
+            if (!request){
+                if (request) request.abort();
+                progress.go(50);
+                request = $.ajax({
+                    url: Leafpub.url('api/update'),
+                    type: 'PATCH',
+                    data: {
+                        name: el.data('name'),
+                        sign: el.data('sign')
+                    }
+                })
+                .done(function(res) {
+                    request = null;
+                    if (res.success){
+                        $(el).remove();
+                    }
+                })
+                .always(function() {
+                    // Hide progress
+                    progress.go(100);
+                });
+            }
+        });
+    };
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if (e.target.href.includes('#updates')){
@@ -381,6 +410,7 @@ $(function() {
             })
             .done(function(res){
                 $('.available-updates').html(res.html);
+                connectEvents();
             })
             .always(function(){
                 progress.go(100);
