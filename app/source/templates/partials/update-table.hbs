@@ -5,8 +5,8 @@
     <table class="table table-bordered">
         <tr>
             <td>Update Leafpub</td>
-            <td>New version: {{updates.Leafpub}}</td>
-            <td><a href="#" class="update-leafpub"><i class="fa fa-cloud-download"></i></a></td>
+            <td>New version: {{updates.Leafpub.newVersion}}</td>
+            <td><a href="#" class="btn btn-outline-primary update" data-name="Leafpub" data-sign="{{updates.Leafpub.data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     </table>
     {{/if}}
@@ -17,7 +17,7 @@
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="{{url}}" class="update-plugin"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
@@ -29,7 +29,7 @@
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="{{url}}" class="update-theme"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
@@ -41,16 +41,16 @@
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="{{url}}" class="update-language"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
     {{/if}}
 {{else}}
-    <div class="backups-table-none valign">
+    <div class="update-table-none valign">
         <div class="valign-middle">
-            <i class="fa fa-archive"></i>
-            {{L 'no_backups'}}
+            <i class="fa fa-cloud-download"></i>
+            {{L 'no_updates'}}
         </div>
     </div>
 {{/if}}
