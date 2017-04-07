@@ -176,14 +176,14 @@ class Update extends Leafpub {
         $data = self::processJsonFile(self::path('source/config/languages.json'));
         $updatableLanguages = [];
         foreach($languages as $language){
-            if (isset($data[$language['name']])){
-                $url = self::generateApiUrl($data[$language['name']] . self::RELEASE_UPDATE_URL);
+            if (isset($data[$language['code']])){
+                $url = self::generateApiUrl($data[$language['code']] . self::RELEASE_UPDATE_URL);
                 $cls = self::parseReleaseData(self::getRemoteData($url));
                 if ($cls){
                     if (Comparator::greaterThan($cls->tag_name, $language['version'])){
-                        $updatableLanguages[$language['name']] = [
-                            'name' => $language['name'], 
-                            'data' => self::encodeData(['link' => $data[$language['name']], 'oldVersion' => $language['version'], 'newVersion'=> $cls->tag_name, 'type' => self::UPDATE_TYPE_LANGUAGE]),
+                        $updatableLanguages[$language['code']] = [
+                            'name' => $language['code'], 
+                            'data' => self::encodeData(['link' => $data[$language['code']], 'oldVersion' => $language['version'], 'newVersion'=> $cls->tag_name, 'type' => self::UPDATE_TYPE_LANGUAGE]),
                             'newVersion'=> $cls->tag_name
                         ];
                     }
