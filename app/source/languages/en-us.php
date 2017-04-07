@@ -149,6 +149,7 @@ return [
     'no_posts' => 'No posts',
     'no_plugins' => "No plugins",
     'no_tags' => 'No tags',
+    'no_updates' => 'No updates',
     'no_uploads' => 'No uploads',
     'no_users' => 'No users',
     'none' => 'None',
@@ -241,6 +242,7 @@ return [
     'underline' => 'Underline',
     'undo' => 'Undo',
     'update' => 'Update Leafpub',
+    'updates' => 'Updates',
     'upload_failed' => 'Upload failed',
     'upload' => 'Upload',
     'uploads' => 'Uploads',
@@ -324,5 +326,5 @@ return [
 
     'language_code' => 'en-us',
     'language_name' => 'English (US)',
-    'language_version' => '1.0.0'
+    'language_version' => '1.2.0'
 ];
