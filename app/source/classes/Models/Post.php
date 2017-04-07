@@ -32,7 +32,8 @@ class Post extends AbstractModel {
     protected static $allowedCaller = [
         'Leafpub\\Controller\\AdminController', 
         'Leafpub\\Controller\\APIController',
-        'Leafpub\\Models\\Post'
+        'Leafpub\\Models\\Post',
+        'Leafpub\\Importer\\AbstractImporter'
     ];
     
     /**

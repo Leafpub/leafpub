@@ -31,7 +31,8 @@ class Tag extends AbstractModel {
         'Leafpub\\Controller\\AdminController', 
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\Post',
-        'Leafpub\\Models\\Tag'
+        'Leafpub\\Models\\Tag',
+        'Leafpub\\Importer\\AbstractImporter'
     ];
 
     /**
