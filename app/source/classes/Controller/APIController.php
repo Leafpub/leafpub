@@ -1775,8 +1775,34 @@ class APIController extends Controller {
     }
 
     public function updateCheck($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withStatus(403);
+        }
         $updates = Update::checkForUpdates();
-
+        /*
+        $updates = [
+            'Leafpub' => [
+                    'newVersion' => '1.1.8',
+                    'data' => Update::encodeData(['link' => 'https://github.com/Leafpub/leafpub', 'newVersion' => '1.1.8', 'type' => 'core'])
+                ],
+            'plugins' => ['SwiftMailer' => [
+                'name' => 'SwiftMailer',
+                'data' => Update::encodeData(['link' => 'https://github.com/Leafpub/SwiftMailer', 'oldVersion' => '1.0.0', 'newVersion' => '1.0.0', 'type' => 'plugin']),
+                'newVersion' => '1.0.1'],
+            ],
+            'languages' => ['de-de' => [
+                'name' => 'de-de', 
+                'data' => Update::encodeData(['link' => 'https://github.com/Leafpub/SwiftMailer', 'oldVersion' => '1.0.0', 'newVersion' => '1.0.1', 'type' => 'language']),
+                'newVersion' => '1.0.1']
+            ],
+            'themes' => ['Range' => [
+                'name' => 'Range', 
+                'data' => Update::encodeData(['link' => 'https://github.com/Leafpub/SwiftMailer', 'oldVersion' => '1.0.0', 'newVersion' => '1.0.1', 'type' => 'theme']),
+                'newVersion' => '1.0.1']
+            ]
+        ];
+        */
+        
         $html = Admin::render('partials/update-table',[
             'updates' => $updates
         ]);
@@ -1785,5 +1811,15 @@ class APIController extends Controller {
             'success' => true,
             'html' => $html
         ]);
+    }
+
+    public function runUpdate($request, $response, $args){
+        if (!Session::isRole(['owner', 'admin'])){
+            return $response->withStatus(403);
+        }
+        $params = $request->getParams();
+        $bRet = Update::doUpdate($params);
+
+        return $respons->withJson(['success' => $bRet]);
     }
 }
