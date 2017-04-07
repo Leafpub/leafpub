@@ -50,7 +50,7 @@ $media-list-item-image-size: 4rem;
 }
 
 // Backups table
-.backups-table {
+.backups-table, .updates-table {
     td,
     th {
         vertical-align: middle;
@@ -60,7 +60,24 @@ $media-list-item-image-size: 4rem;
     }
 }
 
-.backups-table-none {
+.updates-table {
+    .update {
+        font-size: 1.5rem;
+    }
+    tr {
+        td {
+            width: 10rem;
+        }
+        td:nth-child(1){
+            width: 50rem;
+        }
+        td:nth-child(2){
+            width: 40rem;
+        }
+    }
+}
+
+.backups-table-none, .updates-table-none {
     text-align: center;
     font-size: 1.2rem;
     border: dashed 2px #ddd;
