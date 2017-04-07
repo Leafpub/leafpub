@@ -1,53 +1,52 @@
 {{#if updates}}
-
     {{#if updates.Leafpub}}
     <h3>Leafpub</h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered updates-table">
         <tr>
             <td>Update Leafpub</td>
             <td>New version: {{updates.Leafpub.newVersion}}</td>
-            <td><a href="#" class="btn btn-outline-primary update" data-name="Leafpub" data-sign="{{updates.Leafpub.data}}"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="update" data-name="Leafpub" data-sign="{{updates.Leafpub.data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     </table>
     {{/if}}
     {{#if updates.plugins}}
     <h3>Plugins</h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered updates-table">
     {{#each updates.plugins}}
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
     {{/if}}
     {{#if updates.themes}}
     <h3>Themes</h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered updates-table">
     {{#each updates.themes}}
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
     {{/if}}
     {{#if updates.languages}}
     <h3>Languages</h3>
-    <table class="table table-bordered">
+    <table class="table table-bordered updates-table">
     {{#each updates.languages}}
         <tr>
             <td>Update {{name}}</td>
             <td>New Version: {{newVersion}}</td>
-            <td><a href="#" class="btn btn-outline-primary update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
+            <td><a href="#" class="update" data-name="{{name}}" data-sign="{{data}}"><i class="fa fa-cloud-download"></i></a></td>
         </tr>
     {{/each}}
     </table>
     {{/if}}
 {{else}}
-    <div class="update-table-none valign">
+    <div class="updates-table-none valign">
         <div class="valign-middle">
             <i class="fa fa-cloud-download"></i>
             {{L 'no_updates'}}
