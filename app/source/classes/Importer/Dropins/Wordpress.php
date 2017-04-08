@@ -29,7 +29,7 @@ class Wordpress extends AbstractImporter {
         if (extension_loaded('simplexml')){
             $this->parseWithSimpleXml();
         } else {
-            throw new \Exception(Language::term('Extension simplexml needs to be installed!'));
+            throw new \Exception(\Leafpub\Language::term('Extension simplexml needs to be installed!'));
         }
         
 		foreach($this->_posts as &$post){
@@ -62,12 +62,12 @@ class Wordpress extends AbstractImporter {
 		}
 
 		if ( ! $success || isset( $dom->doctype ) ) {
-			return new \Exception(Language::term('There was an error when reading this file'), libxml_get_errors() );
+			return new \Exception(\Leafpub\Language::term('There was an error when reading this file'), libxml_get_errors() );
 		}
 
 		$parser = simplexml_import_dom( $dom );
 		if (!$parser){
-			return new \Exception(Language::term('There was an error when reading this file'), libxml_get_errors());
+			return new \Exception(\Leafpub\Language::term('There was an error when reading this file'), libxml_get_errors());
     	}
     
 		unset( $dom );
