@@ -36,12 +36,16 @@ $(function() {
                     { style: 'success' }
                 );
             } else {
-                // Show errors
-                var err = '';
-                res.failed.forEach(function(element){
-                    err += element[0] + ':<br>' + element[1] + '<br>';
-                });
-                $.alertable.alert(err, {html: true});
+                if (res.failed.length > 0){
+                    // Show errors
+                    var err = '';
+                    res.failed.forEach(function(element){
+                        err += element[0] + ':<br>' + element[1] + '<br>';
+                    });
+                    $.alertable.alert(err, {html: true});
+                } else {
+                    $.alertable.alert('Nothing imported!');
+                }
             }
         })
         .always(function() {
