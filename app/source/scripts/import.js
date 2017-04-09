@@ -39,9 +39,9 @@ $(function() {
                 // Show errors
                 var err = '';
                 res.failed.forEach(function(element){
-                    err += element[0] + ':\\n' + element[1] + '\\n';
+                    err += element[0] + ':<br>' + element[1] + '<br>';
                 });
-                $.alertable.alert(err);
+                $.alertable.alert(err, {html: true});
             }
         })
         .always(function() {
