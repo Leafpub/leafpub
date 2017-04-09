@@ -29,7 +29,8 @@ class User extends AbstractModel {
     protected static $allowedCaller = [
         'Leafpub\\Controller\\AdminController', 
         'Leafpub\\Controller\\APIController',
-        'Leafpub\\Models\\User'
+        'Leafpub\\Models\\User',
+        'Leafpub\\Importer\\AbstractImporter'
     ];
 
     /**
