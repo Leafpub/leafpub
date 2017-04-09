@@ -62,12 +62,12 @@ class Wordpress extends AbstractImporter {
 		}
 
 		if ( ! $success || isset( $dom->doctype ) ) {
-			return new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . libxml_get_errors() );
+			throw new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . $this->parseXmlError(libxml_get_errors()) );
 		}
 
 		$parser = simplexml_import_dom( $dom );
 		if (!$parser){
-			return new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . libxml_get_errors());
+			throw new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . $this->parseXmlError(libxml_get_errors()));
     	}
     
 		unset( $dom );
@@ -272,5 +272,29 @@ class Wordpress extends AbstractImporter {
 		//$content = preg_replace('/' . "\[\w(.+?)?\](?:(.+?)\[\/\w(.+?)?\])?" . '/', '', $content);
 		return $content;
     } 
+
+	private function parseXmlError(array $error){
+		foreach ($error as $e){
+			switch ($e->level) {
+				case LIBXML_ERR_WARNING:
+					$return .= "Warning $e->code: ";
+					break;
+				case LIBXML_ERR_ERROR:
+					$return .= "Error $e->code: ";
+					break;
+				case LIBXML_ERR_FATAL:
+					$return .= "Fatal Error $e->code: ";
+					break;
+			}
+
+			$return .= trim($e->message) .
+					"\n  Line: $e->line" .
+					"\n  Column: $e->column";
+
+			if ($e->file) {
+				$return .= "\n  File: $e->file";
+			}
+			$return .= "\n";
+		}
+	}
 }
-?>
