@@ -62,12 +62,12 @@ class Wordpress extends AbstractImporter {
 		}
 
 		if ( ! $success || isset( $dom->doctype ) ) {
-			return new \Exception(\Leafpub\Language::term('There was an error when reading this file'), libxml_get_errors() );
+			return new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . libxml_get_errors() );
 		}
 
 		$parser = simplexml_import_dom( $dom );
 		if (!$parser){
-			return new \Exception(\Leafpub\Language::term('There was an error when reading this file'), libxml_get_errors());
+			return new \Exception(\Leafpub\Language::term('There was an error when reading this file') . ': ' . libxml_get_errors());
     	}
     
 		unset( $dom );
