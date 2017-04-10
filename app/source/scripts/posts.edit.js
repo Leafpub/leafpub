@@ -502,8 +502,8 @@ $(function() {
                     { style: 'success' }
                 ).then(function() {
                     // Remove save confirmation and redirect
-                    window.onbeforeunload = null;
                     if (saveAction === 'pb'){
+                        window.onbeforeunload = null;
                         if (post){
                             // Only call unlock if we're saving a post after edit
                             $.ajax({
@@ -514,6 +514,7 @@ $(function() {
                         location.href = Leafpub.adminUrl('posts');
                     } else {
                         if (type === 'POST'){
+                            window.onbeforeunload = null;
                             location.href = Leafpub.adminUrl('posts/' + properties.slug);
                         }
                     }
@@ -974,7 +975,7 @@ $(function() {
     (function() {
         var btn = $('[data-editor="image"]'),
             bookmark,
-            //figure,
+            figure,
             //figcaption,
             image,
             width,
@@ -991,6 +992,7 @@ $(function() {
         .on('show.leafpub.panel', function() {
             var src,
                 href,
+                sign,
                 alt;
 
             // Get bookmark and selected element
@@ -998,9 +1000,10 @@ $(function() {
             image = contentEditor.getSelectedElement();//).closest('img');
             //figure = $(contentEditor.getSelectedElement()).closest('figure.image');
             //figcaption = figure.find('figcaption');
-            
+
             if ($(image).is('figure')) {
                 $('#image-caption').prop('checked', true);
+                
                 if ($(image.firstChild).is('a')){
                     image = image.firstChild;
                 }
@@ -1017,7 +1020,8 @@ $(function() {
             height = $(image).attr('height') || null;
             cssClass = $(image).attr('class') || null;
             //caption = $(figcaption).html();
-
+            sign = $(image).data('sign');
+            
             // Set alignment radios
             $('.image-align-none').trigger('click');
             if(image) {
@@ -1039,9 +1043,10 @@ $(function() {
             $('#image-class').val(cssClass);
             $('#image-constrain').prop('checked', true);
             $('.image-open').prop('hidden', href.length === 0);
-            //if (image){
+            $('#image-sign').val(sign);
+            if (image){
                 $('.delete-image').prop('hidden', !image.length);
-            //}
+            }
 
             // Toggle button state
             $(btn).addClass('active');
@@ -1080,7 +1085,7 @@ $(function() {
                 prepareEdit(values, type);
             },
             getValue: function() {
-                return $(this).attr('data-slug');
+                return [$(this).data('slug'), $(this).data('sign')];
             }
         });
 
@@ -1126,17 +1131,18 @@ $(function() {
 
         function prepareEdit(el, type){
             $.ajax({
-                url: Leafpub.url('api/upload/' + el),
+                url: Leafpub.url('api/upload/' + el[0] + '?width=300&sign=' + el[1]),
                 type: 'GET'
             })
             .done(function(res) {
                 if (res.success === true){
                     if (type === 'post-image'){
                         $('.media-list').css('display', 'none').html('');
-                        setPostImage(res.file.path);
+                        setPostImage(res.file.img);
                     } else {
-                        $('#image-src').val(res.file.path).trigger('change');
+                        $('#image-src').val(res.file.img).trigger('change');
                         $('#image-caption').val(res.file.caption);
+                        $('#image-sign').val(res.file.sign);
                     }
                 }
             });
@@ -1158,8 +1164,9 @@ $(function() {
                 newWidth = $('#image-width').val(),
                 newHeight = $('#image-height').val(),
                 cssClass = $('#image-class').val(),
-                align = $('.image-form').find('input[name="align"]:checked').val();
-                caption = $('#image-caption').prop('checked');
+                align = $('.image-form').find('input[name="align"]:checked').val(),
+                caption = $('#image-caption').prop('checked'),
+                sign = $('#image-sign').val();
 
             event.preventDefault();
 
@@ -1176,7 +1183,8 @@ $(function() {
                     height: newHeight,
                     align: align,
                     "class": cssClass,
-                    caption: caption
+                    caption: caption,
+                    sign: sign
                 });
             } else {
                 contentEditor.image('remove');
