@@ -1217,10 +1217,9 @@ $(function() {
                 // Update the image
                 if(res.uploaded.length) {
                     if(res.uploaded.length) {
-                        $('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '?width=300&sign=' + res.uploaded[0].sign + '\')');
+                        $('.picture').css('background-image', 'url(\'' + res.uploaded[0].thumbnail + '\')');
                         $('.media-list').css('display', 'none').html('');
-                        $('#image-src').val(res.uploaded[0].img).trigger('change');
-                        $('#image-sign').val(res.uploaded[0].sign);
+                        $('#image-src').val(res.uploaded[0].relative_path).trigger('change');
                     }
                 }
 

@@ -32,7 +32,8 @@ class Blog extends Leafpub {
         // Get the posts
         $posts = Post::getMany([
             'page' => $page,
-            'items_per_page' => Setting::getOne('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page'),
+            'end_date' => null
         ], $pagination);
 
         // Make sure the requested page exists
