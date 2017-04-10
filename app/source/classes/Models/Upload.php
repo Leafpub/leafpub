@@ -165,6 +165,7 @@ class Upload extends AbstractModel {
                     'caption',
                     'path' => new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, filename), extension)"),
                     'thumbnail' => new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, 'thumbnails/' , filename), extension)"),
+                    'img' => new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT('img/', filename), extension)"),
                     'created',
                     'filename',
                     'extension',
@@ -265,23 +266,23 @@ class Upload extends AbstractModel {
             );
         }
 
-        //$target_dir .= '/thumbnails';
-        if(!Leafpub::makeDir(Leafpub::path($target_dir.'thumbnails'))) {
-            throw new \Exception(
-                'Unable to create directory: ' . $target_dir.'thumbnails',
-                self::UNABLE_TO_CREATE_DIRECTORY
-            );
-        }
-        $relative_thumb = "$target_dir"."thumbnails/$filename";
-        $thumb_path = Leafpub::path($relative_thumb);
+        /** As we're generating images on the fly, we don't need thumbnails anymore ;-) **/
+        // if(!Leafpub::makeDir(Leafpub::path($target_dir.'thumbnails'))) {
+        //     throw new \Exception(
+        //         'Unable to create directory: ' . $target_dir.'thumbnails',
+        //         self::UNABLE_TO_CREATE_DIRECTORY
+        //     );
+        // }
+        // $relative_thumb = "$target_dir"."thumbnails/$filename";
+        // $thumb_path = Leafpub::path($relative_thumb);
         
-        // Generate thumbnails via event to give
-        // developers the possibility to overwrite the thumbnail generation
-        $evt = new GenerateThumbnail([
-            'fullPath' => $full_path,
-            'thumbPath' => $thumb_path
-        ]);
-        Leafpub::dispatchEvent(GenerateThumbnail::NAME, $evt);
+        // // Generate thumbnails via event to give
+        // // developers the possibility to overwrite the thumbnail generation
+        // $evt = new GenerateThumbnail([
+        //     'fullPath' => $full_path,
+        //     'thumbPath' => $thumb_path
+        // ]);
+        // Leafpub::dispatchEvent(GenerateThumbnail::NAME, $evt);
        
         //self::generateThumbnail($full_path, $thumb_path);
 
@@ -322,12 +323,14 @@ class Upload extends AbstractModel {
             'path' => $full_path,
             'relative_path' => $relative_path,
             'url' => Leafpub::url($relative_path),
-            'thumbnail_path' => $thumb_path,
+            //'thumbnail_path' => $thumb_path,
             'relative_thumb' => $relative_thumb,
-            'thumbnail' => Leafpub::url($relative_thumb),
+            //'thumbnail' => Leafpub::url($relative_thumb),
             'width' => $width,
             'height' => $height,
-            'size' => $size
+            'size' => $size,
+            'img' => 'img/' . $filename,
+            'sign' => md5( Leafpub::fileName($filename) . date('U') . Setting::getOne('auth_key') )
         ];
 
         $evt = new Add($info);
@@ -445,6 +448,7 @@ class Upload extends AbstractModel {
         }
         $select = self::getModel()->getSql()->select();
         $select->where->equalTo(new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT(path, filename), extension)"), $path);
+        $select->where->or->equalTo(new \Zend\Db\Sql\Expression("CONCAT_WS('.', CONCAT('img/', filename), extension)"), $path);
         return self::getModel()->selectWith($select)->current()['id'];
     }
 
@@ -518,7 +522,8 @@ class Upload extends AbstractModel {
         
         $upload['tags'] = self::getTags($upload['id']);
         $upload['posts'] = self::getPosts($upload['id']);
-
+        $upload['sign'] = md5( $upload['filename'] . $upload['created'] . Setting::getOne('auth_key') );
+        
         return $upload;
     }
 
