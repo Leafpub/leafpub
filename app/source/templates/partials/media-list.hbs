@@ -1,7 +1,7 @@
 {{#each uploads}}
-    <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6" data-slug="{{filename}}">
+    <div class="media-list-item col-xl-2 col-lg-4 col-md-4 col-sm-4 col-6" data-slug="{{filename}}" data-sign="{{sign}}">
         <div class="preview">
-            <img class="preview-image" src="{{#is thumbnail}}{{url thumbnail}}{{else}}{{url path}}{{/is}}">
+            <img class="preview-image" src="{{img path width="150"}}">
         </div>
         <div class="info">
             <div class="meta">
