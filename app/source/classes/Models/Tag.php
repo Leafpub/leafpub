@@ -192,7 +192,7 @@ class Tag extends AbstractModel {
         $tag['meta_description'] = (string) $tag['meta_description'];
         
         if (!$tag['created']){ 
-            $tag['created'] = new \Zend\Db\Sql\Expression('NOW()');
+            $tag['created'] = Leafpub::localToUtc(date('Y-m-d H:i:s'));
         }
 
         $evt = new Add($tag);
