@@ -26,9 +26,19 @@
         <div class="description">
             {{#if meta.lock}}
                 {{#admin_author meta.lock.0}}
-                    <span class="avatar" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
-                        <i class="fa fa-lock"></i>
-                    </span>
+                    {{#is ../meta.lock.0 "===" @user.slug}}
+                        {{#if avatar}}
+                            <img class="avatar" src="{{url avatar}}" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
+                        {{else}}
+                            <span class="avatar" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
+                                <i class="fa fa-user"></i>
+                            </span>
+                        {{/if}}
+                    {{else}}
+                        <span class="avatar" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                    {{/is}}
                 {{/admin_author}}
             {{else}}
                 {{#admin_author author}}
