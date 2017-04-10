@@ -127,7 +127,7 @@ class Middleware {
     * @return \Slim\Http\Response
     *
     **/
-    public static function maintenance($request, $response, $next){
+    public function maintenance($request, $response, $next){
         $siteInMaintenanceMode = (Setting::getOne('maintenance') == 'on');
         
         $allowedRoutes = array('/admin', '/admin/login', '/api/login', '/logout');
@@ -152,7 +152,7 @@ class Middleware {
         return $next($request, $response);
     }
 
-    public static function checkDBScheme($request, $response, $next){
+    public function checkDBScheme($request, $response, $next){
         if (version_compare(LEAFPUB_SCHEME_VERSION, (\Leafpub\Models\Setting::getOne('schemeVersion') ?: 0)) == 1){
             if (Session::isRole(['owner', 'admin'])){
                 $allowedRoutes = array('/api/update', '/admin', '/admin/login', '/admin/updateLeafpub', '/logout', '/api/login');
@@ -170,6 +170,61 @@ class Middleware {
         if ($time === date('H:i:s')){
             \Leafpub\Update::updateRegisterFiles();
         } 
+        return $next($request, $response);
+    }
+    
+    public function imageMiddleware($request, $response, $next){
+        if (mb_stristr($request->getUri()->getPath(), '/img/')){
+            $pic = \Leafpub\Leafpub::fileName($request->getUri()->getPath(), 5); // pic == /img/filename.jpg
+            $picData = \Leafpub\Models\Upload::getOne($pic);
+            if (!$picData){
+                return $response->withStatus(403);  
+            }
+            $params = $request->getParams();
+            if ($params){
+                if (!isset($params['sign']) || $params['sign'] !== $picData['sign']){
+                    return $response->withStatus(403);
+                }
+                $dir = \Leafpub\Leafpub::path('content/cache/' . $pic);
+                if (!is_dir($dir)){
+                    mkdir($dir);
+                }
+                foreach (array_keys($params) as $key){
+                   $pic .= '-' . $key . $params[$key]; 
+                }
+                $pic .= '.' . $picData['extension'];
+                
+                if (is_file($dir . '/' . $pic)){
+                    // We have a cached image, so deliver it.
+                    return $response->withHeader('Content-type', 'image')->write(file_get_contents($dir . '/' . $pic));
+                }
+                $simpleImage = new \claviska\SimpleImage();
+                $simpleImage->fromFile(\Leafpub\Leafpub::path($picData['path']));
+                if (isset($params['width'])){
+                    $simpleImage->fitToWidth($params['width']);
+                }
+                if (isset($params['blur'])){
+                    $simpleImage->blur('gaussian', $params['blur']);
+                }
+                if (isset($params['sepia'])){
+                    $simpleImage->sepia();
+                }
+                if (isset($params['emboss'])){
+                    $simpleImage->emboss();
+                }
+                if (isset($params['grayscale'])){
+                    $simpleImage->desaturate();
+                }
+                if (isset($params['brighten'])){
+                    $simpleImage->brighten($params['brighten'] ?: 0);
+                }
+                $simpleImage->toFile($dir . '/' . $pic);
+                return $response->withHeader('Content-type', 'image')->write(file_get_contents($dir . '/' . $pic));
+            } else {
+                return $response->withHeader('Content-type', 'image')->write(file_get_contents(\Leafpub\Leafpub::path($picData['path'])));
+            }
+        }
+        
         return $next($request, $response);
     }
 }
