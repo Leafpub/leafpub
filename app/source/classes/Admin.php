@@ -205,7 +205,7 @@ class Admin extends Leafpub {
             'template' => self::path("source/templates/$template.hbs"),
             'data' => $data,
             'special_vars' => [],
-            'helpers' => ['admin', 'url', 'utility', 'theme']
+            'helpers' => ['admin', 'url', 'utility']
         ]);
     }
 
