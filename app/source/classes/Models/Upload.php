@@ -316,6 +316,7 @@ class Upload extends AbstractModel {
             }
         }
 
+        $created =  date('Y-m-d H:i:s');
         // Generate info to pass back
         $info = [
             'filename' => Leafpub::fileName($filename), // We use filename as our slug
@@ -330,7 +331,7 @@ class Upload extends AbstractModel {
             'height' => $height,
             'size' => $size,
             'img' => 'img/' . $filename,
-            'sign' => md5( Leafpub::fileName($filename) . date('U') . Setting::getOne('auth_key') )
+            'sign' => md5( Leafpub::fileName($filename) . Leafpub::utcToLocal($created) . Setting::getOne('auth_key') )
         ];
 
         $evt = new Add($info);
@@ -339,7 +340,7 @@ class Upload extends AbstractModel {
         try {
             $insert = [
                 'path' => $target_dir,
-                'created' => new \Zend\Db\Sql\Expression('NOW()'),
+                'created' => $created,
                 'filename' => Leafpub::fileName($filename),
                 'extension' => $extension,
                 'size' => $size,
