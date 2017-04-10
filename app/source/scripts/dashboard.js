@@ -164,7 +164,7 @@ $(function() {
     function addWidget(name){
         $.ajax({
             type: 'GET',
-            url: Leapub.url('api/widget'),
+            url: Leafpub.url('api/widget'),
             data: {
                 widget: name
             }
