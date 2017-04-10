@@ -65,7 +65,7 @@ class Database extends Leafpub {
             GlobalAdapterFeature::setStaticAdapter(new Adapter($config));
             TableGateway::$prefix = $config['prefix'];
             
-            //self::$database->exec('SET time_zone = "+00:00"');
+            GlobalAdapterFeature::getStaticAdapter()->query('SET time_zone = "+00:00"', Adapter::QUERY_MODE_EXECUTE);
         } catch(\PDOException $e) {
             switch($e->getCode()) {
                 case 1044: // Access denied for database
