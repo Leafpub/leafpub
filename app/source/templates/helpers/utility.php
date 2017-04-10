@@ -423,6 +423,59 @@ return [
             // No posts, do {{else}}
             return $options['inverse'] ? $options['inverse']() : '';
         }
+    },
+    
+    'img' => function($image, $options){
+        $possibleOptions = ['width', 'blur', 'brighten', 'sepia', 'emboss', 'grayscale'];
+        if (isset($options['_this']['sign'])){
+            $picData = $options['_this'];
+        } else {
+            $picData = \Leafpub\Models\Upload::getOne(\Leafpub\Leafpub::fileName($image));
+        }
+        $sign = $picData['sign'];
+        $cpImage = $image = $picData['filename'] . '.' . $picData['extension'] ;
+        
+        if ($options){
+            for($i = 0; $i < 6; $i++){
+                if (isset($options['hash'][$possibleOptions[$i]])){
+                    switch ($i){
+                        case 0:
+                            $width = 'width=' . $options['hash']['width'];
+                            break;
+                        case 1:
+                        case 2:
+                            $append .= '&' . $possibleOptions[$i] . '=' . $options['hash'][$possibleOptions[$i]];
+                            break;
+                        case 3:
+                        case 4:
+                        case 5:
+                            $append .= '&' . $possibleOptions[$i];
+                            break;
+                    }
+                }
+            }
+            $append .= '&sign=' . $sign;
+            $appendix = ($width) ? $width . $append : substr($append, 1);
+            $image .= '?' . $appendix;
+        }
+        
+        if (isset($options['hash']['srcset'])){
+            for ($i = 1; $i < 5; $i++){
+                $widthP = $i*400;
+                if ($width){
+                    if ($widthP <= ceil($options['hash']['width'])){
+                        $srcSet .= \Leafpub\Leafpub::url('/img/' . $cpImage . '?width=' . $widthP . $append . ' ' . $widthP . 'w,');
+                    }
+                } else {
+                    $srcSet .= \Leafpub\Leafpub::url('/img/' . $cpImage . '?width=' . $widthP . $append . ' ' . $widthP . 'w,');
+                }
+            } 
+            $append = ($width) ? $width . $append : substr($append, 1);
+            $s = '<img src="' . \Leafpub\Leafpub::url('/img/' . $cpImage . '?' . $append) . '" alt="" srcset="' . $srcSet . '" />';   
+            return new \LightnCandy\SafeString($s);
+        } else {
+            return \Leafpub\Leafpub::url('/img/' . $image);
+        }
     }
 
 ];
