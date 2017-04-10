@@ -340,7 +340,7 @@ class Upload extends AbstractModel {
         try {
             $insert = [
                 'path' => $target_dir,
-                'created' => $created,
+                'created' => Leafpub::localToUtc($created),
                 'filename' => Leafpub::fileName($filename),
                 'extension' => $extension,
                 'size' => $size,
