@@ -34,7 +34,7 @@ return [
     'cancel' => 'Annuler',
     'change_password' => 'Changer le mot de passe',
     'check_your_email_for_further_instructions' => 'Vérifiez votre email pour plus d\'instructions',
-    'clear_cache' => 'Vider le cacher',
+    'clear_cache' => 'Vider le cache',
     'clear_formatting' => 'Effacer la mise en forme',
     'code' => 'Code',
     'constrain_proportions' => 'Conserver les proportions',
