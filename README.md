@@ -32,6 +32,8 @@ Leafpub uses Composer and NPM to manage dependencies and Gulp as its task runner
 
 Please read through our [contributing guidelines](https://github.com/leafpub/leafpub/blob/master/.github/CONTRIBUTING.md).
 
+To improve the translations, please refer to the [translation guidelines](app/source/languages/READ_BEFORE_PR.md).
+
 ## Building
 
 Once you have the necessary development tools installed:
