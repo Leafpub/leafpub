@@ -62,6 +62,29 @@ Please adhere to the [coding guidelines](#code-guidelines) used throughout the p
 
 Adhering to the following process is the best way to get your work included in the project:
 
+## Languages
+
+With Leafpub 1.2 all language files are located in their own GitHub repo. This decision was made to update the language files independently from the Leafpub core files. With the update functionality introduced wiht Leafpub 1.2 it's possible to update the language files individually.
+
+Leafpub has been translated to the following languages so far:
+
+| Language | Repo |
+| --- | --- |
+| Danish translation (da-dk) | https://github.com/Leafpub/da-dk |
+| German translation (de-de) | https://github.com/Leafpub/de-de |
+| Spanish translation (es) | https://github.com/Leafpub/es |
+| French translation (fr-fr) | https://github.com/Leafpub/fr-fr |
+| Italian translation (it-it) | https://github.com/Leafpub/it-it |
+| Japanese translation (jp-jp) | https://github.com/Leafpub/jp-jp |
+| Norwegian translation (nb-bo) | https://github.com/Leafpub/nb-bo |
+| Dutch translation (nl-nl) | https://github.com/Leafpub/nl-nl |
+| Polish translation (pl) | https://github.com/Leafpub/pl |
+| Portuguese (Brasil) translation (pt-br) | https://github.com/Leafpub/pt-br |
+| Portuguese translation (pt-pt) | https://github.com/Leafpub/pt-pt |
+| Turkish translation (tr-tr) | https://github.com/Leafpub/tr-tr |
+
+If Leafpub is not translated to your language, feel free to open an issue. We'll create a new language repo and you can open a PR to your language.
+
 ## Code guidelines
 
 We try to adhere as closely as possible to the following code guidelines, and we ask that you do the same. If you follow these basic rules and pay attention to the existing code, you'll be just fine.
