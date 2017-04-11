@@ -868,7 +868,13 @@ class Post extends AbstractModel {
         if($options['zen']) {
             $template = Leafpub::path('source/templates/editor.zen.hbs');
         } else {
-            $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
+            if ($options['amp']){
+                $post['content'] = self::ampifyImageTags($post['content']);
+                $template = Leafpub::path('source/templates/amp-template.hbs');   
+            } else {
+                $options['amp'] = false;
+                $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
+            }
         }
 
         // Generate event
@@ -876,6 +882,7 @@ class Post extends AbstractModel {
             'post' => $post,
             'special_vars' => [
                 'meta' => [
+                    'amp' => !!$options['amp'],
                     'editable' => !!$options['editable'],
                     'preview' => !!$options['preview'],
                     'title'=> !empty($post['meta_title']) ? $post['meta_title'] : $post['title'],
@@ -1257,6 +1264,23 @@ class Post extends AbstractModel {
         }
 
         return true;
+    }
+    
+    protected static function ampifyImageTags($content){
+        $content = str_replace('srcset', '', $content);
+        $content = str_replace('<img', '<amp-img', $content);
+        
+        $doc = new \DOMDocument();
+        @$doc->loadHTML($content);
+
+        $tags = $doc->getElementsByTagName('amp-img');
+        foreach ($tags as $tag){
+            $img = $tag->getAttribute('src');
+            $sign = $tag->getAttribute('data-sign');
+            $tag->setAttribute($img . '?width=300&sign=' . $sign);
+        }
+        
+        return $doc->saveHTML();
     }
     
     // Assign posts to new user

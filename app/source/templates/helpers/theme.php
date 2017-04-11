@@ -307,6 +307,10 @@ return [
                 $html .= "\n<meta name=\"" . htmlspecialchars($key) . "\" content=\"" . htmlspecialchars($value) . "\">";
             }
         }
+        
+        if (!($options['data']['meta']['amp'])){
+            $html .= '<link rel="amphtml" href="' . $options['data']['meta']['ld_json']['url'] . '/amp">';
+        }
 
         // Return raw HTML
         return new \LightnCandy\SafeString($html);

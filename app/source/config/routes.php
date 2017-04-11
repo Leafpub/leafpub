@@ -192,5 +192,5 @@ $app->group("/$frags->search", function() use($frags) {
 
 // Posts
 $app->get('/{post}', 'Leafpub\Controller\ThemeController:post');
-
+$app->get('/{post}/amp', 'Leafpub\Controller\ThemeController:ampify');
 ?>

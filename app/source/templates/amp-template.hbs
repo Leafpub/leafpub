@@ -1,0 +1,223 @@
+<!doctype html>
+<html amp lang="en">
+    <head>
+{{#post}}
+        <meta charset="utf-8">
+        <script async src="https://cdn.ampproject.org/v0.js"></script>
+        <title>{{title}}</title>
+        <link rel="canonical" href="{{post_url}}" />
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        <style amp-boilerplate>
+            body{
+                -webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+                -moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+                -ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+                animation:-amp-start 8s steps(1,end) 0s 1 normal both
+            }
+            @-webkit-keyframes -amp-start{
+                from{visibility:hidden}
+                to{visibility:visible}
+            }
+            @-moz-keyframes -amp-start{
+                from{visibility:hidden}
+                to{visibility:visible}
+            }@-ms-keyframes -amp-start{
+                from{visibility:hidden}
+                to{visibility:visible}
+            }@-o-keyframes -amp-start{
+                from{visibility:hidden}
+                to{visibility:visible}
+            }@keyframes -amp-start{
+                from{visibility:hidden}
+                to{visibility:visible}
+            }
+        </style>
+        <style amp-custom>
+            html {
+            	background: #0a89c0;
+            }
+            
+            body {
+            	background: #fff;
+            	color: #353535;
+            	font-family: 'Merriweather', 'Times New Roman', Times, Serif;
+            	font-weight: 300;
+            	line-height: 1.75em;
+            }
+            
+            p,
+            ol,
+            ul,
+            figure {
+            	margin: 0 0 1em;
+            	padding: 0;
+            }
+            
+            a,
+            a:visited {
+            	color: #0a89c0;
+            }
+            
+            a:hover,
+            a:active,
+            a:focus {
+            	color: #353535;
+            }
+
+            .leafpub-amp-head {
+                background-color: #09d;
+            }
+            .leafpub-amp-head .inner-head{
+                color: #fff;
+            	font-size: 1em;
+            	font-weight: 400;
+            	margin: 0 auto;
+            	max-width: calc(840px - 32px);
+            	padding: .875em 16px;
+            	position: relative;
+            }
+            .leafpub-amp-head a{
+                color: #fff;
+                text-decoration: none;
+            }
+            article {
+            	color: #353535;
+            	font-weight: 400;
+            	margin: 1.5em auto;
+            	max-width: 840px;
+            	overflow-wrap: break-word;
+            	word-wrap: break-word;
+            }
+            article header {
+            	align-items: center;
+            	align-content: stretch;
+            	display: flex;
+            	flex-wrap: wrap;
+            	justify-content: space-between;
+            	margin: 1.5em 16px 1.5em;
+            }
+            
+            .leafpub-amp-title {
+            	color: #353535;
+            	display: block;
+            	flex: 1 0 100%;
+            	font-weight: 900;
+            	margin: 0 0 .625em;
+            	width: 100%;
+            }
+            .leafpub-amp-article-meta {
+                color: #696969;
+            	display: inline-block;
+            	flex: 2 1 50%;
+            	font-size: .875em;
+            	line-height: 1.5em;
+            	margin: 0;
+            	padding: 0;
+            }
+            .leafpub-amp-article-meta.meta-author{
+                text-align: left;
+            }
+            .leafpub-amp-article-meta.meta-author > span {
+                vertical-align: middle;
+            }
+            amp-img.author-avatar {
+                border-radius: 50%;
+                margin-right: 6px;
+                position: relative;
+                vertical-align: middle;
+            }
+            .leafpub-amp-article-meta.meta-posted {
+                text-align: right;
+            }
+            .leafpub-amp-article-content {
+                margin: 0 16px;
+            }
+            .leafpub-amp-article-content amp-img {
+            	margin: 0 auto;
+            }
+            .leafpub-amp-article-content amp-img.alignright {
+            	margin: 0 0 1em 16px;
+            }
+            .leafpub-amp-article-content amp-img.alignleft {
+            	margin: 0 16px 1em 0;
+            }
+            .leafpub-amp-footer {
+            	border-top: 1px solid #c2c2c2;
+            	margin: calc(1.5em - 1px) 0 0;
+            }
+            
+            .leafpub-amp-footer div {
+            	margin: 0 auto;
+            	max-width: calc(840px - 32px);
+            	padding: 1.25em 16px 1.25em;
+            	position: relative;
+            }
+            
+            .leafpub-amp-footer h2 {
+            	font-size: 1em;
+            	line-height: 1.375em;
+            	margin: 0 0 .5em;
+            }
+            
+            .leafpub-amp-footer p {
+            	color: #696969;
+            	font-size: .8em;
+            	line-height: 1.5em;
+            	margin: 0 85px 0 0;
+            }
+            
+            .leafpub-amp-footer a {
+            	text-decoration: none;
+            }
+            .back-to-top {
+            	bottom: 1.275em;
+            	font-size: .8em;
+            	font-weight: 600;
+            	line-height: 2em;
+            	position: absolute;
+            	right: 16px;
+            }
+        </style>
+        <noscript>
+            <style amp-boilerplate>
+                body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
+            </style>
+        </noscript>
+        {{leafpub_head}}
+    </head>
+    <body>
+        <header id="#top" class="leafpub-amp-head">
+            <div class="inner-head">
+                <a href="{{url}}">{{@settings.title}}</a>
+            </div>
+        </header>
+        <article>
+            <header>
+                <h1 class="leafpub-amp-title">{{title}}</h1>
+                    <div class="leafpub-amp-article-meta meta-author">
+                        {{#author}}
+                            {{!-- Avatar --}}
+                            {{#if avatar}}
+                                <amp-img class="author-avatar" src="{{url avatar}}" width="24" height="24" alt="{{name}}"></amp-img>
+                            {{/if}}
+                            <span class="author vcard">{{name}}</span>
+                        {{/author}}
+                    </div>
+                    <div class="leafpub-amp-article-meta meta-posted" title="{{date format="%B %e, %Y at %l:%M%P"}}">
+                        {{date format="time_ago"}}
+                    </div>
+            </header>
+            <div class="leafpub-amp-article-content">
+            {{content}}
+            </div>
+        </article>
+        <footer class="leafpub-amp-footer">
+            <div>
+                <h2>{{@settings.title}}</h2>
+                <p>Published with <a href="https://www.leafpub.org/">Leafpub</a></p>
+                <a href="#top" class="back-to-top">Up</a>
+            </div>
+        </footer>
+    </body>
+</html>
+{{/post}}
