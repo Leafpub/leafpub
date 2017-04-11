@@ -63,7 +63,15 @@
             a:focus {
             	color: #353535;
             }
-
+            .leafpub-amp-head,
+            .leafpub-amp-meta,
+            .leafpub-amp-header div,
+            .leafpub-amp-title,
+            .leafpub-amp-tag,
+            .leafpub-amp-footer p,
+            .back-to-top {
+            	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
+            }
             .leafpub-amp-head {
                 background-color: #09d;
             }
@@ -76,9 +84,13 @@
             	padding: .875em 16px;
             	position: relative;
             }
+            .leafpub-amp-head amp-img {
+                vertical-align: middle;
+            }
             .leafpub-amp-head a{
                 color: #fff;
                 text-decoration: none;
+                vertical-align: middle;
             }
             article {
             	color: #353535;
@@ -188,6 +200,9 @@
     <body>
         <header id="#top" class="leafpub-amp-head">
             <div class="inner-head">
+                {{#if @settings.logo}}
+                <amp-img src="{{img @settings.logo}}" width="36" height="36" class="right"></amp-img>
+                {{/if}}
                 <a href="{{url}}">{{@settings.title}}</a>
             </div>
         </header>
