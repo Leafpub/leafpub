@@ -1267,7 +1267,7 @@ class Post extends AbstractModel {
     }
     
     protected static function ampifyImageTags($content){
-        $content = str_replace('srcset', '', $content);
+        //$content = str_replace('srcset', '', $content);
         $content = str_replace('<img', '<amp-img', $content);
         
         $doc = new \DOMDocument();
@@ -1275,9 +1275,7 @@ class Post extends AbstractModel {
 
         $tags = $doc->getElementsByTagName('amp-img');
         foreach ($tags as $tag){
-            $img = $tag->getAttribute('src');
-            $sign = $tag->getAttribute('data-sign');
-            $tag->setAttribute($img . '?width=300&sign=' . $sign);
+            $tag->setAttribute('layout', 'responsive');
         }
         
         return $doc->saveHTML();
