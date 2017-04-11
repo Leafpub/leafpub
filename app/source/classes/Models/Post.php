@@ -1277,7 +1277,12 @@ class Post extends AbstractModel {
         foreach ($tags as $tag){
             $tag->setAttribute('layout', 'responsive');
         }
-        
+
+        $tags = $doc->getElementsByTagName('figcaption');
+        foreach ($tags as $tag){
+            $tag->removeAttribute('contenteditable');
+        }
+
         return $doc->saveHTML();
     }
     
