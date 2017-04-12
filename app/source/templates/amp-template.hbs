@@ -12,12 +12,12 @@
         </style>
         <style amp-custom>
             html {
-            	background: #0a89c0;
+            	background: #fff;
             }
             
             body {
             	background: #fff;
-            	color: #353535;
+            	color: #000;
             	font-family: 'Merriweather', 'Times New Roman', Times, Serif;
             	font-weight: 300;
             	line-height: 1.75em;
@@ -51,7 +51,7 @@
             	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
             }
             .leafpub-amp-head {
-                background-color: #09d;
+                background-color: #8cc152;
             }
             .leafpub-amp-head .inner-head{
                 color: #fff;
@@ -85,6 +85,8 @@
             	flex-wrap: wrap;
             	justify-content: space-between;
             	margin: 1.5em 16px 1.5em;
+            	padding-bottom: 5px;
+            	border-bottom: .25px solid #c2c2c2;
             }
             
             .leafpub-amp-title {
@@ -98,7 +100,7 @@
             .leafpub-amp-article-meta {
                 color: #696969;
             	display: inline-block;
-            	flex: 2 1 50%;
+            	flex: 2 1 33%;
             	font-size: .875em;
             	line-height: 1.5em;
             	margin: 0;
@@ -195,6 +197,9 @@
                             {{/if}}
                             <span class="author vcard">{{name}}</span>
                         {{/author}}
+                    </div>
+                    <div class="leafpub-amp-article-meta meta-tags">
+                        Tags: {{tags and=" and "}}
                     </div>
                     <div class="leafpub-amp-article-meta meta-posted" title="{{date format="%B %e, %Y at %l:%M%P"}}">
                         {{date format="time_ago"}}
