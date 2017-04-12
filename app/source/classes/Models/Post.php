@@ -1271,7 +1271,8 @@ class Post extends AbstractModel {
         $content = str_replace('<img', '<amp-img', $content);
         
         $doc = new \DOMDocument();
-        @$doc->loadHTML($content);
+        // see http://stackoverflow.com/a/8218649
+        @$doc->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
 
         $tags = $doc->getElementsByTagName('amp-img');
         foreach ($tags as $tag){
