@@ -1143,7 +1143,7 @@ class APIController extends Controller {
             Setting::edit(['name' => 'language', 'value' => 'en-us']);
             return $response->withJson([
                 'success' => false,
-                'message' => 'Unable to download and install ' . $params['language'] . '. Setting language to en-us'
+                'message' => 'Unable to download and install ' . $params['language'] . '. Setting language back to en-us.'
             ]);
         }
 
