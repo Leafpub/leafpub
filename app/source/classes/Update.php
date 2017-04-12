@@ -42,49 +42,57 @@ class Update extends Leafpub {
                 $dlPath = self::path('content/uploads/' . $cls->assets[0]->name);
                 $dl = self::downloadZip($cls->assets[0]->url, $dlPath);
                 if($dl){
-                    $zip = new ZipArchive();
-                    $res = $zip->open($dlPath, ZipArchive::CHECKCONS);
-                    var_dump($res);
-                    // Check if zip is ok
-                    if ($res !== TRUE) {
-                        switch($res) {
-                            case ZipArchive::ER_NOZIP:
-                                throw new \Exception('not a zip archive');
-                            case ZipArchive::ER_INCONS :
-                                throw new \Exception('consistency check failed');
-                            case ZipArchive::ER_CRC :
-                                throw new \Exception('checksum failed');
-                            default:
-                                throw new \Exception('error ' . $res);
-                        }
-                    }
-
-                    $unzipPath = self::path('content/uploads/' . uniqid());
-                    $copyPath = self::path(self::$_paths[$data->type]);
-
-                    $unzip = $zip->extractTo($unzipPath);
-                    if (!$unzip){
-                        throw new \Exception('Unable to extract zip');
-                    }
-                    $zip->close();
-
-                    if ($data->type !== self::UPDATE_TYPE_CORE){
-                        $copyPath = self::path(self::$_paths[$data->type] . '/' . $name);
-                    } else {
-                        $copyPath = self::path(self::$_paths[$data->type]);
-                    }
-                    $unzipPath .= '/' . self::fileName($cls->assets[0]->name);
-
-                    self::rcopy($unzipPath, $copyPath);
-                    unlink($dlPath);
-                    self::removeDir($unzipPath);
-                    return true;
+                    return self::extractData($name, $dlPath, $data);
                 }
             } else {
                 Session::logout();
                 return false;
             }
         }
+    }
+
+    public static function extractData($name, $dlPath, $data){
+        $zip = new ZipArchive();
+        $res = $zip->open($dlPath, ZipArchive::CHECKCONS);
+
+        // Check if zip is ok
+        if ($res !== TRUE) {
+            switch($res) {
+                case ZipArchive::ER_NOZIP:
+                    throw new \Exception('not a zip archive');
+                case ZipArchive::ER_INCONS :
+                    throw new \Exception('consistency check failed');
+                case ZipArchive::ER_CRC :
+                    throw new \Exception('checksum failed');
+                default:
+                    throw new \Exception('error ' . $res);
+            }
+        }
+
+        $unzipPath = self::path('content/uploads/' . uniqid());
+        $copyPath = self::path(self::$_paths[$data->type]);
+
+        $unzip = $zip->extractTo($unzipPath);
+        if (!$unzip){
+            throw new \Exception('Unable to extract zip');
+        }
+        $zip->close();
+
+        if ($data->type !== self::UPDATE_TYPE_CORE){
+            if ($data->type === self::UPDATE_TYPE_LANGUAGE){
+                $copyPath = self::path(self::$_paths[$data->type]);
+            } else {
+                $copyPath = self::path(self::$_paths[$data->type] . '/' . $name);
+            }
+        } else {
+            $copyPath = self::path(self::$_paths[$data->type]);
+        }
+        //$unzipPath .= '/' . self::fileName($dlPath);
+
+        self::rcopy($unzipPath . '/' . self::fileName($dlPath), $copyPath);
+        unlink($dlPath);
+        self::removeDir($unzipPath);
+        return true;
     }
 
     public static function updateRegisterFiles(){
@@ -176,7 +184,7 @@ class Update extends Leafpub {
         $data = self::processJsonFile(self::path('source/config/languages.json'));
         $updatableLanguages = [];
         foreach($languages as $language){
-            if (isset($data[$language['code']])){
+            if (isset($data[$language['name']])){
                 $url = self::generateApiUrl($data[$language['code']] . self::RELEASE_UPDATE_URL);
                 $cls = self::parseReleaseData(self::getRemoteData($url));
                 if ($cls){
@@ -217,7 +225,7 @@ class Update extends Leafpub {
         return $updatableThemes;
     }
 
-    protected static function getRemoteData($url){
+    public static function getRemoteData($url){
         $handle = curl_init($url);
         curl_setopt($handle, CURLOPT_HTTPHEADER, ['User-Agent: Leafpub', 'Accept: application/vnd.github.v3.raw+json']);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
@@ -226,7 +234,7 @@ class Update extends Leafpub {
         return $ret;
     }
 
-    protected static function downloadZip($url, $targetFile){
+    public static function downloadZip($url, $targetFile){
         try {
             $targetFile = fopen($targetFile, 'w');
             $handle = curl_init($url);
@@ -247,7 +255,7 @@ class Update extends Leafpub {
         }
     }
 
-    protected static function generateApiUrl($url){
+    public static function generateApiUrl($url){
         return str_replace('https://github.com/', self::GITHUB_API_URL, $url);
     }
 
