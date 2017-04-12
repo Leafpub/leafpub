@@ -1167,7 +1167,8 @@ class Post extends AbstractModel {
         $post['page'] = (int) $post['page'];
         $post['featured'] = (int) $post['featured'];
         $post['sticky'] = (int) $post['sticky'];
-
+        $post['content'] = preg_replace('/content\/uploads\/[0-9]{4}\/[0-9]{2}/', '/img', $post['content']);
+        
         // Convert dates from UTC to local
         $post['created'] = Leafpub::utcToLocal($post['created']);
         $post['pub_date'] = Leafpub::utcToLocal($post['pub_date']);
