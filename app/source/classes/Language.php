@@ -70,7 +70,19 @@ class Language extends Leafpub {
             }
         }
 
-        return $languages;
+        $jsonPath = self::path('source/config/languages.json');
+        $lang = self::getJsonLanguages();
+        if ($lang){
+            foreach($languages as $language){
+                foreach ($lang as $k => $v){
+                    if ($language['name'] === $v['name']){
+                        unset($lang[$k]);
+                    }
+                }
+            }
+        }
+        return array_merge($languages, $lang);
+        //return $languages;
     }
 
     /**
@@ -95,4 +107,40 @@ class Language extends Leafpub {
         return $term;
     }
 
+    public static function installLanguage($code){
+        $lang = self::getAll();
+        foreach($lang as $l){
+            if ($l['code'] === $code){
+                if (isset($l['url'])){
+                    $url = $l['url'];
+                    break;
+                } else {
+                    return true;
+                }
+            }
+        }
+        if (!$url) return false;
+        $url = Update::generateApiUrl($url . Update::RELEASE_UPDATE_URL . '/latest');
+        $data = json_decode(Update::getRemoteData($url));
+        if (!$data || $data->message){
+            return false;
+        }
+        $dlPath = self::path('content/uploads/' . $data->assets[0]->name);
+        $dl = Update::downloadZip($data->assets[0]->url, $dlPath);
+        if ($dl){
+            $obj = new \StdClass();
+            $obj->type = Update::UPDATE_TYPE_LANGUAGE;
+            return Update::extractData($code, $dlPath, $obj);
+        }
+        return false;
+    }
+
+    protected static function getJsonLanguages(){
+        $jsonPath = self::path('source/config/languages.json');
+        if (file_exists($jsonPath)){
+            $lang = json_decode(file_get_contents($jsonPath), true);
+            return $lang;
+        }
+        return false;
+    }
 }
