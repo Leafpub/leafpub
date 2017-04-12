@@ -1,4 +1,14 @@
 [
-    {"name": "de-de", "url": "https://github.com/Leafpub/de-de"},
-    {"name": "pl", "url": "https://github.com/Leafpub/pl"}
+    {"name": "Dansk", "code": "da-dk", "url": "https://github.com/Leafpub/da-dk"},
+    {"name": "Deutsch", "code": "de-de", "url": "https://github.com/Leafpub/de-de"},
+    {"name": "Español", "code": "es", "url": "https://github.com/Leafpub/es"},
+    {"name": "Français (FR)", "code": "fr-fr", "url": "https://github.com/Leafpub/fr-fr"},
+    {"name": "Italiano (IT)", "code": "it-it", "url": "https://github.com/Leafpub/it-it"},
+    {"name": "日本語 (JP)", "code": "jp-jp", "url": "https://github.com/Leafpub/jp-jp"},
+    {"name": "Norwegian Bokmål (NO)", "code": "nb-bo", "url": "https://github.com/Leafpub/nb-bo"},
+    {"name": "Nederlands", "code": "nl-nl", "url": "https://github.com/Leafpub/nl-nl"},
+    {"name": "Polski", "code": "pl", "url": "https://github.com/Leafpub/pl"},
+    {"name": "Português Brasil (BR)", "code": "pt-br", "url": "https://github.com/Leafpub/pt-br"},
+    {"name": "Português (PT)", "code": "pt-pt", "url": "https://github.com/Leafpub/pt-pt"},
+    {"name": "Türkçe", "code": "tr-tr", "url": "https://github.com/Leafpub/tr-tr"}
 ]
