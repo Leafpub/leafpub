@@ -32,6 +32,8 @@ Leafpub uses Composer and NPM to manage dependencies and Gulp as its task runner
 
 Please read through our [contributing guidelines](https://github.com/leafpub/leafpub/blob/master/.github/CONTRIBUTING.md).
 
+> Something is wrong with a translation? Your language isn't available? Please read through the [language section](https://github.com/leafpub/leafpub/blob/master/.github/CONTRIBUTING.md#languages)
+
 ## Building
 
 Once you have the necessary development tools installed:
@@ -103,11 +105,11 @@ Leafpub is maintained under the [Semantic Versioning guidelines](http://semver.o
 
 ## License
 
-©2017 Cory & Marc
+©2017 Marc
 
 This software is copyrighted. You may use it under the terms of the GNU GPLv3 or later. See LICENSE.md for licensing details.
 
-All code is copyright 2016 Cory & Marc except where noted. Third-party libraries are copyrighted and licensed by their respective owners.
+All code is copyright 2016-2017 by Marc except where noted. Third-party libraries are copyrighted and licensed by their respective owners.
 
 ### Theme & Plugin Policy
 
