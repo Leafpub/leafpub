@@ -199,7 +199,9 @@
                         {{/author}}
                     </div>
                     <div class="leafpub-amp-article-meta meta-tags">
+                        {{#if tags}}
                         Tags: {{tags and=" and "}}
+                        {{/if}}
                     </div>
                     <div class="leafpub-amp-article-meta meta-posted" title="{{date format="%B %e, %Y at %l:%M%P"}}">
                         {{date format="time_ago"}}
