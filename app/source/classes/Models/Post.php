@@ -1167,7 +1167,7 @@ class Post extends AbstractModel {
         $post['page'] = (int) $post['page'];
         $post['featured'] = (int) $post['featured'];
         $post['sticky'] = (int) $post['sticky'];
-        $post['content'] = preg_replace('/content\/uploads\/[0-9]{4}\/[0-9]{2}/', '/img', $post['content']);
+        $post['content'] = preg_replace('/content\/uploads\/[0-9]{4}\/[0-9]{2}/', 'img', $post['content']);
         
         // Convert dates from UTC to local
         $post['created'] = Leafpub::utcToLocal($post['created']);
@@ -1268,7 +1268,6 @@ class Post extends AbstractModel {
     }
     
     protected static function ampifyImageTags($content){
-        //$content = str_replace('srcset', '', $content);
         $content = str_replace('<img', '<amp-img', $content);
         
         $doc = new \DOMDocument();
@@ -1277,7 +1276,11 @@ class Post extends AbstractModel {
 
         $tags = $doc->getElementsByTagName('amp-img');
         foreach ($tags as $tag){
-            $tag->setAttribute('layout', 'responsive');
+            if ($tag->hasAttribute('srcset')){
+                $tag->setAttribute('layout', 'responsive');
+            } else {
+                $tag->setAttribute('layout', 'fixed');
+            }
         }
 
         $tags = $doc->getElementsByTagName('figcaption');
