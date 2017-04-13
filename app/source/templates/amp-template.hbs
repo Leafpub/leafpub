@@ -4,6 +4,21 @@
 {{#post}}
         <meta charset="utf-8">
         <script async src="https://cdn.ampproject.org/v0.js"></script>
+        {{#is @meta.embed_media "youtube"}}
+        <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
+        {{/is}}
+        {{#is @meta.embed_media "vimeo"}}
+        <script async custom-element="amp-vimeo" src="https://cdn.ampproject.org/v0/amp-vimeo-0.1.js"></script>
+        {{/is}}
+        {{#is @meta.embed_media "soundcloud"}}
+        <script async custom-element="amp-soundcloud" src="https://cdn.ampproject.org/v0/amp-soundcloud-0.1.js"></script>
+        {{/is}}
+        {{#is @meta.embed_social "facebook"}}
+        <script async custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js"></script>
+        {{/is}}
+        {{#is @meta.embed_social "twitter"}}
+        <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
+        {{/is}}
         <title>{{title}}</title>
         <link rel="canonical" href="{{post_url}}" />
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
