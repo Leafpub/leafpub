@@ -309,7 +309,7 @@ return [
         }
         
         if (!($options['data']['meta']['amp'])){
-            $html .= '<link rel="amphtml" href="' . $options['data']['meta']['ld_json']['url'] . '/amp">';
+            $html .= "\n<link rel=\"amphtml\" href=\"" . $options['data']['meta']['ld_json']['url'] . "/amp\">";
         }
 
         // Return raw HTML
