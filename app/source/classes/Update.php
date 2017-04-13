@@ -40,6 +40,7 @@ class Update extends Leafpub {
                 $url = self::generateApiUrl($data->link . self::RELEASE_UPDATE_URL . '/tags/' . $data->newVersion);
                 $cls = json_decode(self::getRemoteData($url));
                 $dlPath = self::path('content/uploads/' . $cls->assets[0]->name);
+                self::$logger->debug('dlPath: ' . $dlPath);
                 $dl = self::downloadZip($cls->assets[0]->url, $dlPath);
                 if($dl){
                     return self::extractData($name, $dlPath, $data);
@@ -54,7 +55,7 @@ class Update extends Leafpub {
     public static function extractData($name, $dlPath, $data){
         $zip = new ZipArchive();
         $res = $zip->open($dlPath, ZipArchive::CHECKCONS);
-
+        self::$logger->debug('extractData(' . $name . ', ' . $dlPath . ')');
         // Check if zip is ok
         if ($res !== TRUE) {
             switch($res) {
@@ -81,14 +82,15 @@ class Update extends Leafpub {
         if ($data->type !== self::UPDATE_TYPE_CORE){
             if ($data->type === self::UPDATE_TYPE_LANGUAGE){
                 $copyPath = self::path(self::$_paths[$data->type]);
+            } elseif ($data->type === self::UPDATE_TYPE_THEME) {
+                $copyPath = self::path(self::$_paths[$data->type] . '/' . lcfirst($name));
             } else {
                 $copyPath = self::path(self::$_paths[$data->type] . '/' . $name);
             }
         } else {
             $copyPath = self::path(self::$_paths[$data->type]);
         }
-        //$unzipPath .= '/' . self::fileName($dlPath);
-
+        
         self::rcopy($unzipPath . '/' . self::fileName($dlPath), $copyPath);
         unlink($dlPath);
         self::removeDir($unzipPath);
@@ -127,14 +129,7 @@ class Update extends Leafpub {
         if ($check){
             $ret['themes'] = $check;
         }
-        /*
-        return [
-            'Leafpub' => self::checkForLeafpubUpdate(),
-            'plugins' => self::checkPluginsForUpdate(),
-            'languages' => self::checkLanguagesForUpdate(),
-            'themes' => self::checkThemesForUpdate()
-        ];
-        */
+       
         return $ret;
     }
     
@@ -150,7 +145,6 @@ class Update extends Leafpub {
                     'newVersion' => $cls->tag_name,
                     'data' => self::encodeData(['link' => 'https://github.com/Leafpub/leafpub', 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_CORE])
                 ];
-                //return self::downloadZip($cls->assets[0]->url, self::path('content/uploads/' . $cls->assets[0]->name));
             } 
         }
 
@@ -304,6 +298,7 @@ class Update extends Leafpub {
 
     // copies files and non-empty directories
     private static function rcopy($src, $dst) {
+        self::$logger->debug('rcopy(' . $src . ', ' . $dst . ')');
         if (is_dir($src)) {
             $files = scandir($src);
             foreach ($files as $file)
