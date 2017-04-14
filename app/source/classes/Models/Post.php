@@ -1296,7 +1296,9 @@ class Post extends AbstractModel {
         }
 
         $tags = $doc->getElementsByTagName('iframe');
-        foreach ($tags as $tag){
+        $length = $tags->length;
+        for ($i = 0; $i < $length; $i++){//$tags as $tag){
+            $tag = $tags[0];
             $parent = $tag->parentNode;
             $src = $tag->getAttribute('src');
 
@@ -1351,6 +1353,7 @@ class Post extends AbstractModel {
             }*/
             $parent->removeChild($tag);
         }
+
         return ['html' => $doc->saveHTML(), 'embed_media' => $embed_media, 'embed_social' => $embed_social];
     }
     
