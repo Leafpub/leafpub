@@ -477,7 +477,7 @@ $(function() {
 
         // Don't save if another request is pending
         if(request || !ready) return;
-
+        
         // Show progress
         progress.go(50);
         Leafpub.highlightErrors('.settings-form');
@@ -714,7 +714,7 @@ $(function() {
 
             // Set the post image
             if(res.uploaded.length) {
-                setPostImage(res.uploaded[0].relative_path);
+                setPostImage(res.uploaded[0].img);
             }
 
             // Show feedback
