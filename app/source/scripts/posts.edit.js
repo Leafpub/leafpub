@@ -1141,7 +1141,7 @@ $(function() {
                         setPostImage(res.file.img);
                     } else {
                         $('#image-src').val(res.file.img).trigger('change');
-                        $('#image-caption').val(res.file.caption);
+                        $('#image-alt').val(res.file.caption);
                         $('#image-sign').val(res.file.sign);
                     }
                 }
