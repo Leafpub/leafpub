@@ -211,11 +211,11 @@ $(function() {
             $.each(media, function(index, value) {
                 // Add deferreds to the queue
                 $.ajax({
-                    url: Leafpub.url('api/uploads/' + encodeURIComponent(value)),
+                    url: Leafpub.url('api/uploads/' + encodeURIComponent(value[0])),
                     type: 'DELETE'
                 })
                 .done(function(res) {
-                    var item = $('.media-list').selectable('getElements', value);
+                    var item = $('[data-sign=' + value[1] +']');//.selectable('getElements', value);
 
                     // Remove deleted item
                     if(res.success) {
@@ -256,7 +256,7 @@ $(function() {
 
             if(res.uploaded.length) {
                 if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
-                    $('.picture').css('background-image', 'url(\'' + res.uploaded[0].thumbnail + '\')');
+                    $('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '\')');
                     $('#image-width').val(res.uploaded[0].width);
                     $('#image-height').val(res.uploaded[0].height);
                     $('#image-slug').val(res.uploaded[0].filename);
