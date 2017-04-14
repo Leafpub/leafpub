@@ -520,6 +520,7 @@ class Upload extends AbstractModel {
         $upload['size'] = (int) $upload['size'];
         $upload['width'] = (int) $upload['width'];
         $upload['height'] = (int) $upload['height'];
+        $upload['caption'] = (string) ($upload['caption'] ?: $upload['filename']);
 
         // Convert dates from UTC to local
         $upload['created'] = Leafpub::utcToLocal($upload['created']);
