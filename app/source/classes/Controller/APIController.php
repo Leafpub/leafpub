@@ -671,7 +671,8 @@ class APIController extends Controller {
             Leafpub::strftime('%H:%M', strtotime($history['post_data']['pub_date']));
 
         $history['post_data']['pub_date'] =
-            Leafpub::strftime('%d %b %Y', strtotime($history['post_data']['pub_date']));
+            // HTML5 input type=date needs format Y-m-d
+            Leafpub::strftime('%Y-%m-%d', strtotime($history['post_data']['pub_date']));
 
         // Return the requested history item
         return $response->withJson([
