@@ -698,6 +698,7 @@ var Editor;
                         if (!editor.dom.is(image.parentNode, 'figure.image')) {
                             oldImg = image;
                             image = image.cloneNode(true);
+                            editor.dom.setAttribs(image, {'class': ''});
                             figure = editor.dom.create('figure');
                             editor.dom.setAttribs(figure, { 'class': 'image' });
                             figure.appendChild(image);
