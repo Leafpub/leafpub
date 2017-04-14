@@ -420,6 +420,9 @@ class Upload extends AbstractModel {
         $file = self::getOne($filename);
         unlink(Leafpub::path($file['path']));
         unlink(Leafpub::path($file['thumbnail']));
+        Leafpub::removeDir(
+            Leafpub::path('content/cache/' . $filename)
+        );
         
         try {
            $rowCount = self::getModel()->delete(['filename' => $filename]);
