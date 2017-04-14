@@ -75,7 +75,7 @@ Leafpub has been translated to the following languages so far:
 | Spanish translation (es) | https://github.com/Leafpub/es |
 | French translation (fr-fr) | https://github.com/Leafpub/fr-fr |
 | Italian translation (it-it) | https://github.com/Leafpub/it-it |
-| Japanese translation (jp-jp) | https://github.com/Leafpub/jp-jp |
+| Japanese translation (ja-jp) | https://github.com/Leafpub/ja-jp |
 | Norwegian translation (nb-bo) | https://github.com/Leafpub/nb-bo |
 | Dutch translation (nl-nl) | https://github.com/Leafpub/nl-nl |
 | Polish translation (pl) | https://github.com/Leafpub/pl |
