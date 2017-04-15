@@ -324,7 +324,7 @@ $(function() {
                     if(res.uploaded.length) {
                         // Set post image
                         if(target === 'post-image') {
-                            setPostImage(res.uploaded[0].relative_path);
+                            setPostImage(res.uploaded[0].img);
                         }
 
                         // Insert into content
@@ -332,7 +332,7 @@ $(function() {
                             if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
                                 // Insert image
                                 contentEditor.image('insert', {
-                                    src: res.uploaded[0].relative_path,
+                                    src: res.uploaded[0].img,
                                     alt: res.uploaded[0].filename,
                                     width: res.uploaded[0].width,
                                     height: res.uploaded[0].height
@@ -341,7 +341,7 @@ $(function() {
                                 // Insert link
                                 contentEditor.insertContent(
                                     $('<a>')
-                                    .attr('href', res.uploaded[0].relative_path)
+                                    .attr('href', res.uploaded[0].img)
                                     .text(res.uploaded[0].filename)
                                     .get(0).outerHTML
                                 );
