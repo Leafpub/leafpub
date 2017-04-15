@@ -580,7 +580,7 @@ return [
             $tags = \Leafpub\Models\Tag::getNames();
         }
         if(count($tags)) {
-            return $options['fn'](['tc' => $tags]);
+            return $options['fn'](['tags' => $tags]);
         } else {
             // No posts, do {{else}}
             return $options['inverse'] ? $options['inverse']() : '';
