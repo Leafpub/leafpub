@@ -321,17 +321,17 @@ class Upload extends AbstractModel {
         $info = [
             'filename' => Leafpub::fileName($filename), // We use filename as our slug
             'extension' => $extension,
-            'path' => $full_path,
-            'relative_path' => $relative_path,
-            'url' => Leafpub::url($relative_path),
+            'path' => $full_path, // will be removed in 1.3
+            'relative_path' => $relative_path, // will be removed in 1.3
+            'url' => Leafpub::url($relative_path), // will be removed in 1.3
             //'thumbnail_path' => $thumb_path,
-            'relative_thumb' => $relative_thumb,
+            'relative_thumb' => $relative_thumb, // will be removed in 1.3
             //'thumbnail' => Leafpub::url($relative_thumb),
             'width' => $width,
             'height' => $height,
             'size' => $size,
             'img' => 'img/' . $filename,
-            'sign' => md5( Leafpub::fileName($filename) . Leafpub::utcToLocal($created) . Setting::getOne('auth_key') )
+            //'sign' => md5( Leafpub::fileName($filename) . Leafpub::localToUtc($created) . Setting::getOne('auth_key') )
         ];
 
         $evt = new Add($info);
@@ -356,7 +356,7 @@ class Upload extends AbstractModel {
             if ($id > 0){
                 $evt = new Added($id);
                 Leafpub::dispatchEvent(Added::NAME, $evt);
-
+                $info['sign'] = self::getOne($info['filename'])['sign'];
                 return $id;
              } else {
                 return false;
