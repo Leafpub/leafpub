@@ -256,7 +256,7 @@ $(function() {
 
             if(res.uploaded.length) {
                 if(res.uploaded[0].extension.match(/(gif|jpg|jpeg|png|svg)$/i)) {
-                    $('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '\')');
+                    $('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '?width=300&sign=' + res.uploaded[0].sign + '\')');
                     $('#image-width').val(res.uploaded[0].width);
                     $('#image-height').val(res.uploaded[0].height);
                     $('#image-slug').val(res.uploaded[0].filename);
