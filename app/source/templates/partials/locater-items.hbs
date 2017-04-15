@@ -1,7 +1,7 @@
 {{#each items}}
     <a href="{{link}}" {{#is link '#'}}data-widget="{{name}}"{{/is}}>
         {{#if avatar}}
-            <img class="avatar" src="{{url avatar}}" alt="{{L 'avatar'}}">
+            <img class="avatar" src="{{img avatar}}" alt="{{L 'avatar'}}">
         {{else}}
             <i class="{{icon}}"></i>
         {{/if}}

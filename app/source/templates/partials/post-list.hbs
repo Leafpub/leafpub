@@ -28,7 +28,7 @@
                 {{#admin_author meta.lock.0}}
                     {{#is ../meta.lock.0 "===" @user.slug}}
                         {{#if avatar}}
-                            <img class="avatar" src="{{url avatar}}" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
+                            <img class="avatar" src="{{img avatar}}" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
                         {{else}}
                             <span class="avatar" title="{{name}} {{date date=../meta.lock.1 format="%B %e, %Y"}}">
                                 <i class="fa fa-user"></i>
@@ -43,7 +43,7 @@
             {{else}}
                 {{#admin_author author}}
                     {{#if avatar}}
-                        <img class="avatar" src="{{url avatar}}" title="{{name}}">
+                        <img class="avatar" src="{{img avatar}}" title="{{name}}">
                     {{else}}
                         <span class="avatar" title="{{name}}">
                             <i class="fa fa-user"></i>

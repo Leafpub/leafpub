@@ -10,7 +10,7 @@
         {{#each items}}
             <a href="{{link}}" title="{{title}}" data-toggle="tooltip" class="{{#if current}}current {{/if}}{{#if class}}{{class}}{{/if}}">
                 {{#if avatar}}
-                    <img src="{{url avatar}}" alt="{{L 'avatar'}}"></i>
+                    <img src="{{img avatar}}" alt="{{L 'avatar'}}"></i>
                 {{else}}
                     <i class="{{icon}}"></i>
                 {{/if}}
@@ -39,7 +39,7 @@
             {{#each items}}
                 <a href="{{link}}" class="{{#if current}}current {{/if}}{{#if class}}{{class}}{{/if}}">
                     {{#if avatar}}
-                        <img src="{{url avatar}}" alt="{{L 'avatar'}}"></i>
+                        <img src="{{img avatar}}" alt="{{L 'avatar'}}"></i>
                     {{else}}
                         <i class="{{icon}}"></i>
                     {{/if}}
