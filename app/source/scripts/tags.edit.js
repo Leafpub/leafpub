@@ -156,8 +156,8 @@ $(function() {
 
             // Update cover
             if(res.uploaded.length) {
-                $('input[name="cover"]').val(res.uploaded[0].relative_path);
-                $('.cover').css('background-image', 'url("' + res.uploaded[0].url + '")');
+                $('input[name="cover"]').val(res.uploaded[0].img);
+                $('.cover').css('background-image', 'url("' + res.uploaded[0].img + '")');
                 $('.remove-cover').prop('hidden', false);
             }
 
@@ -251,8 +251,8 @@ $(function() {
             .done(function(res) {
                 if (res.success === true){
                     $('.media-list').css('display', 'none').html('');
-                    $('input[name="cover"]').val(res.file.path);
-                    $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.path) + '")');
+                    $('input[name="cover"]').val(res.file.img);
+                    $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.img) + '")');
                     $('.remove-cover').prop('hidden', false);
                 }
             });

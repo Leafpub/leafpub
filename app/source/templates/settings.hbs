@@ -117,7 +117,7 @@
                         <div class="form-group">
                             <label>{{L 'cover_photo'}}</label>
                             <input type="hidden" name="cover" value="{{@settings.cover}}">
-                            <div class="cover card"{{#if @settings.cover}} style="background-image: url('{{url @settings.cover}}');"{{/if}}>
+                            <div class="cover card"{{#if @settings.cover}} style="background-image: url('{{img @settings.cover width="300"}}');"{{/if}}>
                                 <div class="media-list row" data-type="image">
 
                                 </div>
@@ -140,7 +140,7 @@
                             <div class="col-sm-6">
                                 <label>{{L 'logo'}}</label>
                                 <input type="hidden" name="logo" value="{{@settings.logo}}">
-                                <div class="logo card card-block"{{#if @settings.logo}} style="background-image: url('{{url @settings.logo}}');"{{/if}}>
+                                <div class="logo card card-block"{{#if @settings.logo}} style="background-image: url('{{img @settings.logo}}');"{{/if}}>
                                     <div class="controls">
                                         <label class="upload-logo btn btn-translucent-dark">
                                             <i class="fa fa-fw fa-camera"></i>

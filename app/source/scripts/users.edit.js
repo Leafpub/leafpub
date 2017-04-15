@@ -146,8 +146,8 @@ $(function() {
 
             // Update avatar
             if(res.uploaded.length) {
-                $('input[name="avatar"]').val(res.uploaded[0].relative_path);
-                $('.avatar .image').attr('src', res.uploaded[0].url).prop('hidden', false);
+                $('input[name="avatar"]').val(res.uploaded[0].img);
+                $('.avatar .image').attr('src', res.uploaded[0].img + "?width=512&sign=" + res.uploaded[0].sign).prop('hidden', false);
                 $('.avatar .none').prop('hidden', true);
             }
 
@@ -177,8 +177,8 @@ $(function() {
 
             // Update cover
             if(res.uploaded.length) {
-                $('input[name="cover"]').val(res.uploaded[0].relative_path);
-                $('.cover').css('background-image', 'url("' + res.uploaded[0].url + '")');
+                $('input[name="cover"]').val(res.uploaded[0].img);
+                $('.cover').css('background-image', 'url("' + res.uploaded[0].img + '")');
                 $('.remove-cover').prop('hidden', false);
             }
 
@@ -278,12 +278,12 @@ $(function() {
                     $('.media-list').css('display', 'none').html('');
                     $('.avatar').css('display', 'block');
                     if (!avatar){
-                        $('input[name="cover"]').val(res.file.path);
-                        $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.path) + '")');
+                        $('input[name="cover"]').val(res.file.img);
+                        $('.cover').css('background-image', 'url("' + Leafpub.url(res.file.img) + '")');
                         $('.remove-cover').prop('hidden', false);
                     } else {
-                        $('input[name="avatar"]').val(res.file.path);
-                        $('.avatar .image').attr('src', Leafpub.url(res.file.path)).prop('hidden', false);
+                        $('input[name="avatar"]').val(res.file.img);
+                        $('.avatar .image').attr('src', Leafpub.url(res.file.img)).prop('hidden', false);
                         $('.avatar .none').prop('hidden', true);
                     }
                 }

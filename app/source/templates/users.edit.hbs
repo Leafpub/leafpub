@@ -45,7 +45,7 @@
         <div
             class="cover"
             {{#if user.cover}}
-                {{#if this}}style="background-image:url('{{url user.cover}}');"{{/if}}
+                {{#if this}}style="background-image:url('{{img user.cover width="1200"}}');"{{/if}}
             {{/if}}
         >
             <div class="media-list row" data-type="image">
@@ -53,7 +53,7 @@
             </div>
             {{!-- Avatar --}}
             <div class="avatar">
-                <img class="image" src="{{url user.avatar}}"{{#unless user.avatar}} hidden{{/unless}}>
+                <img class="image" src="{{img user.avatar width="512"}}"{{#unless user.avatar}} hidden{{/unless}}>
                 <i class="none fa fa-user"{{#if user.avatar}} hidden{{/if}}></i>
                 {{!-- Avatar upload button --}}
                 <div class="inner">
