@@ -178,7 +178,8 @@ class Backup extends Leafpub {
         } catch(\Exception $e) {
             // Cleanup the partial tar if it was created
             if(file_exists($pathname)) unlink($pathname);
-
+            // Log error msg to logfile
+            Leafpub::getLogger()->error($e->getMessage());
             throw new \Exception(
                 'Unable to archive backup files: ' . $e->getMessage(),
                 self::UNABLE_TO_CREATE_ARCHIVE
