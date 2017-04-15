@@ -219,9 +219,18 @@ class Middleware {
                     $simpleImage->brighten($params['brighten'] ?: 0);
                 }
                 $simpleImage->toFile($dir . '/' . $pic);
-                return $response->withHeader('Content-type', 'image')->write(file_get_contents($dir . '/' . $pic));
+                $stream = new \Slim\Http\Stream(fopen($dir . '/' . $pic, 'rb'));
+                return $response
+                        ->withHeader('Content-type', 'image')
+                        ->withHeader('Content-Disposition', 'attachment; filename="' . $pic . '"')
+                        ->withBody($stream);
             } else {
-                return $response->withHeader('Content-type', 'image')->write(file_get_contents(\Leafpub\Leafpub::path($picData['path'])));
+                $stream = new \Slim\Http\Stream(fopen(\Leafpub\Leafpub::path($picData['path']), 'rb'));
+                return $response
+                        ->withHeader('Content-type', 'image')
+                        ->withHeader('Content-Disposition', 'attachment; filename="' . $picData['filename'] . '"')
+                        ->withBody($stream);
+                //return $response->withHeader('Content-type', 'image')->write(file_get_contents(\Leafpub\Leafpub::path($picData['path'])));
             }
         }
         
