@@ -631,7 +631,7 @@ class Leafpub {
         $filename = str_replace($invalid_chars, '-', $filename);
 
         // Remove duplicate dashes
-        return str_replace('.', '', preg_replace('/-+/', '-', $filename));
+        return preg_replace('/-+/', '-', $filename);
     }
 
     /**
