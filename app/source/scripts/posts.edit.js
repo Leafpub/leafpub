@@ -854,6 +854,7 @@ $(function() {
             $(btn).addClass('active');
         })
         .on('hide.leafpub.panel', function() {
+            $('.media-list').css('display', 'none').html('');
             $(btn).removeClass('active');
         });
 
@@ -994,7 +995,6 @@ $(function() {
                 href,
                 sign,
                 alt;
-
             // Get bookmark and selected element
             bookmark = contentEditor.getBookmark();
             image = contentEditor.getSelectedElement();//).closest('img');
@@ -1056,18 +1056,22 @@ $(function() {
         })
         .on('hide.leafpub.panel', function() {
             $('.media-list').css('display', 'none').html('');
+            page = 1; // reset the media list
+            more = true; // reset the media list
             $(btn).removeClass('active');
             contentEditor.focus();
         });
 
         $('.media-file').on('click', function(){
-            page = 1;
+            page = 1; // reset the media list
+            more = true // reset the media list
             $('.picture').css('background-image', '');
+            $('.post-image').css('background-image', '');
             $.ajax({
                 url: Leafpub.url('api/uploads'),
                 type: 'GET',
                 data: {
-                    page: page++,
+                    page: page,
                     query: query
                 }
             })
@@ -1094,12 +1098,12 @@ $(function() {
                 scrollTop = $(list).scrollTop(),
                 scrollHeight = list.scrollHeight,
                 height = $(list).height(),
-                padding = 150,
+                padding = 75,
                 query = $('.media-search').val();
 
             if(!request && more && scrollTop + height + padding >= scrollHeight) {
                 // Show progress
-                //progress.go(50);
+                progress.go(50);
 
                 // Load next page
                 if(request) request.abort();
@@ -1113,7 +1117,7 @@ $(function() {
                 })
                 .done(function(res) {
                     request = null;
-
+            
                     // Are there more pages to load?
                     more = page < res.pagination.total_pages;
 
@@ -1124,7 +1128,7 @@ $(function() {
                 })
                 .always(function() {
                     // Hide progress
-                    //progress.go(100);
+                    progress.go(100);
                 });
             }
         });
