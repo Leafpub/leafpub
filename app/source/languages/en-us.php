@@ -189,6 +189,7 @@ return [
     'search_results_for_{query}' => 'Search results for “{query}”',
     'search' => 'Search',
     'select' => 'Select',
+    'select_a_media_file' => 'Select a media file',
     'select_a_xml_file_to_import' => 'Select a file',
     'select_blog_plattform' => 'Select a blog plattform',
     'set_post_image' => 'Set post image',
