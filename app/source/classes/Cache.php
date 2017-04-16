@@ -86,6 +86,11 @@ class Cache extends Leafpub {
                     );
                 }
             }
+            // Delete all cached image files but only, if $prefix is null
+            // if $prefix is null we've called flush from settings panel
+            if ($file->isDir() && $prefix === null){
+                Leafpub::removeDir($file->getPath());
+            }
         }
 
         return true;
