@@ -186,10 +186,10 @@ try {
 // Insert default settings
 Models\Setting::create(['name' => 'auth_key', 'value' => Leafpub::randomBytes(32)]); // create a unique and secure auth key
 Models\Setting::create(['name' => 'allowed_upload_types', 'value' => 'pdf,doc,docx,ppt,pptx,pps,ppsx,odt,xls,xlsx,psd,txt,md,csv,jpg,jpeg,png,gif,ico,svg,mp3,m4a,ogg,wav,mp4,m4v,mov,wmv,avi,mpg,ogv,3gp,3g2']);
-Models\Setting::create(['name' => 'cover', 'value' => 'source/assets/img/leaves.jpg']);
+Models\Setting::create(['name' => 'cover', 'value' => 'img/leaf.jpg']);
 Models\Setting::create(['name' => 'default_content', 'value' => 'Start writing here...']);
 Models\Setting::create(['name' => 'default_title', 'value' => 'Untitled Post']);
-Models\Setting::create(['name' => 'favicon', 'value' => 'source/assets/img/logo-color.png']);
+Models\Setting::create(['name' => 'favicon', 'value' => 'content/uploads/2016/10/logo-color.png']);
 Models\Setting::create(['name' => 'foot_code', 'value' => '']);
 Models\Setting::create(['name' => 'frag_admin', 'value' => 'admin']);
 Models\Setting::create(['name' => 'frag_author', 'value' => 'author']);
@@ -203,7 +203,7 @@ Models\Setting::create(['name' => 'hbs_cache', 'value' => 'on']);
 Models\Setting::create(['name' => 'head_code', 'value' => '']);
 Models\Setting::create(['name' => 'homepage', 'value' =>  '']);
 Models\Setting::create(['name' => 'language', 'value' => 'en-us']);
-Models\Setting::create(['name' => 'logo', 'value' => 'source/assets/img/logo-color.png']);
+Models\Setting::create(['name' => 'logo', 'value' => 'content/uploads/2016/10/logo-color.png']);
 Models\Setting::create(['name' => 'maintenance', 'value' => 'off']);
 Models\Setting::create(['name' => 'maintenance_message', 'value' => '<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p><p>&mdash; The Team</p>']);
 Models\Setting::create(['name' => 'navigation', 'value' => '[{"label":"Home","link":"/"}]']);
@@ -276,7 +276,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Welcome to Leafpub',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.welcome.html')),
-        'image' => 'content/uploads/2016/10/leaves.jpg',
+        'image' => 'img/leaf.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
         'sticky' => true,
@@ -288,7 +288,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'The Editor',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.editor.html')),
-        'image' => 'content/uploads/2016/10/sunflower.jpg',
+        'image' => 'img/note.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
         'created' => new \Zend\Db\Sql\Expression('NOW()')
@@ -299,7 +299,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Themes & Plugins',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.themes.html')),
-        'image' => 'content/uploads/2016/10/autumn.jpg',
+        'image' => 'img/flowers.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
         'created' => new \Zend\Db\Sql\Expression('NOW()')
@@ -310,7 +310,7 @@ try {
         'author' => $_REQUEST['username'],
         'title' => 'Help & Support',
         'content' => file_get_contents(Leafpub::path('source/defaults/post.support.html')),
-        'image' => 'content/uploads/2016/10/ladybug.jpg',
+        'image' => 'img/light.jpg',
         'status' => 'published',
         'tags' => ['getting-started'],
         'created' => new \Zend\Db\Sql\Expression('NOW()')
