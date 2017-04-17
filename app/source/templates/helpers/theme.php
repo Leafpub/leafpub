@@ -51,6 +51,8 @@ return [
         // Homepage class
         if(\Leafpub\Leafpub::isHomepage()) {
             $class .= ' homepage';
+        } elseif ($options['data']['template'] === 'page'){
+            $class .= ' lp-' . $options['_this']['post']['slug'];
         }
 
         // Pagination class
