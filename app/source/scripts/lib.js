@@ -1,6 +1,6 @@
 // Libs
 // include node_modules/jquery/dist/jquery.min.js
-// @include node_modules/jquery-ui/dist/jquery-ui.min.js
+// @include app/source/scripts/modules/jquery-ui.min.js
 // @include node_modules/tether/dist/js/tether.min.js
 // @include node_modules/bootstrap/dist/js/bootstrap.min.js
 // @include node_modules/nanobar/nanobar.min.js
