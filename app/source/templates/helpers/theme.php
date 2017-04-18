@@ -310,8 +310,10 @@ return [
             }
         }
         
-        if (!($options['data']['meta']['amp'])){
-            $html .= "\n<link rel=\"amphtml\" href=\"" . $options['data']['meta']['ld_json']['url'] . "/amp\">";
+        if (!\Leafpub\Leafpub::isHomepage()){
+            if (!($options['data']['meta']['amp'])){
+                $html .= "\n<link rel=\"amphtml\" href=\"" . $options['data']['meta']['ld_json']['url'] . "/amp\">";
+            }
         }
 
         // Return raw HTML
