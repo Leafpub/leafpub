@@ -611,7 +611,10 @@ $(function() {
             description =
                 $.trim($('#meta-description').val()) ||
                 $.trim($(contentEditor.getContent()).text());
-
+        
+        $('.meta-used.title').text(title.length);
+        $('.meta-used.description').text(description.length);
+        
         $('.se-slug').text(slug);
         $('.se-title').text(title);
         $('.se-description').text(description);

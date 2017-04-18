@@ -514,10 +514,26 @@
                 <div class="form-group">
                     <label for="meta-title">{{L 'meta_title'}}</label>
                     <input class="form-control" type="text" name="meta-title" id="meta-title" value="{{post.meta_title}}" autofocus>
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">{{L 'recommended'}}: <strong>70</strong></small>
+                        </div>
+                        <div class="col-6 mt-1">
+                            <small class="text-muted right">{{L 'used'}}: <span class="meta-used title">70</span></small>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="meta-description">{{L 'meta_description'}}</label>
                     <textarea class="form-control" name="meta-description" id="meta-description" rows="4">{{post.meta_description}}</textarea>
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">{{L 'recommended'}}: <strong>170</strong></small>
+                        </div>
+                        <div class="col-6 mt-1">
+                            <small class="text-muted right">{{L 'used'}}: <span class="meta-used description">70</span></small>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>{{L 'search_engine_preview'}}</label>

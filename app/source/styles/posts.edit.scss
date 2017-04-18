@@ -40,9 +40,16 @@ $media-list-item-image-size: 4rem;
     }
 }
 
-.settings-panel .checkbox .badge {
-    font-weight: 300;
-    font-size: 1rem;
+.settings-panel {
+    .checkbox .badge {
+        font-weight: 300;
+        font-size: 1rem;
+    }
+
+    .meta-used {
+        color: $leafpub-green;
+        font-weight: bold;
+    }
 }
 
 
