@@ -20,7 +20,7 @@ class Upload extends CreateTable {
 
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]), 
-            new \Zend\Db\Sql\Ddl\Column\Varchar('caption', 191), 
+            new \Zend\Db\Sql\Ddl\Column\Varchar('caption', 191, true), 
             new \Zend\Db\Sql\Ddl\Column\Datetime('created'),
             new \Zend\Db\Sql\Ddl\Column\Varchar('path', 191),
             new \Zend\Db\Sql\Ddl\Column\Varchar('filename', 90),
