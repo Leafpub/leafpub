@@ -16,5 +16,6 @@
     },
     .se-description {
         @include text-truncate;
+        white-space: initial;
     }
 }
