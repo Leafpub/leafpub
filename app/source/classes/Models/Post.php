@@ -1274,8 +1274,8 @@ class Post extends AbstractModel {
     
     protected static function ampifyImageTags($content){
         $content = str_replace('<img', '<amp-img', $content);
-        $embed_media = 'false';
-        $embed_social = 'false';
+        $embed_media = [];
+        $embed_social = [];
 
         $doc = new \DOMDocument();
         // see http://stackoverflow.com/a/8218649
@@ -1303,44 +1303,44 @@ class Post extends AbstractModel {
             $src = $tag->getAttribute('src');
 
             if (mb_stristr($src, 'youtube')){
-                if ($embed_media === 'false' || $embed_media === 'youtube'){
-                    $embed_media = 'youtube';
-                    $newNode = $parent->appendChild(new \DOMElement('amp-youtube'));
-                    $src = preg_replace('/https:\/\/www.youtube.com\/embed\//', '', $src);
-                    $src = stristr($src, '?', true);
-                    $newNode->setAttribute('data-videoid', $src);
-                    $newNode->setAttribute('layout', "responsive");
-                    $newNode->setAttribute('width', $tag->getAttribute('width'));
-                    $newNode->setAttribute('height', $tag->getAttribute('height'));
+                if (!in_array('youtube', $embed_media)){
+                    $embed_media[] = 'youtube';
                 }
+                $newNode = $parent->appendChild(new \DOMElement('amp-youtube'));
+                $src = preg_replace('/https:\/\/www.youtube.com\/embed\//', '', $src);
+                $src = stristr($src, '?', true);
+                $newNode->setAttribute('data-videoid', $src);
+                $newNode->setAttribute('layout', "responsive");
+                $newNode->setAttribute('width', $tag->getAttribute('width'));
+                $newNode->setAttribute('height', $tag->getAttribute('height'));
             } elseif (mb_stristr($src, 'vimeo')){
-                if ($embed_media === 'false' || $embed_media === 'vimeo'){
-                    $embed_media = 'vimeo';
-                    $newNode = $parent->appendChild(new \DOMElement('amp-vimeo'));
-                    $newNode->setAttribute('data-videoid', substr(strrchr($src, '/'), 1));
-                    $newNode->setAttribute('layout', "responsive");
-                    $newNode->setAttribute('width', $tag->getAttribute('width'));
-                    $newNode->setAttribute('height', $tag->getAttribute('height'));
+                if (!in_array('vimeo', $embed_media)){
+                    $embed_media[] = 'vimeo';
                 }
+                $newNode = $parent->appendChild(new \DOMElement('amp-vimeo'));
+                $newNode->setAttribute('data-videoid', substr(strrchr($src, '/'), 1));
+                $newNode->setAttribute('layout', "responsive");
+                $newNode->setAttribute('width', $tag->getAttribute('width'));
+                $newNode->setAttribute('height', $tag->getAttribute('height'));
             } elseif (mb_stristr($src, 'soundcloud')){
-                if ($embed_media === 'false' || $embed_media === 'soundcloud'){
-                    $embed_media = 'soundcloud';
-                    $newNode = new \DOMElement('amp-soundcloud');
-                    $newNode->setAttribute('data-trackid', "mGENRKrdoGY");
-                    $newNode->setAttribute('layout', "fixed-height");
-                    $newNode->setAttribute('data-visual', true);
-                    $newNode->setAttribute('height', $tag->getAttribute('height'));
+                if (!in_array('soundcloud', $embed_media)){
+                    $embed_media[] = 'soundcloud';
                 }
+                $newNode = new \DOMElement('amp-soundcloud');
+                $newNode->setAttribute('data-trackid', "mGENRKrdoGY");
+                $newNode->setAttribute('layout', "fixed-height");
+                $newNode->setAttribute('data-visual', true);
+                $newNode->setAttribute('height', $tag->getAttribute('height'));
             } elseif (mb_stristr($src, 'facebook')){
-                if ($embed_social === 'false' || $embed_social === 'facebook'){
-                    $embed_social = 'facebook';
-                    $newNode = $parent->appendChild(new \DOMElement('amp-facebook'));
-                    $src = urldecode(stristr(substr(stristr($src, '='), 1), '&', true));
-                    $newNode->setAttribute('data-href', $src);
-                    $newNode->setAttribute('layout', "responsive");
-                    $newNode->setAttribute('width', $tag->getAttribute('width'));
-                    $newNode->setAttribute('height', $tag->getAttribute('height'));
+                if (!in_array('facebook', $embed_social)){
+                    $embed_social[] = 'facebook';
                 }
+                $newNode = $parent->appendChild(new \DOMElement('amp-facebook'));
+                $src = urldecode(stristr(substr(stristr($src, '='), 1), '&', true));
+                $newNode->setAttribute('data-href', $src);
+                $newNode->setAttribute('layout', "responsive");
+                $newNode->setAttribute('width', $tag->getAttribute('width'));
+                $newNode->setAttribute('height', $tag->getAttribute('height'));
             } /*elseif (mb_stristr($src, 'twitter')){
                 if ($embed_social === 'false' || $embed_social === 'twitter'){
                     $embed_social = 'twitter';

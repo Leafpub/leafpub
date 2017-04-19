@@ -4,19 +4,19 @@
 {{#post}}
         <meta charset="utf-8">
         <script async src="https://cdn.ampproject.org/v0.js"></script>
-        {{#is @meta.embed_media "youtube"}}
+        {{#is "youtube" "in" @meta.embed_media}}
         <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
         {{/is}}
-        {{#is @meta.embed_media "vimeo"}}
+        {{#is "vimeo" "in" @meta.embed_media}}
         <script async custom-element="amp-vimeo" src="https://cdn.ampproject.org/v0/amp-vimeo-0.1.js"></script>
         {{/is}}
-        {{#is @meta.embed_media "soundcloud"}}
+        {{#is "soundcloud" "in" @meta.embed_media}}
         <script async custom-element="amp-soundcloud" src="https://cdn.ampproject.org/v0/amp-soundcloud-0.1.js"></script>
         {{/is}}
-        {{#is @meta.embed_social "facebook"}}
+        {{#is "facebook" "in" @meta.embed_social}}
         <script async custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js"></script>
         {{/is}}
-        {{#is @meta.embed_social "twitter"}}
+        {{#is "twitter" "in" @meta.embed_social}}
         <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
         {{/is}}
         <title>{{title}}</title>
