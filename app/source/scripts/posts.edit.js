@@ -607,10 +607,10 @@ $(function() {
         var slug = $('#slug').val(),
             title =
                 $.trim($('#meta-title').val()) ||
-                $.trim(titleEditor.getContent()),
+                $.trim(titleEditor.getContent()).slice(0,70),
             description =
                 $.trim($('#meta-description').val()) ||
-                $.trim($(contentEditor.getContent()).text());
+                $.trim($(contentEditor.getContent()).text()).slice(0,170);
         
         $('.meta-used.title').text(title.length);
         $('.meta-used.description').text(description.length);
