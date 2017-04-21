@@ -25,6 +25,11 @@ $lp-item-height: $lp-item-width;
     background: $leafpub-black;
     border-radius: $border-radius;
     color: white;
+    opacity: .25;
+    transition: opacity 0.5s ease-in-out;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 // Toolbar items
