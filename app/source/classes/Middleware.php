@@ -193,10 +193,10 @@ class Middleware {
                    $pic .= '-' . $key . $params[$key]; 
                 }
                 $pic .= '.' . $picData['extension'];
-                
+                $mime = "";
                 if (is_file($dir . '/' . $pic)){
                     // We have a cached image, so deliver it.
-                    return $response->withHeader('Content-type', 'image')->write(file_get_contents($dir . '/' . $pic));
+                    return $response->withHeader('Content-type', mime_content_type($dir . '/' . $pic))->write(file_get_contents($dir . '/' . $pic));
                 }
                 $simpleImage = new \claviska\SimpleImage();
                 $simpleImage->fromFile(\Leafpub\Leafpub::path($picData['path']));
@@ -221,13 +221,14 @@ class Middleware {
                 $simpleImage->toFile($dir . '/' . $pic, null, 50);
                 $stream = new \Slim\Http\Stream(fopen($dir . '/' . $pic, 'rb'));
                 return $response
-                        ->withHeader('Content-type', 'image')
+                        ->withHeader('Content-type', mime_content_type($dir . '/' . $pic))
                         ->withHeader('Content-Disposition', 'attachment; filename="' . $pic . '"')
                         ->withBody($stream);
             } else {
-                $stream = new \Slim\Http\Stream(fopen(\Leafpub\Leafpub::path($picData['path']), 'rb'));
+                $file = \Leafpub\Leafpub::path($picData['path']);
+                $stream = new \Slim\Http\Stream(fopen($file, 'rb'));
                 return $response
-                        ->withHeader('Content-type', 'image')
+                        ->withHeader('Content-type', mime_content_type($file))
                         ->withHeader('Content-Disposition', 'attachment; filename="' . $picData['filename'] . '"')
                         ->withBody($stream);
                 //return $response->withHeader('Content-type', 'image')->write(file_get_contents(\Leafpub\Leafpub::path($picData['path'])));
