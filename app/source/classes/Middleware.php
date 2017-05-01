@@ -218,7 +218,7 @@ class Middleware {
                 if (isset($params['brighten'])){
                     $simpleImage->brighten($params['brighten'] ?: 0);
                 }
-                $simpleImage->toFile($dir . '/' . $pic);
+                $simpleImage->toFile($dir . '/' . $pic, null, 50);
                 $stream = new \Slim\Http\Stream(fopen($dir . '/' . $pic, 'rb'));
                 return $response
                         ->withHeader('Content-type', 'image')
