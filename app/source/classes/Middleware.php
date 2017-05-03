@@ -174,6 +174,7 @@ class Middleware {
     }
     
     public function imageMiddleware($request, $response, $next){
+        $quality = 50;
         if (mb_stristr($request->getUri()->getPath(), '/img/')){
             $pic = \Leafpub\Leafpub::fileName($request->getUri()->getPath(), 5); // pic == /img/filename.jpg
             $picData = \Leafpub\Models\Upload::getOne($pic);
@@ -201,6 +202,7 @@ class Middleware {
                 $simpleImage = new \claviska\SimpleImage();
                 $simpleImage->fromFile(\Leafpub\Leafpub::path($picData['path']));
                 if (isset($params['width'])){
+                    $quality = $params['width'] < 1000 ? 100 : 50;
                     $simpleImage->fitToWidth($params['width']);
                 }
                 if (isset($params['blur'])){
@@ -218,7 +220,7 @@ class Middleware {
                 if (isset($params['brighten'])){
                     $simpleImage->brighten($params['brighten'] ?: 0);
                 }
-                $simpleImage->toFile($dir . '/' . $pic, null, 50);
+                $simpleImage->toFile($dir . '/' . $pic, null, $quality);
                 $stream = new \Slim\Http\Stream(fopen($dir . '/' . $pic, 'rb'));
                 return $response
                         ->withHeader('Content-type', mime_content_type($dir . '/' . $pic))
