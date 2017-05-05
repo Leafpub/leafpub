@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "claviska/simpleimage",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "c5845378b26ddf1c703c3673d4e65e7e438cd114"
+                "reference": "2909eec9b899519339c5d06c0fa55c25c5cfed8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/c5845378b26ddf1c703c3673d4e65e7e438cd114",
-                "reference": "c5845378b26ddf1c703c3673d4e65e7e438cd114",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/2909eec9b899519339c5d06c0fa55c25c5cfed8e",
+                "reference": "2909eec9b899519339c5d06c0fa55c25c5cfed8e",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 }
             ],
             "description": "A PHP class that makes working with images as simple as possible.",
-            "time": "2017-01-20T16:38:12+00:00"
+            "time": "2017-03-29T16:49:22+00:00"
         },
         {
             "name": "composer/semver",
@@ -714,16 +714,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.2.6",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "b7a1b9e0a0f623ce43b4c8d775eb138f190c9d8d"
+                "reference": "b8a401f733b43251e1d088c589368b2a94155e40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b7a1b9e0a0f623ce43b4c8d775eb138f190c9d8d",
-                "reference": "b7a1b9e0a0f623ce43b4c8d775eb138f190c9d8d",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b8a401f733b43251e1d088c589368b2a94155e40",
+                "reference": "b8a401f733b43251e1d088c589368b2a94155e40",
                 "shasum": ""
             },
             "require": {
@@ -770,20 +770,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-21T09:12:04+00:00"
+            "time": "2017-05-01T14:58:48+00:00"
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.5.6",
+            "version": "4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "87a20625963d051cce993130c6d8ebd5fbc96314"
+                "reference": "f91c525a7ad72ab2cadf5a2fc7143b2f700d1fc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/87a20625963d051cce993130c6d8ebd5fbc96314",
-                "reference": "87a20625963d051cce993130c6d8ebd5fbc96314",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/f91c525a7ad72ab2cadf5a2fc7143b2f700d1fc0",
+                "reference": "f91c525a7ad72ab2cadf5a2fc7143b2f700d1fc0",
                 "shasum": ""
             },
             "type": "component",
@@ -816,7 +816,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2017-03-30T13:48:40+00:00"
+            "time": "2017-05-04T12:45:07+00:00"
         },
         {
             "name": "zendframework/zend-db",
