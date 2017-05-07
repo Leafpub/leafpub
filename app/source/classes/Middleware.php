@@ -195,6 +195,9 @@ class Middleware {
                 }
                 $pic .= '.' . $picData['extension'];
                 $mime = "";
+                 if ($picData['extension'] === 'gif'){
+                    return $response->withHeader('Content-type', mime_content_type($picData['path']))->write(file_get_contents($picData['path']));
+                }
                 if (is_file($dir . '/' . $pic)){
                     // We have a cached image, so deliver it.
                     return $response->withHeader('Content-type', mime_content_type($dir . '/' . $pic))->write(file_get_contents($dir . '/' . $pic));
