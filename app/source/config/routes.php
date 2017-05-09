@@ -190,7 +190,10 @@ $app->group("/$frags->search", function() use($frags) {
     $this->get("[/{query}[/$frags->page/{page:[0-9]+}]]", 'Leafpub\Controller\ThemeController:search');
 })->add('Leafpub\Middleware:adjustSearchQuery')->add('Leafpub\Middleware:adjustPageNumbers');
 
+$app->get('/sitemap', 'Leafpub\Controller\ThemeController:sitemap');
+
 // Posts
 $app->get('/{post}', 'Leafpub\Controller\ThemeController:post');
 $app->get('/{post}/amp', 'Leafpub\Controller\ThemeController:ampify');
+
 ?>

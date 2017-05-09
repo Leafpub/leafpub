@@ -195,4 +195,11 @@ class ThemeController extends Controller {
             $response->write($html);
     }
 
+    public function sitemap($request, $response, $args){
+        $xml = \Leafpub\Leafpub::generateSitemap();
+
+        return $html === false ?
+            $this->notFound($request, $response) :
+            $response->withHeader('Content-type', 'application/xml')->write($xml);
+    }
 }
