@@ -151,6 +151,18 @@ if(!file_exists(Leafpub::path('.htaccess'))) {
     }
 }
 
+$robots_path = Leafpub::path('robots.txt');
+$robots_entry = file_get_contents(Leafpub::path('source/defaults/default.robots.txt'));
+$robots_entry = str_replace('{{sitemap_url}}', Leafpub::url('sitemap'), $robots_entry);
+if(!file_put_contents($robots_path, $robots_entry)) {
+    exit(json_encode([
+        'success' => false,
+        'message' =>
+            'Unable to create /robots.txt. Make sure the directory is writeable or create the ' .
+            'file yourself by copying it from /source/defaults/default.robots.txt and try again.'
+    ]));
+}
+
 // Create database.php from default.database.php
 $db_pathname = Leafpub::path('database.php');
 $db_config = file_get_contents(Leafpub::path('source/defaults/default.database.php'));
