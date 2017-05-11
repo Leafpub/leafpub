@@ -20,6 +20,11 @@ body:not(.no-menu) {
     padding: .4rem 0 4rem 0;
     overflow-y: auto;
     user-select: none;
+    &.indent a.current {
+                border-left: .5rem solid $leafpub-blue;
+                background: white;
+                color: black;
+            }
     a {
         text-align: center;
         font-size: 1.6rem;
@@ -33,11 +38,6 @@ body:not(.no-menu) {
         }
         &.current {
             color: $leafpub-blue;
-            &.indent {
-                border-left: .5rem solid $leafpub-blue;
-                background: white;
-                color: black;
-            }
         }
         &:first-child {
             // Let the logo breathe
