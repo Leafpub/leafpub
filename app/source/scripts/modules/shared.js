@@ -43,6 +43,7 @@ $(function() {
     });
 
     // Main menu tooltips
+    /*
     $('.main-menu [data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         placement: 'right'
@@ -54,7 +55,7 @@ $(function() {
             event.preventDefault();
         }
     });
-
+    */
     // Platform classes on <html>
     $('html')
     .toggleClass('ios', /iPad|iPhone|iPod/.test(navigator.platform))

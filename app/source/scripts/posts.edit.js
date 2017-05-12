@@ -630,6 +630,7 @@ $(function() {
     }
 
     // Tooltips
+    /*
     $('.editor-toolbar').find('[title]')
     .tooltip({
         trigger: 'hover',
@@ -641,7 +642,7 @@ $(function() {
             event.preventDefault();
         }
     });
-
+    */
     // Watch for unsaved changes
 	window.onbeforeunload = function() {
         if(ready && cleanState !== JSON.stringify(serializePost())) {

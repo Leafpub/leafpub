@@ -210,6 +210,7 @@ $(function() {
     });
 
     // Tooltips
+    /*
     $('.top-toolbar').find('[title]')
     .tooltip({
         trigger: 'hover',
@@ -221,4 +222,5 @@ $(function() {
             event.preventDefault();
         }
     });
+    */
 });
