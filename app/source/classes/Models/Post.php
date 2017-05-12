@@ -1353,8 +1353,10 @@ class Post extends AbstractModel {
             }*/
             $parent->removeChild($tag);
         }
-
-        return ['html' => $doc->saveHTML(), 'embed_media' => $embed_media, 'embed_social' => $embed_social];
+        
+        $html = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $doc->saveHTML()));
+        
+        return ['html' => $html, 'embed_media' => $embed_media, 'embed_social' => $embed_social];
     }
     
     // Assign posts to new user
