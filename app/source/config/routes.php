@@ -194,6 +194,7 @@ $app->get('/sitemap', 'Leafpub\Controller\ThemeController:sitemap');
 
 // Posts
 $app->get('/{post}', 'Leafpub\Controller\ThemeController:post');
-$app->get('/{post}/amp', 'Leafpub\Controller\ThemeController:ampify');
-
+if (Setting::getOne('amp') == 'on'){
+    $app->get('/{post}/amp', 'Leafpub\Controller\ThemeController:ampify');
+}
 ?>

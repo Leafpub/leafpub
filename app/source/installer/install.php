@@ -198,6 +198,7 @@ try {
 // Insert default settings
 Models\Setting::create(['name' => 'auth_key', 'value' => Leafpub::randomBytes(32)]); // create a unique and secure auth key
 Models\Setting::create(['name' => 'allowed_upload_types', 'value' => 'pdf,doc,docx,ppt,pptx,pps,ppsx,odt,xls,xlsx,psd,txt,md,csv,jpg,jpeg,png,gif,ico,svg,mp3,m4a,ogg,wav,mp4,m4v,mov,wmv,avi,mpg,ogv,3gp,3g2']);
+Models\Setting::create(['name' => 'amp', 'value' => 'on']);
 Models\Setting::create(['name' => 'cover', 'value' => 'img/leaf.jpg']);
 Models\Setting::create(['name' => 'default_content', 'value' => 'Start writing here...']);
 Models\Setting::create(['name' => 'default_title', 'value' => 'Untitled Post']);

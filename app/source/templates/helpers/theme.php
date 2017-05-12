@@ -309,7 +309,7 @@ return [
         }
         
         if (!\Leafpub\Leafpub::isHomepage()){
-            if (!($options['data']['meta']['amp'])){
+            if (!($options['data']['meta']['amp']) && $options['data']['settings']['amp'] == 'on'){
                 $html .= "\n<link rel=\"amphtml\" href=\"" . $options['data']['meta']['ld_json']['url'] . "/amp\">";
             }
         }
