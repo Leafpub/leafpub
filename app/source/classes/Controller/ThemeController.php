@@ -72,7 +72,8 @@ class ThemeController extends Controller {
     *
     **/
     public function blog($request, $response, $args) {
-        $html = Blog::render($args['page']);
+        $page = isset($args['page']) ? $args['page'] : false;
+        $html = Blog::render($page);
 
         return $html === false ?
             $this->notFound($request, $response) :

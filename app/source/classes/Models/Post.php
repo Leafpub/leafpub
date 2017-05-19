@@ -1138,6 +1138,7 @@ class Post extends AbstractModel {
     }
 
     private static function getPostMeta($post_id){
+        $ret = [];
         try{
             $meta = PostMeta::getMany(['post' => $post_id]);
             foreach($meta as $met){

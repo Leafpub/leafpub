@@ -312,6 +312,7 @@ class Tag extends AbstractModel {
     *
     **/
     public static function getTagsToPost($postId){
+        $tags = [];
         try {
             $table = new Tables\PostTags();
             $select1 = $table->getSql()->select()
