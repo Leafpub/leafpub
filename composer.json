@@ -16,7 +16,9 @@
         "symfony/event-dispatcher": "^3.1",
         "composer/semver": "^1.4.2",
         "zendframework/zend-db": "^2.7",
-        "monolog/monolog": "^1.0"
+        "monolog/monolog": "^1.0",
+        "tracy/tracy": "^2.4",
+        "runcmf/runtracy": "^0.2.9"
     },
     "config": {
         "vendor-dir": "app/source/vendor"

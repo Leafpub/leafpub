@@ -242,4 +242,16 @@ class Middleware {
         
         return $next($request, $response);
     }
+
+    public function tracy($request, $response, $next){
+        if (LEAFPUB_DEV){
+            \Tracy\Debugger::enable();
+            //\Tracy\Debugger::getBar()->addPanel(new \Zarganwar\PerformancePanel\Panel(), "PerformancePanel");
+            if ($request->getParsedBody()) {
+                \Tracy\Debugger::barDump($request->getParsedBody(), 'ParsedBody');
+            }
+            $response = $next($request, $response);
+            return $response;
+        }
+    }
 }
