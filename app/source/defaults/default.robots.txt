@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /content/
+Disallow: /admin/
 
 Sitemap: {{sitemap_url}}
