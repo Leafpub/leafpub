@@ -296,7 +296,7 @@ class Backup extends Leafpub {
 
             // Untar the archive
             $phar = new \PharData($backup['pathname']);
-            $phar->extractTo($tmp_dir);
+            $phar->extractTo($tmp_dir, null, true);
 
             // Restore original execution limit
             ini_set('max_execution_time', $time_limit);
