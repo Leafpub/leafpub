@@ -12,7 +12,7 @@ $media-list-item-image-size: 4rem;
     background-position: center;
     overflow: hidden;
     -webkit-transform: translateZ(0); // enable hardware acceleration in iOS
-    &::before {
+    /*&::before {
         content: '';
         position: absolute;
         top: -50%;
@@ -21,7 +21,7 @@ $media-list-item-image-size: 4rem;
         height: 200%;
         background: inherit;
         filter: blur($user-cover-blur);
-    }
+    }*/
     .cover-controls {
         position: absolute;
         right: 1.5rem;
@@ -35,7 +35,7 @@ $media-list-item-image-size: 4rem;
     }
 
     .media-list {
-        //height: 100%;
+        height: 100%;
         padding: .2rem 1rem;
         user-select: none;
         width: 50%;
