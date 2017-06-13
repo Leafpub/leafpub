@@ -159,7 +159,7 @@ var Editor;
             plugins: 'lists,paste,table,textpattern',
             relative_urls: true,
             selector: '[data-leafpub-id="' + element.getAttribute('data-leafpub-id') + '"]',
-            skin: false,//'lightgray',
+            skin: 'lightgray', //false,
             textpattern_patterns: [
                 {start: '*', end: '*', format: 'italic'},
                 {start: '_', end: '_', format: 'italic'},
@@ -180,7 +180,8 @@ var Editor;
                 {start: '- ', cmd: 'InsertUnorderedList'}
             ],
             toolbar: false,
-            //table_toolbar: 'tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+            table_toolbar: 'tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+            table_default_attributes : $.extend({}, {class: 'table '}, instance.options.table_default_attributes),
             setup: function(ed) {
                 instance.editor = ed;
 
@@ -802,14 +803,22 @@ var Editor;
             }
         },
 
-        table: function(cmd){
+        table: function(cmd, options){
+            var editor = this.editor,
+                table,
+                id = $('.mce-item-table').length;
             //if(!cmd) return;
             if(cmd === 'test') {
-                return !!this.editor.dom.getParent(this.editor.selection.getNode(), 'table');
-            } else {
-                this.editor.plugins.table.insertTable(3,3);
-                this.editor.addVisual();
-                //this.editor.execCommand('mceInsertTable');
+                return !!editor.dom.getParent(editor.selection.getNode(), 'table');
+            } else if (cmd === 'insert'){
+                this.editor.undoManager.transact(function(){
+                    id++;
+                    table = editor.plugins.table.insertTable(options.cols, options.rows);
+                    $(table).attr('id', 'table_' + id);
+                    $(table).toggleClass(options.table_class);
+                    editor.addVisual();
+                });
+                return table;
             }
         }
     };

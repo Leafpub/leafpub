@@ -279,7 +279,12 @@ $(function() {
             ready: function() {
                 contentEditor = this;
                 makeReady();
+            },
+            /*
+            table_default_attributes: {
+                class: 'table table-hovered'
             }
+            */
         });
     }
 
@@ -441,13 +446,42 @@ $(function() {
         }
 
         // Run special commands
-        if(cmd === 'save') save();
+        switch (cmd){
+            case 'save':
+                save();
+                break;
+            case 'zen':
+                toggleZenMode();
+                break;
+            case 'settings':
+                showPanel('.settings-panel');
+                break;
+            case 'link':
+                showPanel('.linkPanel');
+                break;
+            case 'embed':
+                showPanel('.embed-panel');
+                break;
+            case 'image':
+                showPanel('.image-panel');
+                break;
+            case 'table':
+                showPanel('.table-panel');
+                break;
+            default:
+                break;
+        }
+        /*
+        if(cmd === 'save'){
+            save();
+        }
         if(cmd === 'zen') toggleZenMode();
         if(cmd === 'settings') showPanel('.settings-panel');
         if(cmd === 'link') showPanel('.link-panel');
         if(cmd === 'embed') showPanel('.embed-panel');
         if(cmd === 'image') showPanel('.image-panel');
         if(cmd === 'table'){}
+        */
     }
 
     $('[data-save]').on('click', function(){
@@ -1287,6 +1321,34 @@ $(function() {
             // Remember new width/height
             width = newWidth;
             height = newHeight;
+        });
+    })();
+
+    // Table
+    (function(){
+        var btn = $('[data-editor="table"]'),
+            cols,
+            rows,
+            table_class,
+            table;
+        
+        $('.table-panel')
+            .on('show.leafpub.panel', function(){
+
+            })
+            .on('shown.leafpub.panel', function(){
+
+            })
+            .on('hide.leafpub.panel', function(){
+
+            });
+
+        $('.table-form').on('submit', function(event){
+            event.preventDefault();
+            cols = $('#table-cols').val() || 3;
+            rows = $('#table-rows').val() || 3;
+            table_class = $('#table-class').val() || '';
+            var table = contentEditor.table('insert', {cols: cols, rows: rows, table_class: table_class});
         });
     })();
 

@@ -122,7 +122,7 @@
                 <button type="button" class="btn btn-secondary" data-editor="link" title="{{L 'link'}}"><i class="fa fa-link"></i></button>
                 <button type="button" class="btn btn-secondary" data-editor="image" title="{{L 'image'}}"><i class="fa fa-picture-o"></i></button>
                 <button type="button" class="btn btn-secondary" data-editor="embed" title="{{L 'embed'}}"><i class="fa fa-cube"></i></button>
-                <!--button type="button" class="btn btn-secondary" data-editor="table" title="{{L 'table'}}"><i class="fa fa-table"></i></button-->
+                <button type="button" class="btn btn-secondary" data-editor="table" title="{{L 'table'}}"><i class="fa fa-table"></i></button>
             </div>
 
             {{!-- Zen mode, settings --}}
@@ -371,6 +371,42 @@
         </div>
     </form>
 </div>
+
+{{!-- Table panel --}}
+<div class="table-panel panel panel-right">
+    <form class="table-form" autocomplete="off" novalidate>
+        <button type="button" class="close btn btn-link" data-panel="hide"><i class="fa fa-remove"></i></button>
+        <h3>{{L 'table'}}</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="table-rows">{{L 'rows'}}</label>
+                    <input class="form-control" type="number" name="rows" id="table-rows" min="0">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="table-cols">{{L 'cols'}}</label>
+                    <input class="form-control" type="number" name="cols" id="table-cols" min="0">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="table-class">{{L 'class'}}</label>
+            <input class="form-control" type="text" name="class" id="table-class">
+        </div>
+        <!--div class="form-group">
+            <label for="image-class">class</label>
+            <input class="form-control" type="text" name="class" id="image-class">
+        </div-->        
+        <div class="form-group mt-2">
+            <button class="btn btn-secondary delete-table pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
+            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+        </div>
+    </form>
+</div>
+
 
 {{!-- Settings panel --}}
 <div class="settings-panel panel panel-right">
