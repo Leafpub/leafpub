@@ -234,6 +234,8 @@ function pruneVendor() {
         '!app/source/vendor/tinymce/tinymce/themes',
         '!app/source/vendor/tinymce/tinymce/themes/modern',
         '!app/source/vendor/tinymce/tinymce/themes/modern/theme.min.js',
+        '!app/source/vendor/tinymce/tinymce/skins',
+        '!app/source/vendor/tinymce/tinymce/skins/lightgray/**',
 
         // zordius/lightncandy
         'app/source/vendor/zordius/lightncandy/.github',
