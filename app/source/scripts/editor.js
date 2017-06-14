@@ -816,6 +816,14 @@ var Editor;
                     table = editor.plugins.table.insertTable(options.cols, options.rows);
                     $(table).attr('id', 'table_' + id);
                     $(table).toggleClass(options.table_class);
+                    if (options.head){
+                        var head = $('<thead/>');
+                        var tr = $('<tr/>');
+                        for (var i = 0; i < options.cols; i++){
+                            tr.append($('<td/>'));
+                        }
+                        $(table).prepend(head.append(tr));
+                    }
                     editor.addVisual();
                 });
                 return table;

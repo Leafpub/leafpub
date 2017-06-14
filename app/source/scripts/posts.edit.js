@@ -239,8 +239,15 @@ $(function() {
             },
             dblclick: function(event) {
                 // Show appropriate panels on double-click
-                if($(event.target).is('img')) showPanel('.image-panel');
-                if($(event.target).is('[data-embed]')) showPanel('.embed-panel');
+                if($(event.target).is('img')){
+                    showPanel('.image-panel');
+                }
+                if($(event.target).is('[data-embed]')){
+                    showPanel('.embed-panel');  
+                } 
+                if($(event.target).is('td')){
+                    showPanel('.table-panel');
+                }
             },
             paste: function(event) {
                 var clipboardData = event.clipboardData || window.clipboardData,
@@ -1330,17 +1337,25 @@ $(function() {
             cols,
             rows,
             table_class,
+            add_header,
             table;
         
         $('.table-panel')
             .on('show.leafpub.panel', function(){
-
+                table = $(contentEditor.getSelectedElement()).closest('.table');
+                if (table.hasClass('table')){
+                    rows = $('tr', table.find('tbody')).length;
+                    cols = $('td', table.find('tbody')).length / rows;
+                    $('#table-cols').val(cols);
+                    $('#table-rows').val(rows);
+                }
             })
             .on('shown.leafpub.panel', function(){
 
             })
             .on('hide.leafpub.panel', function(){
-
+                $('#table-cols').val(0);
+                $('#table-rows').val(0);
             });
 
         $('.table-form').on('submit', function(event){
@@ -1348,7 +1363,14 @@ $(function() {
             cols = $('#table-cols').val() || 3;
             rows = $('#table-rows').val() || 3;
             table_class = $('#table-class').val() || '';
-            var table = contentEditor.table('insert', {cols: cols, rows: rows, table_class: table_class});
+            add_header = $('#table-header').prop('checked');
+            console.log(table);
+            if (!table){
+                var table = contentEditor.table('insert', {cols: cols, rows: rows, table_class: table_class, head: add_header});
+                
+            } else {
+                
+            }
         });
     })();
 

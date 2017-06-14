@@ -395,10 +395,14 @@
             <label for="table-class">{{L 'class'}}</label>
             <input class="form-control" type="text" name="class" id="table-class">
         </div>
-        <!--div class="form-group">
-            <label for="image-class">class</label>
-            <input class="form-control" type="text" name="class" id="image-class">
-        </div-->        
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="table-header" id="table-header">
+                        {{L 'add_table_header'}}
+                </label>
+            </div>
+        </div>        
         <div class="form-group mt-2">
             <button class="btn btn-secondary delete-table pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
