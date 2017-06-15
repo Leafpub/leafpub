@@ -26,6 +26,9 @@ a[href] {
     a[href] {
         cursor: text;
     }
+    .mce-edit-focus {
+        outline: dashed 2px transparent !important;  
+    }
 }
 
 // Post title regions
