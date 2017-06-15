@@ -17,6 +17,9 @@ a[href] {
     transition: $leafpub-transition-speed outline-color;
     outline: dashed 2px transparent;
     outline-offset: 8px;
+    &.mce-edit-focus {
+        outline: dashed 2px;  
+    }
     &:hover {
         outline-color: rgba(black, .25);
     }
@@ -25,9 +28,6 @@ a[href] {
     }
     a[href] {
         cursor: text;
-    }
-    .mce-edit-focus {
-        outline: dashed 2px transparent !important;  
     }
 }
 
