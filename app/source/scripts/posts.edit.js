@@ -1076,9 +1076,9 @@ $(function() {
             }
 
             // Set fields
-            if (src){
+            /*if (src){
                 $('.picture').css('background-image', 'url(' + Leafpub.url(src) + ')');
-            }
+            }*/
             
             $('#image-src').val(src);
             $('#image-href').val(href);
@@ -1189,9 +1189,9 @@ $(function() {
                         $('.media-list').css('display', 'none').html('');
                         setPostImage(res.file.img);
                     } else {
-                        $('#image-src').val(res.file.img).trigger('change');
-                        $('#image-alt').val(res.file.caption);
                         $('#image-sign').val(res.file.sign);
+                        $('#image-alt').val(res.file.caption);
+                        $('#image-src').val(Leafpub.url(res.file.img)).trigger('change');
                     }
                 }
             });
@@ -1266,8 +1266,8 @@ $(function() {
                 // Update the image
                 if(res.uploaded.length) {
                     if(res.uploaded.length) {
-                        $('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '?width=300&sign=' + res.uploaded[0].sign + '\')');
-                        $('.media-list').css('display', 'none').html('');
+                        //$('.picture').css('background-image', 'url(\'' + res.uploaded[0].img + '?width=300&sign=' + res.uploaded[0].sign + '\')');
+                        //$('.media-list').css('display', 'none').html('');
                         $('#image-src').val(res.uploaded[0].img).trigger('change');
                     }
                 }
@@ -1285,7 +1285,10 @@ $(function() {
                 img;
 
             if(src.length) {
-                src = Leafpub.url(src);
+                //src = Leafpub.url(src);
+                if (src.indexOf(Leafpub.url()) !== -1){
+                    src = src + '?width=300&sign=' + $('#image-sign').val();
+                }
             } else {
                 return;
             }
@@ -1300,12 +1303,21 @@ $(function() {
                     $('#image-width').val(width);
                     $('#image-height').val(height);
                     $(img).remove();
+                    $('.picture').css('background-image', 'url(\'' + src + '\')');
+                    $('.media-list').css('display', 'none').html('');
                 })
                 .on('error', function() {
                     $(img).remove();
                 })
                 .appendTo('body')
                 .attr('src', src);
+        })
+        .on('paste', function(evt){
+            var inp = this;
+            // We need to wait a little bit until input's value is set.
+            setTimeout(function(){
+                $(inp).trigger('change');
+            }, 100);
         });
 
         // Constrain proportions

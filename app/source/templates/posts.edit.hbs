@@ -241,6 +241,10 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="image-src">{{L 'source'}}</label>
+            <input class="form-control" type="url" name="src" id="image-src">
+        </div>
+        <div class="form-group">
             <label for="image-alt">{{L 'description'}}</label>
             <input class="form-control" type="text" name="alt" id="image-alt">
         </div>
@@ -322,7 +326,7 @@
             <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
             <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
-            <input class="form-control" type="url" name="src" id="image-src" hidden>
+            <!--input class="form-control" type="url" name="src" id="image-src" hidden-->
             <input class="form-control" type="text" name="sign" id="image-sign" hidden>
         </div>
     </form>
