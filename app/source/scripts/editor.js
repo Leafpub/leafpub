@@ -609,11 +609,14 @@ var Editor;
             } else if(cmd === 'insert') {
                 var generateSrcSet = function(path, sign){
                     var srcSet = '';
-                    for (var i = 1; i <= 10; i++){
-                        var widthP = i*200;
-                        srcSet += path + '?width=' + widthP + '&sign=' + sign + ' ' + widthP + 'w,';
+                    if (sign.length){
+                        for (var i = 1; i <= 10; i++){
+                            var widthP = i*200;
+                            srcSet += path + '?width=' + widthP + '&sign=' + sign + ' ' + widthP + 'w,';
+                        }
+                        return srcSet.slice(0, srcSet.length - 1);
                     }
-                    return srcSet.slice(0, srcSet.length - 1);
+                    return null;
                 };
                 
                 editor.undoManager.transact(function () {
