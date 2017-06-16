@@ -1079,8 +1079,8 @@ $(function() {
             /*if (src){
                 $('.picture').css('background-image', 'url(' + Leafpub.url(src) + ')');
             }*/
-            
-            $('#image-src').val(src);
+            $('#image-sign').val(sign);
+            $('#image-src').val(src).trigger('change');
             $('#image-href').val(href);
             $('#image-alt').val(alt);
             $('#image-width').val(width);
@@ -1088,7 +1088,6 @@ $(function() {
             $('#image-class').val(cssClass);
             $('#image-constrain').prop('checked', true);
             $('.image-open').prop('hidden', href.length === 0);
-            $('#image-sign').val(sign);
             if (image){
                 $('.delete-image').prop('hidden', !image.length);
             }
@@ -1191,7 +1190,7 @@ $(function() {
                     } else {
                         $('#image-sign').val(res.file.sign);
                         $('#image-alt').val(res.file.caption);
-                        $('#image-src').val(Leafpub.url(res.file.img)).trigger('change');
+                        $('#image-src').val(res.file.img).trigger('change');
                     }
                 }
             });
@@ -1282,12 +1281,17 @@ $(function() {
         // Image changes
         $('#image-src').on('change', function() {
             var src = $(this).val(),
+                preview,
+                oldWith =  $('#image-width').val(),
+                oldHeight = $('#image-height').val(),
                 img;
 
             if(src.length) {
                 //src = Leafpub.url(src);
-                if (src.indexOf(Leafpub.url()) !== -1){
-                    src = src + '?width=300&sign=' + $('#image-sign').val();
+                if (src.indexOf('http') === -1){
+                    preview = Leafpub.url(src) + '?width=300&sign=' + $('#image-sign').val();
+                } else {
+                    preview = src;
                 }
             } else {
                 return;
@@ -1300,10 +1304,14 @@ $(function() {
                 .one('load', function() {
                     width = this.naturalWidth;
                     height = this.naturalHeight;
-                    $('#image-width').val(width);
-                    $('#image-height').val(height);
+                    if (!oldWith){
+                        $('#image-width').val(width);
+                    }
+                    if (!oldHeight){
+                        $('#image-height').val(height);
+                    }
                     $(img).remove();
-                    $('.picture').css('background-image', 'url(\'' + src + '\')');
+                    $('.picture').css('background-image', 'url(\'' + preview + '\')');
                     $('.media-list').css('display', 'none').html('');
                 })
                 .on('error', function() {
