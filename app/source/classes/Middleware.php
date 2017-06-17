@@ -175,7 +175,7 @@ class Middleware {
     
     public function imageMiddleware($request, $response, $next){
         $quality = 50;
-        if (mb_stristr($request->getUri()->getPath(), '/img/')){
+        if (mb_stristr($request->getUri()->getPath(), 'img/')){
             $pic = \Leafpub\Leafpub::fileName($request->getUri()->getPath(), 5); // pic == /img/filename.jpg
             $picData = \Leafpub\Models\Upload::getOne($pic);
             if (!$picData){
