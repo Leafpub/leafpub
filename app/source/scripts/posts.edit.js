@@ -464,7 +464,7 @@ $(function() {
                 showPanel('.settings-panel');
                 break;
             case 'link':
-                showPanel('.linkPanel');
+                showPanel('.link-panel');
                 break;
             case 'embed':
                 showPanel('.embed-panel');
