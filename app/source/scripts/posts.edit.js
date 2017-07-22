@@ -686,6 +686,13 @@ $(function() {
     */
     // Watch for unsaved changes
 	window.onbeforeunload = function() {
+        if (post){
+            // Only call unlock if we're saving a post after edit
+            $.ajax({
+                type: 'GET',
+                url: Leafpub.url('api/posts/unlock/' + encodeURIComponent(post)),
+            });
+        }
         if(ready && cleanState !== JSON.stringify(serializePost())) {
             return $('.editor-frame').attr('data-unsaved-changes');
         }
