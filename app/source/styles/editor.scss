@@ -26,6 +26,11 @@ a[href] {
     &:focus {
         outline-color: rgba(black, .5);
     }
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
     a[href] {
         cursor: text;
     }
