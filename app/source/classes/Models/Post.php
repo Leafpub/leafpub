@@ -1145,7 +1145,7 @@ class Post extends AbstractModel {
                 $ret[$met['name']] = [$met['value'], $met['created']];
             }
             if (isset($ret['lock'])){
-                $time = strtotime($ret['lock'][1]);
+                $time = strtotime(Leafpub::utcToLocal($ret['lock'][1]));
                 $diff = date('U') - $time;
                 // If difference between lock date and now is gt 1 unlock automatically
                 if (round($diff / (3600*24)) >= 1){
