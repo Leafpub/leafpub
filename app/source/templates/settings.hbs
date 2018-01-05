@@ -238,6 +238,7 @@
                                 </label>
                             </div>
                         </div>
+                        {{!-- showDashboard --}}
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
@@ -246,11 +247,21 @@
                                 </label>
                             </div>
                         </div>
+                        {{!-- AMP --}}
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="amp" value="on"{{#is @settings.amp 'on'}} checked{{/is}}>
                                     {{L 'amp_enabled'}}<br>
+                                </label>
+                            </div>
+                        </div>
+                        {{!-- forceSSL --}}
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="forceSsl" value="on"{{#is @settings.forceSsl 'on'}} checked{{/is}}>
+                                    {{L 'forceSsl'}}<br>
                                 </label>
                             </div>
                         </div>

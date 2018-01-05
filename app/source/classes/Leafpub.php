@@ -308,6 +308,9 @@ class Leafpub {
     *
     **/
     public static function isSsl() {
+        if (Setting::getOne('forceSsl') == 'on'){
+            return true;
+        }
         // Some servers (e.g. Cloud9) don't populate $_SERVER[HTTPS], so we have to check the value
         // of $_SERVER[REQUEST_SCHEME] instead.
         if($_SERVER['REQUEST_SCHEME'] === 'https') return true;

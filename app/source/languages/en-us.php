@@ -81,6 +81,7 @@ return [
     'feed' => 'Feed',
     'file_edited_successfully' => 'File edited successfully',
     'file_deleted_successfully' => 'File deleted successfully',
+    'forceSsl' => 'Deliver Leafpub with https',
     'full_name' => 'Full Name',
     'general' => 'General',
     'generator_enabled' => 'Show some love and add generator meta to head',
