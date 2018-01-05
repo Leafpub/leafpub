@@ -1,6 +1,6 @@
 {
   "name": "leafpub",
-  "version": "1.2.0-beta6",
+  "version": "1.2.0-beta7",
   "private": true,
   "devDependencies": {
     "del": "^2.2.1",
@@ -25,7 +25,7 @@
     "@claviska/jquery-alertable": "^1.0.2",
     "@claviska/jquery-offscreen": "^1.0.1",
     "@claviska/jquery-selectable": "^1.0.3",
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "font-awesome": "^4.6.3",
     "gridstack": "^0.2.6",
     "jquery": "^3.1.0",
