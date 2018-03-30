@@ -150,7 +150,7 @@ body:not(.no-menu) {
     .description {
         display: block;
         @include text-truncate;
-        color: $gray-light;
+        color: $gray-100;
         transition: color $leafpub-transition-speed;
     }
     &:hover,

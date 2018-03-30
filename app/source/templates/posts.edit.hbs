@@ -8,14 +8,14 @@
         <div class="editor-toolbar" hidden>
             {{!-- Undo/redo --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="undo" title="{{L 'undo'}}"><i class="fa fa-undo"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="redo" title="{{L 'redo'}}"><i class="fa fa-repeat"></i></button>
+                <button type="button" class="btn btn-light" data-editor="undo" title="{{L 'undo'}}"><i class="fa fa-undo"></i></button>
+                <button type="button" class="btn btn-light" data-editor="redo" title="{{L 'redo'}}"><i class="fa fa-repeat"></i></button>
             </div>
 
             {{!-- Bold, italic, underline --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="bold" title="{{L 'bold'}}"><i class="fa fa-bold"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="italic" title="{{L 'italic'}}"><i class="fa fa-italic"></i></button>
+                <button type="button" class="btn btn-light" data-editor="bold" title="{{L 'bold'}}"><i class="fa fa-bold"></i></button>
+                <button type="button" class="btn btn-light" data-editor="italic" title="{{L 'italic'}}"><i class="fa fa-italic"></i></button>
                 {{!-- Format dropdown --}}
                 <div class="dropdown-btn">
                     <span class="dropdown-toggle" data-toggle="dropdown">
@@ -119,22 +119,22 @@
 
             {{!-- Link, image, embed --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary" data-editor="link" title="{{L 'link'}}"><i class="fa fa-link"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="image" title="{{L 'image'}}"><i class="fa fa-picture-o"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="embed" title="{{L 'embed'}}"><i class="fa fa-cube"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="table" title="{{L 'table'}}"><i class="fa fa-table"></i></button>
+                <button type="button" class="btn btn-light" data-editor="link" title="{{L 'link'}}"><i class="fa fa-link"></i></button>
+                <button type="button" class="btn btn-light" data-editor="image" title="{{L 'image'}}"><i class="fa fa-picture-o"></i></button>
+                <button type="button" class="btn btn-light" data-editor="embed" title="{{L 'embed'}}"><i class="fa fa-cube"></i></button>
+                <button type="button" class="btn btn-light" data-editor="table" title="{{L 'table'}}"><i class="fa fa-table"></i></button>
             </div>
 
             {{!-- Zen mode, settings --}}
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen" title="{{L 'zen_mode'}}"><i class="fa fa-leaf"></i></button>
-                <button type="button" class="btn btn-secondary" data-editor="settings" title="{{L 'settings'}}"><i class="fa fa-cog"></i></button>
+                <button type="button" class="btn btn-light{{#is @cookies.zen 'true'}} active{{/is}}" data-editor="zen" title="{{L 'zen_mode'}}"><i class="fa fa-leaf"></i></button>
+                <button type="button" class="btn btn-light" data-editor="settings" title="{{L 'settings'}}"><i class="fa fa-cog"></i></button>
             </div>
 
             {{!-- Save --}}
             <div class="btn-group">
-                <button type="button" class="btn {{#is post.status 'published'}}btn-success{{else}}btn-warning{{/is}}" data-editor="save">{{L 'save'}}</button>
-                <button type="button" class="btn {{#is post.status 'published'}}btn-success{{else}}btn-warning{{/is}} dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{L 'options'}}">
+                <button type="button" class="btn {{#is post.status 'published'}}btn-outline-success{{else}}btn-outline-warning{{/is}}" data-editor="save">{{L 'save'}}</button>
+                <button type="button" class="btn {{#is post.status 'published'}}btn-outline-success{{else}}btn-outline-warning{{/is}} dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{L 'options'}}">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
@@ -211,9 +211,9 @@
             </div>
         </div>
         <div class="form-group mt-2">
-            <button class="btn btn-secondary unlink pull-right" type="button"><i class="fa fa-unlink"></i></button>
+            <button class="btn btn-light unlink pull-right" type="button"><i class="fa fa-unlink"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
-            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+            <button class="btn btn-light" type="button" data-panel="hide">{{L 'cancel'}}</button>
         </div>
     </form>
 </div>
@@ -236,7 +236,7 @@
                     <label class="upload-picture btn btn-translucent-dark">
                         <i class="fa fa-fw fa-camera"></i>
                         <input type="file" accept="image/*" style="display: none;">
-                    </label>                    
+                    </label>
                 </div>
             </div>
         </div>
@@ -271,19 +271,19 @@
             <label>{{L 'alignment'}}</label>
             <div class="radio">
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
+                    <label class="btn btn-light active">
                         <input type="radio" class="image-align-none" name="align" value="none">
                         <i class="fa fa-ban"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="image-align-left" name="align" value="left">
                         <i class="fa fa-align-left"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="image-align-center" name="align" value="center">
                         <i class="fa fa-align-center"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="image-align-right" name="align" value="right">
                         <i class="fa fa-align-right"></i>
                     </label>
@@ -323,9 +323,9 @@
             </div>
         </div>
         <div class="form-group mt-2">
-            <button class="btn btn-secondary delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-light delete-image pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
-            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+            <button class="btn btn-light" type="button" data-panel="hide">{{L 'cancel'}}</button>
             <!--input class="form-control" type="url" name="src" id="image-src" hidden-->
             <input class="form-control" type="text" name="sign" id="image-sign" hidden>
         </div>
@@ -349,19 +349,19 @@
             <label>{{L 'alignment'}}</label>
             <div class="radio">
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
+                    <label class="btn btn-light active">
                         <input type="radio" class="embed-align-none" name="align" value="none">
                         <i class="fa fa-ban"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="embed-align-left" name="align" value="left">
                         <i class="fa fa-align-left"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="embed-align-center" name="align" value="center">
                         <i class="fa fa-align-center"></i>
                     </label>
-                    <label class="btn btn-secondary">
+                    <label class="btn btn-light">
                         <input type="radio" class="embed-align-right" name="align" value="right">
                         <i class="fa fa-align-right"></i>
                     </label>
@@ -369,9 +369,9 @@
             </div>
         </div>
         <div class="form-group mt-2">
-            <button class="btn btn-secondary delete-embed pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-light delete-embed pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
-            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+            <button class="btn btn-light" type="button" data-panel="hide">{{L 'cancel'}}</button>
         </div>
     </form>
 </div>
@@ -406,11 +406,11 @@
                         {{L 'add_table_header'}}
                 </label>
             </div>
-        </div>        
+        </div>
         <div class="form-group mt-2">
-            <button class="btn btn-secondary delete-table pull-right" type="button"><i class="fa fa-trash-o"></i></button>
+            <button class="btn btn-light delete-table pull-right" type="button"><i class="fa fa-trash-o"></i></button>
             <button class="btn btn-primary" type="submit">{{L 'submit'}}</button>
-            <button class="btn btn-secondary" type="button" data-panel="hide">{{L 'cancel'}}</button>
+            <button class="btn btn-light" type="button" data-panel="hide">{{L 'cancel'}}</button>
         </div>
     </form>
 </div>

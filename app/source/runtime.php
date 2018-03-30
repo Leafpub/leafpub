@@ -3,7 +3,7 @@ namespace Leafpub;
 
 define('LEAFPUB_VERSION', '{{version}}');
 define('LEAFPUB_SCHEME_VERSION', 3);
-define('LEAFPUB_DEV', !!preg_match('/\.dev$/', $_SERVER['HTTP_HOST']));
+define('LEAFPUB_DEV', !!preg_match('/\.test$/', $_SERVER['HTTP_HOST']));
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
 ini_set('display_errors', LEAFPUB_DEV ? 1 : 0);
 ini_set('log_errors', 1);
@@ -15,8 +15,8 @@ $loader->setPsr4('Leafpub\\Plugins\\', __DIR__ . '/../content/plugins');
 $loader->register();
 
 // Check PHP version
-if(version_compare(PHP_VERSION, '5.6.0') < 0) {
-    exit('Leafpub requires PHP 5.6 or above.');
+if(version_compare(PHP_VERSION, '7.1.0') < 0) {
+    exit('Leafpub requires PHP 7.1 or above.');
 }
 
 // Check for curl extension

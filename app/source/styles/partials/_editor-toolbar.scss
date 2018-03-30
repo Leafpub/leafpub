@@ -33,12 +33,12 @@
     // Dropdown buttons
     .dropdown-btn {
         @extend .btn;
-        @extend .btn-secondary;
+        @extend .btn-light;
         position: relative;
         padding: 0;
         display: inline-block;
         .dropdown-toggle {
-            @include button-size($btn-padding-y, $btn-padding-x, 1rem, $border-radius);
+            @include button-size($btn-padding-y, $btn-padding-x, $font-size-root, 1rem, $border-radius);
             position: relative;
             padding-right: $btn-padding-x * .75;
             display: block;
@@ -57,7 +57,7 @@
         .dropdown-item {
             i {
                 width: 1.2em;
-                color: $gray-light;
+                color: $dark;
                 margin-right: .5rem;
             }
             // On state

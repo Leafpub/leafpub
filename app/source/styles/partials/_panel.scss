@@ -32,10 +32,10 @@
         top: 1rem;
         right: 1rem;
         font-size: 1.2rem;
-        color: $gray-light;
+        color: $gray-100;
         transition: color $leafpub-transition-speed;
         &:hover {
-            color: $gray;
+            color: $dark;
         }
     }
     h3 {

@@ -21,15 +21,15 @@
         <div class="top-toolbar-section col-lg-8 col-sm-6 text-sm-right text-left">
             {{#is @template 'tags.edit'}}
             <div class="btn-group m-r-1">
-                <button type="button" class="open btn btn-secondary" data-url="{{tag_url tag.slug}}">
+                <button type="button" class="open btn btn-light" data-url="{{tag_url tag.slug}}">
                     <i class="fa fa-external-link"></i>
                 </button>
-                <button type="button" class="delete btn btn-secondary" data-confirm="{{L 'delete_this_tag'}}">
+                <button type="button" class="delete btn btn-light" data-confirm="{{L 'delete_this_tag'}}">
                     <i class="fa fa-trash-o"></i>
                 </button>
             </div>
             {{/is}}
-            <button type="button" class="submit btn btn-primary">
+            <button type="button" class="submit btn btn-outline-primary">
                 {{L 'save'}}
             </button>
         </div>
@@ -73,7 +73,7 @@
     {{!-- Form --}}
     <form class="tag-form" autocomplete="off">
         <div class="row">
-            <div class="col-lg-6 push-lg-3 col-md-8 push-md-2 col-sm-10 push-sm-1">
+            <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
                 {{!-- Tag --}}
                 <div class="form-group mt-2">
                     <label for="name">{{L 'name'}}</label>

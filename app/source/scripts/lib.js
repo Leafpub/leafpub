@@ -2,7 +2,8 @@
 // include node_modules/jquery/dist/jquery.min.js
 // @include app/source/scripts/modules/jquery-ui.min.js
 // @include node_modules/tether/dist/js/tether.min.js
-// @include node_modules/bootstrap/dist/js/bootstrap.min.js
+// @include node_modules/popper.js/dist/umd/popper.js
+// @include node_modules/bootstrap/dist/js/bootstrap.js
 // @include node_modules/nanobar/nanobar.min.js
 // @include node_modules/selectize/dist/js/standalone/selectize.min.js
 // @include node_modules/js-cookie/src/js.cookie.js
