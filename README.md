@@ -1,7 +1,7 @@
 # <img src="https://leafpub.org/content/uploads/2016/11/leafpub-logo-1.png" alt="Leafpub" width="300">
 **Simple, beautiful publishing.**
 
-### [Website](https://www.leafpub.org/) &nbsp; [Documentation](https://leafpub.org/docs) &nbsp;
+### [Website](https://leafpub.org/) &nbsp; [Documentation](https://leafpub.org/docs) &nbsp;
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Leafpub/leafpub)  &nbsp; [![Twitter Follow](https://img.shields.io/twitter/follow/leafpub.svg?style=social&maxAge=3600)](https://twitter.com/leafpub)
 
@@ -9,18 +9,18 @@ Created by [Cory LaViska](https://twitter.com/claviska)
 
 Maintained by [Marc Apfelbaum](https://twitter.com/karsasmus)
 
-![Screenshots](https://www.leafpub.org/content/uploads/2016/07/homepage-splash.png)
+![Screenshots](https://leafpub.org/content/uploads/2016/07/homepage-splash.png)
 
 ## Requirements
 
-- PHP 5.6+ with curl, gd lib, mbstring, openssl & pdo
+- PHP 7.1+ with curl, gd lib, mbstring, openssl & pdo
 - MySQL 5.5.3+
 
 ## Download
 
 **This is the development repo!** You'll need to build Leafpub using the instructions below before running it.
 
-Download the latest ready-to-use version from: https://www.leafpub.org/download
+Download the latest ready-to-use version from: https://leafpub.org/download
 
 ## Contributing
 
@@ -105,11 +105,11 @@ Leafpub is maintained under the [Semantic Versioning guidelines](http://semver.o
 
 ## License
 
-©2017 Marc
+©2018 Marc
 
 This software is copyrighted. You may use it under the terms of the GNU GPLv3 or later. See LICENSE.md for licensing details.
 
-All code is copyright 2016-2017 by Marc except where noted. Third-party libraries are copyrighted and licensed by their respective owners.
+All code is copyright 2016-2018 by Marc except where noted. Third-party libraries are copyrighted and licensed by their respective owners.
 
 ### Theme & Plugin Policy
 
