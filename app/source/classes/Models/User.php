@@ -414,7 +414,7 @@ class User extends AbstractModel {
                             $where->notEqualTo('role', 'owner');
                         });
 
-            $ret = ($rowCount() > 0);
+            $ret = ($rowCount > 0);
         } catch(\PDOException $e) {
             return false;
         }
