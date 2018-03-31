@@ -28,6 +28,13 @@
         &.on {
             color: $leafpub-blue;
         }
+
+        &.btn-light {
+            &:hover {
+                background: $leafpub-blue;
+                color: #fff;
+            }
+        }
     }
 
     // Dropdown buttons
