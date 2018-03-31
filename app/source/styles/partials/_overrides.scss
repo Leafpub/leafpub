@@ -96,7 +96,7 @@ select.form-control:not([size]):not([multiple]) {
 
 // Black/white buttons at 50% opacity
 .btn-translucent-dark {
-    @include button-variant(white, rgba(black, .5), transparent);
+    @include button-variant( rgba(black, .5), transparent);
     &:hover {
         background-color: rgba(black, .6);
     }
