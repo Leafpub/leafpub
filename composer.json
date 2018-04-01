@@ -25,11 +25,11 @@
     },
     "scripts": {
         "post-update-cmd": [
-            "gulp build"
+            "npm run build-dev"
         ],
         "post-install-cmd": [
             "npm install",
-            "gulp build"
+            "npm run build-dev"
         ]
     }
 }

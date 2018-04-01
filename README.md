@@ -28,7 +28,7 @@ Leafpub uses Composer and NPM to manage dependencies and Gulp as its task runner
 
 - [Composer](https://getcomposer.org/)
 - [Node](https://nodejs.org/en/)
-- [Gulp](http://gulpjs.com/) (Install using `npm install -g gulp-cli`)
+- [Webpack](http://webpack.js.org//)
 
 Please read through our [contributing guidelines](https://github.com/leafpub/leafpub/blob/master/.github/CONTRIBUTING.md).
 
@@ -50,35 +50,18 @@ Composer will install its own dependencies and then run `npm install`. This may 
 
 **Important:** You'll also need to add [the default theme](https://github.com/Leafpub/range) to `content/themes/range/` manually. This will happen automatically once Leafpub is out of beta.
 
-## Using Gulp
+## Using webpack
 
-From the root directory, you can use `gulp help` to see all available tasks:
-
+We're using npm scripts to run and compile our assets
 ```
 Usage
-    gulp [TASK] [OPTIONS...]
+    npm start           run encore in watch mode
+    npm run build-dev   run encore once without minifying
+    npm run build-prod  run encore once with minifying
 
-Available tasks
-    build          Run all build tasks. [build:fonts, build:images, build:prune, build:scripts, build:styles]
-    build:fonts    Build font assets. [clean:fonts]
-    build:images   Optimize images. [clean:images]
-    build:prune    Prune unused files from vendor packages.
-    build:scripts  Build scripts. [jshint, clean:scripts]
-    build:styles   Build styles. [clean:styles]
-    clean          Clean up generated files. [clean:fonts, clean:images, clean:scripts, clean:styles]
-    clean:fonts    Delete generated fonts.
-    clean:images   Delete generated images.
-    clean:scripts  Delete generated scripts.
-    clean:styles   Delete generated styles.
-    default        Run the default task. [watch]
-    help           Display this help text.
-    jshint         Lint source scripts with JSHint.
-    release:clean  Delete all generated releases.
-    release:make   Generate a release.
-    watch          Watch for script and style changes.
 ```
 
-For development, use `gulp watch` to automatically compile Sass/JavaScript as you work.
+For development, use `npm start` to automatically compile Sass/JavaScript as you work.
 
 ## Testing
 
