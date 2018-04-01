@@ -24,7 +24,7 @@ Download the latest ready-to-use version from: https://leafpub.org/download
 
 ## Contributing
 
-Leafpub uses Composer and NPM to manage dependencies and Gulp as its task runner. To contribute to this project, you'll need to clone the repository and install the required development tools listed below.
+Leafpub uses Composer and NPM to manage dependencies and Webpack as its task runner. To contribute to this project, you'll need to clone the repository and install the required development tools listed below.
 
 - [Composer](https://getcomposer.org/)
 - [Node](https://nodejs.org/en/)
@@ -46,7 +46,7 @@ Once you have the necessary development tools installed:
 composer install
 ```
 
-Composer will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will trigger `gulp build` which will generate all the assets you need to run Leafpub.
+Composer will install its own dependencies and then run `npm install`. This may take a few minutes as packages are downloaded. Once complete, Composer will trigger `npm run build-dev` which will generate all the assets you need to run Leafpub.
 
 **Important:** You'll also need to add [the default theme](https://github.com/Leafpub/range) to `content/themes/range/` manually. This will happen automatically once Leafpub is out of beta.
 
