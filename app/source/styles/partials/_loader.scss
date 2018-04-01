@@ -22,7 +22,7 @@
 
 .loader {
     display: inline-block;
-    background-image: url(../img/loader-light.gif);
+    background-image: url(../images/loader-light.gif);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -31,7 +31,7 @@
     height: 1em;
     width: 1em;
     &.loader-dark {
-        background-image: url(../img/loader-dark.gif);
+        background-image: url(../images/loader-dark.gif);
     }
     &.loader-xs {
         font-size: 16px;
