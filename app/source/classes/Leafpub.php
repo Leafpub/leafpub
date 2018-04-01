@@ -817,10 +817,26 @@ class Leafpub {
         $path = preg_replace('/\/+/', '/', $path);
 
         // Remove preceding slash
-        $path = ltrim($path, '/');
+        $path = self::versionedAsset(ltrim($path, '/'));
 
         // Generate the URL
         return "$protocol://$hostname/$path";
+    }
+
+    /**
+     * Get a versioned asset
+     *
+     * @param $path
+     * @return string
+     */
+    protected static function versionedAsset(string $path):string
+    {
+        $assets = json_decode(file_get_contents(realpath(dirname(__FILE__)) . '/../../assets/manifest.json'));
+        $asset = strstr($path, 'assets/');
+        if ($asset && $assets->{$asset} != null){
+            return $assets->{$asset};
+        }
+        return $path;
     }
 
     /**

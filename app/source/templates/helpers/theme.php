@@ -258,8 +258,7 @@ return [
                 '<script>window.leafpub = true;</script>' .
                 '<link rel="stylesheet" href="' . htmlspecialchars(
                     \Leafpub\Leafpub::url(
-                        'source/assets/css/editor.css?v=' .
-                        $options['data']['leafpub']['version']
+                        'assets/editor.css'
                     )
                 ) . '">';
         }
@@ -274,8 +273,7 @@ return [
                 '<link rel="stylesheet" href="' .
                 htmlspecialchars(
                     \Leafpub\Leafpub::url(
-                        'source/assets/css/admin-toolbar.css?v=' .
-                        $options['data']['leafpub']['version']
+                        'assets/admin-toolbar.css'
                     )
                 ) .
                 '">';

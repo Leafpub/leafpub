@@ -3,7 +3,7 @@
 var Leafpub;
 
 // The Leafpub object
-$(function() {
+export default function Leafpub() {
     'use strict';
 
     Leafpub = {
@@ -174,4 +174,5 @@ $(function() {
                 url;
         }
     };
-});
+    return Leafpub;
+};

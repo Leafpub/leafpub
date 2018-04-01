@@ -134,24 +134,122 @@ Encore
     })
 
     .autoProvideVariables({
-        Popper: ['popper.js', 'default'],
-        number: 'jquery-number.js'
+        Popper: ['popper.js', 'default']
     })
 
     //#####################################################################################################
     // Entries
     //####################################################################################################
+    .addEntry('dashboard', [
+        './app/source/scripts/dashboard.js',
+        './app/source/styles/dashboard.scss',
+        //'./node_modules/gridstack/src/gridstack.scss',
+        //'./node_modules/gridstack/src/gridstack.js'
+    ])
+
+    .addEntry('editor', [
+        './app/source/scripts/editor.js',
+        './app/source/styles/editor.scss',
+    ])
+
+    .addEntry('import', [
+        './app/source/scripts/import.js',
+        './app/source/styles/import.scss',
+    ])
+
+    .addEntry('login', [
+        './app/source/scripts/login.js',
+        './app/source/styles/login.scss',
+    ])
+
+    .addEntry('navigation', [
+        './app/source/scripts/navigation.js',
+        './app/source/styles/navigation.scss',
+    ])
+
+    .addEntry('plugins', [
+        './app/source/scripts/plugins.js',
+        './app/source/styles/plugins.scss',
+    ])
+
+    .addEntry('posts.edit', [
+        './app/source/scripts/posts.edit.js',
+        './app/source/styles/posts.edit.scss',
+    ])
+
+    .addEntry('posts', [
+        './app/source/scripts/posts.js',
+        './app/source/styles/posts.scss',
+    ])
+
+    .addEntry('settings', [
+        './app/source/scripts/settings.js',
+        './app/source/styles/settings.scss',
+    ])
+
+    .addEntry('tags.edit', [
+        './app/source/scripts/tags.edit.js',
+        './app/source/styles/tags.edit.scss',
+    ])
+
+    .addEntry('tags', [
+        './app/source/scripts/tags.js',
+        './app/source/styles/tags.scss',
+    ])
+
+    .addEntry('update', [
+        './app/source/scripts/update.js',
+        './app/source/styles/update.scss',
+    ])
+
+    .addEntry('uploads', [
+        './app/source/scripts/uploads.js',
+        './app/source/styles/uploads.scss',
+    ])
+
+    .addEntry('users.edit', [
+        './app/source/scripts/users.edit.js',
+        './app/source/styles/users.edit.scss',
+    ])
+
+    .addEntry('users', [
+        './app/source/scripts/users.js',
+        './app/source/styles/users.scss',
+    ])
+
     .addEntry('vue', [
         "./node_modules/vue/dist/vue.js",
         "./node_modules/vuex/dist/vuex.js"
     ])
 
-    .addStyleEntry(
-        'lib',
-        [
-            './app/source/styles/lib.scss'
-        ]
-    )
+    .addEntry('lib', [
+        './app/source/styles/lib.scss',
+        './node_modules/jquery/dist/jquery.js',
+        './app/source/scripts/modules/jquery-ui.min.js',
+        './node_modules/tether/dist/js/tether.min.js',
+        './node_modules/popper.js/dist/umd/popper.js',
+        './node_modules/bootstrap/dist/js/bootstrap.bundle.js',
+        './node_modules/nanobar/nanobar.min.js',
+        './node_modules/selectize/dist/js/standalone/selectize.min.js',
+        './node_modules/js-cookie/src/js.cookie.js',
+        './node_modules/showdown/dist/showdown.min.js',
+        './node_modules/sortablejs/Sortable.min.js',
+        './node_modules/velocity-animate/velocity.min.js',
+        './node_modules/velocity-animate/velocity.ui.min.js',
+        './node_modules/@claviska/jquery-alertable/jquery.alertable.js',
+        './node_modules/@claviska/jquery-offscreen/jquery.offscreen.js',
+        './node_modules/@claviska/jquery-selectable/jquery.selectable.js',
+        './node_modules/lodash/lodash.min.js',
+        './node_modules/slugify/index.js',
+        './app/source/scripts/modules/leafpub.js',
+        './app/source/scripts/modules/locater.js',
+        './app/source/scripts/modules/reauthenticate.js',
+        './app/source/scripts/modules/shared.js'
+    ])
+
+    .addStyleEntry('admin-toolbar', [
+        './app/source/styles/admin-toolbar.scss'
+    ])
 ;
 
 if (Encore.isProduction()){

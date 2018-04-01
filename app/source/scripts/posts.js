@@ -1,10 +1,15 @@
 /* globals Nanobar, Leafpub */
+const Nanobar = require('nanobar');
+import lp from './modules/leafpub';
+const sel = require('@claviska/jquery-selectable/jquery.selectable');
+
 $(function() {
     'use strict';
 
     var lastQuery = '',
         more = true,
         progress = new Nanobar(),
+        Leafpub = new lp(),
         page = 1,
         request,
         searchTimeout;

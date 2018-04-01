@@ -51,8 +51,7 @@ return [
                 $src = $script;
             } else {
                 $src =
-                    self::url('source/assets/js', $script) . '?v=' .
-                    $options['data']['leafpub']['version'];
+                    self::url('/assets/', $script);
             }
             $html .= '<script src="' . htmlspecialchars($src) . '"></script>';
         }
@@ -77,8 +76,7 @@ return [
 
         foreach((array) $options['_this']['styles'] as $style) {
             $href =
-                self::url('source/assets/css', $style) . '?v=' .
-                $options['data']['leafpub']['version'];
+                self::url('assets/' , $style);
             $html .= '<link rel="stylesheet" href="' . htmlspecialchars($href) . '">';
         }
 

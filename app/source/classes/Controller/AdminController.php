@@ -59,7 +59,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('login', [
             'title' => Language::term('login'),
-            'scripts' => ['login.min.js'],
+            'scripts' => ['login.js'],
             'styles' => 'login.css',
             'body_class' => 'no-menu',
             'redirect' => $params['redirect']
@@ -83,7 +83,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('login.recover', [
             'title' => Language::term('lost_your_password'),
-            'scripts' => ['login.min.js'],
+            'scripts' => ['login.js'],
             'styles' => 'login.css',
             'body_class' => 'no-menu'
         ]);
@@ -106,7 +106,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('login.reset', [
             'title' => Language::term('lost_your_password'),
-            'scripts' => ['login.min.js'],
+            'scripts' => ['login.js'],
             'styles' => 'login.css',
             'body_class' => 'no-menu'
         ]);
@@ -149,7 +149,7 @@ class AdminController extends Controller {
         
         $html = Admin::render('import', [
             'title' => Language::term('import'),
-            'scripts' => 'import.min.js',
+            'scripts' => 'import.js',
             'styles' => 'import.css',
             'dropins' => $installedImporter
         ]);
@@ -170,7 +170,7 @@ class AdminController extends Controller {
         if (\Leafpub\Models\Setting::getOne('showDashboard') === 'on'){
             $html = Admin::render('dashboard', [
                 'title' => Language::term('dashboard'),
-                'scripts' => 'dashboard.min.js',
+                'scripts' => 'dashboard.js',
                 'styles' => 'dashboard.css',
                 'dashboard' => Widget::renderDashboard(Session::user('slug')),
                 //'widgets' => Widget::getWidgets()
@@ -188,7 +188,7 @@ class AdminController extends Controller {
         } else {
             $html = Admin::render('plugins', [
                 'title' => Language::term('plugins'),
-                'scripts' => 'plugins.min.js',
+                'scripts' => 'plugins.js',
                 'styles' => 'plugins.css',
                 'plugins' => Plugin::getMany()
             ]);
@@ -209,7 +209,7 @@ class AdminController extends Controller {
     public function posts($request, $response, $args) {
         $html = Admin::render('posts', [
             'title' => Language::term('posts'),
-            'scripts' => 'posts.min.js',
+            'scripts' => 'posts.js',
             'styles' => 'posts.css',
             'posts' => Post::getMany([
                 // If you're not an owner, admin, or editor then you can only see your own posts
@@ -240,7 +240,7 @@ class AdminController extends Controller {
     public function newPost($request, $response, $args) {
         $html = Admin::render('posts.new', [
             'title' => Language::term('new_post'),
-            'scripts' => ['editor.min.js', 'posts.edit.min.js'],
+            'scripts' => ['editor.js', 'posts.edit.js'],
             'styles' => 'posts.edit.css',
             'post' => [],
             'history' => false,
@@ -288,7 +288,7 @@ class AdminController extends Controller {
         
         $html = Admin::render('posts.edit', [
             'title' => Language::term('edit_post'),
-            'scripts' => ['editor.min.js', 'posts.edit.min.js'],
+            'scripts' => ['editor.js', 'posts.edit.js'],
             'styles' => 'posts.edit.css',
             'post' => $post,
             'history' => History::getMany(['slug' => $post['slug']]),
@@ -346,7 +346,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('tags', [
             'title' => Language::term('tags'),
-            'scripts' => 'tags.min.js',
+            'scripts' => 'tags.js',
             'styles' => 'tags.css',
             'tags' => Tag::getMany([
                 'items_per_page' => 50
@@ -373,7 +373,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('tags.new', [
             'title' => Language::term('new_tag'),
-            'scripts' => 'tags.edit.min.js',
+            'scripts' => 'tags.edit.js',
             'styles' => 'tags.edit.css',
             'tag' => []
         ]);
@@ -403,7 +403,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('tags.edit', [
             'title' => Language::term('edit_tag'),
-            'scripts' => 'tags.edit.min.js',
+            'scripts' => 'tags.edit.js',
             'styles' => 'tags.edit.css',
             'tag' => $tag
         ]);
@@ -430,7 +430,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('navigation', [
             'title' => Language::term('navigation'),
-            'scripts' => 'navigation.min.js',
+            'scripts' => 'navigation.js',
             'styles' => 'navigation.css',
             'navigation' => json_decode(Setting::getOne('navigation'), true)
         ]);
@@ -455,7 +455,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('users', [
             'title' => Language::term('users'),
-            'scripts' => 'users.min.js',
+            'scripts' => 'users.js',
             'styles' => 'users.css',
             'users' => User::getMany([
                 'items_per_page' => 50
@@ -482,7 +482,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('users.new', [
             'title' => Language::term('new_user'),
-            'scripts' => 'users.edit.min.js',
+            'scripts' => 'users.edit.js',
             'styles' => 'users.edit.css',
             'user' => [],
             'redirect' => Admin::url('users')
@@ -514,7 +514,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('users.edit', [
             'title' => Language::term('edit_user'),
-            'scripts' => 'users.edit.min.js',
+            'scripts' => 'users.edit.js',
             'styles' => 'users.edit.css',
             'user' => $user,
             'redirect' => Session::isRole(['owner', 'admin']) ?
@@ -569,7 +569,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('settings', [
             'title' => Language::term('settings'),
-            'scripts' => 'settings.min.js',
+            'scripts' => 'settings.js',
             'styles' => 'settings.css',
             'pages' => $pages,
             'mailers' => $mailers,
@@ -589,7 +589,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('uploads', [
             'title' => Language::term('uploads'),
-            'scripts' => 'uploads.min.js',
+            'scripts' => 'uploads.js',
             'styles' => 'uploads.css',
             'uploads' => $uploads,
             'all_tags' => Tag::getNames('upload'),
@@ -620,7 +620,7 @@ class AdminController extends Controller {
 
         $html = Admin::render('update', [
             'title' => Language::term('update'),
-            'scripts' => 'update.min.js',
+            'scripts' => 'update.js',
             //'styles' => 'update.css',
             'dbScheme' => \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0,
             'schemeVersion' => LEAFPUB_SCHEME_VERSION

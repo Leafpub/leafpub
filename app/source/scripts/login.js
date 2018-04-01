@@ -1,9 +1,15 @@
 /* globals Nanobar, Leafpub */
+const Nanobar = require('nanobar');
+import lp from './modules/leafpub';
+import 'bootstrap';
+import 'velocity-animate';
+
 $(function() {
     'use strict';
 
     var progress = new Nanobar(),
-        redirect = $('.login-form').attr('data-redirect');
+        redirect = $('.login-form').attr('data-redirect'),
+        Leafpub = new lp();
 
     // Tooltip
     $('[data-toggle="tooltip"]').tooltip({
