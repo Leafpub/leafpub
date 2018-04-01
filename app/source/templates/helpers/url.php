@@ -119,7 +119,9 @@ return [
         if(preg_match('/^(http:|https:|mailto:|\/\/:)/i', $path)) {
             return $path;
         } else {
-            return \Leafpub\Leafpub::url($path);
+            $assets = json_decode(file_get_contents(realpath(dirname(__FILE__)) . '../../../assets/manifest.json'));
+            $assetPath = $assets->{$path};
+            return \Leafpub\Leafpub::url($assetPath);
         }
     }
 
