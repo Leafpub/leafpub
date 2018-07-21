@@ -409,9 +409,9 @@ class User extends AbstractModel {
 
         // Delete the target user
         try {
-            $rowCount = self::getModel()->delete(function($where) use ($slug){
-                            $where->equalTo('slug', $slug);
-                            $where->notEqualTo('role', 'owner');
+            $rowCount = self::getModel()->delete(function($delete) use ($slug){
+                            $delete->where->equalTo('slug', $slug);
+                            $delete->where->notEqualTo('role', 'owner');
                         });
 
             $ret = ($rowCount > 0);
