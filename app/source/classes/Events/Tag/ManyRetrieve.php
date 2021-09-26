@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -6,12 +7,12 @@
  * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
+
 namespace Leafpub\Events\Tag;
 
 use Leafpub\Events\LeafpubEvent;
 
-class ManyRetrieve extends LeafpubEvent {
-    const NAME = 'tags.retrieve';
+class ManyRetrieve extends LeafpubEvent
+{
+    public const NAME = 'tags.retrieve';
 }
-
-?>

@@ -1,35 +1,24 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
  * @link      https://github.com/Leafpub/leafpub
- * @copyright Copyright (c) 2017 Leafpub Team
+ * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
- 
+
 namespace Leafpub\Mailer\Mail;
 
-class Mail {
+class Mail
+{
+    public string $to;
 
-    /**
-     * @var Address
-     */
-    public $to;
+    public string $from;
 
-    /**
-     * @var Address
-     */
-    public $from;
+    public string $subject;
 
-    /**
-     * @var string
-     */
-    public $subject;
-
-    /**
-     * @var string
-     */
-    public $message;
+    public string $message;
 
     /**
      * @param string $to
@@ -37,9 +26,10 @@ class Mail {
      * @param string $subject
      * @param string $message
      */
-    public function __construct($to, $from, $subject, $message) {
-        $this->to      = $to;
-        $this->from    = $from;
+    public function __construct($to, $from, $subject, $message)
+    {
+        $this->to = $to;
+        $this->from = $from;
         $this->subject = $subject;
         $this->message = $message;
     }

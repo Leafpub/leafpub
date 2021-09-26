@@ -245,17 +245,8 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="showDashboard" value="on"{{#is @settings.showDashboard 'on'}} checked{{/is}}>
+                                    <input type="checkbox" name="showDashboard" value="on"{{#is @settings.show_dashboard 'on'}} checked{{/is}}>
                                     {{L 'show_dashboard'}}<br>
-                                </label>
-                            </div>
-                        </div>
-                        {{!-- AMP --}}
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="amp" value="on"{{#is @settings.amp 'on'}} checked{{/is}}>
-                                    {{L 'amp_enabled'}}<br>
                                 </label>
                             </div>
                         </div>

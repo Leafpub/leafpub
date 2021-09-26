@@ -1,11 +1,14 @@
 {
     "require": {
-        "php": ">=7.1",
+        "php": "^7.4|8.0",
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo_mysql": "*",
+        "ext-fileinfo": "*",
+        "ext-zip": "*",
+        "ext-iconv": "*",
         "zordius/lightncandy": "^1.0",
         "firebase/php-jwt": "^3.0",
         "slim/slim": "^3.0",
@@ -13,12 +16,13 @@
         "erusev/parsedown": "^1.6",
         "tinymce/tinymce": "^4.5",
         "mpratt/embera": "^1.9",
-        "symfony/event-dispatcher": "^3.1",
-        "composer/semver": "^1.4.2",
+        "symfony/event-dispatcher": "^4.4",
+        "composer/semver": "^3.2",
         "zendframework/zend-db": "^2.7",
         "monolog/monolog": "^1.0",
         "tracy/tracy": "^2.4",
-        "runcmf/runtracy": "^0.2.9"
+        "runcmf/runtracy": "^0.2.9",
+        "zarganwar/performance-panel": "^1.2"
     },
     "config": {
         "vendor-dir": "app/source/vendor"
@@ -31,5 +35,21 @@
             "npm install",
             "gulp build"
         ]
+    },
+    "require-dev": {
+        "rector/rector": "^0.10.15",
+        "friendsofphp/php-cs-fixer": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Leafpub\\":"source/classes",
+            "Leafpub\\Plugins\\": "content/plugins"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Leafpub\\": "app/source/classes",
+            "Leafpub\\Plugins\\": "app/content/plugins"
+        }
     }
 }

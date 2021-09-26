@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,26 +10,28 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Post,
-    Leafpub\Models\Setting;
+use Leafpub\Models\Post;
+use Leafpub\Models\Setting;
 
 /**
-* Blog
-*
-*  methods for working with the blog
-* @package Leafpub
-*
-**/ 
-class Blog extends Leafpub {
-
+ * Blog
+ *
+ *  methods for working with the blog
+ *
+ **/
+class Blog extends Leafpub
+{
     /**
-    * Render blog index page
-    *
-    * @param 1 $page
-    * @return mixed
-    *
-    **/
-    public static function render($page = 1) {
+     * Render blog index page
+     *
+     * @param 1 $page
+     *
+     * @throws \Exception
+     *
+     * @return mixed
+     */
+    public static function render($page = 1)
+    {
         // Get the posts
         $posts = Post::getMany([
             'page' => $page,
@@ -37,7 +40,9 @@ class Blog extends Leafpub {
         ], $pagination);
 
         // Make sure the requested page exists
-        if($page > $pagination['total_pages']) return false;
+        if ($page > $pagination['total_pages']) {
+            return false;
+        }
 
         // Add previous/next links to pagination
         $pagination['next_page_url'] = $pagination['next_page'] ?
@@ -50,11 +55,11 @@ class Blog extends Leafpub {
             'template' => Theme::getPath('blog.hbs'),
             'data' => [
                 'posts' => $posts,
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ],
             'special_vars' => [
                 'meta' => [
-                    'title'=> Setting::getOne('title'),
+                    'title' => Setting::getOne('title'),
                     'description' => Setting::getOne('tagline'),
                     // JSON linked data (schema.org)
                     'ld_json' => [
@@ -64,7 +69,7 @@ class Blog extends Leafpub {
                         'url' => parent::url(),
                         'image' => !empty(Setting::getOne('cover')) ?
                             parent::url(Setting::getOne('cover')) : null,
-                        'description' => Setting::getOne('tagline')
+                        'description' => Setting::getOne('tagline'),
                     ],
                     // Open Graph
                     'open_graph' => [
@@ -74,7 +79,7 @@ class Blog extends Leafpub {
                         'og:description' => Setting::getOne('tagline'),
                         'og:url' => parent::url(),
                         'og:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null
+                            parent::url(Setting::getOne('cover')) : null,
                     ],
                     // Twitter Card
                     'twitter_card' => [
@@ -86,32 +91,34 @@ class Blog extends Leafpub {
                         'twitter:description' => Setting::getOne('tagline'),
                         'twitter:url' => parent::url(),
                         'twitter:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null
-                    ]
+                            parent::url(Setting::getOne('cover')) : null,
+                    ],
                 ],
             ],
-            'helpers' => ['url', 'utility', 'theme']
+            'helpers' => ['url', 'utility', 'theme'],
         ]);
     }
 
     /**
-    * Returns a blog URL
-    * 
-    * @param 1 $page
-    * @return String
-    *
-    **/
-    public static function url($page = 1) {
-        if(!mb_strlen(Setting::getOne('homepage'))) {
+     * Returns a blog URL
+     *
+     * @param 1 $page
+     *
+     * @return string
+     *
+     **/
+    public static function url($page = 1)
+    {
+        if (!strlen(Setting::getOne('homepage'))) {
             // Default homepage
             return $page > 1 ?
                 // example.com/page/2
                 parent::url(Setting::getOne('frag_page'), $page) :
                 // example.com
                 parent::url();
-        } else {
-            // Custom homepage
-            return $page > 1 ?
+        }
+        // Custom homepage
+        return $page > 1 ?
                 // example.com/posts/page/2
                 parent::url(
                     Setting::getOne('frag_blog'),
@@ -120,7 +127,5 @@ class Blog extends Leafpub {
                 ) :
                 // example.com/posts/
                 parent::url(Setting::getOne('frag_blog'));
-        }
     }
-
 }

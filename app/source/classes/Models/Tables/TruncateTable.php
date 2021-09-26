@@ -1,18 +1,27 @@
 <?php
+declare(strict_types=1);
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
 
 namespace Leafpub\Models\Tables;
 
-use \Zend\Db\Adapter\ParameterContainer,
-    \Zend\Db\Adapter\Platform\PlatformInterface,
-    \Zend\Db\Adapter\Driver\DriverInterface,
-    \Zend\Db\Sql\AbstractPreparableSql,
-     \Zend\Db\Sql\TableIdentifier;
+use Zend\Db\Adapter\Driver\DriverInterface;
+use Zend\Db\Adapter\ParameterContainer;
+use Zend\Db\Adapter\Platform\PlatformInterface;
+use Zend\Db\Sql\AbstractPreparableSql;
+use Zend\Db\Sql\TableIdentifier;
 
-class TruncateTable extends AbstractPreparableSql {
+class TruncateTable extends AbstractPreparableSql
+{
     /**@#+
      * @const string
      */
-    const SPECIFICATION_TRUNCATE = 'truncate';
+    public const SPECIFICATION_TRUNCATE = 'truncate';
     /**@#-*/
 
     /**
@@ -28,30 +37,32 @@ class TruncateTable extends AbstractPreparableSql {
     protected $table = '';
 
     /**
-     * @param null|string|TableIdentifier $table
+     * @param string|TableIdentifier|null $table
      */
-    public function __construct($table = null){
+    public function __construct($table = null)
+    {
         if ($table) {
             $this->table($table);
         }
     }
 
     /**
-     * @param  string|TableIdentifier $table
+     * @param string|TableIdentifier $table
+     *
      * @return self
      */
-    public function table($table){
+    public function table($table)
+    {
         $this->table = $table;
+
         return $this;
     }
 
     /**
-     * @param  PlatformInterface       $platform
-     * @param  DriverInterface|null    $driver
-     * @param  ParameterContainer|null $parameterContainer
      * @return string
      */
-    protected function processTruncate(PlatformInterface $platform, DriverInterface $driver = null, ParameterContainer $parameterContainer = null){
+    protected function processTruncate(PlatformInterface $platform, DriverInterface $driver = null, ParameterContainer $parameterContainer = null)
+    {
         return sprintf(
             $this->specifications[static::SPECIFICATION_TRUNCATE],
             $this->resolveTable($this->table, $platform, $driver, $parameterContainer)

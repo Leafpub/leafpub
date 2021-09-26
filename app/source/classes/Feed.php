@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,40 +10,42 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Setting,
-    Leafpub\Models\Post;
-/**
-* Feed
-*
-* methods for working with the RSS feed
-* @package Leafpub
-*
-**/
-class Feed extends Leafpub {
+use Leafpub\Models\Post;
+use Leafpub\Models\Setting;
 
+/**
+ * Feed
+ *
+ * methods for working with the RSS feed
+ *
+ **/
+class Feed extends Leafpub
+{
     /**
-    * Renders an RSS feed
-    *
-    * @param null $options
-    * @return String
-    *
-    **/
-    public static function render($options = null) {
+     * Renders an RSS feed
+     *
+     * @param null $options
+     *
+     * @return string
+     *
+     **/
+    public static function render($options = null)
+    {
         // Merge options
         $options = array_merge([
             'author' => null,
-            'tag' => null
+            'tag' => null,
         ], $options);
 
         // Get posts for feed
         $posts = Post::getMany([
             'author' => $options['author'],
             'tag' => $options['tag'],
-            'items_per_page' => Setting::getOne('posts_per_page')
+            'items_per_page' => Setting::getOne('posts_per_page'),
         ]);
 
         // Open feed
-        $feed  = '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . "\n";
+        $feed = '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . "\n";
         $feed .= '    <channel>' . "\n";
         $feed .= '      <title>' . htmlspecialchars(Setting::getOne('title')) . '</title>' . "\n";
         $feed .= '      <atom:link href="' . htmlspecialchars(self::url($options)) . '" rel="self" type="application/rss+xml" />' . "\n";
@@ -50,7 +53,7 @@ class Feed extends Leafpub {
         $feed .= '      <description>' . htmlspecialchars(Setting::getOne('tagline')) . '</description>' . "\n";
 
         // Add feed items
-        foreach($posts as $post) {
+        foreach ($posts as $post) {
             // Meta title or title
             $title = !empty($post['meta_title']) ?
                 $post['meta_title'] :
@@ -78,23 +81,23 @@ class Feed extends Leafpub {
     }
 
     /**
-    * Returns the feed URL
-    *
-    * @param null $options
-    * @return String
-    *
-    **/
-    public static function url($options = null) {
-        if(count($options)) {
+     * Returns the feed URL
+     *
+     * @param null $options
+     *
+     * @return string
+     *
+     **/
+    public static function url($options = null)
+    {
+        if (count($options)) {
             // example.com/feed?author=name&tag=name
             return
                 parent::url(Setting::getOne('frag_feed')) .
                 '?' .
                 http_build_query($options, null, '&', PHP_QUERY_RFC3986);
-        } else {
-            // example.com/feed
-            return parent::url(Setting::getOne('frag_feed'));
         }
+        // example.com/feed
+        return parent::url(Setting::getOne('frag_feed'));
     }
-
 }

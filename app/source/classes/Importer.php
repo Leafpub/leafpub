@@ -1,12 +1,21 @@
 <?php
+declare(strict_types=1);
+/**
+ * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
+ *
+ * @link      https://github.com/Leafpub/leafpub
+ * @copyright Copyright (c) 2016 Leafpub Team
+ * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
+ */
 
 namespace Leafpub;
 
 use Leafpub\Importer\ImportFactory;
 
-class Importer extends Leafpub {
-
-    public static function doImport($options) {
+class Importer extends Leafpub
+{
+    public static function doImport($options)
+    {
         // Read params
         $dropin = $options['importer'];
         $file = $options['file'];
@@ -14,8 +23,8 @@ class Importer extends Leafpub {
         Models\Setting::edit(['name' => 'maintenance', 'value' => 'off']);
         // 2. ini_set
         $old_execution_time = ini_get('max_execution_time');
-        ini_set('max_execution_time', '600');  
-        try {      
+        ini_set('max_execution_time', '600');
+        try {
             // 5. Parse file and import data
             $importer = ImportFactory::factory($dropin, $file);
             $importer->setOptions($options);
@@ -26,12 +35,14 @@ class Importer extends Leafpub {
             // 9. Set maintenance mode off
             ini_set('max_execution_time', $old_execution_time);
             Models\Setting::edit(['name' => 'maintenance', 'value' => 'off']);
+
             return $ret;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             self::getLogger()->error($e->getMessage());
+
             return [
-                'succeed' => [], 
-                'failed' => [['error', $e->getMessage()]]
+                'succeed' => [],
+                'failed' => [['error', $e->getMessage()]],
             ];
         }
     }

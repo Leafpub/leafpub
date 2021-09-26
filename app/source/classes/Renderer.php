@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -12,43 +13,25 @@ namespace Leafpub;
 use Leafpub\Models\Setting;
 
 /**
-* Renderer
-*
-* methods for rendering handlebar templates
-* @package Leafpub
-*
-**/
-class Renderer extends Leafpub {
-
+ * Renderer
+ *
+ * methods for rendering handlebar templates
+ *
+ **/
+class Renderer extends Leafpub
+{
     /**
-    * Return admin helpers
-    *
-    * @param array $helpers
-    * @return array
-    *
-    **/
-    private static function loadHelpers($helpers = []) {
-        $array = [];
-
-        foreach((array) $helpers as $helper) {
-            $path = self::path("/source/templates/helpers/$helper.php");
-            if(file_exists($path)) {
-                $array = array_merge($array, include $path);
-            }
-        }
-
-        return $array;
-    }
-
-    /**
-    * Renders the specified handlebar template and returns the resulting HTML
-    *
-    * @param array $options
-    * @return String
-    * @throws \Exception
-    *
-    **/
-    public static function render($options = []) {
+     * Renders the specified handlebar template and returns the resulting HTML
+     *
+     * @param array $options
+     *
+     * @throws \Exception
+     *
+     * @return string
+     *
+     **/
+    public static function render($options = [])
+    {
         // Extract options
         $template = $data = $special_vars = $helpers = '';
         extract($options, EXTR_IF_EXISTS);
@@ -63,7 +46,7 @@ class Renderer extends Leafpub {
         $admin_dir = self::path('source/templates');
 
         // Load the template
-        if(!file_exists($template) || !$source = file_get_contents($template)) {
+        if (!file_exists($template) || !$source = file_get_contents($template)) {
             throw new \Exception("Template missing: $template_file");
         }
 
@@ -76,48 +59,47 @@ class Renderer extends Leafpub {
         // render the template. However, when caching is disabled the template will be recompiled
         // on every request, regardless of whether or not a cache file exists.
         //
-        if(!Cache::get($cache_file) || Setting::getOne('hbs_cache') !== 'on') {
+        if (!Cache::get($cache_file) || Setting::getOne('hbs_cache') !== 'on') {
             // Compile the template
             try {
                 $output = '<?php ' . \LightnCandy\LightnCandy::compile($source, [
-                    'flags' =>
-                        \LightnCandy\LightnCandy::FLAG_ERROR_EXCEPTION |
+                    'flags' => \LightnCandy\LightnCandy::FLAG_ERROR_EXCEPTION |
                         \LightnCandy\LightnCandy::FLAG_HANDLEBARS |
                         \LightnCandy\LightnCandy::FLAG_PROPERTY |
                         \LightnCandy\LightnCandy::FLAG_BESTPERFORMANCE |
                         \LightnCandy\LightnCandy::FLAG_RUNTIMEPARTIAL,
-                    'partialresolver' => function($cx, $name) use ($template_dir, $admin_dir) {
+                    'partialresolver' => function ($cx, $name) use ($template_dir, $admin_dir) {
                         // Search these locations for partials
-                        foreach([
+                        foreach ([
                             "$template_dir/$name.hbs",
                             "$template_dir/partials/$name.hbs",
                             "$admin_dir/$name.hbs",
                             "$admin_dir/partials/$name.hbs",
-                        ] as $file ) {
-                            if(file_exists($file)) return file_get_contents($file);
+                        ] as $file) {
+                            if (file_exists($file)) {
+                                return file_get_contents($file);
+                            }
                         }
 
                         return null;
                     },
-                    'helpers' => self::loadHelpers($helpers)
+                    'helpers' => self::loadHelpers($helpers),
                 ]);
-            } catch(\Exception $e) {
-                throw new \Exception(
-                    "Failed to compile $template_file. The compiler said: " . $e->getMessage()
-                );
+            } catch (\Exception $e) {
+                throw new \Exception("Failed to compile $template_file. The compiler said: " . $e->getMessage());
             }
 
             // Delete old cache files for this template
             try {
                 Cache::flush("hbs.$template_name.");
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 // Do nothing
             }
 
             // Create the cache file
             try {
                 Cache::put($cache_file, $output);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 throw new \Exception($e->getMessage());
             }
         }
@@ -126,41 +108,40 @@ class Renderer extends Leafpub {
         $special_vars = array_merge((array) $special_vars, [
             'cookies' => $_COOKIE,
             'leafpub' => [
-                'version' => LEAFPUB_VERSION === '{{version}}' ? 'dev' : LEAFPUB_VERSION
+                'version' => LEAFPUB_VERSION === '{{version}}' ? 'dev' : LEAFPUB_VERSION,
             ],
             'request' => [
                 'get' => $_GET,
                 'post' => $_POST,
-                'host'=> $_SERVER['HTTP_HOST'],
+                'host' => $_SERVER['HTTP_HOST'],
                 'homepage' => self::isHomepage(),
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'method' => $_SERVER['REQUEST_METHOD'],
                 'referer' => $_SERVER['HTTP_REFERER'],
                 'time' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']),
                 'uri' => $_SERVER['REQUEST_URI'],
-                'user_agent' => $_SERVER['HTTP_USER_AGENT']
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'],
             ],
             'settings' => Setting::getMany(),
             'template' => $template_name,
-            'user' => isset($options['user']) ? $options['user'] : Session::user()
+            'user' => isset($options['user']) ? $options['user'] : Session::user(),
         ]);
 
         // We can't use `set_error_handler()` to catch fatal errors, but we can register a shutdown
         // function to display any errors that might occur while rendering.
-        register_shutdown_function(function() use($template_file) {
+        register_shutdown_function(function () use ($template_file) {
             $error = error_get_last();
 
-            switch($error['type']) {
+            switch ($error['type']) {
                 case E_ERROR:
                 case E_USER_ERROR:
                     ob_end_clean();
                     exit(
                         Error::system([
                             'title' => 'Template Error',
-                            'message' =>
-                                "Failed to render $template_file due to a PHP error. This was " .
-                                "most likely caused by an error in the template. Please check " .
-                                "the template for syntax errors."
+                            'message' => "Failed to render $template_file due to a PHP error. This was " .
+                                'most likely caused by an error in the template. Please check ' .
+                                'the template for syntax errors.',
                         ])
                     );
                     break;
@@ -174,11 +155,32 @@ class Renderer extends Leafpub {
             $renderer = eval('?>' . Cache::get($cache_file));
             $html = $renderer($data, ['data' => $special_vars]);
             ob_end_flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception("Failed to render $template_file: " . $e->getMessage());
         }
 
         return $html;
     }
 
+    /**
+     * Return admin helpers
+     *
+     * @param array $helpers
+     *
+     * @return array
+     *
+     **/
+    private static function loadHelpers($helpers = [])
+    {
+        $array = [];
+
+        foreach ((array) $helpers as $helper) {
+            $path = self::path("/source/templates/helpers/$helper.php");
+            if (file_exists($path)) {
+                $array = array_merge($array, include $path);
+            }
+        }
+
+        return $array;
+    }
 }

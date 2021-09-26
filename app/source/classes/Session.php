@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,72 +10,40 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Setting,
-    Leafpub\Models\User;
+use Leafpub\Models\Setting;
+use Leafpub\Models\User;
 
 /**
-* Session
-*
-* methods for working with authenticated sessions
-* @package Leafpub
-*
-**/
-class Session extends Leafpub {
-
+ * Session
+ *
+ * methods for working with authenticated sessions
+ *
+ **/
+class Session extends Leafpub
+{
     /**
-    * Properties
-    **/
+     * Properties
+     **/
     private static $user;
 
     /**
-    * Generate and store an token
-    *
-    * @param String $username
-    * @return void
-    *
-    **/
-    private static function createJWT($username) {
-        $now = time();
-        $expires = $now + 3600; // + one hour
-
-        $token = \Firebase\JWT\JWT::encode([
-            'iat' => $now,
-            'exp' => $expires,
-            'data' => [
-                'username' => $username
-            ]
-        ], Setting::getOne('auth_key'));
-
-        // Save token in a cookie
-        setcookie('authToken', $token, $expires, '/');
-    }
-
-    /**
-    * Destroys the cookie holding the token
-    *
-    * @return void
-    *
-    **/
-    private static function destroyJWT() {
-        unset($_COOKIE['authToken']);
-        setcookie('authToken', '', time() - 3600, '/');
-    }
-
-    /**
-    * Initializes the user's session
-    *
-    * @return bool
-    *
-    **/
-    public static function init() {
+     * Initializes the user's session
+     *
+     * @return bool
+     *
+     **/
+    public static function init()
+    {
         // No token means no session
-        if(empty($_COOKIE['authToken'])) return false;
+        if (empty($_COOKIE['authToken'])) {
+            return false;
+        }
 
         // Decode the token
         try {
             \Firebase\JWT\JWT::$leeway = 60;
             $token = \Firebase\JWT\JWT::decode($_COOKIE['authToken'], Setting::getOne('auth_key'), ['HS256']);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -88,36 +57,41 @@ class Session extends Leafpub {
     }
 
     /**
-    * Determines is a user is currently logged in
-    *
-    * @return bool
-    *
-    **/
-    public static function isAuthenticated() {
+     * Determines is a user is currently logged in
+     *
+     * @return bool
+     *
+     **/
+    public static function isAuthenticated()
+    {
         return isset(self::$user);
     }
 
     /**
-    * Tests the authenticated user for a role. $role can be a string or an array of roles.
-    *
-    * @param String/array $role
-    * @return bool
-    *
-    **/
-    public static function isRole($role) {
+     * Tests the authenticated user for a role. $role can be a string or an array of roles.
+     *
+     * @param String/array $role
+     *
+     * @return bool
+     *
+     **/
+    public static function isRole($role)
+    {
         return in_array(self::user('role'), (array) $role);
     }
 
     /**
-    * Logs the user in and sets the token cookie
-    *
-    * @param String $username
-    * @param String $password
-    * @return bool
-    *
-    **/
-    public static function login($username, $password) {
-        if(User::verifyPassword($username, $password)) {
+     * Logs the user in and sets the token cookie
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return bool
+     *
+     **/
+    public static function login($username, $password)
+    {
+        if (User::verifyPassword($username, $password)) {
             // Store user data
             self::$user = User::getOne($username);
 
@@ -125,34 +99,38 @@ class Session extends Leafpub {
             self::createJWT($username);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
-    * Logs the user out and destroys the token cookie
-    *
-    * @return bool
-    *
-    **/
-    public static function logout() {
+     * Logs the user out and destroys the token cookie
+     *
+     * @return bool
+     *
+     **/
+    public static function logout()
+    {
         self::$user = null;
         self::destroyJWT();
+
         return true;
     }
 
     /**
-    * Updates the authenticated user's token and data. This method should be called anytime the
-    * authenticated user is updated. If the username (slug) has changed, pass it to $new_username.
-    *
-    * @param null $new_username
-    * @return void
-    *
-    **/
-    public static function update($new_username = null) {
+     * Updates the authenticated user's token and data. This method should be called anytime the
+     * authenticated user is updated. If the username (slug) has changed, pass it to $new_username.
+     *
+     * @param null $new_username
+     *
+     * @return void
+     *
+     **/
+    public static function update($new_username = null)
+    {
         // Has the username (slug) changed?
-        if($new_username !== Session::user()['slug']) {
+        if ($new_username !== Session::user()['slug']) {
             // Yep, update user data and token
             self::$user = User::getOne($new_username);
             self::createJWT($new_username);
@@ -163,18 +141,57 @@ class Session extends Leafpub {
     }
 
     /**
-    * Gets the user that is currently logged in. If $property is set, only that property will be
-    * returned.
-    *
-    * @param null $property
-    * @return mixed
-    *
-    **/
-    public static function user($property = null) {
-        if(self::isAuthenticated()) {
+     * Gets the user that is currently logged in. If $property is set, only that property will be
+     * returned.
+     *
+     * @param null $property
+     *
+     * @return mixed
+     *
+     **/
+    public static function user($property = null)
+    {
+        if (self::isAuthenticated()) {
             return $property ? self::$user[$property] : self::$user;
-        } else {
-            return null;
         }
+
+        return null;
+    }
+
+    /**
+     * Generate and store an token
+     *
+     * @param string $username
+     *
+     * @return void
+     *
+     **/
+    private static function createJWT($username)
+    {
+        $now = time();
+        $expires = $now + 3600; // + one hour
+
+        $token = \Firebase\JWT\JWT::encode([
+            'iat' => $now,
+            'exp' => $expires,
+            'data' => [
+                'username' => $username,
+            ],
+        ], Setting::getOne('auth_key'));
+
+        // Save token in a cookie
+        setcookie('authToken', $token, $expires, '/');
+    }
+
+    /**
+     * Destroys the cookie holding the token
+     *
+     * @return void
+     *
+     **/
+    private static function destroyJWT()
+    {
+        unset($_COOKIE['authToken']);
+        setcookie('authToken', '', time() - 3600, '/');
     }
 }

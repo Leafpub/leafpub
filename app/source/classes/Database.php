@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,46 +10,48 @@
 
 namespace Leafpub;
 
-use Zend\Db\Adapter\Adapter,
-    Zend\Db\TableGateway\Feature\GlobalAdapterFeature,
-    Leafpub\Models\Tables\TableGateway;
+use Leafpub\Models\Tables\TableGateway;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
+
 /**
-* Database
-*
-* methods for working with the database
-*
-* Note: the database instance is stored in the static $database property of the base class to
-* prevent superflous database connections.
-* @package Leafpub
-*
-**/
-class Database extends Leafpub {
+ * Database
+ *
+ * methods for working with the database
+ *
+ * Note: the database instance is stored in the static $database property of the base class to
+ * prevent superflous database connections.
+ *
+ **/
+class Database extends Leafpub
+{
+    /**
+     * Constants
+     **/
+    public const AUTH_ERROR = 1;
+    public const CONNECT_ERROR = 2;
+    public const DOES_NOT_EXIST = 3;
+    public const INIT_FAILED = 4;
+    public const NOT_CONFIGURED = 5;
+    public const TIMEOUT = 6;
 
     /**
-    * Constants
-    **/
-    const
-        AUTH_ERROR = 1,
-        CONNECT_ERROR = 2,
-        DOES_NOT_EXIST = 3,
-        INIT_FAILED = 4,
-        NOT_CONFIGURED = 5,
-        TIMEOUT = 6;
-    
-    /**
-    * Connect the Database
-    *
-    * @param null $config
-    * @param array $pdo_options
-    * @return void
-    * @throws \Exception
-    *
-    **/
-    public static function connect($config = null, $pdo_options = []) {
+     * Connect the Database
+     *
+     * @param null  $config
+     * @param array $pdo_options
+     *
+     * @throws \Exception
+     *
+     * @return void
+     *
+     **/
+    public static function connect($config = null, $pdo_options = [])
+    {
         // Load default database config
-        if(!$config) {
+        if (!$config) {
             $file = self::path('database.php');
-            if(file_exists($file)) {
+            if (file_exists($file)) {
                 $config = include $file;
             } else {
                 throw new \Exception('Database not configured', self::NOT_CONFIGURED);
@@ -57,17 +60,17 @@ class Database extends Leafpub {
 
         // Merge PDO options
         $pdo_options = array_merge([
-            \PDO::MYSQL_ATTR_FOUND_ROWS => true
+            \PDO::MYSQL_ATTR_FOUND_ROWS => true,
         ], $pdo_options);
 
         // Connect to the database
         try {
             GlobalAdapterFeature::setStaticAdapter(new Adapter($config));
             TableGateway::$prefix = $config['prefix'];
-            
+
             GlobalAdapterFeature::getStaticAdapter()->query('SET time_zone = "+00:00"', Adapter::QUERY_MODE_EXECUTE);
-        } catch(\PDOException $e) {
-            switch($e->getCode()) {
+        } catch (\PDOException $e) {
+            switch ($e->getCode()) {
                 case 1044: // Access denied for database
                 case 1045: // Access denied for user
                     $message = 'The database rejected this user or password. Make sure the user exists and has access to the specified database.';
@@ -94,67 +97,68 @@ class Database extends Leafpub {
     }
 
     /**
-    * Escapes % and _ characters which are wildcards for LIKE
-    *
-    * @param String $string
-    * @return String
-    *
-    **/
-    public static function escapeLikeWildcards($string) {
+     * Escapes % and _ characters which are wildcards for LIKE
+     *
+     * @param string $string
+     *
+     * @return string
+     *
+     **/
+    public static function escapeLikeWildcards($string)
+    {
         $string = str_replace('%', '\\%', $string);
         $string = str_replace('_', '\\_', $string);
+
         return $string;
     }
 
     /**
-    * Drops all Leafpub database tables and recreates them from default.database.sql
-    *
-    * @return void
-    * @throws \Exception
-    *
-    **/
-    public static function resetTables(){
+     * Drops all Leafpub database tables and recreates them from default.database.sql
+     *
+     * @throws \Exception
+     *
+     * @return void
+     *
+     **/
+    public static function resetTables()
+    {
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
         $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
 
-            foreach(self::getTableNames() as $table){
-                $x = '\\Leafpub\\Models\\Ddl\\' . $table;
-                $ddl = new $x();
-                $tableSQL = $sql->getSqlStringForSqlObject(new Models\Ddl\Drop($ddl->getTable())) . '; ';
-                $tableSQL .= $sql->getSqlStringForSqlObject($ddl);
-                if ($isMySQL){
-                    $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
-                }
-                
-                try {
+        foreach (self::getTableNames() as $table) {
+            $x = '\\Leafpub\\Models\\Ddl\\' . $table;
+            $ddl = new $x();
+            $tableSQL = $sql->getSqlStringForSqlObject(new Models\Ddl\Drop($ddl->getTable())) . '; ';
+            $tableSQL .= $sql->getSqlStringForSqlObject($ddl);
+            if ($isMySQL) {
+                $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
+            }
 
-                    $adapter->query(
+            try {
+                $adapter->query(
                         $tableSQL,
                         Adapter::QUERY_MODE_EXECUTE
                     );
 
-                    if ($table == 'Upload'){
-                        $dbTable = new Models\Tables\Upload();
-                        $dbTable->insert(['id' => 1, 'caption' => '', 'created' => '2017-02-01 12:23:45', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaves', 'extension' => 'jpg', 'size' => 254734, 'width' => 3000, 'height' => 2008]);
-                        $dbTable->insert(['id' => 2, 'caption' => '', 'created' => '2017-02-01 12:24:28', 'path' => 'content/uploads/2016/10/', 'filename' => 'sunflower', 'extension' => 'jpg', 'size' => 280779, 'width' => 3000, 'height' => 1990]);
-                        $dbTable->insert(['id' => 3, 'caption' => '', 'created' => '2017-02-01 12:24:40', 'path' => 'content/uploads/2016/10/', 'filename' => 'autumn', 'extension' => 'jpg', 'size' => 383879, 'width' => 3000, 'height' => 2000]);
-                        $dbTable->insert(['id' => 4, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'ladybug', 'extension' => 'jpg', 'size' => 277815, 'width' => 3000, 'height' => 1993]);
-                        $dbTable->insert(['id' => 5, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'flowers', 'extension' => 'jpg', 'size' => 342200, 'width' => 3000, 'height' => 2000]);
-                        $dbTable->insert(['id' => 6, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaf', 'extension' => 'jpg', 'size' => 220200, 'width' => 3000, 'height' => 2253]);
-                        $dbTable->insert(['id' => 7, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'note', 'extension' => 'jpg', 'size' => 453700, 'width' => 3000, 'height' => 2000]);
-                        $dbTable->insert(['id' => 8, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'light', 'extension' => 'jpg', 'size' => 156500, 'width' => 3000, 'height' => 2000]);
-                        $dbTable->insert(['id' => 9, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'logo-color', 'extension' => 'png', 'size' => 20000, 'width' => 610, 'height' => 610]);
-                    }
-                } catch(\PDOException $e){
-                    throw new \Exception(
-                        'Unable to create database schema [' . $ddl->getTable() . ']: ' . $e->getMessage(),
-                        self::INIT_FAILED
-                    );
+                if ($table == 'Upload') {
+                    $dbTable = new Models\Tables\Upload();
+                    $dbTable->insert(['id' => 1, 'caption' => '', 'created' => '2017-02-01 12:23:45', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaves', 'extension' => 'jpg', 'size' => 254734, 'width' => 3000, 'height' => 2008]);
+                    $dbTable->insert(['id' => 2, 'caption' => '', 'created' => '2017-02-01 12:24:28', 'path' => 'content/uploads/2016/10/', 'filename' => 'sunflower', 'extension' => 'jpg', 'size' => 280779, 'width' => 3000, 'height' => 1990]);
+                    $dbTable->insert(['id' => 3, 'caption' => '', 'created' => '2017-02-01 12:24:40', 'path' => 'content/uploads/2016/10/', 'filename' => 'autumn', 'extension' => 'jpg', 'size' => 383879, 'width' => 3000, 'height' => 2000]);
+                    $dbTable->insert(['id' => 4, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'ladybug', 'extension' => 'jpg', 'size' => 277815, 'width' => 3000, 'height' => 1993]);
+                    $dbTable->insert(['id' => 5, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'flowers', 'extension' => 'jpg', 'size' => 342200, 'width' => 3000, 'height' => 2000]);
+                    $dbTable->insert(['id' => 6, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaf', 'extension' => 'jpg', 'size' => 220200, 'width' => 3000, 'height' => 2253]);
+                    $dbTable->insert(['id' => 7, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'note', 'extension' => 'jpg', 'size' => 453700, 'width' => 3000, 'height' => 2000]);
+                    $dbTable->insert(['id' => 8, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'light', 'extension' => 'jpg', 'size' => 156500, 'width' => 3000, 'height' => 2000]);
+                    $dbTable->insert(['id' => 9, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'logo-color', 'extension' => 'png', 'size' => 20000, 'width' => 610, 'height' => 610]);
                 }
+            } catch (\PDOException $e) {
+                throw new \Exception('Unable to create database schema [' . $ddl->getTable() . ']: ' . $e->getMessage(), self::INIT_FAILED);
             }
-            $adapter->query('DROP VIEW IF EXISTS ' . TableGateway::$prefix . 'view_posts;', Adapter::QUERY_MODE_EXECUTE);
-            $adapter->query(
+        }
+        $adapter->query('DROP VIEW IF EXISTS ' . TableGateway::$prefix . 'view_posts;', Adapter::QUERY_MODE_EXECUTE);
+        $adapter->query(
                     str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
                         SELECT  
                         a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
@@ -170,91 +174,95 @@ class Database extends Leafpub {
                         `__users` c
                         ON
                         a.author = c.id
-                        "), 
+                        "),
                     Adapter::QUERY_MODE_EXECUTE
                 );
     }
 
     /**
-    * Begins a transaction
-    *
-    * @return bool
-    *
-    **/
-    public static function beginTransaction(){
+     * Begins a transaction
+     *
+     * @return bool
+     *
+     **/
+    public static function beginTransaction()
+    {
         return self::$database->beginTransaction();
     }
 
     /**
-    * Rollback a transaction
-    *
-    * @return bool
-    *
-    **/ 
-    public static function rollBack() {
+     * Rollback a transaction
+     *
+     * @return bool
+     *
+     **/
+    public static function rollBack()
+    {
         return self::$database->rollBack();
     }
 
     /**
-    * Commit a transaction
-    *
-    * @return bool
-    *
-    **/
-    public static function commit(){
+     * Commit a transaction
+     *
+     * @return bool
+     *
+     **/
+    public static function commit()
+    {
         return self::$database->commit();
     }
 
     /**
-    * Truncate a table
-    *
-    * @param String $table
-    * @return bool
-    *
-    **/
-    public static function truncate($table){
+     * Truncate a table
+     *
+     * @param string $table
+     *
+     * @return bool
+     *
+     **/
+    public static function truncate($table)
+    {
         return self::$database->exec('TRUNCATE ' . $table);
     }
 
-    /**
-    *
-    **/
-
-    public static function updateDatabase(){
+    public static function updateDatabase()
+    {
         self::$logger->info(' Begin database update ');
         self::$logger->info(' creating backup ');
         \Leafpub\Backup::create();
         $dbScheme = \Leafpub\Models\Setting::getOne('schemeVersion') ?: 0;
 
-        for ($i = $dbScheme; $i < LEAFPUB_SCHEME_VERSION; $i++){
+        for ($i = $dbScheme; $i < LEAFPUB_SCHEME_VERSION; ++$i) {
             $method = 'updateToVersion' . ($i + 1);
             self::$method();
         }
     }
 
     /**
-    * Create __plugins table
-    *
-    **/
-    protected static function updateToVersion1(){
+     * Create __plugins table
+     *
+     **/
+    protected static function updateToVersion1()
+    {
         self::$logger->info(' start updateToVersion1 ');
-        
+
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
         $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
-        
+
         $table = new \Leafpub\Models\Ddl\Plugin();
         $tableSQL = $sql->getSqlStringForSqlObject($table);
-        if ($isMySQL){
+        if ($isMySQL) {
             $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
         }
-        
+
         $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
-        
+
         self::$logger->info(' end updateToVersion1 ');
     }
 
-    protected static function updateToVersion2(){
+    protected static function updateToVersion2()
+    {
         self::$logger->info(' start updateToVersion2 ');
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
@@ -279,7 +287,7 @@ class Database extends Leafpub {
             self::$logger->info('creating table __upload_tags');
             $ut = new \Leafpub\Models\Ddl\UploadTags();
             $tableSQL = $sql->getSqlStringForSqlObject($ut);
-            if ($isMySQL){
+            if ($isMySQL) {
                 $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
             }
 
@@ -288,12 +296,12 @@ class Database extends Leafpub {
             self::$logger->info('creating table __post_uploads');
             $pu = new \Leafpub\Models\Ddl\PostUploads();
             $tableSQL = $sql->getSqlStringForSqlObject($pu);
-            if ($isMySQL){
+            if ($isMySQL) {
                 $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
             }
 
             $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             self::$logger->error($e->getMessage());
         }
 
@@ -301,8 +309,8 @@ class Database extends Leafpub {
 
         $uploads = $adapter->query('SELECT * FROM ' . TableGateway::$prefix . 'uploads;', Adapter::QUERY_MODE_EXECUTE)->toArray();
 
-        foreach($uploads as $upload){
-            if (strpos($upload['filename'], $upload['extension']) > 0){
+        foreach ($uploads as $upload) {
+            if (strpos($upload['filename'], $upload['extension']) > 0) {
                 $extLength = strlen($upload['extension']) + 1;
 
                 $newFilename = substr($upload['filename'], 0, strlen($upload['filename']) - $extLength);
@@ -313,22 +321,19 @@ class Database extends Leafpub {
                 try {
                     $sSQL = 'UPDATE ' . TableGateway::$prefix . 'uploads SET path = \'' . $newPath . '\', filename = \'' . $newFilename . '\' WHERE id = ' . $upload['id'] . ';';
                     $adapter->query($sSQL, Adapter::QUERY_MODE_EXECUTE);
-                    
-                    if(!self::makeDir(self::path($newPath.'thumbnails'))) {
-                        throw new \Exception(
-                            'Unable to create directory: ' . $newPath.'thumbnails',
-                            self::UNABLE_TO_CREATE_DIRECTORY
-                        );
+
+                    if (!self::makeDir(self::path($newPath . 'thumbnails'))) {
+                        throw new \Exception('Unable to create directory: ' . $newPath . 'thumbnails', self::UNABLE_TO_CREATE_DIRECTORY);
                     }
-                    $relativeThumb = "$newPath"."thumbnails/" . $upload['filename'];
+                    $relativeThumb = "$newPath" . 'thumbnails/' . $upload['filename'];
                     $thumbPath = self::path($relativeThumb);
                     $imgPath = self::path($upload['path']);
 
-                    if (is_file($imgPath)){
+                    if (is_file($imgPath)) {
                         Upload::generateThumbnail($imgPath, $thumbPath);
                     }
                     self::$logger->info("Updated $newFilename and generated a thumbnail");
-                } catch (\PDOException $e){
+                } catch (\PDOException $e) {
                     self::$logger->error($e->getMessage());
                 }
             }
@@ -352,17 +357,18 @@ class Database extends Leafpub {
                             `__users` c
                             ON
                             a.author = c.id
-                            "), 
+                            "),
                         Adapter::QUERY_MODE_EXECUTE
                     );
 
             self::$logger->info(' end updateToVersion2 ');
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             self::$logger->error($e->getMessage());
         }
     }
 
-    protected static function updateToVersion3(){
+    protected static function updateToVersion3()
+    {
         self::$logger->info(' start updateToVersion3 ');
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
@@ -371,14 +377,14 @@ class Database extends Leafpub {
         try {
             $table = new \Leafpub\Models\Ddl\PostMeta();
             $tableSQL = $sql->getSqlStringForSqlObject($table);
-            if ($isMySQL){
+            if ($isMySQL) {
                 $tableSQL .= ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;';
             }
-            
+
             $adapter->query($tableSQL, Adapter::QUERY_MODE_EXECUTE);
 
             self::$logger->info(' end updateToVersion3 ');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             self::$logger->error($e->getMessage());
         }
     }

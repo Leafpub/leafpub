@@ -16,7 +16,7 @@
 // @include node_modules/@claviska/jquery-selectable/jquery.selectable.min.js
 // @include node_modules/lodash/lodash.min.js
 // @include node_modules/gridstack/dist/gridstack.min.js
-// @include node_modules/slugify/index.js
+// include node_modules/slugify/index.js
 
 // Modules
 // @include app/source/scripts/modules/leafpub.js

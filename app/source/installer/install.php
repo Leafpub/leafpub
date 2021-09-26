@@ -231,6 +231,7 @@ Models\Setting::create(['name' => 'mailer', 'value' => 'default']);
 Models\Setting::create(['name' => 'schemeVersion', 'value' => LEAFPUB_SCHEME_VERSION]);
 Models\Setting::create(['name' => 'updateTime', 'value' => '03:00:00']);
 Models\Setting::create(['name' => 'forceSsl', 'value' => 'off']);
+Models\Setting::create(['name' => 'show_dashboard', 'value' => 'off']);
 
 // Insert owner
 try {
@@ -266,7 +267,7 @@ try {
 // Insert default tag
 try {
     Models\Tag::create([
-        'slug' => 'getting-started', 
+        'slug' => 'getting-started',
         'name' => 'Getting Started',
         'description' => 'This is a sample tag. You can delete it, rename it, or do whatever you want with it!',
         'type' => 'post',
@@ -297,7 +298,7 @@ try {
         'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
     Models\Post::create([
-        'slug' => 'the-editor', 
+        'slug' => 'the-editor',
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'The Editor',
@@ -308,7 +309,7 @@ try {
         'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
     Models\Post::create([
-        'slug' => 'themes-and-plugins', 
+        'slug' => 'themes-and-plugins',
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Themes & Plugins',
@@ -319,7 +320,7 @@ try {
         'created' => new \Zend\Db\Sql\Expression('NOW()')
     ]);
     Models\Post::create([
-        'slug' => 'help-and-support', 
+        'slug' => 'help-and-support',
         'pub_date' => '2016-07-27 22:50:00',
         'author' => $_REQUEST['username'],
         'title' => 'Help & Support',

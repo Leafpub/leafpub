@@ -1,60 +1,54 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
  * @link      https://github.com/Leafpub/leafpub
- * @copyright Copyright (c) 2017 Leafpub Team
+ * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
 
 namespace Leafpub\Models;
 
-use DirectoryIterator,
-    ZipArchive,
-    Composer\Semver\Comparator,
-    Leafpub\Leafpub;
+use Composer\Semver\Comparator;
+use DirectoryIterator;
+use Leafpub\Leafpub;
+use ZipArchive;
 
-class Plugin extends AbstractModel {
-    protected static $_instance;
-
-    protected static $allowedCaller = [
-        'Leafpub\\Controller\\AdminController', 
-        'Leafpub\\Controller\\APIController',
-        'Leafpub\\Leafpub',
-        'Leafpub\\Models\\Plugin'
-    ];
-
+class Plugin extends AbstractModel
+{
     /**
-    * Constants
-    **/
-    const
-        ALREADY_EXISTS = 1,
-        INVALID_NAME = 2,
-        INVALID_DIR = 3,
-        NOT_FOUND = 4,
-        VERSION_MISMATCH = 5;
+     * Constants
+     **/
+    public const ALREADY_EXISTS = 1;
+    public const INVALID_NAME = 2;
+    public const INVALID_DIR = 3;
+    public const NOT_FOUND = 4;
+    public const VERSION_MISMATCH = 5;
 
     public static $plugins;
+    protected static ?\Leafpub\Models\Tables\Plugin $_instance = null;
 
-    protected static function getModel(){
-		if (self::$_instance == null){
-			self::$_instance	=	new Tables\Plugin();
-		}
-		return self::$_instance;
-	}
+    protected static $allowedCaller = [
+        'Leafpub\\Controller\\AdminController',
+        'Leafpub\\Controller\\APIController',
+        'Leafpub\\Leafpub',
+        'Leafpub\\Models\\Plugin',
+    ];
 
-    public static function getMany(array $options = [], &$pagination = null){
+    public static function getMany(array $options = [], &$pagination = null)
+    {
         $options = array_merge([
             'items_per_page' => 10,
             'page' => 1,
             'query' => null,
-            'sort' => 'DESC'
+            'sort' => 'DESC',
         ], (array) $options);
 
         $where = null;
 
-        if ($options['query'] !== null){
-            $where = function($wh) use($options){
+        if ($options['query'] !== null) {
+            $where = function ($wh) use ($options) {
                 $wh->like('name', '%' . $options['query'] . '%');
             };
         }
@@ -79,121 +73,124 @@ class Plugin extends AbstractModel {
         $selectZero->where(['enabled' => '0']);
         $selectZero->limit($count)->offset($offset);
 
-        if ($where){
+        if ($where) {
             $selectOne->where($where);
             $selectZero->where($where);
         }
 
         $selectZero->combine($selectOne, 'UNION');
         $databasePlugins = self::getModel()->selectWith($selectZero)->toArray();
-    
+
         // Merge plugins from database with plugins from filesystem
         // only, when we're not searching...'
-        if ($options['query'] == null){
+        if ($options['query'] == null) {
             $plugins = array_map(
-                            function($arr) use($databasePlugins){
-                                foreach($databasePlugins as $plugin){
-                                    if ($plugin['dir'] == $arr['dir']){
+                function ($arr) use ($databasePlugins) {
+                                foreach ($databasePlugins as $plugin) {
+                                    if ($plugin['dir'] == $arr['dir']) {
                                         $arr['install_date'] = $plugin['install_date'];
-                                        if ($plugin['enabled'] == 1){
+                                        if ($plugin['enabled'] == 1) {
                                             $arr['enabled'] = 1; // Set to 1 because this is the HDD Plugin, not the database plugin...
                                             $arr['enable_date'] = $plugin['enable_date'];
                                         }
+
                                         return $arr;
                                     }
                                 }
+
                                 return $arr;
                             },
-                            self::getAll()
-                        );
+                self::getAll()
+            );
         } else {
             $plugins = $databasePlugins;
         }
-        foreach ($plugins as $key => $plugin){
+        foreach ($plugins as $key => $plugin) {
             $plugins[$key] = self::normalize($plugin);
         }
 
         return $plugins;
     }
-    
-    public static function getOne($plugin){
-        try {
-           $plugin = self::getModel()->select(['dir' => $plugin])->current();
-           if (!$plugin){
-               return false;
-           }
-       } catch(\PDOException $e) {
-           return false;
-       }
 
-       $plugin = self::normalize($plugin->getArrayCopy());
-       return $plugin;
+    public static function getOne($plugin)
+    {
+        try {
+            $plugin = self::getModel()->select(['dir' => $plugin])->current();
+            if (!$plugin) {
+                return false;
+            }
+        } catch (\PDOException $e) {
+            return false;
+        }
+
+        $plugin = self::normalize($plugin->getArrayCopy());
+
+        return $plugin;
     }
-    
-    public static function create($plugin){
-        if (!self::isAllowedCaller()){
+
+    public static function create($plugin)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
         // Is the name valid?
-        if(!mb_strlen($plugin['name']) || Leafpub::isProtectedSlug($plugin['name'])) {
+        if ($plugin['name'] === '' || Leafpub::isProtectedSlug($plugin['name'])) {
             throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
-        if(
-            !mb_strlen($plugin['dir']) || 
-            Leafpub::isProtectedSlug($plugin['dir']) || 
+        if (
+            $plugin['dir'] === '' ||
+            Leafpub::isProtectedSlug($plugin['dir']) ||
             !is_dir(Leafpub::path('content/plugins/' . $plugin['dir']))
         ) {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
 
-        if (LEAFPUB_VERSION != '{{version}}'){
-            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
-                throw new \Exception(
-                    'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
-                    self::VERSION_MISMATCH
-                );
-            }
+        if (
+            (LEAFPUB_VERSION !== '{{version}}') &&
+            !Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])
+        ) {
+            throw new \Exception('Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', self::VERSION_MISMATCH);
         }
 
         $plugin = self::normalize($plugin);
 
         try {
-           self::getModel()->insert($plugin);
-           $plugin_id = (int) self::getModel()->getLastInsertValue();
-           if($plugin_id <= 0) return false;
-       } catch(\PDOException $e) {
-           return false;
-       }
+            self::getModel()->insert($plugin);
+            $plugin_id = (int) self::getModel()->getLastInsertValue();
+            if ($plugin_id <= 0) {
+                return false;
+            }
+        } catch (\PDOException $e) {
+            return false;
+        }
 
-       return true;
+        return true;
     }
-    
-    public static function edit($plugin){
-        if (!self::isAllowedCaller()){
+
+    public static function edit($plugin)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
         // Is the name valid?
-        if(!mb_strlen($plugin['name']) || Leafpub::isProtectedSlug($plugin['name'])) {
+        if ($plugin['name'] === '' || Leafpub::isProtectedSlug($plugin['name'])) {
             throw new \Exception('Invalid name: ' . $plugin['name'], self::INVALID_NAME);
         }
 
-        if(
-            !mb_strlen($plugin['dir']) || 
-            Leafpub::isProtectedSlug($plugin['dir']) || 
+        if (
+            $plugin['dir'] === '' ||
+            Leafpub::isProtectedSlug($plugin['dir']) ||
             !is_dir(Leafpub::path('content/plugins/' . $plugin['dir']))
         ) {
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
 
-        if (LEAFPUB_VERSION != '{{version}}'){
-            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])){
-                throw new \Exception(
-                    'Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', 
-                    self::VERSION_MISMATCH
-                );
+        if (LEAFPUB_VERSION != '{{version}}') {
+            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])) {
+                throw new \Exception('Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', self::VERSION_MISMATCH);
             }
         }
         $dbPlugin = self::getOne($plugin['dir']);
@@ -203,57 +200,63 @@ class Plugin extends AbstractModel {
 
         try {
             self::getModel()->update($plugin, ['id' => $id]);
-        } catch(\PDOException $e) {
-           return false;
+        } catch (\PDOException $e) {
+            return false;
         }
 
         return true;
     }
-    
-    public static function delete($plugin){
-        if (!self::isAllowedCaller()){
+
+    public static function delete($plugin)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
         try {
-           $rowCount = self::getModel()->delete(['dir' => $plugin]);
-           return ($rowCount > 0);
-       } catch(\PDOException $e) {
-           return false;
-       }
+            $rowCount = self::getModel()->delete(['dir' => $plugin]);
+
+            return $rowCount > 0;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
-    public static function count($where = null){
+    public static function count($where = null)
+    {
         try {
             $model = self::getModel();
             $select = $model->getSql()->select();
             $select->columns(['num' => new \Zend\Db\Sql\Expression('COUNT(*)')]);
 
-            if ($where){
+            if ($where) {
                 $select->where($where);
             }
 
             return (int) $model->selectWith($select)->current()['num'];
-        } catch(\Exception $e){
-
+        } catch (\Exception $e) {
         }
     }
+
     /**
-    * Returns a list of all available plugins
-    *
-    * @return array
-    *
-    **/
-    public static function getAll() {
+     * Returns a list of all available plugins
+     *
+     * @return array
+     *
+     **/
+    public static function getAll()
+    {
         $plugins = [];
 
         $iterator = new DirectoryIterator(Leafpub::path('content/plugins'));
-        foreach($iterator as $dir) {
-            if(!$dir->isDot() && $dir->isDir()) {
+        foreach ($iterator as $dir) {
+            if (!$dir->isDot() && $dir->isDir()) {
                 // Attempt to read and decode theme.json
                 $plugin_json = $dir->getPathname() . '/plugin.json';
                 $json = json_decode(file_get_contents($plugin_json), true);
-                if(!$json) continue;
+                if (!$json) {
+                    continue;
+                }
                 // Add it
                 $plugins[] = array_merge($json, ['dir' => $dir->getFilename()]);
             }
@@ -263,96 +266,96 @@ class Plugin extends AbstractModel {
     }
 
     /**
-    * Returns a list of all activated Plugins
-    *
-    * @return mixed
-    *
-    */
-    public static function getActivatedPlugins(){
+     * Returns a list of all activated Plugins
+     *
+     * @return mixed
+     */
+    public static function getActivatedPlugins()
+    {
         try {
-           return self::getModel()->select(['enabled' => '1'])->toArray();
-           
-       } catch(\PDOException $e) {
-           return false;
-       }
+            return self::getModel()->select(['enabled' => '1'])->toArray();
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
     /**
-    * Upload a zip, unzip, create a folder, copy files
-    *
-    * @return bool
-    *
-    */
-    public static function install($zipFile){
-        if (!self::isAllowedCaller()){
+     * Upload a zip, unzip, create a folder, copy files
+     *
+     * @return bool
+     */
+    public static function install($zipFile)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
         $bPluginJson = false;
         $bPluginPhp = false;
         $bUpdate = false;
-        
+
         $zip = new ZipArchive();
         $res = $zip->open($zipFile, ZipArchive::CHECKCONS);
-        
+
         // Check if zip is ok
-        if ($res !== TRUE) {
-            switch($res) {
+        if ($res !== true) {
+            switch ($res) {
                 case ZipArchive::ER_NOZIP:
                     throw new \Exception('not a zip archive');
-                case ZipArchive::ER_INCONS :
+                case ZipArchive::ER_INCONS:
                     throw new \Exception('consistency check failed');
-                case ZipArchive::ER_CRC :
+                case ZipArchive::ER_CRC:
                     throw new \Exception('checksum failed');
                 default:
                     throw new \Exception('error ' . $res);
             }
         }
-        
+
         // Check for the mandatory files
-        for( $i = 0; $i < $zip->numFiles; $i++ ){
-            $file = $zip->getNameIndex( $i );
-            if (strstr($file, 'plugin.json')){
-                $bPluginJson = true; 
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
+            $file = $zip->getNameIndex($i);
+            if (strstr($file, 'plugin.json')) {
+                $bPluginJson = true;
             }
-            if (strstr($file, 'Plugin.php')){
+            if (strstr($file, 'Plugin.php')) {
                 $bPluginPhp = true;
             }
-        } 
-        
+        }
+
         // All mandatory files are present
-        if (!$bPluginJson || !$bPluginPhp){
+        if (!$bPluginJson || !$bPluginPhp) {
             throw new \Exception('Mandatory file missing');
         }
-        
+
         // Get the plugin folder
         $ns = $zip->getNameIndex(0);
-        
+
         // Plugin exists already
-        if (is_dir(Leafpub::path('content/plugins/' . $ns))){
+        if (is_dir(Leafpub::path('content/plugins/' . $ns))) {
             // We're doing an update'
             Leafpub::removeDir(Leafpub::path('content/plugins/' . $ns));
             $bUpdate = true;
         }
-        
-        if (!$zip->extractTo(Leafpub::path('content/plugins'))){
+
+        if (!$zip->extractTo(Leafpub::path('content/plugins'))) {
             throw new \Exception('Unable to extract zip');
         }
-        
+
         $plugin = json_decode(
             file_get_contents(
                 Leafpub::path("content/plugins/$ns/plugin.json")
-            ), true
+            ),
+            true
         );
         $plugin['dir'] = $ns;
-        
+
         $plugin['img'] = $plugin['image'];
 
         unset($plugin['image']);
         unset($plugin['routes']);
         unset($plugin['isWidget']);
-        
-        if ($bUpdate){
+
+        if ($bUpdate) {
             $res = self::edit($plugin);
         } else {
             $res = self::create($plugin);
@@ -362,27 +365,28 @@ class Plugin extends AbstractModel {
     }
 
     /**
-    * Delete the plugin folder
-    *
-    * @param String $plugin the plugin to deinstall
-    * @return bool
-    *
-    */
-    public static function deinstall($plugin){
-        if (!self::isAllowedCaller()){
+     * Delete the plugin folder
+     *
+     * @param string $plugin the plugin to deinstall
+     *
+     * @return bool
+     */
+    public static function deinstall($plugin)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
-        if (!is_dir(Leafpub::path("content/plugins/$plugin"))){
+        if (!is_dir(Leafpub::path("content/plugins/$plugin"))) {
             return false;
         }
 
         $plugin = self::getOne($plugin);
-        if (!$plugin){
+        if (!$plugin) {
             return false;
         }
 
-        if ($plugin['enabled'] == 1){
+        if ($plugin['enabled'] == 1) {
             self::deactivate($plugin['dir']);
         }
 
@@ -394,29 +398,31 @@ class Plugin extends AbstractModel {
     }
 
     /**
-    * Activates an installed plugin
-    *
-    * @param String $dir the plugin to activate
-    * @return bool
-    *
-    */
-    public static function activate($dir){
-        if (!self::isAllowedCaller()){
+     * Activates an installed plugin
+     *
+     * @param string $dir the plugin to activate
+     *
+     * @return bool
+     */
+    public static function activate($dir)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
-        
+
         // Always sanitize user input ;-)
-        if (!is_dir(Leafpub::path("content/plugins/$dir"))){
+        if (!is_dir(Leafpub::path("content/plugins/$dir"))) {
             return false;
         }
 
         $plugin = self::getOne($dir);
-        
-        if (!$plugin){
+
+        if (!$plugin) {
             $plugin = json_decode(
                 file_get_contents(
                     Leafpub::path("content/plugins/$dir/plugin.json")
-                ), true
+                ),
+                true
             );
             $plugin['dir'] = $dir;
 
@@ -425,10 +431,10 @@ class Plugin extends AbstractModel {
             unset($plugin['image']);
             unset($plugin['routes']);
             unset($plugin['isWidget']);
-            
-            try{
+
+            try {
                 self::create($plugin);
-            } catch (\Exception $e){
+            } catch (\Exception $e) {
                 return false;
             }
         }
@@ -439,36 +445,39 @@ class Plugin extends AbstractModel {
 
         // Update database
         try {
-            $rowCount = self::getModel()->update([
+            $rowCount = self::getModel()->update(
+                [
                                 'enabled' => '1',
-                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()')
+                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()'),
                             ],
-                            ['dir' => $dir]
-                        );
-            return ($rowCount > 0);
-        } catch(\PDOException $e) {
-           return false;
-       }    
+                ['dir' => $dir]
+            );
+
+            return $rowCount > 0;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
     /**
-    * Deactivates an installed plugin
-    *
-    * @param String $dir the plugin to deactivate
-    * @return bool
-    *
-    */
-    public static function deactivate($dir){
-        if (!self::isAllowedCaller()){
+     * Deactivates an installed plugin
+     *
+     * @param string $dir the plugin to deactivate
+     *
+     * @return bool
+     */
+    public static function deactivate($dir)
+    {
+        if (!self::isAllowedCaller()) {
             return false;
         }
 
-        if (!is_dir(Leafpub::path("content/plugins/$dir"))){
+        if (!is_dir(Leafpub::path("content/plugins/$dir"))) {
             return false;
         }
 
         $plugin = self::getOne($dir);
-        if (!$plugin){
+        if (!$plugin) {
             return false;
         }
 
@@ -479,26 +488,54 @@ class Plugin extends AbstractModel {
 
         // Update database
         try {
-            $rowCount = self::getModel()->update([
+            $rowCount = self::getModel()->update(
+                [
                                 'enabled' => '0',
-                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()')
+                                'enable_date' => new \Zend\Db\Sql\Expression('NOW()'),
                             ],
-                            ['dir' => $dir]
-                        );
-            return ($rowCount > 0);
-        } catch(\PDOException $e) {
-           return false;
-       }   
+                ['dir' => $dir]
+            );
+
+            return $rowCount > 0;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
     /**
-    * Normalize types for certain fields
-    *
-    * @param array $plugin
-    * @return array
-    *
-    */
-    private static function normalize($plugin){
+     * Checks, if a plugin exists
+     *
+     * @param string $dir
+     *
+     * @return bool
+     */
+    public static function exists($dir)
+    {
+        try {
+            return (bool) self::getOne($dir);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    protected static function getModel()
+    {
+        if (self::$_instance == null) {
+            self::$_instance = new Tables\Plugin();
+        }
+
+        return self::$_instance;
+    }
+
+    /**
+     * Normalize types for certain fields
+     *
+     * @param array $plugin
+     *
+     * @return array
+     */
+    private static function normalize($plugin)
+    {
         // Cast to integer
         $plugin['id'] = (int) $plugin['id'];
         $plugin['isAdminPlugin'] = (int) $plugin['isAdminPlugin'];
@@ -511,20 +548,4 @@ class Plugin extends AbstractModel {
 
         return $plugin;
     }
-
-    /**
-    * Checks, if a plugin exists
-    *
-    * @param String $dir
-    * @return bool
-    *
-    */
-    public static function exists($dir){
-        try {
-           return !!self::getOne($dir);
-       } catch(\PDOException $e) {
-           return false;
-       }
-    }
-
 }

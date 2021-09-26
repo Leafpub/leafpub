@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -6,47 +7,52 @@
  * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
+
 namespace Leafpub\Listeners;
 
-use Leafpub\Events\Post\Add,
-    Leafpub\Events\Post\Added,
-    Leafpub\Events\Post\BeforeRender,
-    Leafpub\Events\Post\PostViewed,
-    Leafpub\Leafpub,
-    Leafpub\Models\Setting,
-    Leafpub\Models\User,
-    Leafpub\Models\Post as P,
-    Leafpub\Models\PostMeta;
+use Leafpub\Events\Post\Add;
+use Leafpub\Events\Post\Added;
+use Leafpub\Events\Post\BeforeRender;
+use Leafpub\Events\Post\PostViewed;
+use Leafpub\Leafpub;
+use Leafpub\Models\Post as P;
+use Leafpub\Models\Setting;
+use Leafpub\Models\User;
 
-class Post {
-    
-    public function onPostAdd(Add $add){
+class Post
+{
+    public function onPostAdd(Add $add)
+    {
         $post = $add->getEventData();
     }
-    
-    public function onPostAdded(Added $added){
+
+    public function onPostAdded(Added $added)
+    {
         $post = $added->getEventData();
     }
 
-    public function onBeforeRender(BeforeRender $event){
+    public function onBeforeRender(BeforeRender $event)
+    {
         $data = $event->getEventData();
         /*
         $author = User::get($data['post']['author']);
         $data['special_vars']['meta']['ld_json'] = $this->_generateLDJson($data['post'], $author);
         $data['special_vars']['meta']['open_graph'] = $this->_generateOGData($data['post']);
         $data['special_vars']['meta']['twitter_card'] = $this->_generateTwitterData($data['post'], $author);
-        
+
         $event->setEventData($data);
         */
     }
 
-    public function onPostViewed(PostViewed $event){
+    public function onPostViewed(PostViewed $event)
+    {
         $data = $event->getEventData();
         $slug = $data['post'];
         P::increaseViewCount($slug);
     }
 
-    private function _generateLDJson($post, $author){
+    private function _generateLDJson($post, $author)
+    {
         return [
             '@context' => 'https://schema.org',
             '@type' => 'Article',
@@ -54,7 +60,7 @@ class Post {
                 '@type' => 'Organization',
                 'name' => Setting::get('title'),
                 'logo' => !empty(Setting::get('logo')) ?
-                    Leafpub::url(Setting::get('logo')) : null
+                    Leafpub::url(Setting::get('logo')) : null,
                 ],
             'author' => [
                 '@type' => 'Person',
@@ -74,11 +80,12 @@ class Post {
                 P::getWords(strip_tags($post['content']), 50),
             'image' => empty($post['image']) ? null : Leafpub::url($post['image']),
             'datePublished' => P::strftime('%FT%TZ', strtotime($post['pub_date'])),
-            'dateModified' => P::strftime('%FT%TZ', strtotime($post['pub_date']))
+            'dateModified' => P::strftime('%FT%TZ', strtotime($post['pub_date'])),
         ];
     }
 
-    private function _generateOGData($post){
+    private function _generateOGData($post)
+    {
         // Open Graph
         return [
             'og:type' => 'article',
@@ -96,11 +103,12 @@ class Post {
             'article:modified_time' => $post['page'] ?
                 null : P::strftime('%FT%TZ', strtotime($post['pub_date'])),
             'article:tag' => $post['page'] ?
-                null : implode(', ', (array) $post['tags'])
+                null : implode(', ', (array) $post['tags']),
         ];
     }
 
-    private function _generateTwitterData($post, $author){
+    private function _generateTwitterData($post, $author)
+    {
         return [
             'twitter:card' => !empty($post['image']) ?
                 'summary_large_image' :
@@ -126,12 +134,11 @@ class Post {
             'twitter:label2' => !$post['page'] ?
                 'Tagged with' : null,
             'twitter:data2' => !$post['page'] ?
-                implode(', ', (array) $post['tags']) : null
+                implode(', ', (array) $post['tags']) : null,
         ];
     }
 
-    private function _generateAMPData(){
-
+    private function _generateAMPData()
+    {
     }
 }
-?>

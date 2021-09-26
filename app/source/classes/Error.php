@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -10,24 +11,27 @@
 namespace Leafpub;
 
 /**
-* Error
-*
-* methods for working with error pages
-* @package Leafpub
-*
-**/
-class Error extends Leafpub {
-    const STD_ERR_CODE = '404';
+ * Error
+ *
+ * methods for working with error pages
+ *
+ **/
+class Error extends Leafpub
+{
+    public const STD_ERR_CODE = '404';
+
     /**
-    * Renders the error page
-    *
-    * @param String $code - The http status code
-    * @param array $data - data to use in view
-    * @param array $special - data for special_vars
-    * @return mixed
-    *
-    **/
-    public static function render($code = self::STD_ERR_CODE, $data = array(), $special = array()) {
+     * Renders the error page
+     *
+     * @param string $code    - The http status code
+     * @param array  $data    - data to use in view
+     * @param array  $special - data for special_vars
+     *
+     * @return mixed
+     *
+     **/
+    public static function render($code = self::STD_ERR_CODE, $data = [], $special = [])
+    {
         // Render it
         return Renderer::render([
             'template' => Theme::getErrorTemplate($code),
@@ -35,26 +39,28 @@ class Error extends Leafpub {
             'special_vars' => array_merge([
                 'meta' => [
                     'title' => Language::term('not_found'),
-                    'description' => ''
-                ]
+                    'description' => '',
+                ],
             ], $special),
-            'helpers' => ['url', 'utility', 'theme']
+            'helpers' => ['url', 'utility', 'theme'],
         ]);
     }
 
     /**
-    * Renders the system error template and exits. This method should be called before any output
-    * is sent to the browser and only when an irrecoverable error occurs.
-    *
-    * Important: This method should not use the handlebars engine, database resources, or any
-    * assets over HTTP because it may be triggered any time, even before a database connection is
-    * established.
-    *
-    * @param array $data
-    * @return mixed
-    *
-    **/
-    public static function system($data) {
+     * Renders the system error template and exits. This method should be called before any output
+     * is sent to the browser and only when an irrecoverable error occurs.
+     *
+     * Important: This method should not use the handlebars engine, database resources, or any
+     * assets over HTTP because it may be triggered any time, even before a database connection is
+     * established.
+     *
+     * @param array $data
+     *
+     * @return mixed
+     *
+     **/
+    public static function system($data)
+    {
         // Get the template
         $template = self::path('source/templates/error.system.hbs');
         $html = file_get_contents($template);
@@ -72,5 +78,4 @@ class Error extends Leafpub {
 
         return $html;
     }
-
 }

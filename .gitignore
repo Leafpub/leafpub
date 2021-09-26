@@ -13,3 +13,5 @@ npm-debug.log
 /dist
 /node_modules
 .vscode
+app/content/cache
+app/source/.php-cs-fixer.cache

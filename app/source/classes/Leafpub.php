@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,54 +10,57 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Setting,
-    Leafpub\Models\Plugin,
-    Symfony\Component\EventDispatcher\EventDispatcher;
+use Leafpub\Models\Plugin;
+use Leafpub\Models\Setting;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
-* Leafpub
-*
-* base class for the Leafpub API
-* @package Leafpub
-*
-**/
-class Leafpub {
+ * Leafpub
+ *
+ * base class for the Leafpub API
+ *
+ **/
+class Leafpub
+{
+    /**
+     * Properties
+     **/
+    protected static $database;
+    protected static $language;
+    protected static $listeners;
+    protected static $dispatcher;
+    protected static $logger;
 
     /**
-    * Properties
-    **/
-    protected static $database, $language, $listeners, $dispatcher, $logger;
-
-    /**
-    * Initialize the app
-    *
-    * @return void
-    * @throws \Exception
-    *
-    **/
-    public static function run() {
+     * Initialize the app
+     *
+     * @throws \Exception
+     *
+     * @return void
+     *
+     **/
+    public static function run()
+    {
         try {
             self::$logger = new \Monolog\Logger('Leafpub::Logger');
             $logLvl = \Monolog\Logger::INFO;
-            if(LEAFPUB_DEV == 1){
+            if (LEAFPUB_DEV == 1) {
                 self::$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
                 $logLvl = \Monolog\Logger::DEBUG;
             }
-            self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(Leafpub::path('log/leafpub.log'), 30, $logLvl));
+            self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(self::path('log/leafpub.log'), 30, $logLvl));
             self::$logger->debug('Startup...');
             // Connect to the database
-        
+
             self::$logger->debug('Connecting to database');
             Database::connect();
-        }
-        catch (\UnexpectedValueException $ue){
+        } catch (\UnexpectedValueException $ue) {
             exit(Error::system([
                 'title' => 'Logger Error',
-                'message' => $ue->getMessage()
+                'message' => $ue->getMessage(),
             ]));
-        } 
-        catch(\Exception $e) {
-            switch($e->getCode()) {
+        } catch (\Exception $e) {
+            switch ($e->getCode()) {
                 case Database::NOT_CONFIGURED:
                     // Database isn't configured, launch the installer
                     self::$logger->error('Database isn\'t configured');
@@ -70,7 +74,7 @@ class Leafpub {
 
             exit(Error::system([
                 'title' => $title,
-                'message' => $message
+                'message' => $message,
             ]));
         }
 
@@ -78,10 +82,10 @@ class Leafpub {
         try {
             self::$logger->debug('Load settings');
             Setting::load();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             exit(Error::system([
                 'title' => 'Settings Error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]));
         }
 
@@ -89,136 +93,129 @@ class Leafpub {
         try {
             self::$logger->debug('Load language');
             Language::load(Setting::getOne('language'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             exit(Error::system([
                 'title' => 'Translation Pack Error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]));
         }
-
-        // Set encoding
-        mb_internal_encoding('UTF-8');
 
         // Set timezone
         date_default_timezone_set(Setting::getOne('timezone'));
 
-         // Create the Symfony EventDispatcher
+        // Create the Symfony EventDispatcher
         self::$logger->debug('Create event dispatcher');
         self::$dispatcher = new EventDispatcher();
         self::_registerCoreListener();
     }
 
-    private static function _registerCoreListener(){
-        // Add Application Listener
-        $appListener = new Listeners\Application();
-        self::on(Events\Application\Startup::NAME, array($appListener, 'onApplicationStartup'));
-        
-        // Add Post Listener
-        $postListener = new Listeners\Post();
-        self::on(Events\Post\Add::NAME, array($postListener, 'onPostAdd'));
-        self::on(Events\Post\Added::NAME, array($postListener, 'onPostAdded'));
-        self::on(Events\Post\BeforeRender::NAME, array($postListener, 'onBeforeRender'));
-        self::on(Events\Post\PostViewed::NAME, array($postListener, 'onPostViewed'));
-
-        // Handle thumbnail generation
-        self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Models\Upload::handleThumbnail', -999);
-        //self::on(Events\Upload\SaveImageFile::NAME, __NAMESPACE__ . '\Models\Upload::saveImageToFile', -999);
-    }
-
-    public static function getLogger(){
+    public static function getLogger()
+    {
         return self::$logger;
     }
 
-    public static function registerPlugins(\Slim\App $app){
+    public static function registerPlugins(\Slim\App $app)
+    {
         // Only register plugins if the static array is null.
-        if (Plugin::$plugins == null){
+        if (Plugin::$plugins === null) {
             self::$logger->debug('Register plugins');
             try {
                 $plugins = Plugin::getActivatedPlugins();
 
-                foreach($plugins as $plugin){
+                foreach ($plugins as $plugin) {
                     $ns = $plugin['dir'];
                     $class = 'Leafpub\\Plugins\\' . $ns . '\\Plugin';
                     $pls[$ns] = new $class($app);
                     self::$logger->debug('Register plugin \'' . $ns . '\'');
                 }
                 Plugin::$plugins = $pls;
-            }
-            catch (\Zend\Db\Adapter\Exception\InvalidQueryException $ze){
-
-            } 
-            catch (\Exception $e){
+            } catch (\Zend\Db\Adapter\Exception\InvalidQueryException $ze) {
+            } catch (\Exception $e) {
                 exit(Error::system([
                     'title' => 'Register Plugin Error',
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ]));
             }
         }
     }
+
     /**
-    * Returns the file extension of $filename (lowercase, without a dot)
-    *
-    * @param String $filename
-    * @return String
-    *
-    **/
-    public static function fileExtension($filename) {
-        return mb_strtolower(pathinfo($filename)['extension']);
+     * Returns the file extension of $filename (lowercase, without a dot)
+     *
+     * @param string $filename
+     *
+     * @return string
+     *
+     **/
+    public static function fileExtension($filename)
+    {
+        return strtolower(pathinfo($filename)['extension']);
     }
 
     /**
-    * Returns the filename without an extension
-    *
-    * @param String $filename
-    * @return String
-    *
-    **/
-    public static function fileName($filename) {
+     * Returns the filename without an extension
+     *
+     * @param string $filename
+     *
+     * @return string
+     *
+     **/
+    public static function fileName($filename)
+    {
         return pathinfo($filename)['filename'];
     }
 
     /**
-    * Given a size in bytes, returns the most appropriate size as a string. Ex: 4.20k
-    *
-    * @param long size
-    * @param int $precision
-    * @return String
-    *
-    **/
-    public static function formatBytes($size, $precision = 2) {
+     * Given a size in bytes, returns the most appropriate size as a string. Ex: 4.20k
+     *
+     * @param long size
+     * @param int $precision
+     *
+     * @return string
+     *
+     **/
+    public static function formatBytes($size, $precision = 2)
+    {
         $base = log($size, 1000);
         $suffixes = ['', 'kb', 'mb', 'gb', 'tb'];
+
         return round(pow(1000, $base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
     /**
-    * Returns no more than $num characters from $string, breaking at word
-    *
-    * @param String $string
-    * @param int $num
-    * @return String
-    *
-    **/
-    public static function getChars($string, $num) {
+     * Returns no more than $num characters from $string, breaking at word
+     *
+     * @param string $string
+     * @param int    $num
+     *
+     * @return string
+     *
+     **/
+    public static function getChars($string, $num)
+    {
         // Remove line breaks
         $string = preg_replace('/\r|\n/', ' ', $string);
 
         // Trim to max length and break at word
-        $string = mb_substr($string, 0, $num);
-        $string = mb_substr($string, 0, mb_strrpos($string, ' '));
-
-        return $string;
+        $string = substr($string, 0, $num);
+        $pos = strrpos($string, ' ');
+        if (is_bool($pos)) {
+            $pos = 0;
+        }
+        return substr($string, 0, $pos);
     }
 
     /**
-    * Returns no more than $num words from $string
-    *
-    * @param String $string
-    * @param int $num
-    * @return String
-    *
-    **/
-    public static function getWords($string, $num) {
+     * Returns no more than $num words from $string
+     *
+     * @param string $string
+     * @param int    $num
+     *
+     * @return string
+     *
+     **/
+    public static function getWords($string, $num)
+    {
         // Remove line breaks
         $string = preg_replace('/\r|\n/', ' ', $string);
 
@@ -230,24 +227,28 @@ class Leafpub {
     }
 
     /**
-    * Returns true if the specified URL matches the current URL
-    *
-    * @param String $test_url
-    * @return bool
-    *
-    **/
-    public static function isCurrentUrl($test_url) {
+     * Returns true if the specified URL matches the current URL
+     *
+     * @param string $test_url
+     *
+     * @return bool
+     *
+     **/
+    public static function isCurrentUrl(string $urlToTest): bool
+    {
         // Parse the current URL
         $current_url = parse_url(self::url($_SERVER['REQUEST_URI']));
 
         // Parse test URL
-        $test_url = parse_url($test_url);
+        $test_url = parse_url($urlToTest);
 
         // Parsing error, no match
-        if(!$current_url || !$test_url) return false;
+        if (!$current_url || !$test_url) {
+            return false;
+        }
 
         // Do the hosts match OR is the nav link relative?
-        if($current_url['host'] === $test_url['host'] || empty($test_url['host'])) {
+        if ($current_url['host'] === $test_url['host'] || empty($test_url['host'])) {
             // Compare paths without trailing slashes
             return rtrim($current_url['path'], '/') === rtrim($test_url['path'], '/');
         }
@@ -256,38 +257,45 @@ class Leafpub {
     }
 
     /**
-    * Returns true if the specified URI is the homepage. Defaults to the current URI.
-    *
-    * @param null $test_url
-    * @return bool
-    *
-    **/
-    public static function isHomepage($test_url = null) {
+     * Returns true if the specified URI is the homepage. Defaults to the current URI.
+     *
+     * @param null $test_url
+     *
+     * @return bool
+     *
+     **/
+    public static function isHomepage($test_url = null)
+    {
         // Default to the current URI
-        if(!$test_url) $test_url = $_SERVER['REQUEST_URI'];
+        if (!$test_url) {
+            $test_url = $_SERVER['REQUEST_URI'];
+        }
 
         return explode('?', $test_url)[0] === '/';
     }
 
     /**
-    * Returns true if Leafpub has been installed
-    *
-    * @return bool
-    *
-    **/
-    public static function isInstalled() {
+     * Returns true if Leafpub has been installed
+     *
+     * @return bool
+     *
+     **/
+    public static function isInstalled()
+    {
         // Simple check for database.php
         return file_exists(Leafpub::path('database.php'));
     }
 
     /**
-    * Determines whether a slug is protected (i.e. used in settings.slugs)
-    *
-    * @param String $slug
-    * @return bool
-    *
-    **/
-    public static function isProtectedSlug($slug) {
+     * Determines whether a slug is protected (i.e. used in settings.slugs)
+     *
+     * @param string $slug
+     *
+     * @return bool
+     *
+     **/
+    public static function isProtectedSlug($slug)
+    {
         return in_array($slug, [
             'api',      // reserved for the API
             'leafpub', // reserved for future use
@@ -297,72 +305,82 @@ class Leafpub {
             Setting::getOne('frag_feed'),
             Setting::getOne('frag_page'),
             Setting::getOne('frag_search'),
-            Setting::getOne('frag_tag')
+            Setting::getOne('frag_tag'),
         ]);
     }
 
     /**
-    * Returns true if the website is being served over HTTPS
-    *
-    * @return bool
-    *
-    **/
-    public static function isSsl() {
-        if (Setting::getOne('forceSsl') == 'on'){
+     * Returns true if the website is being served over HTTPS
+     *
+     * @return bool
+     *
+     **/
+    public static function isSsl()
+    {
+        if (Setting::getOne('forceSsl') == 'on') {
             return true;
         }
         // Some servers (e.g. Cloud9) don't populate $_SERVER[HTTPS], so we have to check the value
         // of $_SERVER[REQUEST_SCHEME] instead.
-        if($_SERVER['REQUEST_SCHEME'] === 'https') return true;
+        if ($_SERVER['REQUEST_SCHEME'] === 'https') {
+            return true;
+        }
 
-         // If https is empty or it is  off, perform extra checks
-       if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'){
-               // Detect if HTTP_X_FORWARDED_PROTO is set to https; and if so set HTTPS to on.
-               if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'){
-                   $_SERVER['HTTPS']='on';
-               }
-       }
+        // If https is empty or it is  off, perform extra checks
+        if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') {
+            // Detect if HTTP_X_FORWARDED_PROTO is set to https; and if so set HTTPS to on.
+            if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+                $_SERVER['HTTPS'] = 'on';
+            }
+        }
         // Other servers will populate $_SERVER[HTTPS] when SSL is on. IIS is unique because the
         // value will be 'off' when SSL is not enabled.
         return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
     }
 
     /**
-    * Returns true if $email is a valid email address
-    *
-    * @param String $email
-    * @return bool
-    *
-    **/
-    public static function isValidEmail($email) {
-        return !!filter_var($email, FILTER_VALIDATE_EMAIL);
+     * Returns true if $email is a valid email address
+     *
+     * @param string $email
+     *
+     * @return bool
+     *
+     **/
+    public static function isValidEmail($email)
+    {
+        return (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     /**
-    * Convert a local date string to UTC
-    *
-    * @param String $local_date
-    * @return String
-    *
-    **/
-    public static function localToUtc($local_date) {
+     * Convert a local date string to UTC
+     *
+     * @param string $local_date
+     *
+     * @return string
+     *
+     **/
+    public static function localToUtc($local_date)
+    {
         $dt = new \DateTime($local_date, new \DateTimeZone(Setting::getOne('timezone')));
         $dt->setTimeZone(new \DateTimeZone('UTC'));
+
         return $dt->format('Y-m-d H:i:s');
     }
 
     /**
-    * Makes the specified directory if it doesn't exist. Returns true if the folder already exists
-    * or if it was created.
-    *
-    * @param String $path
-    * @param int $mode
-    * @return bool
-    *
-    **/
-    public static function makeDir($path, $mode = 0755) {
-        if(!file_exists($path) || !is_dir($path)) {
-            if(!@mkdir($path, $mode, true)) {
+     * Makes the specified directory if it doesn't exist. Returns true if the folder already exists
+     * or if it was created.
+     *
+     * @param string $path
+     * @param int    $mode
+     *
+     * @return bool
+     *
+     **/
+    public static function makeDir($path, $mode = 0755)
+    {
+        if (!file_exists($path) || !is_dir($path)) {
+            if (!@mkdir($path, $mode, true)) {
                 return false;
             }
         }
@@ -371,27 +389,31 @@ class Leafpub {
     }
 
     /**
-    * Converts markdown to HTML
-    *
-    * @param String $markdown
-    * @return String
-    *
-    **/
-    public static function markdownToHtml($markdown) {
+     * Converts markdown to HTML
+     *
+     * @param string $markdown
+     *
+     * @return string
+     *
+     **/
+    public static function markdownToHtml($markdown)
+    {
         $pd = new \Parsedown();
 
         return $pd->text($markdown);
     }
 
     /**
-    * Same as number_format(), but localizes decimal and thousands separators
-    *
-    * @param int $number
-    * @param int $dec_places
-    * @return String
-    *
-    **/
-    public static function numberFormat($number, $dec_places = 0) {
+     * Same as number_format(), but localizes decimal and thousands separators
+     *
+     * @param int $number
+     * @param int $dec_places
+     *
+     * @return string
+     *
+     **/
+    public static function numberFormat($number, $dec_places = 0)
+    {
         return number_format(
             $number,
             $dec_places,
@@ -401,71 +423,77 @@ class Leafpub {
     }
 
     /**
-    * Dispatches an event
-    *
-    * @param String $eventName
-    * @param \Symfony\Component\EventDispatcher\Event $event
-    * @return void
-    *
-    **/
-    public static function dispatchEvent($eventName, $event) {
+     * Dispatches an event
+     *
+     * @param string                                   $eventName
+     * @param \Symfony\Component\EventDispatcher\Event $event
+     *
+     * @return void
+     *
+     **/
+    public static function dispatchEvent($eventName, $event)
+    {
         // We need this check because on install, the dispatcher won't be initiated!
-        if (self::$dispatcher instanceof EventDispatcher){
+        if (self::$dispatcher instanceof EventDispatcher) {
             self::$dispatcher->dispatch($eventName, $event);
         }
     }
 
     /**
-    * Removes one or more event listeners
-    *
-    * @param String $eventName
-    * @param callable $listener
-    * @return void
-    *
-    */
-    public static function off($eventName, $listener) {
+     * Removes one or more event listeners
+     *
+     * @param string   $eventName
+     * @param callable $listener
+     *
+     * @return void
+     */
+    public static function off($eventName, $listener)
+    {
         self::$dispatcher->removeListener($eventName, $listener);
     }
 
     /**
-    * Adds an event listener
-    *
-    * @param String $event
-    * @param callable $callback
-    * @param int $priority
-    * @return void
-    *
-    */
-    public static function on($event, $callback, $priority = 0) {
+     * Adds an event listener
+     *
+     * @param string   $event
+     * @param callable $callback
+     * @param int      $priority
+     *
+     * @return void
+     */
+    public static function on($event, $callback, $priority = 0)
+    {
         self::$dispatcher->addListener($event, $callback, $priority);
     }
 
     /**
-    * Checks if a listener exists
-    *
-    * @param String $event
-    * @return bool
-    *
-    */
-    public static function hasListener($event){
-        return (self::$dispatcher->hasListeners($event) > 0);
+     * Checks if a listener exists
+     *
+     * @param string $event
+     *
+     * @return bool
+     */
+    public static function hasListener($event)
+    {
+        return self::$dispatcher->hasListeners($event) > 0;
     }
 
     /** TODO: Do we also need Subscriber functionality?
-    public static function addSubscriber(EventSubscriberInterface $event){
-        self::$dispatcher->addSubscriber($event);
     }
-    **/
+     **/
+
     /**
-    * Generates an array of pagination data
-    *
-    * @param int $total_items
-    * @param int $items_per_page
-    * @param int $current_page
-    * @return array
-    *
-    **/
-    public static function paginate($total_items, $items_per_page = 10, $current_page = 1) {
+     * Generates an array of pagination data
+     *
+     * @param int $total_items
+     * @param int $items_per_page
+     * @param int $current_page
+     *
+     * @return array
+     *
+     **/
+    public static function paginate($total_items, $items_per_page = 10, $current_page = 1)
+    {
         // Items per page must be at least one
         $items_per_page = (int) max(1, $items_per_page);
 
@@ -485,29 +513,32 @@ class Leafpub {
             'next_page' => $next_page,
             'previous_page' => $previous_page,
             'total_items' => $total_items,
-            'total_pages' => $total_pages
+            'total_pages' => $total_pages,
         ];
     }
 
     /**
-    * Parses a string and outputs the corresponding date in YYYY-MM-DD HH:MM:SS format. If a valid
-    * date/time can't be parsed, the current date/time will be used instead.
-    *
-    * @param String $date
-    * @return String
-    *
-    **/
-    public static function parseDate($date) {
+     * Parses a string and outputs the corresponding date in YYYY-MM-DD HH:MM:SS format. If a valid
+     * date/time can't be parsed, the current date/time will be used instead.
+     *
+     * @param string $date
+     *
+     * @return string
+     *
+     **/
+    public static function parseDate($date)
+    {
         return date('Y-m-d H:i:s', strtotime($date) ?: time());
     }
 
     /**
-    * Returns Leafpub's base path, optionally concatenating additional folders
-    *
-    * @return String
-    *
-    **/
-    public static function path() {
+     * Returns Leafpub's base path, optionally concatenating additional folders
+     *
+     * @return string
+     *
+     **/
+    public static function path()
+    {
         // Determine the base path that Leafpub runs from. This will be the same as the document
         // root unless Leafpub is running from a subfolder.
         $base_path = realpath(dirname(dirname(__DIR__)));
@@ -517,7 +548,7 @@ class Leafpub {
         array_unshift($args, $base_path);
 
         // Remove empties
-        $args = array_filter($args, 'mb_strlen');
+        $args = array_filter($args, 'strlen');
 
         // Glue them together
         $path = implode('/', $args);
@@ -532,20 +563,22 @@ class Leafpub {
     }
 
     /**
-    * Converts a path to a URL
-    *
-    * @param String $path
-    * @return String
-    *
-    **/
-    public static function pathToUrl($path) {
+     * Converts a path to a URL
+     *
+     * @param string $path
+     *
+     * @return string
+     *
+     **/
+    public static function pathToUrl($path)
+    {
         // Get real path for comparison
         $base_path = self::path();
         $path = realpath($path);
 
         // Remove basepath from path
-        if(mb_substr($path, 0, mb_strlen($base_path)) === $base_path) {
-            $path = mb_substr($path, mb_strlen($base_path));
+        if (strpos($path, $base_path) === 0) {
+            $path = substr($path, strlen($base_path));
         }
 
         // Return a URL
@@ -553,40 +586,32 @@ class Leafpub {
     }
 
     /**
-    * Generates cryptographically secure pseudo-random bytes
-    *
-    * @param int $length
-    * @return String
-    *
-    **/
-    public static function randomBytes($length = 128) {
-        if(function_exists('random_bytes')) {
-            // PHP 7+
-            $bytes = bin2hex(random_bytes($length));
-        } else {
-            // PHP < 7
-            $bytes = bin2hex(openssl_random_pseudo_bytes($length));
-        }
-
-        return $bytes;
+     * Generates cryptographically secure pseudo-random bytes
+     *
+     **/
+    public static function randomBytes(int $length = 128): string
+    {
+        return bin2hex(random_bytes($length));
     }
 
     /**
-    * Redirects the user to the specified URL and exits. Must be called before any output is
-    * sent to the browser. If $permanent is true, a 301 HTTP code will be sent as well.
-    *
-    * @param String $url
-    * @param bool $permanent
-    * @return void
-    *
-    **/
-    public static function redirect($url, $permanent = false) {
-        if($permanent) header('HTTP/1.1 301 Moved Permanently');
+     * Redirects the user to the specified URL and exits. Must be called before any output is
+     * sent to the browser. If $permanent is true, a 301 HTTP code will be sent as well.
+     *
+     **/
+    public static function redirect(
+        string $url,
+        bool $permanent = false
+    ): void {
+        if ($permanent) {
+            header('HTTP/1.1 301 Moved Permanently');
+        }
         header('Location: ' . $url);
         exit();
     }
 
-    public static function scanDir($dir){
+    public static function scanDir($dir)
+    {
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
             \RecursiveIteratorIterator::CHILD_FIRST
@@ -596,20 +621,26 @@ class Leafpub {
     }
 
     /**
-    * Recursively removes a directory and all its contents
-    *
-    * @param String $dir
-    * @return bool
-    *
-    **/
-    public static function removeDir($dir) {
+     * Recursively removes a directory and all its contents
+     *
+     * @param string $dir
+     *
+     * @return bool
+     *
+     **/
+    public static function removeDir($dir)
+    {
         // Remove everything inside
         $files = self::scanDir($dir);
-        foreach($files as $file) {
-            if($file->isDir()) {
-                if(!rmdir($file->getRealPath())) return false;
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                if (!rmdir($file->getRealPath())) {
+                    return false;
+                }
             } else {
-                if(!unlink($file->getRealPath())) return false;
+                if (!unlink($file->getRealPath())) {
+                    return false;
+                }
             }
         }
 
@@ -618,16 +649,18 @@ class Leafpub {
     }
 
     /**
-    * Generates a web-safe filename by removing potentially problematic characters
-    *
-    * @param String $filename
-    * @return String
-    *
-    **/
-    public static function safeFilename($filename) {
+     * Generates a web-safe filename by removing potentially problematic characters
+     *
+     * @param string $filename
+     *
+     * @return string
+     *
+     **/
+    public static function safeFilename($filename)
+    {
         $invalid_chars = [
             '[', ']', '{', '}', '|', '<', '>', '/', '\\', '?', ':', ';', '\'', '"', ' ',
-            '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '='
+            '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=',
         ];
 
         // Replace invalid characters with dashes
@@ -638,26 +671,28 @@ class Leafpub {
     }
 
     /**
-    * Translates any string into a Leafpub slug. This function may return an empty string if no
-    * valid characters are passed in.
-    * https://gist.github.com/sgmurphy/3098978
-    *
-    * @param String $string
-    * @return String
-    *
-    **/
-    public static function slug($string) {
-        $char_map = array(
+     * Translates any string into a Leafpub slug. This function may return an empty string if no
+     * valid characters are passed in.
+     * https://gist.github.com/sgmurphy/3098978
+     *
+     * @param string $string
+     *
+     * @return string
+     *
+     **/
+    public static function slug($string)
+    {
+        $char_map = [
             // Latin
-            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C', 
-            'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 
-            'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O', 
-            'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH', 
-            'ß' => 'ss', 
-            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 
-            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 
-            'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o', 
-            'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th', 
+            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
+            'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+            'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O',
+            'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH',
+            'ß' => 'ss',
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c',
+            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+            'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o',
+            'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th',
             'ÿ' => 'y',
 
             // Latin symbols
@@ -677,7 +712,7 @@ class Leafpub {
 
             // Turkish
             'Ş' => 'S', 'İ' => 'I', 'Ç' => 'C', 'Ü' => 'U', 'Ö' => 'O', 'Ğ' => 'G',
-            'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g', 
+            'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g',
 
             // Russian
             'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ё' => 'Yo', 'Ж' => 'Zh',
@@ -696,101 +731,107 @@ class Leafpub {
             'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g',
 
             // Czech
-            'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U', 
-            'Ž' => 'Z', 
+            'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U',
+            'Ž' => 'Z',
             'č' => 'c', 'ď' => 'd', 'ě' => 'e', 'ň' => 'n', 'ř' => 'r', 'š' => 's', 'ť' => 't', 'ů' => 'u',
-            'ž' => 'z', 
+            'ž' => 'z',
 
             // Polish
-            'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z', 
-            'Ż' => 'Z', 
+            'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z',
+            'Ż' => 'Z',
             'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l', 'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z',
             'ż' => 'z',
 
             // Latvian
-            'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N', 
+            'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N',
             'Š' => 'S', 'Ū' => 'u', 'Ž' => 'Z',
             'ā' => 'a', 'č' => 'c', 'ē' => 'e', 'ģ' => 'g', 'ī' => 'i', 'ķ' => 'k', 'ļ' => 'l', 'ņ' => 'n',
-            'š' => 's', 'ū' => 'u', 'ž' => 'z'
-        );
+            'š' => 's', 'ū' => 'u', 'ž' => 'z',
+        ];
         // Convert spaces and underscores to dashes
-		$string = preg_replace('/(\s|_)/', '-', $string);
-		// Remove unsafe characters
-		//$string = preg_replace('/[^A-Z0-9-]/i', '', $string);
+        $string = preg_replace('/(\s|_)/', '-', $string);
+        // Remove unsafe characters
+        //$string = preg_replace('/[^A-Z0-9-]/i', '', $string);
         $string = str_replace(array_keys($char_map), $char_map, $string);
-		// Remove duplicate dashes
-		$string = preg_replace('/-+/', '-', $string);
-		// Remove starting dashes
-		$string = preg_replace('/^-+/', '', $string);
-		// Remove trailing dashes
-		$string = preg_replace('/-+$/', '', $string);
+        // Remove duplicate dashes
+        $string = preg_replace('/-+/', '-', $string);
+        // Remove starting dashes
+        $string = preg_replace('/^-+/', '', $string);
+        // Remove trailing dashes
+        $string = preg_replace('/-+$/', '', $string);
 
         // Make lowercase
-		return mb_strtolower($string);
+        return strtolower($string);
     }
 
     /**
-    * This is a wrapper for PHP's strftime() function. We do this instead of setting the locale
-    * because:
-    *
-    *  1. Not all locales are available on all systems, and it's easier to install a Leafpub
-    *     language pack than additional PHP locales, and some users can't.
-    *
-    *  2. There are various parameters that aren't supported on all operating systems (e.g. %e and
-    *     %P). This method normalizes those parameters so they work consistently on all systems.
-    *
-    * @param String $format
-    * @param null $timestamp
-    * @return String
-    *
-    **/
-    public static function strftime($format, $timestamp = null) {
+     * This is a wrapper for PHP's strftime() function. We do this instead of setting the locale
+     * because:
+     *
+     *  1. Not all locales are available on all systems, and it's easier to install a Leafpub
+     *     language pack than additional PHP locales, and some users can't.
+     *
+     *  2. There are various parameters that aren't supported on all operating systems (e.g. %e and
+     *     %P). This method normalizes those parameters so they work consistently on all systems.
+     *
+     * @param string $format
+     * @param null   $timestamp
+     *
+     * @return string
+     *
+     **/
+    public static function strftime($format, $timestamp = null)
+    {
         // Default to current timestamp
-        if(!$timestamp) $timestamp = time();
+        if (!$timestamp) {
+            $timestamp = time();
+        }
 
         // Get localized names
-        $day_short = Language::term(mb_strtolower(date('D', $timestamp)) . '_short');
-        $day_long = Language::term(mb_strtolower(date('l', $timestamp)));
-        $month_short = Language::term(mb_strtolower(date('M', $timestamp)) . '_short');
-        $month_long = Language::term(mb_strtolower(date('F', $timestamp)));
+        $day_short = Language::term(strtolower(date('D', $timestamp)) . '_short');
+        $day_long = Language::term(strtolower(date('l', $timestamp)));
+        $month_short = Language::term(strtolower(date('M', $timestamp)) . '_short');
+        $month_long = Language::term(strtolower(date('F', $timestamp)));
         $am_pm = Language::term(date('a', $timestamp));
 
-        if ($format != 'time_ago'){
+        if ($format != 'time_ago') {
             // Convert them
             $format = str_replace('%a', $day_short, $format);
             $format = str_replace('%A', $day_long, $format);
             $format = str_replace('%b', $month_short, $format);
             $format = str_replace('%B', $month_long, $format);
-            $format = str_replace('%p', mb_strtoupper($am_pm), $format);
-            $format = str_replace('%P', mb_strtolower($am_pm), $format);
+            $format = str_replace('%p', strtoupper($am_pm), $format);
+            $format = str_replace('%P', strtolower($am_pm), $format);
 
             // %e isn't supported on Windows
             $format = str_replace('%e', date('j', $timestamp), $format);
 
             // Run the rest through strftime()
             return strftime($format, $timestamp);
-        } else {
-            return self::getTimeAgo($timestamp);
         }
+
+        return self::getTimeAgo($timestamp);
     }
 
     /**
-    * Returns the subfolder that Leafpub is running from
-    *
-    * @return String
-    *
-    **/
-    public static function subfolder() {
-        return mb_substr(self::path(), mb_strlen(realpath($_SERVER['DOCUMENT_ROOT'])));
+     * Returns the subfolder that Leafpub is running from
+     *
+     * @return string
+     *
+     **/
+    public static function subfolder()
+    {
+        return substr(self::path(), strlen(realpath($_SERVER['DOCUMENT_ROOT'])));
     }
 
     /**
-    * Returns Leafpub's base URL, optionally concatenating additional folders
-    *
-    * @return String
-    *
-    **/
-    public static function url() {
+     * Returns Leafpub's base URL, optionally concatenating additional folders
+     *
+     * @return string
+     *
+     **/
+    public static function url()
+    {
         // Determine protocol
         $protocol = self::isSsl() ? 'https' : 'http';
 
@@ -805,7 +846,7 @@ class Leafpub {
         array_unshift($args, $subfolder);
 
         // Remove empties
-        $args = array_filter($args, 'mb_strlen');
+        $args = array_filter($args, 'strlen');
 
         // Glue them together
         $path = implode('/', $args);
@@ -824,46 +865,51 @@ class Leafpub {
     }
 
     /**
-    * Convert a UTC date string to local time
-    *
-    * @param String $utc_date
-    * @return String
-    *
-    **/
-    public static function utcToLocal($utc_date) {
+     * Convert a UTC date string to local time
+     *
+     * @param string $utc_date
+     *
+     * @return string
+     *
+     **/
+    public static function utcToLocal($utc_date)
+    {
         $dt = new \DateTime($utc_date, new \DateTimeZone('UTC'));
         $dt->setTimeZone(new \DateTimeZone(Setting::getOne('timezone')));
+
         return $dt->format('Y-m-d H:i:s');
     }
 
-    public static function getTimeAgo($timestamp) {
+    public static function getTimeAgo($timestamp)
+    {
         $estimate_time = time() - $timestamp;
 
-        if( $estimate_time < 1 ){
+        if ($estimate_time < 1) {
             return 'less than 1 second ago';
         }
 
-        $condition = [ 
-                    12 * 30 * 24 * 60 * 60  =>  'year',
-                    30 * 24 * 60 * 60       =>  'month',
-                    24 * 60 * 60            =>  'day',
-                    60 * 60                 =>  'hour',
-                    60                      =>  'minute',
-                    1                       =>  'second'
+        $condition = [
+                    12 * 30 * 24 * 60 * 60 => 'year',
+                    30 * 24 * 60 * 60 => 'month',
+                    24 * 60 * 60 => 'day',
+                    60 * 60 => 'hour',
+                    60 => 'minute',
+                    1 => 'second',
         ];
 
-        foreach( $condition as $secs => $caption ){
+        foreach ($condition as $secs => $caption) {
             $duration = $estimate_time / $secs;
 
-            if( $duration >= 1 ){
-                $r = round( $duration );
-                $caption = (( $r > 1) ? Language::term($caption . '_pl') : Language::term($caption) );
+            if ($duration >= 1) {
+                $r = round($duration);
+                $caption = (($r > 1) ? Language::term($caption . '_pl') : Language::term($caption));
+
                 return Language::term(
                         '{n}_{time}_{ago}',
                         [
                             'n' => $r,
                             'time' => $caption,
-                            'ago' => Language::term('ago')
+                            'ago' => Language::term('ago'),
                         ]
                     );
             }
@@ -871,19 +917,20 @@ class Leafpub {
     }
 
     /**
-    * Returns an array of all known database table names
-    *
-    * @return array
-    *
-    **/
-    public static function getTableNames() {
+     * Returns an array of all known database table names
+     *
+     * @return array
+     *
+     **/
+    public static function getTableNames()
+    {
         // If we're installing, we need the latest table version...
-        if (defined('LEAFPUB_IS_INSTALLING')){
+        if (defined('LEAFPUB_IS_INSTALLING')) {
             $version = LEAFPUB_SCHEME_VERSION;
         } else {
             $version = Models\Setting::getOne('schemeVersion') ?: 0;
         }
-        switch($version){
+        switch ($version) {
             case 0:
                 $tables = ['History', 'PostTags', 'Post', 'Setting', 'Tag', 'Upload', 'User'];
                 break;
@@ -897,22 +944,43 @@ class Leafpub {
                 $tables = ['History', 'PostUploads', 'PostMeta', 'PostTags', 'Post', 'Setting', 'Tag', 'UploadTags', 'Upload', 'User', 'Plugin'];
                 break;
         }
+
         return $tables;
     }
 
-    public static function generateSitemap(){
+    public static function generateSitemap()
+    {
         $posts = Models\Post::getMany([
             'ignore_pages' => false,
             'ignore_featured' => true,
-            'items_per_page' => 50000
+            'items_per_page' => 50000,
         ]);
 
         $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"></urlset>');
-        foreach ($posts as $post){
+        foreach ($posts as $post) {
             $p = $xml->addChild('url');
             $child = $p->addChild('loc', self::url($post['slug']));
             $child = $p->addChild('lastmod', date('Y-m-d', strtotime($post['pub_date'])));
         }
+
         return $xml->asXml();
+    }
+
+    private static function _registerCoreListener()
+    {
+        // Add Application Listener
+        $appListener = new Listeners\Application();
+        self::on(Events\Application\Startup::NAME, [$appListener, 'onApplicationStartup']);
+
+        // Add Post Listener
+        $postListener = new Listeners\Post();
+        self::on(Events\Post\Add::NAME, [$postListener, 'onPostAdd']);
+        self::on(Events\Post\Added::NAME, [$postListener, 'onPostAdded']);
+        self::on(Events\Post\BeforeRender::NAME, [$postListener, 'onBeforeRender']);
+        self::on(Events\Post\PostViewed::NAME, [$postListener, 'onPostViewed']);
+
+        // Handle thumbnail generation
+        self::on(Events\Upload\GenerateThumbnail::NAME, __NAMESPACE__ . '\Models\Upload::handleThumbnail', -999);
+        //self::on(Events\Upload\SaveImageFile::NAME, __NAMESPACE__ . '\Models\Upload::saveImageToFile', -999);
     }
 }

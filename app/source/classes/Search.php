@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,40 +10,43 @@
 
 namespace Leafpub;
 
-use Leafpub\Models\Setting,
-    Leafpub\Models\Post;
+use Leafpub\Models\Post;
+use Leafpub\Models\Setting;
 
 /**
-* Search
-*
-* methods for working with search pages
-* @package Leafpub
-*
-**/
-class Search extends Leafpub {
-
-    /** 
-    * Renders a search page
-    *
-    * @param String $query
-    * @param in $page
-    * @return mixed
-    *
-    **/
-    public static function render($query, $page = 1) {
+ * Search
+ *
+ * methods for working with search pages
+ *
+ **/
+class Search extends Leafpub
+{
+    /**
+     * Renders a search page
+     *
+     * @param string $query
+     * @param in     $page
+     *
+     * @return mixed
+     *
+     **/
+    public static function render($query, $page = 1)
+    {
         // Get the search's posts
-        if(mb_strlen($query)) {
+        if (mb_strlen($query)) {
             $posts = Post::getMany([
                 'query' => (string) $query,
                 'page' => $page,
-                'items_per_page' => Setting::getOne('posts_per_page')
+                'items_per_page' => Setting::getOne('posts_per_page'),
             ], $pagination);
         } else {
             $posts = false;
         }
 
         // Make sure the requested page exists
-        if($page > $pagination['total_pages']) return false;
+        if ($page > $pagination['total_pages']) {
+            return false;
+        }
 
         // Add previous/next links to pagination
         $pagination['next_page_url'] = $pagination['next_page'] ?
@@ -51,9 +55,9 @@ class Search extends Leafpub {
             self::url($query, $pagination['previous_page']) : null;
 
         // Determine meta title based on query
-        if(mb_strlen($query)) {
+        if (mb_strlen($query)) {
             $meta_title = Language::term('search_results_for_{query}', [
-                'query' => $query
+                'query' => $query,
             ]);
         } else {
             $meta_title = Language::term('search');
@@ -65,11 +69,11 @@ class Search extends Leafpub {
             'data' => [
                 'query' => $query,
                 'posts' => $posts,
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ],
             'special_vars' => [
                 'meta' => [
-                    'title'=> $meta_title,
+                    'title' => $meta_title,
                     'description' => null,
                     // JSON linked data (schema.org)
                     'ld_json' => [
@@ -79,8 +83,8 @@ class Search extends Leafpub {
                         'potentialAction' => [
                             '@type' => 'SearchAction',
                             'target' => self::url($query),
-                            'query-input' => $query
-                        ]
+                            'query-input' => $query,
+                        ],
                     ],
                     // Open Graph
                     'open_graph' => [
@@ -91,7 +95,7 @@ class Search extends Leafpub {
                             'Search results for “' . htmlspecialchars($query) . '”' : null,
                         'og:url' => self::url($query),
                         'og:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null
+                            parent::url(Setting::getOne('cover')) : null,
                     ],
                     // Twitter Card
                     'twitter_card' => [
@@ -104,18 +108,20 @@ class Search extends Leafpub {
                             'Search results for “' . htmlspecialchars($query) . '”' : null,
                         'twitter:url' => self::url($query),
                         'twitter:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null
-                    ]
-                ]
+                            parent::url(Setting::getOne('cover')) : null,
+                    ],
+                ],
             ],
-            'helpers' => ['url', 'utility', 'theme']
+            'helpers' => ['url', 'utility', 'theme'],
         ]);
     }
 
     // Returns a search URL
-    public static function url($query = '', $page = 1) {
+    public static function url($query = '', $page = 1)
+    {
         // Remove slashes from search queries because they don't play nice with the server
         $query = str_replace(['/', '\\'], ' ', $query);
+
         return $page > 1 && mb_strlen($query) ?
             // example.com/search/query/page/2
             parent::url(
@@ -127,5 +133,4 @@ class Search extends Leafpub {
             // example.com/search/query
             parent::url(Setting::getOne('frag_search'), rawurlencode($query));
     }
-
 }

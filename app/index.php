@@ -6,7 +6,14 @@
  * @copyright Copyright (c) 2016 Leafpub Team
  * @license   https://github.com/Leafpub/leafpub/blob/master/LICENSE.md (GPL License)
  */
-namespace Leafpub;
+#namespace Leafpub;
+
+use Leafpub\{Leafpub, Session};
+use Leafpub\Events\Application\Startup;
+
+use Slim\App;
+use Slim\Container;
+
 require __DIR__ . '/source/runtime.php';
 
 // Initialize the app and session
@@ -14,8 +21,8 @@ Leafpub::run();
 Session::init();
 
 // Initialize the app
-$container = new \Slim\Container();
-if (LEAFPUB_DEV){
+$container = new Container();
+if (LEAFPUB_DEV) {
     $container['settings']['displayErrorDetails'] = true;
     $container['settings']['tracy'] = [
             'showPhpInfoPanel' => 1,
@@ -48,7 +55,7 @@ if (LEAFPUB_DEV){
                 'ConsoleHashAlgorithm' => 'sha1',
                 // Home directory (multi-user mode supported) values ( var || array )
                 // '' || '/tmp' || ['user1' => '/home/user1', 'user2' => '/home/user2']
-                'ConsoleHomeDirectory' => DIR,
+                'ConsoleHomeDirectory' => __DIR__,
                 // terminal.js full URI
                 'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
                 // terminal.css full URI
@@ -65,7 +72,7 @@ if (LEAFPUB_DEV){
             ]
         ];
 }
-$app = new \Slim\App($container);
+$app = new App($container);
 
 require __DIR__ . '/source/config/routes.php';
 require __DIR__ . '/source/config/middleware.php';
@@ -73,8 +80,8 @@ require __DIR__ . '/source/config/dependencies.php';
 
 Leafpub::registerPlugins($app);
 // Create startup event and dispatch...
-$startup = new Events\Application\Startup($app);
-Leafpub::dispatchEvent(Events\Application\Startup::NAME, $startup);
+$startup = new Startup($app);
+Leafpub::dispatchEvent(Startup::NAME, $startup);
 
 // Run it!
 $app->run();

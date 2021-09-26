@@ -13,7 +13,7 @@
         line-height: 1.8;
         color: $leafpub-green;
         @include text-truncate;
-    },
+    }
     .se-description {
         @include text-truncate;
         white-space: initial;

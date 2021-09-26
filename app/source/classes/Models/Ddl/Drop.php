@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Leafpub: Simple, beautiful publishing. (https://leafpub.org)
  *
@@ -9,13 +10,14 @@
 
 namespace Leafpub\Models\Ddl;
 
-use \Zend\Db\Sql\Ddl\DropTable;
+use Zend\Db\Sql\Ddl\DropTable;
 
-class Drop extends DropTable {
+class Drop extends DropTable
+{
     /**
      * @var array
      */
     protected $specifications = [
-        self::TABLE => 'DROP TABLE IF EXISTS %1$s'
+        self::TABLE => 'DROP TABLE IF EXISTS %1$s',
     ];
 }

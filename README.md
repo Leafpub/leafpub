@@ -13,7 +13,7 @@ Maintained by [Marc Apfelbaum](https://twitter.com/karsasmus)
 
 ## Requirements
 
-- PHP 7.1+ with curl, gd lib, mbstring, openssl & pdo
+- PHP 7.4+ with curl, gd lib, mbstring, openssl & pdo
 - MySQL 5.5.3+
 
 ## Download
