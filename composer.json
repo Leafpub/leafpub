@@ -9,6 +9,7 @@
         "ext-fileinfo": "*",
         "ext-zip": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "zordius/lightncandy": "^1.0",
         "firebase/php-jwt": "^3.0",
         "slim/slim": "^3.0",
@@ -38,7 +39,7 @@
     },
     "require-dev": {
         "rector/rector": "^0.10.15",
-        "friendsofphp/php-cs-fixer": "^3.1"
+        "friendsofphp/php-cs-fixer": "^3.1",
     },
     "autoload": {
         "psr-4": {
