@@ -15,3 +15,4 @@ npm-debug.log
 .vscode
 app/content/cache
 app/source/.php-cs-fixer.cache
+data
