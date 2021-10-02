@@ -22,6 +22,7 @@ Session::init();
 
 // Initialize the app
 $container = new Container();
+$container['settings']['routerCacheFile'] = __DIR__ . DIRECTORY_SEPARATOR . 'var/cache/routes.cache';
 if (LEAFPUB_DEV) {
     $container['settings']['displayErrorDetails'] = true;
     $container['settings']['tracy'] = [
