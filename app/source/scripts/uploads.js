@@ -11,6 +11,12 @@ $(function() {
         canCreateTags = $('#image-tags').attr('data-can-create-tags') === 'true',
         searchTimeout;
 
+    $('.lazy').Lazy({
+        afterLoad: function(element) {
+            $(element).removeClass("preloading");
+        }
+    });
+
     // Hide the dropzone after a short delay. We do this to prevent flickering
     // when dragging over child elements of the dropzone.
     function hideDropzone() {
@@ -78,7 +84,7 @@ $(function() {
 
         clearTimeout(dropTimeout);
     }
-    
+
     // Selection
     $('.media-list').selectable({
         items: '.media-list-item',
@@ -329,7 +335,7 @@ $(function() {
                     $.alertable.alert(res.message);
                 }
             }
-                
+
         })
         .always(function() {
             // Show progress

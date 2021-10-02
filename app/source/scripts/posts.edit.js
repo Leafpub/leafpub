@@ -243,8 +243,8 @@ $(function() {
                     showPanel('.image-panel');
                 }
                 if($(event.target).is('[data-embed]')){
-                    showPanel('.embed-panel');  
-                } 
+                    showPanel('.embed-panel');
+                }
                 if($(event.target).is('td')){
                     showPanel('.table-panel');
                 }
@@ -518,7 +518,7 @@ $(function() {
 
         // Don't save if another request is pending
         if(request || !ready) return;
-        
+
         // Show progress
         progress.go(50);
         Leafpub.highlightErrors('.settings-form');
@@ -652,10 +652,10 @@ $(function() {
             description =
                 $.trim($('#meta-description').val()) ||
                 $.trim($(contentEditor.getContent()).text()).slice(0,170);
-        
+
         $('.meta-used.title').text(title.length);
         $('.meta-used.description').text(description.length);
-        
+
         $('.se-slug').text(slug);
         $('.se-title').text(title);
         $('.se-description').text(description);
@@ -1055,7 +1055,7 @@ $(function() {
 
             if ($(image).is('figure')) {
                 $('#image-caption').prop('checked', true);
-                
+
                 if ($(image.firstChild).is('a')){
                     image = image.firstChild;
                 }
@@ -1073,7 +1073,7 @@ $(function() {
             cssClass = $(image).attr('class') || null;
             //caption = $(figcaption).html();
             sign = $(image).data('sign');
-            
+
             // Set alignment radios
             $('.image-align-none').trigger('click');
             if(image) {
@@ -1115,7 +1115,7 @@ $(function() {
 
         $('.media-file').on('click', function(){
             page = 1; // reset the media list
-            more = true // reset the media list
+            more = true; // reset the media list
             $('.picture').css('background-image', '');
             $('.post-image').css('background-image', '');
             $.ajax({
@@ -1128,6 +1128,11 @@ $(function() {
             })
             .done(function(res){
                 $('.media-list').css('display', 'flex').html(res.html);
+                $('.lazy').Lazy({
+                    afterLoad: function(element) {
+                        $(element).removeClass("preloading");
+                    }
+                });
             });
         });
 
@@ -1168,7 +1173,7 @@ $(function() {
                 })
                 .done(function(res) {
                     request = null;
-            
+
                     // Are there more pages to load?
                     more = page < res.pagination.total_pages;
 
@@ -1180,6 +1185,11 @@ $(function() {
                 .always(function() {
                     // Hide progress
                     progress.go(100);
+                    $('.lazy').Lazy({
+                        afterLoad: function(element) {
+                            $(element).removeClass("preloading");
+                        }
+                    });
                 });
             }
         });
@@ -1366,7 +1376,7 @@ $(function() {
             table_class,
             add_header,
             table;
-        
+
         $('.table-panel')
             .on('show.leafpub.panel', function(){
                 table = $(contentEditor.getSelectedElement()).closest('.table');
@@ -1394,9 +1404,9 @@ $(function() {
             console.log(table);
             if (!table){
                 var table = contentEditor.table('insert', {cols: cols, rows: rows, table_class: table_class, head: add_header});
-                
+
             } else {
-                
+
             }
         });
     })();
