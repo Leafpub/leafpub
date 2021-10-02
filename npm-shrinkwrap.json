@@ -5174,6 +5174,14 @@
       "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz",
       "integrity": "sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw=="
     },
+    "jquery-lazy": {
+      "version": "1.7.11",
+      "resolved": "https://registry.npmjs.org/jquery-lazy/-/jquery-lazy-1.7.11.tgz",
+      "integrity": "sha512-jNAOMwfgf+lYaOCc/atBVjbOzAIRW5BUyjQ4b4jJPkQM6I0zGZd4m/Y73ekfAlrQQDg3/Dge3YNhW7Cqjgi0UA==",
+      "requires": {
+        "jquery": ">=1.7.2"
+      }
+    },
     "jquery-ui": {
       "version": "1.12.1",
       "resolved": "https://registry.npmjs.org/jquery-ui/-/jquery-ui-1.12.1.tgz",
