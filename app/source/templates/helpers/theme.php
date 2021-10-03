@@ -189,13 +189,13 @@ return [
     // Handles the output for {{leafpub_foot}}
     'leafpub_foot' => function($options) {
         $html = '';
-       
+
         // Dispatch event.
         // A disqus plugin could inject the javascript here....
-        $event = new \Leafpub\Events\Application\LeafpubFoot($html);
-        \Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubFoot::NAME, $event);
-        $html = $event->getEventData();
-        
+        #$event = new \Leafpub\Events\Application\LeafpubFoot($html);
+        #\Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubFoot::NAME, $event);
+        #$html = $event->getEventData();
+
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject TinyMCE
@@ -240,16 +240,16 @@ return [
     // Handles the output for {{leafpub_head}}
     'leafpub_head' => function($options) {
         $html = '';
-        
+
         // Dispatch event.
-        $event = new \Leafpub\Events\Application\LeafpubHead($html);
-        \Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubHead::NAME, $event);
-        $html = $event->getEventData();
+        #$event = new \Leafpub\Events\Application\LeafpubHead($html);
+        #\Leafpub\Leafpub::dispatchEvent(\Leafpub\Events\Application\LeafpubHead::NAME, $event);
+        #$html = $event->getEventData();
 
         if (\Leafpub\Models\Setting::getOne('generator') == 'on'){
             $html .= '<meta name="generator" content="Leafpub v' . LEAFPUB_VERSION . '">';
         }
-        
+
         // If we're editing a post, add required code
         if($options['data']['meta']['editable']) {
             // Inject Leafpub data and editor stylesheet
@@ -305,12 +305,6 @@ return [
             foreach($options['data']['meta']['twitter_card'] as $key => $value) {
                 if($value === null) continue;
                 $html .= "\n<meta name=\"" . htmlspecialchars($key) . "\" content=\"" . htmlspecialchars($value) . "\">";
-            }
-        }
-        
-        if (!\Leafpub\Leafpub::isHomepage()){
-            if (!($options['data']['meta']['amp']) && $options['data']['settings']['amp'] == 'on'){
-                $html .= "\n<link rel=\"amphtml\" href=\"" . $options['data']['meta']['ld_json']['url'] . "/amp\">";
             }
         }
 
@@ -555,7 +549,7 @@ return [
             return $title;
         }
     },
-    
+
     'tag_cloud' => function($options){
         $tags = array();
         if (count($options['hash']) > 0){
@@ -588,16 +582,16 @@ return [
             return $options['inverse'] ? $options['inverse']() : '';
         }
     },
-    
+
     'authors' => function($options){
         $searchFor = array();
 
         if (isset($options['hash']['query'])){
             $searchFor['query'] = $options['hash']['query'];
         }
-        
+
         $authors = \Leafpub\Models\User::getAuthors($searchFor);
-    
+
         if(count($authors)) {
             return $options['fn'](['authors' => $authors]);
         } else {
@@ -605,5 +599,5 @@ return [
             return $options['inverse'] ? $options['inverse']() : '';
         }
     }
-    
+
 ];
