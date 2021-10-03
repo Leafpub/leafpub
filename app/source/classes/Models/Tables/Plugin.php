@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class Plugin extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'plugins';
 }

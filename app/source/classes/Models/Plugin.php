@@ -27,8 +27,14 @@ class Plugin extends AbstractModel
     public const VERSION_MISMATCH = 5;
 
     public static $plugins;
+    /**
+     * @var null|\Leafpub\Models\Tables\Plugin
+     */
     protected static ?\Leafpub\Models\Tables\Plugin $_instance = null;
 
+    /**
+     * @var array<class-string<\Leafpub\Controller\AdminController>>|array<class-string<\Leafpub\Controller\APIController>>|array<class-string<\Leafpub\Leafpub>>|array<class-string<\Leafpub\Models\Plugin>>
+     */
     protected static $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
@@ -43,7 +49,7 @@ class Plugin extends AbstractModel
             'page' => 1,
             'query' => null,
             'sort' => 'DESC',
-        ], (array) $options);
+        ], (array) (array) (array) (array) (array) $options);
 
         $where = null;
 
@@ -123,9 +129,7 @@ class Plugin extends AbstractModel
             return false;
         }
 
-        $plugin = self::normalize($plugin->getArrayCopy());
-
-        return $plugin;
+        return self::normalize($plugin->getArrayCopy());
     }
 
     public static function create($plugin)
@@ -158,7 +162,7 @@ class Plugin extends AbstractModel
 
         try {
             self::getModel()->insert($plugin);
-            $plugin_id = (int) self::getModel()->getLastInsertValue();
+            $plugin_id = (int) (int) self::getModel()->getLastInsertValue();
             if ($plugin_id <= 0) {
                 return false;
             }
@@ -188,10 +192,8 @@ class Plugin extends AbstractModel
             throw new \Exception('Invalid dir: ' . $plugin['dir'], self::INVALID_DIR);
         }
 
-        if (LEAFPUB_VERSION != '{{version}}') {
-            if (!Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])) {
-                throw new \Exception('Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', self::VERSION_MISMATCH);
-            }
+        if (LEAFPUB_VERSION != '{{version}}' && !Comparator::greaterThanOrEqualTo(LEAFPUB_VERSION, $plugin['requires'])) {
+            throw new \Exception('Plugin needs Leafpub Version ' . $plugin['requires'] . ', but version ' . LEAFPUB_VERSION . ' detected', self::VERSION_MISMATCH);
         }
         $dbPlugin = self::getOne($plugin['dir']);
         $plugin = array_merge($dbPlugin, $plugin);
@@ -241,10 +243,9 @@ class Plugin extends AbstractModel
     /**
      * Returns a list of all available plugins
      *
-     * @return array
      *
      **/
-    public static function getAll()
+    public static function getAll(): array
     {
         $plugins = [];
 
@@ -355,23 +356,15 @@ class Plugin extends AbstractModel
         unset($plugin['routes']);
         unset($plugin['isWidget']);
 
-        if ($bUpdate) {
-            $res = self::edit($plugin);
-        } else {
-            $res = self::create($plugin);
-        }
-
-        return $res;
+        return $bUpdate ? self::edit($plugin) : self::create($plugin);
     }
 
     /**
      * Delete the plugin folder
      *
      * @param string $plugin the plugin to deinstall
-     *
-     * @return bool
      */
-    public static function deinstall($plugin)
+    public static function deinstall($plugin): bool
     {
         if (!self::isAllowedCaller()) {
             return false;
@@ -401,10 +394,8 @@ class Plugin extends AbstractModel
      * Activates an installed plugin
      *
      * @param string $dir the plugin to activate
-     *
-     * @return bool
      */
-    public static function activate($dir)
+    public static function activate($dir): bool
     {
         if (!self::isAllowedCaller()) {
             return false;
@@ -463,10 +454,8 @@ class Plugin extends AbstractModel
      * Deactivates an installed plugin
      *
      * @param string $dir the plugin to deactivate
-     *
-     * @return bool
      */
-    public static function deactivate($dir)
+    public static function deactivate($dir): bool
     {
         if (!self::isAllowedCaller()) {
             return false;
@@ -506,10 +495,8 @@ class Plugin extends AbstractModel
      * Checks, if a plugin exists
      *
      * @param string $dir
-     *
-     * @return bool
      */
-    public static function exists($dir)
+    public static function exists($dir): bool
     {
         try {
             return (bool) self::getOne($dir);
@@ -518,7 +505,7 @@ class Plugin extends AbstractModel
         }
     }
 
-    protected static function getModel()
+    protected static function getModel(): \Leafpub\Models\Tables\Plugin
     {
         if (self::$_instance == null) {
             self::$_instance = new Tables\Plugin();
@@ -531,10 +518,8 @@ class Plugin extends AbstractModel
      * Normalize types for certain fields
      *
      * @param array $plugin
-     *
-     * @return array
      */
-    private static function normalize($plugin)
+    private static function normalize($plugin): array
     {
         // Cast to integer
         $plugin['id'] = (int) $plugin['id'];

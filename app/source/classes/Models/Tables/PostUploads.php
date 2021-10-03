@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class PostUploads extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'post_uploads';
 }

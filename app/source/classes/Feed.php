@@ -90,12 +90,12 @@ class Feed extends Leafpub
      **/
     public static function url($options = null)
     {
-        if (count($options)) {
+        if (count($options) > 0) {
             // example.com/feed?author=name&tag=name
             return
                 parent::url(Setting::getOne('frag_feed')) .
                 '?' .
-                http_build_query($options, null, '&', PHP_QUERY_RFC3986);
+                http_build_query($options, "", '&', PHP_QUERY_RFC3986);
         }
         // example.com/feed
         return parent::url(Setting::getOne('frag_feed'));

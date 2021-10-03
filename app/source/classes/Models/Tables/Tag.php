@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class Tag extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'tags';
 }

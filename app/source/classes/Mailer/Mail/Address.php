@@ -12,8 +12,14 @@ namespace Leafpub\Mailer\Mail;
 
 class Address
 {
+    /**
+     * @var string
+     */
     private string $email;
 
+    /**
+     * @var null|string
+     */
     private ?string $name = null;
 
     /**
@@ -26,26 +32,17 @@ class Address
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullAddress()
+    public function getFullAddress(): string
     {
         return "{$this->name} <{$this->email}>";
     }

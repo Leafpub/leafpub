@@ -24,15 +24,17 @@ class Theme extends Leafpub
     public const THEME_STD_ERROR = 'error.hbs';
     public const THEME_STD_MAINTENANCE = 'source/templates/maintenance.hbs';
 
+    /**
+     * @var null
+     */
     private static $_themeOptions;
 
     /**
      * Returns an array of all available themes
      *
-     * @return array
      *
      **/
-    public static function getAll()
+    public static function getAll(): array
     {
         $themes = [];
 
@@ -56,18 +58,16 @@ class Theme extends Leafpub
     /**
      * Returns the path to the current theme, optionally concatenating a path
      *
-     * @return string
      *
      **/
-    public static function getPath()
+    public static function getPath(...$paths): string
     {
-        $paths = func_get_args();
         $base_path = 'content/themes/' . Setting::getOne('theme');
 
         return self::path($base_path, implode('/', $paths));
     }
 
-    public static function getErrorTemplate($code)
+    public static function getErrorTemplate($code): string
     {
         if (!self::$_themeOptions) {
             self::$_themeOptions = json_decode(
@@ -78,11 +78,7 @@ class Theme extends Leafpub
         }
         $file = self::getPath(self::$_themeOptions->error_templates->{$code});
         if (!is_file($file)) {
-            if ($code == '503') {
-                $file = self::path(self::THEME_STD_MAINTENANCE);
-            } else {
-                $file = self::getPath(self::THEME_STD_ERROR);
-            }
+            $file = $code == '503' ? self::path(self::THEME_STD_MAINTENANCE) : self::getPath(self::THEME_STD_ERROR);
         }
 
         return $file;

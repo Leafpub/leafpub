@@ -14,12 +14,14 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class Upload extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'uploads';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]),
             new \Zend\Db\Sql\Ddl\Column\Varchar('caption', 191, true),
@@ -31,19 +33,18 @@ class Upload extends CreateTable
             new \Zend\Db\Sql\Ddl\Column\Integer('width'),
             new \Zend\Db\Sql\Ddl\Column\Integer('height'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\PrimaryKey('id'),
             new \Zend\Db\Sql\Ddl\Constraint\UniqueKey('filename'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

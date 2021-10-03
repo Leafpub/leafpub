@@ -16,10 +16,8 @@ class MailFactory
 {
     /**
      * @throws MailerException
-     *
-     * @return Mail
      */
-    public static function create(array $mailVars)
+    public static function create(array $mailVars): \Leafpub\Mailer\Mail\Mail
     {
         if (!($mailVars['to'] instanceof Address)) {
             throw new MailerException("Field 'to' must be an instance of " . Address::class);

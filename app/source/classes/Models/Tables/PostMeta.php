@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class PostMeta extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'post_meta';
 }

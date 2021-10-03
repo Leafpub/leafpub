@@ -20,8 +20,8 @@ use Leafpub\Models\Tag;
 use Leafpub\Models\User;
 use Leafpub\Search;
 use Leafpub\Session;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * ThemeController
@@ -34,18 +34,14 @@ class ThemeController extends Controller
     /**
      * Renders the author page
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
      *
-     * @return Response
      *
      **/
     public function author(
-        Request $request,
-        Response $response,
+        RequestInterface $request,
+        ResponseInterface $response,
         array $args
-    ): Response
+    ): ResponseInterface
     {
         $html = User::render($args['author'], $args['page']);
 
@@ -57,14 +53,19 @@ class ThemeController extends Controller
     /**
      * Renders the custom homepage
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function customHomepage($request, $response, $args)
+     * @throws \Exception
+     */
+    public function customHomepage(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $html = Post::render(Setting::getOne('homepage'));
 
@@ -76,14 +77,19 @@ class ThemeController extends Controller
     /**
      * Renders the blog view
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function blog($request, $response, $args)
+     * @throws \Exception
+     */
+    public function blog(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $page = isset($args['page']) ? $args['page'] : false;
         $html = Blog::render($page);
@@ -96,14 +102,18 @@ class ThemeController extends Controller
     /**
      * Renders the error view
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function error($request, $response, $args)
+     */
+    public function error(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $html = Error::render();
 
@@ -113,21 +123,25 @@ class ThemeController extends Controller
     /**
      * Generates the RSS Feed
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function feed($request, $response, $args)
+     */
+    public function feed(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $html = Feed::render([
             'author' => $request->getParams()['author'],
             'tag' => $request->getParams()['tag'],
         ]);
 
-        return $html ?
+        return $html !== '' ?
             $response
                 ->withHeader('Content-type', 'application/xml')
                 ->write($html) :
@@ -137,14 +151,19 @@ class ThemeController extends Controller
     /**
      * Renders a specific post
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function post($request, $response, $args)
+     * @throws \Exception
+     */
+    public function post(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $preview = Session::isAuthenticated() && isset($request->getParams()['preview']);
         $html = Post::render($args['post'], [
@@ -163,7 +182,11 @@ class ThemeController extends Controller
         return $response->write($html);
     }
 
-    public function ampify($request, $response, $args)
+    public function ampify(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $preview = Session::isAuthenticated() && isset($request->getParams()['preview']);
         $html = Post::render($args['post'], [
@@ -186,14 +209,18 @@ class ThemeController extends Controller
     /**
      * Renders the search results
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function search($request, $response, $args)
+     */
+    public function search(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $html = Search::render($args['query'], $args['page']);
 
@@ -205,14 +232,18 @@ class ThemeController extends Controller
     /**
      * Renders the tag view
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param array               $args
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
      *
-     * @return Response
+     * @return ResponseInterface
      *
-     **/
-    public function tag($request, $response, $args)
+     */
+    public function tag(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $html = Tag::render($args['tag'], $args['page']);
 
@@ -221,11 +252,15 @@ class ThemeController extends Controller
             $response->write($html);
     }
 
-    public function sitemap($request, $response, $args)
+    public function sitemap(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $xml = \Leafpub\Leafpub::generateSitemap();
 
-        return $html === false ?
+        return $xml === false ?
             $this->notFound($request, $response) :
             $response->withHeader('Content-type', 'application/xml')->write($xml);
     }

@@ -30,7 +30,7 @@ class Error extends Leafpub
      * @return mixed
      *
      **/
-    public static function render($code = self::STD_ERR_CODE, $data = [], $special = [])
+    public static function render($code = self::STD_ERR_CODE, $data = [], $special = []): string
     {
         // Render it
         return Renderer::render([
@@ -59,7 +59,7 @@ class Error extends Leafpub
      * @return mixed
      *
      **/
-    public static function system($data)
+    public static function system($data): string
     {
         // Get the template
         $template = self::path('source/templates/error.system.hbs');
@@ -74,8 +74,7 @@ class Error extends Leafpub
         $html = str_replace('{{logo}}', htmlspecialchars($image), $html);
         $html = str_replace('{{title}}', htmlspecialchars($data['title']), $html);
         $html = str_replace('{{message}}', htmlspecialchars($data['message']), $html);
-        $html = str_replace('{{host}}', htmlspecialchars($_SERVER['HTTP_HOST']), $html);
 
-        return $html;
+        return str_replace('{{host}}', htmlspecialchars($_SERVER['HTTP_HOST']), $html);
     }
 }

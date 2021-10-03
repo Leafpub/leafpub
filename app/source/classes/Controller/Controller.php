@@ -19,6 +19,9 @@ use Slim\Container;
  **/
 class Controller
 {
+    /**
+     * @var \Slim\Container
+     */
     protected \Slim\Container $ci;
 
     public function __construct(Container $ci)
@@ -38,8 +41,8 @@ class Controller
         return $response->withStatus(404);
     }
 
-    protected function returnJson($request)
+    protected function returnJson($request): bool
     {
-        return (bool) ($request->getParam('returnJson') != null);
+        return $request->getParam('returnJson') != null;
     }
 }

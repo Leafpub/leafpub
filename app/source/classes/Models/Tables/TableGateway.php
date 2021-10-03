@@ -16,6 +16,9 @@ use Zend\Db\TableGateway\Feature;
 abstract class TableGateway extends AbstractTableGateway
 {
     public const DEFAULT_PREFIX = 'leafpub_';
+    /**
+     * @var string
+     */
     public static string $prefix = '';
 
     public function __construct()
@@ -38,7 +41,7 @@ abstract class TableGateway extends AbstractTableGateway
         exit;
     }
 
-    public function truncate()
+    public function truncate(): \Zend\Db\Adapter\Driver\ResultInterface
     {
         return $this->getSql()->prepareStatementForSqlObject(new TruncateTable($this->getTable()))->execute();
     }

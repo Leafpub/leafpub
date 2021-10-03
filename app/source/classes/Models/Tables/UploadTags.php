@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class UploadTags extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'upload_tags';
 }

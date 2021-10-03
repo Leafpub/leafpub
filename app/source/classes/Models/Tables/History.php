@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class History extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'history';
 }

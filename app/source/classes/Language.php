@@ -21,10 +21,9 @@ class Language extends Leafpub
     /**
      * Gets an array of all available language packs
      *
-     * @return array
      *
      **/
-    public static function getAll()
+    public static function getAll(): array
     {
         $languages = [];
 
@@ -64,10 +63,9 @@ class Language extends Leafpub
      * @param string $term
      * @param null   $placeholders
      *
-     * @return string
      *
      **/
-    public static function term($term, $placeholders = null)
+    public static function term($term, $placeholders = null): string
     {
         // Get requested term. If non-existent, wrap in brackets so we can identify missing terms
         $term = isset(self::$language[$term]) ? self::$language[$term] : '[' . $term . ']';
@@ -82,7 +80,7 @@ class Language extends Leafpub
         return $term;
     }
 
-    public static function installLanguage($code)
+    public static function installLanguage($code): bool
     {
         $lang = self::getAll();
         foreach ($lang as $l) {
@@ -122,10 +120,9 @@ class Language extends Leafpub
      *
      * @throws \Exception
      *
-     * @return void
      *
      **/
-    protected static function load($language = 'en-us')
+    protected static function load($language = 'en-us'): void
     {
         // Load the en-us pack first since it's the default. We do this so missing terms from other
         // language packs will fallback to the English equivalent.
@@ -151,9 +148,7 @@ class Language extends Leafpub
     {
         $jsonPath = self::path('source/config/languages.json');
         if (file_exists($jsonPath)) {
-            $lang = json_decode(file_get_contents($jsonPath), true);
-
-            return $lang;
+            return json_decode(file_get_contents($jsonPath), true);
         }
 
         return false;

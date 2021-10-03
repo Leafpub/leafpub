@@ -26,10 +26,9 @@ class ImportFactory
      *
      * @throws \Exception
      *
-     * @return Leafpub\Importer\AbstractImporter
      *
      **/
-    public static function factory($system, $file)
+    public static function factory($system, $file): \Leafpub\Importer\AbstractImporter
     {
         $class_to_load = __NAMESPACE__ . '\Dropins\\' . ucfirst($system);
         if (class_exists($class_to_load)) {

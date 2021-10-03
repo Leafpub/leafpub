@@ -20,6 +20,9 @@ use Leafpub\Models\Setting;
  **/
 class Widget extends Leafpub
 {
+    /**
+     * @var array
+     */
     protected static array $widgets = [];
 
     /**
@@ -28,10 +31,8 @@ class Widget extends Leafpub
      * @param array $widget - Format: ['name' => widgetName, 'class' => entryClassName]
      *
      * @throws \Exception
-     *
-     * @return void
      */
-    public static function addWidget($widgetData)
+    public static function addWidget($widgetData): void
     {
         static::$widgets[$widgetData['name']] = $widgetData;
     }
@@ -39,7 +40,7 @@ class Widget extends Leafpub
     /**
      * Returns a rendered widget
      *
-     * @param String/array $widgetName
+     * @param string $widgetName
      *
      * @return string
      */
@@ -63,21 +64,22 @@ class Widget extends Leafpub
         return false;
     }
 
-    public static function getWidgets()
+    public static function getWidgets(): array
     {
         return self::$widgets;
     }
 
-    public static function renderDashboard($userSlug)
+    public static function renderDashboard(string $userSlug)
     {
+        $ret = [];
         $data = Setting::getOne('dashboard_' . $userSlug);
 
         if ($data) {
-            $widgets = json_decode($data, true);
+            $widgets = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
             foreach ($widgets as $widget) {
                 self::getLogger()->debug('Widget Id: ' . $widget->id);
                 $html = self::getWidget($widget);
-                if ($html) {
+                if ($html !== '') {
                     $ret[] = ['widget' => $html];
                 }
             }

@@ -221,7 +221,7 @@ class Post extends AbstractModel
             $select = new \Zend\Db\Sql\Sql(self::getModel()->getAdapter());
             $select = $select->select();
             $select->from($prefix . 'view_posts');
-            if (is_integer($slug)) {
+            if (is_int($slug)) {
                 $select->where(['id' => $slug]);
             } else {
                 $select->where(['slug' => $slug]);
@@ -239,8 +239,8 @@ class Post extends AbstractModel
 
         $evt = new Retrieved($post);
         Leafpub::dispatchEvent(Retrieved::NAME, $evt);
-
-        return $evt->getEventData();
+        return $post;
+        #return $evt->getEventData();
     }
 
     /**
@@ -322,7 +322,7 @@ class Post extends AbstractModel
                 return false;
             }
         } catch (\PDOException $e) {
-            throw new \Exception('Database error: ' . $e->getMessage());
+            throw new \Exception('Database error: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         // Set post tags
@@ -438,7 +438,7 @@ class Post extends AbstractModel
         try {
             self::getModel()->update($post, ['slug' => $slug]);
         } catch (\PDOException $e) {
-            throw new \Exception('Database error: ' . $e->getMessage());
+            throw new \Exception('Database error: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         // Set post tags
@@ -927,16 +927,8 @@ class Post extends AbstractModel
         if ($options['zen']) {
             $template = Leafpub::path('source/templates/editor.zen.hbs');
         } else {
-            if ($options['amp']) {
-                $ret = self::ampifyImageTags($post['content']);
-                $options['embed_media'] = $ret['embed_media'];
-                $options['embed_social'] = $ret['embed_social'];
-                $post['content'] = $ret['html'];
-                $template = Leafpub::path('source/templates/amp-template.hbs');
-            } else {
-                $options['amp'] = false;
-                $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
-            }
+            $options['amp'] = false;
+            $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
         }
 
         // Generate event
@@ -1044,7 +1036,7 @@ class Post extends AbstractModel
                             implode(', ', (array) $post['tags']) : null,
                     ],
                 ],
-            ],
+            ]
         ]);
         // Dispatch Event
         Leafpub::dispatchEvent(BeforeRender::NAME, $beforeRender);
@@ -1078,7 +1070,7 @@ class Post extends AbstractModel
                 '{{leafpub_head}}' => '<!--{{leafpub_head}}-->',
                 '{{leafpub_foot}}' => '<!--{{leafpub_foot}}-->',
             ] as $helper => $test_string) {
-                if (!strstr($html, $test_string)) {
+                if (strpos($html, $test_string) === false) {
                     throw new \Exception("The $helper helper is missing in $template.");
                 }
             }
@@ -1441,7 +1433,7 @@ class Post extends AbstractModel
         }
 
         // Assign new tags
-        if (count($tags)) {
+        if (count($tags) > 0) {
             // Escape slugs
             /*foreach($tags as $key => $value) {
                 $tags[$key] = self::$database->quote($value);
@@ -1488,7 +1480,7 @@ class Post extends AbstractModel
             array_push($matches, $tag->getAttribute('src'));
         }
 
-        if (count($matches)) {
+        if (count($matches) > 0) {
             // Assign tags
             try {
                 foreach ($matches as $media) {
@@ -1496,7 +1488,7 @@ class Post extends AbstractModel
                     // An image path that couldn't be found returns false, so the table insert would fail without
                     // an upload id
                     $imageId = Upload::getImageId($media);
-                    if ($imageId) {
+                    if ($imageId !== 0) {
                         $data = ['post' => $post_id, 'upload' => $imageId];
                         $table->insert($data);
                     }

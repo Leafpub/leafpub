@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class User extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'users';
 }

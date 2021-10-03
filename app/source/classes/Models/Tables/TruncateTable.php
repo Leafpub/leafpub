@@ -23,9 +23,8 @@ class TruncateTable extends AbstractPreparableSql
      */
     public const SPECIFICATION_TRUNCATE = 'truncate';
     /**@#-*/
-
     /**
-     * @var string[]
+     * @var array<string, string>|string[]
      */
     protected $specifications = [
         self::SPECIFICATION_TRUNCATE => /* @lang SQL */ 'TRUNCATE TABLE %1$s',
@@ -48,20 +47,15 @@ class TruncateTable extends AbstractPreparableSql
 
     /**
      * @param string|TableIdentifier $table
-     *
-     * @return self
      */
-    public function table($table)
+    public function table($table): self
     {
         $this->table = $table;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    protected function processTruncate(PlatformInterface $platform, DriverInterface $driver = null, ParameterContainer $parameterContainer = null)
+    protected function processTruncate(PlatformInterface $platform, DriverInterface $driver = null, ParameterContainer $parameterContainer = null): string
     {
         return sprintf(
             $this->specifications[static::SPECIFICATION_TRUNCATE],

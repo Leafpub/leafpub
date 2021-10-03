@@ -14,12 +14,14 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class Plugin extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'plugins';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]),
             new \Zend\Db\Sql\Ddl\Column\Varchar('name', 51),
@@ -37,19 +39,18 @@ class Plugin extends CreateTable
             new \Zend\Db\Sql\Ddl\Column\Binary('enabled', null, false, 0),
             new \Zend\Db\Sql\Ddl\Column\Datetime('enable_date'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\PrimaryKey('id'),
             new \Zend\Db\Sql\Ddl\Constraint\UniqueKey('dir'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

@@ -14,12 +14,14 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class User extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'users';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]),
             new \Zend\Db\Sql\Ddl\Column\Varchar('slug', 191),
@@ -36,19 +38,18 @@ class User extends CreateTable
             new \Zend\Db\Sql\Ddl\Column\Text('location'),
             new \Zend\Db\Sql\Ddl\Column\Text('website'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\PrimaryKey('id'),
             new \Zend\Db\Sql\Ddl\Index\Index('slug'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

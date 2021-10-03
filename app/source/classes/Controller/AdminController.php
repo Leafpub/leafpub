@@ -27,6 +27,8 @@ use Leafpub\Search;
 use Leafpub\Session;
 use Leafpub\Theme;
 use Leafpub\Widget;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * AdminController
@@ -40,15 +42,18 @@ class AdminController extends Controller
     /**
      * Renders the login view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function login($request, $response, $args)
-    {
+    public function login(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $params = $request->getParams();
 
         // Redirect to the admin page if they're already logged in
@@ -70,15 +75,18 @@ class AdminController extends Controller
     /**
      * Renders the password recover view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function recover($request, $response, $args)
-    {
+    public function recover(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // Log out the current user if they requested this page
         Session::logout();
 
@@ -95,15 +103,18 @@ class AdminController extends Controller
     /**
      * Renders the password reset view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function reset($request, $response, $args)
-    {
+    public function reset(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // Log out the current user if they requested this page
         Session::logout();
 
@@ -120,15 +131,18 @@ class AdminController extends Controller
     /**
      * Logout the current user (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function logout($request, $response, $args)
-    {
+    public function logout(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         Session::logout();
 
         return $response->withRedirect(Admin::url('login'));
@@ -137,13 +151,16 @@ class AdminController extends Controller
     /**
      * Show the import page
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
      **/
-    public function import($request, $response, $args)
-    {
+    public function import(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // Only the blog owner can import another blog
         if (!Session::isRole('owner')) {
             return $this->notFound($request, $response);
@@ -167,15 +184,18 @@ class AdminController extends Controller
     /**
      * Redirects admin/ to admin/posts (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function dashboard($request, $response, $args)
-    {
+    public function dashboard(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         if (\Leafpub\Models\Setting::getOne('show_dashboard') === 'on') {
             $html = Admin::render('dashboard', [
                 'title' => Language::term('dashboard'),
@@ -191,8 +211,11 @@ class AdminController extends Controller
         return $response->withRedirect(Admin::url('posts'));
     }
 
-    public function plugins($request, $response, $args)
-    {
+    public function plugins(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         if (!Session::isRole(['owner', 'admin'])) {
             return $this->notFound($request, $response);
         }
@@ -209,15 +232,18 @@ class AdminController extends Controller
     /**
      * Renders the posts view view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function posts($request, $response, $args)
-    {
+    public function posts(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $html = Admin::render('posts', [
             'title' => Language::term('posts'),
             'scripts' => 'posts.min.js',
@@ -241,15 +267,18 @@ class AdminController extends Controller
     /**
      * Renders the new post view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function newPost($request, $response, $args)
-    {
+    public function newPost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $html = Admin::render('posts.new', [
             'title' => Language::term('new_post'),
             'scripts' => ['editor.min.js', 'posts.edit.min.js'],
@@ -271,15 +300,18 @@ class AdminController extends Controller
     /**
      * Renders the edit post view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function editPost($request, $response, $args)
-    {
+    public function editPost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $post = Post::getOne($args['slug']);
         if (!$post) {
             return $this->notFound($request, $response);
@@ -312,7 +344,7 @@ class AdminController extends Controller
             'can_create_tags' => Session::isRole(['owner', 'admin', 'editor']) ? 'true' : 'false',
             'frame_src' => Leafpub::url(
                 'api/posts/render?post=' . rawurlencode($post['slug']) .
-                '&zen=' . rawurlencode($_COOKIE['zen'])
+                '&zen=' . rawurlencode($_COOKIE['zen'] ?? '')
             ),
         ]);
 
@@ -322,15 +354,18 @@ class AdminController extends Controller
     /**
      * Renders the history of a post (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function history($request, $response, $args)
-    {
+    public function history(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $history = History::getOne($args['id']);
         // Is there a history object and does the post's slug match the slug argument?
         if (!$history || $history['post_data']['slug'] !== $args['slug']) {
@@ -348,15 +383,18 @@ class AdminController extends Controller
     /**
      * Renders the tags view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function tags($request, $response, $args)
-    {
+    public function tags(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To view tags, you must be an owner, admin, or editor
         if (!Session::isRole(['owner', 'admin', 'editor'])) {
             return $this->notFound($request, $response);
@@ -377,15 +415,18 @@ class AdminController extends Controller
     /**
      * Renders the new tag view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function newTag($request, $response, $args)
-    {
+    public function newTag(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To add tags, you must be an owner, admin, or editor
         if (!Session::isRole(['owner', 'admin', 'editor'])) {
             return $this->notFound($request, $response);
@@ -404,15 +445,18 @@ class AdminController extends Controller
     /**
      * Renders the edit tag view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function editTag($request, $response, $args)
-    {
+    public function editTag(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To edit tags, you must be an owner, admin, or editor
         if (!Session::isRole(['owner', 'admin', 'editor'])) {
             return $this->notFound($request, $response);
@@ -436,15 +480,18 @@ class AdminController extends Controller
     /**
      * Renders the navigation view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function navigation($request, $response, $args)
-    {
+    public function navigation(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $params = $request->getParams();
 
         // To view navigation, you must be an owner or admin
@@ -465,15 +512,18 @@ class AdminController extends Controller
     /**
      * Renders the user view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function users($request, $response, $args)
-    {
+    public function users(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To view users, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
             return $this->notFound($request, $response);
@@ -494,15 +544,18 @@ class AdminController extends Controller
     /**
      * Renders the new user view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function newUser($request, $response, $args)
-    {
+    public function newUser(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To add users, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
             return $this->notFound($request, $response);
@@ -522,15 +575,18 @@ class AdminController extends Controller
     /**
      * Renders the edit user view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function editUser($request, $response, $args)
-    {
+    public function editUser(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To edit a user, you must be an owner, admin or the user
         if (!Session::isRole(['owner', 'admin']) && $args['slug'] !== Session::user('slug')) {
             return $this->notFound($request, $response);
@@ -557,15 +613,18 @@ class AdminController extends Controller
     /**
      * Renders the settings view (GET)
      *
-     * @param \Slim\Http\Request  $request
-     * @param \Slim\Http\Response $response
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
      * @param array               $args
      *
-     * @return \Slim\Http\Response
+     * @return ResponseInterface
      *
      **/
-    public function settings($request, $response, $args)
-    {
+    public function settings(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // To edit settings, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
             return $this->notFound($request, $response);
@@ -614,8 +673,11 @@ class AdminController extends Controller
         return $response->write($html);
     }
 
-    public function uploads($request, $response, $args)
-    {
+    public function uploads(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $uploads = Upload::getMany([
             'items_per_page' => 20,
         ], $pagination);
@@ -633,8 +695,11 @@ class AdminController extends Controller
         return $response->write($html);
     }
 
-    public function regenerateThumbnails($request, $response, $args)
-    {
+    public function regenerateThumbnails(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $generatedThumbnails = Upload::regenerateThumbnails();
         // Send response
         return $response->withJson([
@@ -643,8 +708,11 @@ class AdminController extends Controller
         ]);
     }
 
-    public function updateLeafpub($request, $response, $args)
-    {
+    public function updateLeafpub(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withRedirect(Admin::url());
         }

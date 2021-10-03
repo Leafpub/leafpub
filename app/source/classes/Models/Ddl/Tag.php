@@ -14,12 +14,14 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class Tag extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'tags';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]),
             new \Zend\Db\Sql\Ddl\Column\Varchar('slug', 191),
@@ -31,19 +33,18 @@ class Tag extends CreateTable
             new \Zend\Db\Sql\Ddl\Column\Text('meta_description'),
             new Column\Enum('type', ["'post'", "'upload'"], false, 'post'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\PrimaryKey('id'),
             new \Zend\Db\Sql\Ddl\Constraint\UniqueKey('slug'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

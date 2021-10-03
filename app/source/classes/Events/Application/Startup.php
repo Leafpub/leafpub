@@ -10,9 +10,21 @@ declare(strict_types=1);
 
 namespace Leafpub\Events\Application;
 
+use Leafpub\App;
 use Leafpub\Events\LeafpubEvent;
 
 class Startup extends LeafpubEvent
 {
-    public const NAME = 'application.startup';
+    private App $app;
+
+    public function __construct(
+        App $app
+    ) {
+        $this->app = $app;
+    }
+
+    public function getApp(): App
+    {
+        return $this->app;
+    }
 }

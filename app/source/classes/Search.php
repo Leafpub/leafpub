@@ -33,9 +33,9 @@ class Search extends Leafpub
     public static function render($query, $page = 1)
     {
         // Get the search's posts
-        if (mb_strlen($query)) {
+        if (mb_strlen($query) !== 0) {
             $posts = Post::getMany([
-                'query' => (string) $query,
+                'query' => (string) (string) $query,
                 'page' => $page,
                 'items_per_page' => Setting::getOne('posts_per_page'),
             ], $pagination);
@@ -55,7 +55,7 @@ class Search extends Leafpub
             self::url($query, $pagination['previous_page']) : null;
 
         // Determine meta title based on query
-        if (mb_strlen($query)) {
+        if (mb_strlen($query) !== 0) {
             $meta_title = Language::term('search_results_for_{query}', [
                 'query' => $query,
             ]);
@@ -91,24 +91,24 @@ class Search extends Leafpub
                         'og:type' => 'website',
                         'og:site_name' => Setting::getOne('title'),
                         'og:title' => 'Search &middot; ' . Setting::getOne('title'),
-                        'og:description' => !empty($query) ?
-                            'Search results for “' . htmlspecialchars($query) . '”' : null,
+                        'og:description' => empty($query) ?
+                            null : 'Search results for “' . htmlspecialchars($query) . '”',
                         'og:url' => self::url($query),
-                        'og:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null,
+                        'og:image' => empty(Setting::getOne('cover')) ?
+                            null : parent::url(Setting::getOne('cover')),
                     ],
                     // Twitter Card
                     'twitter_card' => [
-                        'twitter:card' => !empty(Setting::getOne('cover')) ?
-                            'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
-                            '@' . Setting::getOne('twitter') : null,
+                        'twitter:card' => empty(Setting::getOne('cover')) ?
+                            'summary' : 'summary_large_image',
+                        'twitter:site' => empty(Setting::getOne('twitter')) ?
+                            null : '@' . Setting::getOne('twitter'),
                         'twitter:title' => 'Search &middot; ' . Setting::getOne('title'),
-                        'twitter:description' => !empty($query) ?
-                            'Search results for “' . htmlspecialchars($query) . '”' : null,
+                        'twitter:description' => empty($query) ?
+                            null : 'Search results for “' . htmlspecialchars($query) . '”',
                         'twitter:url' => self::url($query),
-                        'twitter:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null,
+                        'twitter:image' => empty(Setting::getOne('cover')) ?
+                            null : parent::url(Setting::getOne('cover')),
                     ],
                 ],
             ],

@@ -16,6 +16,9 @@ use Leafpub\Mailer\MailerException;
 
 class Mailer extends Leafpub
 {
+    /**
+     * @var array<string, array<string, string|class-string<\Leafpub\Mailer\Bridge\MailMailer>>>|array<mixed, array<string, mixed>>
+     */
     private static array $mailers = [
         'default' => [
             'name' => 'PHP mail',
@@ -23,33 +26,24 @@ class Mailer extends Leafpub
         ],
     ];
 
-    /**
-     * @return array
-     */
-    public static function getMailers()
+    public static function getMailers(): array
     {
         return self::$mailers;
     }
 
     /**
      * @throws MailerException
-     *
-     * @return bool
      */
-    public static function sendEmail(Mail $mail)
+    public static function sendEmail(Mail $mail): bool
     {
         $mailerClass = self::getMailerClass(Setting::getOne('mailer'));
         /** @var MailerInterface $mailer */
         $mailer = new $mailerClass();
 
-        if (!($mailer instanceof MailerInterface)) {
-            throw new MailerException("Mailer {$mailerClass} must implement MailerInterface");
-        }
-
         return $mailer->send($mail);
     }
 
-    public static function addMailer($name, $class)
+    public static function addMailer($name, $class): void
     {
         if ($name === '') {
             throw new MailerException('Mailer name must be set!');

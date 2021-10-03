@@ -61,9 +61,8 @@ class History extends AbstractModel
             if (!$history) {
                 return false;
             }
-            $revision = self::normalize($history->getArrayCopy());
 
-            return $revision;
+            return self::normalize($history->getArrayCopy());
         } catch (\Exception $e) {
             return false;
         }

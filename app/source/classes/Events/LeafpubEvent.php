@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Leafpub\Events;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class LeafpubEvent extends Event implements ILeafpubEvent
 {
@@ -24,12 +24,12 @@ abstract class LeafpubEvent extends Event implements ILeafpubEvent
         $this->_data = $data;
     }
 
-    public function getEventData()
+    public function getEventData(): array
     {
         return $this->_data;
     }
 
-    public function setEventData($data)
+    public function setEventData(array $data): void
     {
         $this->_data = $data;
     }

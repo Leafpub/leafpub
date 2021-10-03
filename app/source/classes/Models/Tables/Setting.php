@@ -12,5 +12,8 @@ namespace Leafpub\Models\Tables;
 
 class Setting extends TableGateway
 {
+    /**
+     * @var string
+     */
     protected $table = 'settings';
 }

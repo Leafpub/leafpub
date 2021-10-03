@@ -35,6 +35,8 @@ use Leafpub\Search;
 use Leafpub\Session;
 use Leafpub\Update;
 use Leafpub\Widget;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * APIController
@@ -55,7 +57,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response (json)
      *
      **/
-    public function login($request, $response, $args)
+    public function login(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -82,7 +88,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function recover($request, $response, $args)
+    public function recover(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -98,6 +108,8 @@ class APIController extends Controller
 
         // Generate and set a password reset token
         User::edit($user['slug'], [
+            'reset_token' => $token = Leafpub::randomBytes(50),
+        ], [
             'reset_token' => $token = Leafpub::randomBytes(50),
         ]);
 
@@ -147,7 +159,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function reset($request, $response, $args)
+    public function reset(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -182,6 +198,9 @@ class APIController extends Controller
             User::edit($user['slug'], [
                 'password' => $params['password'],
                 'reset_token' => '',
+            ], [
+                'password' => $params['password'],
+                'reset_token' => '',
             ]);
         } catch (Exception $e) {
             return $response->withJson([
@@ -210,7 +229,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getPosts($request, $response, $args)
+    public function getPosts(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -261,7 +284,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function addPost($request, $response, $args)
+    public function addPost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         return $this->addUpdatePost('add', $request, $response, $args);
     }
@@ -276,7 +303,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function updatePost($request, $response, $args)
+    public function updatePost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         return $this->addUpdatePost('update', $request, $response, $args);
     }
@@ -291,7 +322,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function deletePost($request, $response, $args)
+    public function deletePost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // If you're not an owner, admin, or editor then you can only delete your own posts
         if (
@@ -318,7 +353,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function renderPost($request, $response, $args)
+    public function renderPost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         //
         // Render an editable post for the editor. This method supports GET and POST due to query
@@ -349,20 +388,18 @@ class APIController extends Controller
         if (isset($params['post-json'])) {
             // Post was passed as JSON data
             $post = json_decode($params['post-json'], true);
+        } elseif (isset($params['new'])) {
+            // New post
+            $post = [
+                'slug' => ':new',
+                'title' => Setting::getOne('default_title'),
+                'content' => Leafpub::markdownToHtml(Setting::getOne('default_content')),
+                'author' => Session::user(),
+                'pub_date' => date('Y-m-d H:i:s'),
+            ];
         } else {
-            if (isset($params['new'])) {
-                // New post
-                $post = [
-                    'slug' => ':new',
-                    'title' => Setting::getOne('default_title'),
-                    'content' => Leafpub::markdownToHtml(Setting::getOne('default_content')),
-                    'author' => Session::user(),
-                    'pub_date' => date('Y-m-d H:i:s'),
-                ];
-            } else {
-                // Existing post
-                $post = $params['post'];
-            }
+            // Existing post
+            $post = $params['post'];
         }
 
         // Render it
@@ -389,7 +426,11 @@ class APIController extends Controller
             ->write($html);
     }
 
-    public function unlockPost($request, $response, $args)
+    public function unlockPost(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $post = Post::getOne($args['slug']);
         if ($post['meta']['lock'][0] === Session::user('slug')) {
@@ -401,7 +442,11 @@ class APIController extends Controller
         return $response->withJson(['success' => false]);
     }
 
-    public function activatePlugin($request, $response, $args)
+    public function activatePlugin(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withJson([
@@ -411,19 +456,19 @@ class APIController extends Controller
         $params = $request->getParams();
 
         $plugin = $params['plugin'];
-        $enable = ($params['enable'] === 'false' ? true : false);
-        if ($enable) {
-            $ret = Plugin::activate($plugin);
-        } else {
-            $ret = Plugin::deactivate($plugin);
-        }
+        $enable = ($params['enable'] === 'false' ? true : false ? true : false);
+        $ret = $enable ? Plugin::activate($plugin) : Plugin::deactivate($plugin);
 
         return $response->withJson([
                 'success' => $ret,
             ]);
     }
 
-    public function deletePlugin($request, $response, $args)
+    public function deletePlugin(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withJson([
@@ -446,7 +491,11 @@ class APIController extends Controller
             ]);
     }
 
-    public function uploadPlugin($request, $response, $args)
+    public function uploadPlugin(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // Loop through uploaded files
         foreach ($request->getUploadedFiles()['files'] as $upload) {
@@ -493,7 +542,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getPlugins($request, $response, $args)
+    public function getPlugins(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -542,7 +595,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function deleteHistory($request, $response, $args)
+    public function deleteHistory(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // Get the history item and the affected post so we can verify privileges
         $history = History::getOne($args['id']);
@@ -579,7 +636,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getHistory($request, $response, $args)
+    public function getHistory(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $history = History::getOne($args['id']);
         if (!$history) {
@@ -613,7 +674,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getTags($request, $response, $args)
+    public function getTags(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -662,7 +727,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function addTag($request, $response, $args)
+    public function addTag(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         return $this->addUpdateTag('add', $request, $response, $args);
     }
@@ -716,7 +785,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function updateNavigation($request, $response, $args)
+    public function updateNavigation(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -729,11 +802,11 @@ class APIController extends Controller
         $navigation = [];
         $labels = (array) $params['label'];
         $links = (array) $params['link'];
-        for ($i = 0, $iMax = count($labels); $i < $iMax; ++$i) {
+        foreach ($labels as $i => $label) {
             // Ignore items with empty labels
-            if ($labels[$i] !== '') {
+            if ($label !== '') {
                 $navigation[] = [
-                    'label' => $labels[$i],
+                    'label' => $label,
                     'link' => $links[$i],
                 ];
             }
@@ -758,7 +831,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getUsers($request, $response, $args)
+    public function getUsers(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -807,7 +884,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function addUser($request, $response, $args)
+    public function addUser(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         return $this->addUpdateUser('add', $request, $response, $args);
     }
@@ -822,7 +903,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function updateUser($request, $response, $args)
+    public function updateUser(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         return $this->addUpdateUser('update', $request, $response, $args);
     }
@@ -837,7 +922,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function deleteUser($request, $response, $args)
+    public function deleteUser(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // To delete a user, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
@@ -880,7 +969,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function updateSettings($request, $response, $args)
+    public function updateSettings(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -945,7 +1038,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function deleteCache($request, $response, $args)
+    public function deleteCache(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         Cache::flush();
 
@@ -966,7 +1063,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function addBackup($request, $response, $args)
+    public function addBackup(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // To manage backups, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
@@ -1015,7 +1116,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function deleteBackup($request, $response, $args)
+    public function deleteBackup(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // To manage backups, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
@@ -1041,7 +1146,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getBackup($request, $response, $args)
+    public function getBackup(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         // To manage backups, you must be an owner or admin
         if (!Session::isRole(['owner', 'admin'])) {
@@ -1080,7 +1189,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function restoreBackup($request, $response, $args)
+    public function restoreBackup(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -1124,7 +1237,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getLocater($request, $response, $args)
+    public function getLocater(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $html = '';
@@ -1238,7 +1355,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function getUploads($request, $response, $args)
+    public function getUploads(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -1272,7 +1393,11 @@ class APIController extends Controller
         return $response->withJson($uploadArray);
     }
 
-    public function getUpload($request, $response, $args)
+    public function getUpload(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $filename = $args['file'];
 
@@ -1298,7 +1423,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function addUpload($request, $response, $args)
+    public function addUpload(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $uploaded = [];
@@ -1378,7 +1507,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function editUpload($request, $response, $args)
+    public function editUpload(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!isset($args['file'])) {
             return $response->NotFound($request, $response);
@@ -1409,7 +1542,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function deleteUpload($request, $response, $args)
+    public function deleteUpload(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!isset($args['file'])) {
             return $response->NotFound($request, $response);
@@ -1435,7 +1572,11 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    public function getOembed($request, $response, $args)
+    public function getOembed(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -1454,7 +1595,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function handleImportUpload($request, $response, $args)
+    public function handleImportUpload(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $uploaded = [];
@@ -1506,7 +1651,11 @@ class APIController extends Controller
      * @return bool
      *
      **/
-    public function doImport($request, $response, $args)
+    public function doImport(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $ret = Importer::doImport($params);
@@ -1518,7 +1667,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function updateLeafpubDatabase($request, $response, $args)
+    public function updateLeafpubDatabase(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withStatus(403);
@@ -1541,7 +1694,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function setDashboard($request, $response, $args)
+    public function setDashboard(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         try {
             $data = $request->getParams('data');
@@ -1559,12 +1716,16 @@ class APIController extends Controller
         }
     }
 
-    public function getWidget($request, $response, $args)
+    public function getWidget(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $widget = $request->getParam('widget');
 
         $html = Widget::getWidget($widget);
-        if ($html) {
+        if ($html !== '') {
             return $response->withJson([
                 'success' => true,
                 'html' => $html,
@@ -1572,7 +1733,11 @@ class APIController extends Controller
         }
     }
 
-    public function updateCheck($request, $response, $args)
+    public function updateCheck(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withStatus(403);
@@ -1589,7 +1754,11 @@ class APIController extends Controller
         ]);
     }
 
-    public function runUpdate($request, $response, $args)
+    public function runUpdate(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         if (!Session::isRole(['owner', 'admin'])) {
             return $response->withStatus(403);
@@ -1610,7 +1779,12 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    private function addUpdatePost($action, $request, $response, $args)
+    private function addUpdatePost(
+        string $action,
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $properties = $params['properties'];
@@ -1713,7 +1887,12 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    private function addUpdateTag($action, $request, $response, $args)
+    private function addUpdateTag(
+        string $action,
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $slug = $action === 'add' ? $params['slug'] : $args['slug'];
@@ -1783,7 +1962,12 @@ class APIController extends Controller
      * @return \Slim\Http\Response
      *
      **/
-    private function addUpdateUser($action, $request, $response, $args)
+    private function addUpdateUser(
+        string $action,
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface
     {
         $params = $request->getParams();
         $slug = $action === 'add' ? $params['username'] : $args['slug'];
@@ -1875,15 +2059,10 @@ class APIController extends Controller
     /**
      * Returns the HTML for the backups table
      *
-     * @return mixed
+     * @return string
      **/
-    private function getBackupTableHTML()
+    private function getBackupTableHTML(): string
     {
-        // To manage backups, you must be an owner or admin
-        if (!Session::isRole(['owner', 'admin'])) {
-            return $response->withStatus(403);
-        }
-
         return Renderer::render([
             'template' => Leafpub::path('source/templates/partials/backups-table.hbs'),
             'data' => [

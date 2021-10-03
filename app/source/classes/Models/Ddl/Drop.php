@@ -15,7 +15,7 @@ use Zend\Db\Sql\Ddl\DropTable;
 class Drop extends DropTable
 {
     /**
-     * @var array
+     * @var array<string, string>|mixed[]
      */
     protected $specifications = [
         self::TABLE => 'DROP TABLE IF EXISTS %1$s',

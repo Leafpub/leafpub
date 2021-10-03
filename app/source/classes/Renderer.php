@@ -27,10 +27,9 @@ class Renderer extends Leafpub
      *
      * @throws \Exception
      *
-     * @return string
      *
      **/
-    public static function render($options = [])
+    public static function render($options = []): string
     {
         // Extract options
         $template = $data = $special_vars = $helpers = '';
@@ -86,7 +85,7 @@ class Renderer extends Leafpub
                     'helpers' => self::loadHelpers($helpers),
                 ]);
             } catch (\Exception $e) {
-                throw new \Exception("Failed to compile $template_file. The compiler said: " . $e->getMessage());
+                throw new \Exception("Failed to compile $template_file. The compiler said: " . $e->getMessage(), $e->getCode(), $e);
             }
 
             // Delete old cache files for this template
@@ -100,7 +99,7 @@ class Renderer extends Leafpub
             try {
                 Cache::put($cache_file, $output);
             } catch (\Exception $e) {
-                throw new \Exception($e->getMessage());
+                throw new \Exception($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -156,7 +155,7 @@ class Renderer extends Leafpub
             $html = $renderer($data, ['data' => $special_vars]);
             ob_end_flush();
         } catch (\Exception $e) {
-            throw new \Exception("Failed to render $template_file: " . $e->getMessage());
+            throw new \Exception("Failed to render $template_file: " . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $html;
@@ -167,14 +166,13 @@ class Renderer extends Leafpub
      *
      * @param array $helpers
      *
-     * @return array
      *
      **/
-    private static function loadHelpers($helpers = [])
+    private static function loadHelpers($helpers = []): array
     {
         $array = [];
 
-        foreach ((array) $helpers as $helper) {
+        foreach ($helpers as $helper) {
             $path = self::path("/source/templates/helpers/$helper.php");
             if (file_exists($path)) {
                 $array = array_merge($array, include $path);

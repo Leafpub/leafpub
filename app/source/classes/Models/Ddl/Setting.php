@@ -14,28 +14,29 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class Setting extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'settings';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Varchar('name', 191),
             new Column\Longtext('value'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\UniqueKey('name'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

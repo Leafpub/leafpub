@@ -12,7 +12,13 @@ namespace Leafpub\Models;
 
 class Setting extends AbstractModel
 {
+    /**
+     * @var null|\Leafpub\Models\Tables\Setting
+     */
     protected static ?\Leafpub\Models\Tables\Setting $_instance = null;
+    /**
+     * @var mixed[]
+     */
     protected static array $settings = [];
 
     /**
@@ -98,10 +104,9 @@ class Setting extends AbstractModel
     /**
      * Load settings from the database and store in a static variable for quick access
      *
-     * @return array
      *
      **/
-    public static function load()
+    public static function load(): void
     {
         try {
             $ret = self::getModel()->select()->toArray();
@@ -110,11 +115,11 @@ class Setting extends AbstractModel
                 self::$settings[$ds['name']] = $ds['value'];
             }
         } catch (\PDOException $e) {
-            throw new \Exception('Unable to load settings from the database.');
+            throw new \Exception('Unable to load settings from the database.', $e->getCode(), $e);
         }
     }
 
-    protected static function getModel()
+    protected static function getModel(): \Leafpub\Models\Tables\Setting
     {
         if (self::$_instance == null) {
             self::$_instance = new Tables\Setting();

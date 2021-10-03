@@ -12,21 +12,38 @@ namespace Leafpub\Mailer\Mail;
 
 class Mail
 {
-    public string $to;
+    /**
+     * @var Address
+     */
+    public Address $to;
 
-    public string $from;
+    /**
+     * @var Address
+     */
+    public Address $from;
 
+    /**
+     * @var string
+     */
     public string $subject;
 
+    /**
+     * @var string
+     */
     public string $message;
 
     /**
-     * @param string $to
-     * @param string $from
+     * @param Address $to
+     * @param Address $from
      * @param string $subject
      * @param string $message
      */
-    public function __construct($to, $from, $subject, $message)
+    public function __construct(
+        Address $to,
+        Address $from,
+        string $subject,
+        string $message
+    )
     {
         $this->to = $to;
         $this->from = $from;

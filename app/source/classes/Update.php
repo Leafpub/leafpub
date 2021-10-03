@@ -26,6 +26,9 @@ class Update extends Leafpub
     public const UPDATE_TYPE_THEME = 'theme';
     public const UPDATE_TYPE_LANGUAGE = 'language';
 
+    /**
+     * @var array<string, string>
+     */
     private static array $_paths = [
         self::UPDATE_TYPE_CORE => '',
         self::UPDATE_TYPE_PLUGIN => 'content/plugins',
@@ -56,7 +59,7 @@ class Update extends Leafpub
         }
     }
 
-    public static function extractData($name, $dlPath, $data)
+    public static function extractData($name, $dlPath, $data): bool
     {
         $zip = new ZipArchive();
         $res = $zip->open($dlPath, ZipArchive::CHECKCONS);
@@ -107,7 +110,8 @@ class Update extends Leafpub
     {
         $url = self::generateApiUrl('https://github.com/Leafpub/register' . self::CONTENT_URL); //str_replace([':owner', ':repo'], ['Leafpub', 'register'], self::CONTENT_URL);
         $ret = json_decode(self::getRemoteData($url));
-        for ($i = 2; $i < count($ret); ++$i) {
+        $retCount = count($ret);
+        for ($i = 2; $i < $retCount; ++$i) {
             try {
                 $file = self::path('source/config/' . $ret[$i]->name);
                 $data = self::getRemoteData($ret[$i]->download_url);
@@ -118,7 +122,7 @@ class Update extends Leafpub
         }
     }
 
-    public static function checkForUpdates()
+    public static function checkForUpdates(): array
     {
         $ret = [];
         $check = self::checkForLeafpubUpdate();
@@ -126,15 +130,15 @@ class Update extends Leafpub
             $ret['Leafpub'] = $check;
         }
         $check = self::checkPluginsForUpdate();
-        if ($check) {
+        if ($check !== []) {
             $ret['plugins'] = $check;
         }
         $check = self::checkLanguagesForUpdate();
-        if ($check) {
+        if ($check !== []) {
             $ret['languages'] = $check;
         }
         $check = self::checkThemesForUpdate();
-        if ($check) {
+        if ($check !== []) {
             $ret['themes'] = $check;
         }
 
@@ -148,13 +152,11 @@ class Update extends Leafpub
         }
         $url = self::generateApiUrl('https://github.com/Leafpub/leafpub' . self::RELEASE_UPDATE_URL);
         $cls = self::parseReleaseData(self::getRemoteData($url));
-        if ($cls) {
-            if (Comparator::greaterThan($cls->tag_name, LEAFPUB_VERSION)) {
-                return [
-                    'newVersion' => $cls->tag_name,
-                    'data' => self::encodeData(['link' => 'https://github.com/Leafpub/leafpub', 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_CORE]),
-                ];
-            }
+        if ($cls && Comparator::greaterThan($cls->tag_name, LEAFPUB_VERSION)) {
+            return [
+                'newVersion' => $cls->tag_name,
+                'data' => self::encodeData(['link' => 'https://github.com/Leafpub/leafpub', 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_CORE]),
+            ];
         }
 
         return false;
@@ -171,7 +173,7 @@ class Update extends Leafpub
         return $ret;
     }
 
-    public static function downloadZip($url, $targetFile)
+    public static function downloadZip($url, $targetFile): bool
     {
         try {
             $targetFile = fopen($targetFile, 'w');
@@ -200,31 +202,27 @@ class Update extends Leafpub
         return str_replace('https://github.com/', self::GITHUB_API_URL, $url);
     }
 
-    public static function encodeData(array $data)
+    public static function encodeData(array $data): string
     {
-        $token = \Firebase\JWT\JWT::encode($data, Setting::getOne('auth_key'));
-
-        return $token;
+        return \Firebase\JWT\JWT::encode($data, Setting::getOne('auth_key'));
     }
 
     public static function decodeData(string $token)
     {
         if (is_string($token) && ($token !== null)) {
-            $data = \Firebase\JWT\JWT::decode($token, Setting::getOne('auth_key'), ['HS256']);
-
-            return $data;
+            return \Firebase\JWT\JWT::decode($token, Setting::getOne('auth_key'), ['HS256']);
         }
 
         return false;
     }
 
-    public static function curl_progress_callback($dltotal, $dlnow, $ultotal, $ulnow)
+    public static function curl_progress_callback($dltotal, $dlnow, $ultotal, $ulnow): void
     {
         //echo $dltotal; //Reports correct value
         //echo ($dltotal-$dlnow) . '<br>';
     }
 
-    protected function checkPluginsForUpdate()
+    protected function checkPluginsForUpdate(): array
     {
         $plugins = \Leafpub\Models\Plugin::getActivatedPlugins();
         $data = self::processJsonFile(self::path('source/config/plugins.json'));
@@ -233,14 +231,12 @@ class Update extends Leafpub
             if (isset($data[$plugin['name']])) {
                 $url = self::generateApiUrl($data[$plugin['name']] . self::RELEASE_UPDATE_URL);
                 $cls = self::parseReleaseData(self::getRemoteData($url));
-                if ($cls) {
-                    if (Comparator::greaterThan($cls->tag_name, $plugin['version'])) {
-                        $updatablePlugins[$plugin['name']] = [
-                            'name' => $plugin['name'],
-                            'data' => self::encodeData(['link' => $data[$plugin['name']], 'oldVersion' => $plugin['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_PLUGIN]),
-                            'newVersion' => $cls->tag_name,
-                        ];
-                    }
+                if ($cls && Comparator::greaterThan($cls->tag_name, $plugin['version'])) {
+                    $updatablePlugins[$plugin['name']] = [
+                        'name' => $plugin['name'],
+                        'data' => self::encodeData(['link' => $data[$plugin['name']], 'oldVersion' => $plugin['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_PLUGIN]),
+                        'newVersion' => $cls->tag_name,
+                    ];
                 }
             }
         }
@@ -248,7 +244,7 @@ class Update extends Leafpub
         return $updatablePlugins;
     }
 
-    protected static function checkLanguagesForUpdate()
+    protected static function checkLanguagesForUpdate(): array
     {
         $languages = Language::getAll();
         $data = self::processJsonFile(self::path('source/config/languages.json'));
@@ -257,14 +253,12 @@ class Update extends Leafpub
             if (isset($data[$language['name']])) {
                 $url = self::generateApiUrl($data[$language['code']] . self::RELEASE_UPDATE_URL);
                 $cls = self::parseReleaseData(self::getRemoteData($url));
-                if ($cls) {
-                    if (Comparator::greaterThan($cls->tag_name, $language['version'])) {
-                        $updatableLanguages[$language['code']] = [
-                            'name' => $language['code'],
-                            'data' => self::encodeData(['link' => $data[$language['code']], 'oldVersion' => $language['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_LANGUAGE]),
-                            'newVersion' => $cls->tag_name,
-                        ];
-                    }
+                if ($cls && Comparator::greaterThan($cls->tag_name, $language['version'])) {
+                    $updatableLanguages[$language['code']] = [
+                        'name' => $language['code'],
+                        'data' => self::encodeData(['link' => $data[$language['code']], 'oldVersion' => $language['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_LANGUAGE]),
+                        'newVersion' => $cls->tag_name,
+                    ];
                 }
             }
         }
@@ -272,7 +266,7 @@ class Update extends Leafpub
         return $updatableLanguages;
     }
 
-    protected static function checkThemesForUpdate()
+    protected static function checkThemesForUpdate(): array
     {
         $themes = Theme::getAll();
         $data = self::processJsonFile(self::path('source/config/themes.json'));
@@ -281,14 +275,12 @@ class Update extends Leafpub
             if (isset($data[$theme['name']])) {
                 $url = self::generateApiUrl($data[$theme['name']] . self::RELEASE_UPDATE_URL);
                 $cls = self::parseReleaseData(self::getRemoteData($url));
-                if ($cls) {
-                    if (Comparator::greaterThan($cls->tag_name, $theme['version'])) {
-                        $updatableThemes[$theme['name']] = [
-                            'name' => $theme['name'],
-                            'data' => self::encodeData(['link' => $data[$theme['name']], 'oldVersion' => $theme['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_THEME]),
-                            'newVersion' => $cls->tag_name,
-                        ];
-                    }
+                if ($cls && Comparator::greaterThan($cls->tag_name, $theme['version'])) {
+                    $updatableThemes[$theme['name']] = [
+                        'name' => $theme['name'],
+                        'data' => self::encodeData(['link' => $data[$theme['name']], 'oldVersion' => $theme['version'], 'newVersion' => $cls->tag_name, 'type' => self::UPDATE_TYPE_THEME]),
+                        'newVersion' => $cls->tag_name,
+                    ];
                 }
             }
         }
@@ -326,7 +318,7 @@ class Update extends Leafpub
     }
 
     // copies files and non-empty directories
-    private static function rcopy($src, $dst)
+    private static function rcopy($src, $dst): void
     {
         self::$logger->debug('rcopy(' . $src . ', ' . $dst . ')');
         if (is_dir($src)) {

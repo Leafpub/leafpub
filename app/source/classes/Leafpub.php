@@ -48,7 +48,7 @@ class Leafpub
                 self::$logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
                 $logLvl = \Monolog\Logger::DEBUG;
             }
-            self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(self::path('log/leafpub.log'), 30, $logLvl));
+            self::$logger->pushHandler(new \Monolog\Handler\RotatingFileHandler(self::path('var/log/leafpub.log'), 30, $logLvl));
             self::$logger->debug('Startup...');
             // Connect to the database
 
@@ -106,7 +106,7 @@ class Leafpub
         // Create the Symfony EventDispatcher
         self::$logger->debug('Create event dispatcher');
         self::$dispatcher = new EventDispatcher();
-        self::_registerCoreListener();
+        #self::_registerCoreListener();
     }
 
     public static function getLogger()

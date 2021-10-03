@@ -14,29 +14,30 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class PostUploads extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'post_uploads';
 
-    public function __construct($t = null)
+    public function __construct()
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('post'),
             new \Zend\Db\Sql\Ddl\Column\Integer('upload'),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Index\Index('post'),
             new \Zend\Db\Sql\Ddl\Index\Index('upload'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

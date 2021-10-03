@@ -67,8 +67,8 @@ class Blog extends Leafpub
                         '@type' => 'Website',
                         'publisher' => Setting::getOne('title'),
                         'url' => parent::url(),
-                        'image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null,
+                        'image' => empty(Setting::getOne('cover')) ?
+                            null : parent::url(Setting::getOne('cover')),
                         'description' => Setting::getOne('tagline'),
                     ],
                     // Open Graph
@@ -78,20 +78,20 @@ class Blog extends Leafpub
                         'og:title' => Setting::getOne('title'),
                         'og:description' => Setting::getOne('tagline'),
                         'og:url' => parent::url(),
-                        'og:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null,
+                        'og:image' => empty(Setting::getOne('cover')) ?
+                            null : parent::url(Setting::getOne('cover')),
                     ],
                     // Twitter Card
                     'twitter_card' => [
-                        'twitter:card' => !empty(Setting::getOne('cover')) ?
-                            'summary_large_image' : 'summary',
-                        'twitter:site' => !empty(Setting::getOne('twitter')) ?
-                            '@' . Setting::getOne('twitter') : null,
+                        'twitter:card' => empty(Setting::getOne('cover')) ?
+                            'summary' : 'summary_large_image',
+                        'twitter:site' => empty(Setting::getOne('twitter')) ?
+                            null : '@' . Setting::getOne('twitter'),
                         'twitter:title' => Setting::getOne('title'),
                         'twitter:description' => Setting::getOne('tagline'),
                         'twitter:url' => parent::url(),
-                        'twitter:image' => !empty(Setting::getOne('cover')) ?
-                            parent::url(Setting::getOne('cover')) : null,
+                        'twitter:image' => empty(Setting::getOne('cover')) ?
+                            null : parent::url(Setting::getOne('cover')),
                     ],
                 ],
             ],
@@ -109,7 +109,7 @@ class Blog extends Leafpub
      **/
     public static function url($page = 1)
     {
-        if (!strlen(Setting::getOne('homepage'))) {
+        if (Setting::getOne('homepage') === '') {
             // Default homepage
             return $page > 1 ?
                 // example.com/page/2

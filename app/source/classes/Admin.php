@@ -27,10 +27,9 @@ class Admin extends Leafpub
      * @param string $template
      * @param array  $data
      *
-     * @return array
      *
      **/
-    public static function getAdminToolbarItems($template, $data)
+    public static function getAdminToolbarItems($template, $data): array
     {
         $items = [];
 
@@ -92,10 +91,9 @@ class Admin extends Leafpub
     /**
      * Returns an array of default and registered menu items
      *
-     * @return array
      *
      **/
-    public static function getMenuItems()
+    public static function getMenuItems(): array
     {
         $items = [];
 
@@ -205,7 +203,7 @@ class Admin extends Leafpub
      * @return mixed
      *
      **/
-    public static function render($template, $data = null)
+    public static function render($template, $data = null): string
     {
         return Renderer::render([
             'template' => self::path("source/templates/$template.hbs"),
@@ -220,10 +218,9 @@ class Admin extends Leafpub
      *
      * @param null $path
      *
-     * @return string
      *
      **/
-    public static function url($path = null)
+    public static function url($path = null): string
     {
         return parent::url(Setting::getOne('frag_admin'), $path);
     }

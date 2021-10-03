@@ -182,7 +182,7 @@ class Tag extends AbstractModel
         }
 
         // Must have a name
-        if (!mb_strlen($tag['name'])) {
+        if (mb_strlen($tag['name']) === 0) {
             throw new \Exception('No name specified', self::INVALID_NAME);
         }
 
@@ -204,7 +204,7 @@ class Tag extends AbstractModel
         try {
             $ret = (self::getModel()->insert($tag) > 0);
         } catch (\PDOException $e) {
-            throw new \Exception('Database error: ' . $e->getMessage());
+            throw new \Exception('Database error: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $evt = new Added($slug);
@@ -243,7 +243,7 @@ class Tag extends AbstractModel
         $tag = $evt->getEventData();
 
         // Must have a name
-        if (!mb_strlen($tag['name'])) {
+        if (mb_strlen($tag['name']) === 0) {
             throw new \Exception('No name specified', self::INVALID_NAME);
         }
 

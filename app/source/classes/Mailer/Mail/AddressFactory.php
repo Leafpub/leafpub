@@ -19,13 +19,11 @@ class AddressFactory
      * @param string|null $name
      *
      * @throws MailerException
-     *
-     * @return Address
      */
-    public static function create($email, $name = null)
+    public static function create(string $email, string $name = null): \Leafpub\Mailer\Mail\Address
     {
         // Allow email with local hostname and port number in dev mode
-        if (!defined('POSTLEAF_DEV') && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!defined('LEAFPUB_DEV') && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new MailerException('Invalid email: ' . $email);
         }
 

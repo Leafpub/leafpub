@@ -43,10 +43,9 @@ class Database extends Leafpub
      *
      * @throws \Exception
      *
-     * @return void
      *
      **/
-    public static function connect($config = null, $pdo_options = [])
+    public static function connect($config = null, $pdo_options = []): void
     {
         // Load default database config
         if (!$config) {
@@ -92,7 +91,7 @@ class Database extends Leafpub
                     $code = self::CONNECT_ERROR;
             }
 
-            throw new \Exception($message, $code);
+            throw new \Exception($message, $code, $e);
         }
     }
 
@@ -101,15 +100,11 @@ class Database extends Leafpub
      *
      * @param string $string
      *
-     * @return string
      *
      **/
-    public static function escapeLikeWildcards($string)
+    public static function escapeLikeWildcards($string): string
     {
-        $string = str_replace('%', '\\%', $string);
-        $string = str_replace('_', '\\_', $string);
-
-        return $string;
+        return str_replace(array('%', '_'), array('\\%', '\\_'), $string);
     }
 
     /**
@@ -117,14 +112,13 @@ class Database extends Leafpub
      *
      * @throws \Exception
      *
-     * @return void
      *
      **/
-    public static function resetTables()
+    public static function resetTables(): void
     {
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
-        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) === 'mysql');
 
         foreach (self::getTableNames() as $table) {
             $x = '\\Leafpub\\Models\\Ddl\\' . $table;
@@ -137,11 +131,11 @@ class Database extends Leafpub
 
             try {
                 $adapter->query(
-                        $tableSQL,
-                        Adapter::QUERY_MODE_EXECUTE
-                    );
+                    $tableSQL,
+                    Adapter::QUERY_MODE_EXECUTE
+                );
 
-                if ($table == 'Upload') {
+                if ($table === 'Upload') {
                     $dbTable = new Models\Tables\Upload();
                     $dbTable->insert(['id' => 1, 'caption' => '', 'created' => '2017-02-01 12:23:45', 'path' => 'content/uploads/2016/10/', 'filename' => 'leaves', 'extension' => 'jpg', 'size' => 254734, 'width' => 3000, 'height' => 2008]);
                     $dbTable->insert(['id' => 2, 'caption' => '', 'created' => '2017-02-01 12:24:28', 'path' => 'content/uploads/2016/10/', 'filename' => 'sunflower', 'extension' => 'jpg', 'size' => 280779, 'width' => 3000, 'height' => 1990]);
@@ -154,38 +148,37 @@ class Database extends Leafpub
                     $dbTable->insert(['id' => 9, 'caption' => '', 'created' => '2017-02-01 12:24:54', 'path' => 'content/uploads/2016/10/', 'filename' => 'logo-color', 'extension' => 'png', 'size' => 20000, 'width' => 610, 'height' => 610]);
                 }
             } catch (\PDOException $e) {
-                throw new \Exception('Unable to create database schema [' . $ddl->getTable() . ']: ' . $e->getMessage(), self::INIT_FAILED);
+                throw new \Exception('Unable to create database schema [' . $ddl->getTable() . ']: ' . $e->getMessage(), self::INIT_FAILED, $e);
             }
         }
         $adapter->query('DROP VIEW IF EXISTS ' . TableGateway::$prefix . 'view_posts;', Adapter::QUERY_MODE_EXECUTE);
         $adapter->query(
-                    str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
-                        SELECT  
-                        a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
-                        a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
+            str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
+                        SELECT
+                        a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content,
+                        a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky,
                         CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
-                        FROM 
+                        FROM
                         `__posts` a
-                        LEFT JOIN 
+                        LEFT JOIN
                         `__uploads` b
-                        ON 
+                        ON
                         a.image = b.id
                         INNER JOIN
                         `__users` c
                         ON
                         a.author = c.id
                         "),
-                    Adapter::QUERY_MODE_EXECUTE
-                );
+            Adapter::QUERY_MODE_EXECUTE
+        );
     }
 
     /**
      * Begins a transaction
      *
-     * @return bool
      *
      **/
-    public static function beginTransaction()
+    public static function beginTransaction(): bool
     {
         return self::$database->beginTransaction();
     }
@@ -193,10 +186,9 @@ class Database extends Leafpub
     /**
      * Rollback a transaction
      *
-     * @return bool
      *
      **/
-    public static function rollBack()
+    public static function rollBack(): bool
     {
         return self::$database->rollBack();
     }
@@ -204,10 +196,9 @@ class Database extends Leafpub
     /**
      * Commit a transaction
      *
-     * @return bool
      *
      **/
-    public static function commit()
+    public static function commit(): bool
     {
         return self::$database->commit();
     }
@@ -217,15 +208,14 @@ class Database extends Leafpub
      *
      * @param string $table
      *
-     * @return bool
      *
      **/
-    public static function truncate($table)
+    public static function truncate($table): bool
     {
         return self::$database->exec('TRUNCATE ' . $table);
     }
 
-    public static function updateDatabase()
+    public static function updateDatabase(): void
     {
         self::$logger->info(' Begin database update ');
         self::$logger->info(' creating backup ');
@@ -242,13 +232,13 @@ class Database extends Leafpub
      * Create __plugins table
      *
      **/
-    protected static function updateToVersion1()
+    protected static function updateToVersion1(): void
     {
         self::$logger->info(' start updateToVersion1 ');
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
-        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) === 'mysql');
 
         $table = new \Leafpub\Models\Ddl\Plugin();
         $tableSQL = $sql->getSqlStringForSqlObject($table);
@@ -261,12 +251,12 @@ class Database extends Leafpub
         self::$logger->info(' end updateToVersion1 ');
     }
 
-    protected static function updateToVersion2()
+    protected static function updateToVersion2(): void
     {
         self::$logger->info(' start updateToVersion2 ');
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
-        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) === 'mysql');
         try {
             self::$logger->info('updating table __uploads');
             $atu = new \Zend\Db\Sql\Ddl\AlterTable(TableGateway::$prefix . 'uploads');
@@ -342,24 +332,24 @@ class Database extends Leafpub
         self::$logger->info(' creating view __view_posts ');
         try {
             $adapter->query(
-                        str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
-                            SELECT  
-                            a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content, 
-                            a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky, 
+                str_replace('__', TableGateway::$prefix, "CREATE VIEW __view_posts AS
+                            SELECT
+                            a.id, a.slug, a.created, a.pub_date, c.slug as author, a.title, a.content,
+                            a.meta_title, a.meta_description, a.status, a.page, a.featured, a.sticky,
                             CONCAT_WS('.', CONCAT(b.path, b.filename), b.extension) as image
-                            FROM 
+                            FROM
                             `__posts` a
-                            LEFT JOIN 
+                            LEFT JOIN
                             `__uploads` b
-                            ON 
+                            ON
                             a.image = b.id
                             INNER JOIN
                             `__users` c
                             ON
                             a.author = c.id
                             "),
-                        Adapter::QUERY_MODE_EXECUTE
-                    );
+                Adapter::QUERY_MODE_EXECUTE
+            );
 
             self::$logger->info(' end updateToVersion2 ');
         } catch (\Exception $e) {
@@ -367,13 +357,13 @@ class Database extends Leafpub
         }
     }
 
-    protected static function updateToVersion3()
+    protected static function updateToVersion3(): void
     {
         self::$logger->info(' start updateToVersion3 ');
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new \Zend\Db\Sql\Sql($adapter);
-        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) == 'mysql');
+        $isMySQL = (strtolower($adapter->getDriver()->getDatabasePlatformName()) === 'mysql');
         try {
             $table = new \Leafpub\Models\Ddl\PostMeta();
             $tableSQL = $sql->getSqlStringForSqlObject($table);

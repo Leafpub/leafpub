@@ -19,6 +19,9 @@ class Enum extends Column
      */
     protected $type = 'ENUM';
 
+    /**
+     * @var null|mixed[]
+     */
     protected ?array $possibilities = null;
 
     /**
@@ -35,20 +38,15 @@ class Enum extends Column
 
     /**
      * @param array $possibilities
-     *
-     * @return self
      */
-    public function setPossibilities($possibilities)
+    public function setPossibilities($possibilities): self
     {
-        $this->possibilities = (array) $possibilities;
+        $this->possibilities = (array) (array) (array) (array) (array) $possibilities;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getPossibilities()
+    public function getPossibilities(): ?array
     {
         return $this->possibilities;
     }
@@ -60,18 +58,15 @@ class Enum extends Column
     {
         $data = parent::getExpressionData();
 
-        if ($this->getPossibilitiesExpression()) {
+        if ($this->getPossibilitiesExpression() !== '') {
             $data[0][1][1] .= '(' . $this->getPossibilitiesExpression() . ')';
         }
 
         return $data;
     }
 
-    /**
-     * @return string
-     */
-    protected function getPossibilitiesExpression()
+    protected function getPossibilitiesExpression(): string
     {
-        return (string) implode(',', $this->possibilities);
+        return implode(',', $this->possibilities);
     }
 }

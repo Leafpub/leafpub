@@ -33,19 +33,16 @@ class Cache extends Leafpub
      *
      * @throws \Exception
      *
-     * @return bool
      *
      **/
-    public static function delete($filename = null)
+    public static function delete($filename = null): bool
     {
         // Determine full path
-        $filename = self::path('content/cache', $filename);
+        $filename = self::path('var/cache', $filename);
 
         // Delete it if it exists
-        if (file_exists($filename)) {
-            if (!unlink($filename)) {
-                throw new \Exception('Unable to delete cache file: ' . $filename, self::UNABLE_TO_DELETE_FILE);
-            }
+        if (file_exists($filename) && !unlink($filename)) {
+            throw new \Exception('Unable to delete cache file: ' . $filename, self::UNABLE_TO_DELETE_FILE);
         }
 
         return true;
@@ -59,18 +56,17 @@ class Cache extends Leafpub
      *
      * @throws \Exception
      *
-     * @return bool
      *
      **/
-    public static function flush($prefix = null)
+    public static function flush($prefix = null): bool
     {
         // There's nothing to do if the directory doesn't exist
-        if (!file_exists(self::path('content/cache'))) {
+        if (!file_exists(self::path('var/cache'))) {
             return true;
         }
 
         // Loop through the cache directory and flush matching files
-        $iterator = new \DirectoryIterator(self::path('content/cache'));
+        $iterator = new \DirectoryIterator(self::path('var/cache'));
         foreach ($iterator as $file) {
             if ($file->getFilename() === '.gitignore') {
                 continue;
@@ -112,7 +108,7 @@ class Cache extends Leafpub
     public static function get($filename)
     {
         // Read the cache file
-        $filename = self::path('content/cache', $filename);
+        $filename = self::path('var/cache', $filename);
         if (!file_exists($filename)) {
             return false;
         }
@@ -133,18 +129,17 @@ class Cache extends Leafpub
      *
      * @throws \Exception
      *
-     * @return bool
      *
      **/
-    public static function put($filename, $data)
+    public static function put($filename, $data): bool
     {
         // Create the cache directory if it doesn't exist
-        if (!self::makeDir(self::path('content/cache'))) {
+        if (!self::makeDir(self::path('var/cache'))) {
             throw new \Exception('Unable to create cache directory: ' . self::path('content/cache'), self::UNABLE_TO_CREATE_DIRECTORY);
         }
 
         // Write the cache file
-        $filename = self::path('content/cache', $filename);
+        $filename = self::path('var/cache', $filename);
         if (file_put_contents($filename, $data) === false) {
             throw new \Exception('Unable to write cache file: ' . $filename, self::UNABLE_TO_WRITE_FILE);
         }

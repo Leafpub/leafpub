@@ -14,12 +14,14 @@ use Zend\Db\Sql\Ddl\CreateTable;
 
 class History extends CreateTable
 {
+    /**
+     * @var string
+     */
     protected $table = 'history';
 
     public function __construct($t = null)
     {
         $this->table = \Leafpub\Models\Tables\TableGateway::$prefix . $this->table;
-
         $this->columns = [
             new \Zend\Db\Sql\Ddl\Column\Integer('id', false, null, ['auto_increment' => true]),
             new \Zend\Db\Sql\Ddl\Column\Integer('post'),
@@ -27,19 +29,18 @@ class History extends CreateTable
             new Column\Longtext('post_data'),
             new \Zend\Db\Sql\Ddl\Column\Binary('initial', null, false, 0),
         ];
-
         $this->constraints = [
             new \Zend\Db\Sql\Ddl\Constraint\PrimaryKey('id'),
             new \Zend\Db\Sql\Ddl\Index\Index('post'),
         ];
     }
 
-    public function setTable($t)
+    public function setTable($t): self
     {
         return $this;
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }

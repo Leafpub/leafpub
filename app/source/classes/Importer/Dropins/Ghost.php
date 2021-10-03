@@ -20,6 +20,13 @@ use Leafpub\Importer\AbstractImporter;
  **/
 class Ghost extends AbstractImporter
 {
+    /**
+     * @var array<mixed, array<int|string, mixed>>|null
+     */
+    public array $_posts;
+    /**
+     * @var array<string, string>
+     */
     private array $userKeys = [
         'id' => 'id',
         'slug' => 'slug',
@@ -29,6 +36,9 @@ class Ghost extends AbstractImporter
         'created_at' => 'created',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private array $tagKeys = [
         'id' => 'id',
         'slug' => 'slug',
@@ -40,6 +50,9 @@ class Ghost extends AbstractImporter
         'created_at' => 'created',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private array $postKeys = [
         'id' => 'id',
         'slug' => 'slug',
@@ -55,16 +68,22 @@ class Ghost extends AbstractImporter
         'published_at' => 'pub_Date',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private array $mediaKeys = [
         'id' => 'id',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private array $ptKeys = [
         'post_id' => 'post',
         'tag_id' => 'tag',
     ];
 
-    public function parseFile()
+    public function parseFile(): void
     {
         $data = json_decode(file_get_contents($this->_fileToParse));
         $posts = $data->db[0]->data->posts;

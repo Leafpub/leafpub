@@ -27,10 +27,8 @@ abstract class AbstractModel implements ModelInterface
 
     /**
      * Checks if the caller is allowed to call a method
-     *
-     * @return bool
      */
-    protected static function isAllowedCaller()
+    protected static function isAllowedCaller(): bool
     {
         if ($_REQUEST['cmd'] === 'install') {
             return true;

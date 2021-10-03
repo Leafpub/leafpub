@@ -13,8 +13,8 @@ namespace Leafpub\Events;
 interface ILeafpubEvent
 {
     // returns the event data
-    public function getEventData();
+    public function getEventData(): array;
 
     // sets the event data
-    public function setEventData($data);
+    public function setEventData(array $data): void;
 }

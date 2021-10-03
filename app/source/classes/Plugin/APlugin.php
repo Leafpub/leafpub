@@ -16,19 +16,51 @@ use Leafpub\Renderer;
 
 abstract class APlugin
 {
+    /**
+     * @var string
+     */
+    public string $_url;
     public const NAME = '';
+    /**
+     * @var string
+     */
     private string $_name = '';
+    /**
+     * @var string
+     */
     private string $_version = '';
+    /**
+     * @var string
+     */
     private string $_author = '';
+    /**
+     * @var string
+     */
     private string $_license = '';
-    private string $_link = '';
+    /**
+     * @var string
+     */
     private string $_requires = '';
+    /**
+     * @var string
+     */
     private string $_image = '';
+    /**
+     * @var bool
+     */
     private bool $_isAdminPlugin = false;
+    /**
+     * @var bool
+     */
     private bool $_isWidget = false;
-    private string $_dir = '';
+    /**
+     * @var string
+     */
     private string $_description = '';
 
+    /**
+     * @var null|\Slim\App
+     */
     private ?\Slim\App $_app = null;
 
     public function __construct(\Slim\App $app)
@@ -69,50 +101,42 @@ abstract class APlugin
 
     /**
      * Returns the plugin name
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->_name;
     }
 
     /**
      * Returns the plugin version
-     *
-     * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->_version;
     }
 
     /**
      * Returns the author's name
-     *
-     * @return string
      */
-    public function getAuthor()
+    public function getAuthor(): string
     {
         return $this->_author;
     }
 
     /**
      * Returns the license
-     *
-     * @return string
      */
-    public function getLicense()
+    public function getLicense(): string
     {
         return $this->_license;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->_description;
     }
 
-    public function getImage()
+    public function getImage(): string
     {
         if ($this->_image === '') {
             return 'source/assets/img/app-icon.png';
@@ -121,32 +145,28 @@ abstract class APlugin
         return $this->_image;
     }
 
-    public function isWidget()
+    public function isWidget(): bool
     {
         return $this->_isWidget;
     }
 
     /**
      * Returns the plugin address
-     *
-     * @return string
      */
-    public function getPluginAddress()
+    public function getPluginAddress(): string
     {
         return $this->_url;
     }
 
     /**
      * Returns the required Leafpub version
-     *
-     * @return string
      */
-    public function getRequiredLeafpubVersion()
+    public function getRequiredLeafpubVersion(): string
     {
         return $this->_requires;
     }
 
-    public function url($path = null)
+    public function url($path = null): string
     {
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin) {
@@ -183,7 +203,7 @@ abstract class APlugin
      * @return mixed
      *
      **/
-    public static function render($template, $data = null, $dir = null)
+    public static function render($template, $data = null, $dir = null): string
     {
         return Renderer::render([
             'template' => Leafpub::path('content/plugins/' . $dir . "/templates/$template.hbs"),
@@ -195,10 +215,8 @@ abstract class APlugin
 
     /**
      * Reads the plugin.json and autoconfigure the plugin
-     *
-     * @return void
      */
-    protected function setOptions()
+    protected function setOptions(): void
     {
         // Generate path from the class and read the plugin.json
         $dir = array_slice(explode('\\', get_class($this)), 0, -1)[2];
@@ -212,29 +230,21 @@ abstract class APlugin
         $this->_version = $json['version'];
         $this->_license = $json['license'];
         $this->_requires = $json['requires'];
-        $this->_link = $json['link'];
         $this->_image = $json['image'];
         $this->_isAdminPlugin = $json['isAdminPlugin'];
-        $this->_dir = $dir;
         $this->_isWidget = $json['isWidget'];
 
         if ($json['isMiddleware'] == true) {
             $this->_app->add($this);
-        } else {
-            // Add routes to app, if present
-            // and only, if this plugin isn't a middleware
-            if (isset($json['routes'])) {
-                $this->addRoutes($json['routes']);
-            }
+        } elseif (isset($json['routes'])) {
+            $this->addRoutes($json['routes']);
         }
     }
 
     /**
      * Adds routes to Leafpub
-     *
-     * @return void
      */
-    private function addRoutes(array $routes)
+    private function addRoutes(array $routes): void
     {
         $safeName = Leafpub::slug($this->_name);
         if ($this->_isAdminPlugin) {
