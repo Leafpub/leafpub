@@ -214,6 +214,11 @@ $(function() {
         })
         .done(function(res){
             $('.media-list').css('display', 'flex').html(res.html);
+            $('.lazy').Lazy({
+                afterLoad: function(element) {
+                    $(element).removeClass("preloading");
+                }
+            });
         });
     });
 
@@ -222,7 +227,7 @@ $(function() {
             multiple: false,
             doubleClick: function(value) {
                 setImage(value);
-                
+
             },
             getValue: function() {
                 return $(this).attr('data-slug');
@@ -260,6 +265,12 @@ $(function() {
                     if(page <= res.pagination.total_pages) {
                         $(list).append(res.html);
                     }
+
+                    $('.lazy').Lazy({
+                        afterLoad: function(element) {
+                            $(element).removeClass("preloading");
+                        }
+                    });
                 })
                 .always(function() {
                     // Hide progress
