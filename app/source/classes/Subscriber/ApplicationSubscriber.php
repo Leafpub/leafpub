@@ -3,6 +3,16 @@ declare(strict_types=1);
 
 namespace Leafpub\Subscriber;
 
+use Leafpub\Controller\Admin\DashboardController;
+use Leafpub\Controller\Admin\EditPostController;
+use Leafpub\Controller\Admin\ImportController;
+use Leafpub\Controller\Admin\ListPostsController;
+use Leafpub\Controller\Admin\LoginController;
+use Leafpub\Controller\Admin\LogoutController;
+use Leafpub\Controller\Admin\NewPostController;
+use Leafpub\Controller\Admin\PostHistoryController;
+use Leafpub\Controller\Admin\RecoverController;
+use Leafpub\Controller\Admin\ResetController;
 use Leafpub\Events\Application\Shutdown;
 use Leafpub\Events\Application\Startup;
 use Leafpub\Middleware\AdjustSearchQueryMiddleware;
@@ -140,25 +150,25 @@ class ApplicationSubscriber implements EventSubscriberInterface
 
         /** Unprotected **/
         $app->group("/$frags->admin", function() {
-            $this->get('/login', 'Leafpub\Controller\AdminController:login');
-            $this->get('/login/recover', 'Leafpub\Controller\AdminController:recover');
-            $this->get('/login/reset', 'Leafpub\Controller\AdminController:reset');
-            $this->get('/logout', 'Leafpub\Controller\AdminController:logout');
+            $this->get('/login', LoginController::class);
+            $this->get('/login/recover', RecoverController::class);
+            $this->get('/login/reset', ResetController::class);
+            $this->get('/logout', LogoutController::class);
         });
 
         /** Protected **/
         $app->group("/$frags->admin", function() {
             // Dashboard
-            $this->get('', 'Leafpub\Controller\AdminController:dashboard');
+            $this->get('', DashboardController::class);
 
             // Importer
-            $this->get('/import', 'Leafpub\Controller\AdminController:import');
+            $this->get('/import', ImportController::class);
 
             // Posts
-            $this->get('/posts', 'Leafpub\Controller\AdminController:posts');
-            $this->get('/posts/new', 'Leafpub\Controller\AdminController:newPost');
-            $this->get('/posts/{slug}', 'Leafpub\Controller\AdminController:editPost');
-            $this->get('/posts/{slug}/history/{id}', 'Leafpub\Controller\AdminController:history');
+            $this->get('/posts', ListPostsController::class);
+            $this->get('/posts/new', NewPostController::class);
+            $this->get('/posts/{slug}', EditPostController::class);
+            $this->get('/posts/{slug}/history/{id}', PostHistoryController::class);
 
             // Tags
             $this->get('/tags', 'Leafpub\Controller\AdminController:tags');

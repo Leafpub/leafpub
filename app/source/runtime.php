@@ -1,6 +1,16 @@
 <?php
 namespace Leafpub;
 
+use Leafpub\Controller\Admin\DashboardController;
+use Leafpub\Controller\Admin\EditPostController;
+use Leafpub\Controller\Admin\ImportController;
+use Leafpub\Controller\Admin\ListPostsController;
+use Leafpub\Controller\Admin\LoginController;
+use Leafpub\Controller\Admin\LogoutController;
+use Leafpub\Controller\Admin\NewPostController;
+use Leafpub\Controller\Admin\PostHistoryController;
+use Leafpub\Controller\Admin\RecoverController;
+use Leafpub\Controller\Admin\ResetController;
 use Leafpub\Events\Application\Startup;
 use Leafpub\Middleware\AdjustSearchQueryMiddleware;
 use Leafpub\Middleware\AuthMiddleware;
@@ -223,5 +233,50 @@ function containerFactory(): ContainerInterface
         return new MediaSubscriber();
     };
 
+    /** END SUBSCRIBER */
+
+    /** BEGINN CONTROLLER */
+
+    $container[LoginController::class] = static function (ContainerInterface $container): LoginController {
+        return new LoginController();
+    };
+
+    $container[RecoverController::class] = static function (ContainerInterface $container): RecoverController {
+        return new RecoverController();
+    };
+
+    $container[ResetController::class] = static function (ContainerInterface $container): ResetController {
+        return new ResetController();
+    };
+
+    $container[LogoutController::class] = static function (ContainerInterface $container): LogoutController {
+        return new LogoutController();
+    };
+
+    $container[DashboardController::class] = static function (ContainerInterface $container): DashboardController {
+        return new DashboardController();
+    };
+
+    $container[ImportController::class] = static function (ContainerInterface $container): ImportController {
+        return new ImportController();
+    };
+
+    $container[ListPostsController::class] = static function (ContainerInterface $container): ListPostsController {
+        return new ListPostsController();
+    };
+
+    $container[NewPostController::class] = static function (ContainerInterface $container): NewPostController {
+        return new NewPostController();
+    };
+
+    $container[EditPostController::class] = static function (ContainerInterface $container): EditPostController {
+        return new EditPostController();
+    };
+
+    $container[PostHistoryController::class] = static function (ContainerInterface $container): PostHistoryController {
+        return new PostHistoryController();
+    };
+
+    /** END CONTROLLER */
     return $container;
 }

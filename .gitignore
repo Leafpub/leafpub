@@ -8,7 +8,7 @@ npm-debug.log
 /app/db_upload_fix.php
 /app/source/assets
 /app/source/vendor
-/app/source/var
+/app/var
 /design
 /dist
 /node_modules
