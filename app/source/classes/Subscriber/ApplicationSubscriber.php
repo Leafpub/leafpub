@@ -5,14 +5,34 @@ namespace Leafpub\Subscriber;
 
 use Leafpub\Controller\Admin\DashboardController;
 use Leafpub\Controller\Admin\EditPostController;
+use Leafpub\Controller\Admin\EditTagController;
+use Leafpub\Controller\Admin\EditUserController;
 use Leafpub\Controller\Admin\ImportController;
 use Leafpub\Controller\Admin\ListPostsController;
+use Leafpub\Controller\Admin\ListTagsController;
+use Leafpub\Controller\Admin\ListUsersController;
 use Leafpub\Controller\Admin\LoginController;
 use Leafpub\Controller\Admin\LogoutController;
+use Leafpub\Controller\Admin\MediaController;
+use Leafpub\Controller\Admin\NavigationController;
 use Leafpub\Controller\Admin\NewPostController;
+use Leafpub\Controller\Admin\NewTagController;
+use Leafpub\Controller\Admin\NewUserController;
+use Leafpub\Controller\Admin\PluginController;
 use Leafpub\Controller\Admin\PostHistoryController;
 use Leafpub\Controller\Admin\RecoverController;
 use Leafpub\Controller\Admin\ResetController;
+use Leafpub\Controller\Admin\SettingsController;
+use Leafpub\Controller\Admin\UpdateController;
+use Leafpub\Controller\Api\Get\RegenerateThumbnailsController;
+use Leafpub\Controller\Frontend\AuthorController;
+use Leafpub\Controller\Frontend\BlogController;
+use Leafpub\Controller\Frontend\CustomHomepageController;
+use Leafpub\Controller\Frontend\FeedController;
+use Leafpub\Controller\Frontend\PostController;
+use Leafpub\Controller\Frontend\SearchController;
+use Leafpub\Controller\Frontend\SitemapController;
+use Leafpub\Controller\Frontend\TagController;
 use Leafpub\Events\Application\Shutdown;
 use Leafpub\Events\Application\Startup;
 use Leafpub\Middleware\AdjustSearchQueryMiddleware;
@@ -171,29 +191,29 @@ class ApplicationSubscriber implements EventSubscriberInterface
             $this->get('/posts/{slug}/history/{id}', PostHistoryController::class);
 
             // Tags
-            $this->get('/tags', 'Leafpub\Controller\AdminController:tags');
-            $this->get('/tags/new', 'Leafpub\Controller\AdminController:newTag');
-            $this->get('/tags/{slug}', 'Leafpub\Controller\AdminController:editTag');
+            $this->get('/tags', ListTagsController::class);
+            $this->get('/tags/new', NewTagController::class);
+            $this->get('/tags/{slug}', EditTagController::class);
 
             // Navigation
-            $this->get('/navigation', 'Leafpub\Controller\AdminController:navigation');
+            $this->get('/navigation', NavigationController::class);
 
             // Users
-            $this->get('/users', 'Leafpub\Controller\AdminController:users');
-            $this->get('/users/new', 'Leafpub\Controller\AdminController:newUser');
-            $this->get('/users/{slug}', 'Leafpub\Controller\AdminController:editUser');
+            $this->get('/users', ListUsersController::class);
+            $this->get('/users/new', NewUserController::class);
+            $this->get('/users/{slug}', EditUserController::class);
 
             // Settings
-            $this->get('/settings', 'Leafpub\Controller\AdminController:settings');
+            $this->get('/settings', SettingsController::class);
 
             // Plugins
-            $this->get('/plugins', 'Leafpub\Controller\AdminController:plugins');
+            $this->get('/plugins', PluginController::class);
 
             // Uploads
-            $this->get('/uploads', 'Leafpub\Controller\AdminController:uploads');
-            $this->get('/regenerateThumbnails', 'Leafpub\Controller\AdminController:regenerateThumbnails');
+            $this->get('/uploads', MediaController::class);
+            $this->get('/regenerateThumbnails', RegenerateThumbnailsController::class);
 
-            $this->get('/updateLeafpub', 'Leafpub\Controller\AdminController:updateLeafpub');
+            $this->get('/updateLeafpub', UpdateController::class);
 
         })->add($app->getContainer()->get(AuthMiddleware::class))->add('Leafpub\Middleware:checkDBScheme');
 
@@ -204,41 +224,41 @@ class ApplicationSubscriber implements EventSubscriberInterface
         /** Homepage **/
         if(Setting::getOne('homepage')) {
             // Custom homepage
-            $app->get('/', 'Leafpub\Controller\ThemeController:customHomepage');
+            $app->get('/', CustomHomepageController::class);
 
             // Blog at /blog
             $app->group("/$frags->blog", function() use($frags) {
-                $this->get("[/$frags->page/{page:[0-9]+}]", 'Leafpub\Controller\ThemeController:blog');
+                $this->get("[/$frags->page/{page:[0-9]+}]", BlogController::class);
             })->add($app->getContainer()->get(PageNumbersMiddleware::class));
         } else {
             // Blog at the homepage
             $app->group('/', function() use($frags) {
-                $this->get("[$frags->page/{page:[0-9]+}]", 'Leafpub\Controller\ThemeController:blog');
+                $this->get("[$frags->page/{page:[0-9]+}]", BlogController::class);
             })->add($app->getContainer()->get(PageNumbersMiddleware::class));
         }
 
 // Feed
-        $app->get("/$frags->feed", 'Leafpub\Controller\ThemeController:feed');
+        $app->get("/$frags->feed", FeedController::class);
 
 // Authors
         $app->group("/$frags->author", function() use ($frags) {
-            $this->get("/{author}[/$frags->page/{page:[0-9]+}]", 'Leafpub\Controller\ThemeController:author');
+            $this->get("/{author}[/$frags->page/{page:[0-9]+}]", AuthorController::class);
         })->add($app->getContainer()->get(PageNumbersMiddleware::class));
 
 // Tags
         $app->group("/$frags->tag", function() use ($frags) {
-            $this->get("/{tag}[/$frags->page/{page:[0-9]+}]", 'Leafpub\Controller\ThemeController:tag');
+            $this->get("/{tag}[/$frags->page/{page:[0-9]+}]", TagController::class);
         })->add($app->getContainer()->get(PageNumbersMiddleware::class));
 
 // Search
         $app->group("/$frags->search", function() use($frags) {
-            $this->get("[/{query}[/$frags->page/{page:[0-9]+}]]", 'Leafpub\Controller\ThemeController:search');
+            $this->get("[/{query}[/$frags->page/{page:[0-9]+}]]", SearchController::class);
         })->add($app->getContainer()->get(AdjustSearchQueryMiddleware::class))->add($app->getContainer()->get(PageNumbersMiddleware::class));
 
-        $app->get('/sitemap', 'Leafpub\Controller\ThemeController:sitemap');
+        $app->get('/sitemap', SitemapController::class);
 
 // Posts
-        $app->get('/{post}', 'Leafpub\Controller\ThemeController:post');
+        $app->get('/{post}', PostController::class);
     }
 
     public function addMiddleware(Startup $evt): void

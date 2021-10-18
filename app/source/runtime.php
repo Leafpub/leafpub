@@ -3,14 +3,35 @@ namespace Leafpub;
 
 use Leafpub\Controller\Admin\DashboardController;
 use Leafpub\Controller\Admin\EditPostController;
+use Leafpub\Controller\Admin\EditTagController;
+use Leafpub\Controller\Admin\EditUserController;
 use Leafpub\Controller\Admin\ImportController;
 use Leafpub\Controller\Admin\ListPostsController;
+use Leafpub\Controller\Admin\ListTagsController;
+use Leafpub\Controller\Admin\ListUsersController;
 use Leafpub\Controller\Admin\LoginController;
 use Leafpub\Controller\Admin\LogoutController;
+use Leafpub\Controller\Admin\MediaController;
+use Leafpub\Controller\Admin\NavigationController;
 use Leafpub\Controller\Admin\NewPostController;
+use Leafpub\Controller\Admin\NewTagController;
+use Leafpub\Controller\Admin\NewUserController;
+use Leafpub\Controller\Admin\PluginController;
 use Leafpub\Controller\Admin\PostHistoryController;
 use Leafpub\Controller\Admin\RecoverController;
 use Leafpub\Controller\Admin\ResetController;
+use Leafpub\Controller\Admin\SettingsController;
+use Leafpub\Controller\Admin\UpdateController;
+use Leafpub\Controller\Api\Get\RegenerateThumbnailsController;
+use Leafpub\Controller\Frontend\AuthorController;
+use Leafpub\Controller\Frontend\BlogController;
+use Leafpub\Controller\Frontend\CustomHomepageController;
+use Leafpub\Controller\Frontend\ErrorController;
+use Leafpub\Controller\Frontend\FeedController;
+use Leafpub\Controller\Frontend\PostController;
+use Leafpub\Controller\Frontend\SearchController;
+use Leafpub\Controller\Frontend\SitemapController;
+use Leafpub\Controller\Frontend\TagController;
 use Leafpub\Events\Application\Startup;
 use Leafpub\Middleware\AdjustSearchQueryMiddleware;
 use Leafpub\Middleware\AuthMiddleware;
@@ -19,7 +40,6 @@ use Leafpub\Middleware\MaintenanceMiddleware;
 use Leafpub\Middleware\PageNumbersMiddleware;
 use Leafpub\Middleware\RemoveTrailingSlashMiddleware;
 use Leafpub\Middleware\TracyMiddleware;
-use Leafpub\Subscriber\Application;
 use Leafpub\Subscriber\ApplicationSubscriber;
 use Leafpub\Subscriber\MediaSubscriber;
 use Leafpub\Subscriber\PostSubscriber;
@@ -275,6 +295,90 @@ function containerFactory(): ContainerInterface
 
     $container[PostHistoryController::class] = static function (ContainerInterface $container): PostHistoryController {
         return new PostHistoryController();
+    };
+
+    $container[ListTagsController::class] = static function (ContainerInterface $container): ListTagsController {
+        return new ListTagsController();
+    };
+
+    $container[NewTagController::class] = static function (ContainerInterface $container): NewTagController {
+        return new NewTagController();
+    };
+
+    $container[EditTagController::class] = static function (ContainerInterface $container): EditTagController {
+        return new EditTagController();
+    };
+
+    $container[NavigationController::class] = static function (ContainerInterface $container): NavigationController {
+        return new NavigationController();
+    };
+
+    $container[ListUsersController::class] = static function (ContainerInterface $container): ListUsersController {
+        return new ListUsersController();
+    };
+
+    $container[NewUserController::class] = static function (ContainerInterface $container): NewUserController {
+        return new NewUserController();
+    };
+
+    $container[EditUserController::class] = static function (ContainerInterface $container): EditUserController {
+        return new EditUserController();
+    };
+
+    $container[SettingsController::class] = static function (ContainerInterface $container): SettingsController {
+        return new SettingsController();
+    };
+
+    $container[PluginController::class] = static function (ContainerInterface $container): PluginController {
+        return new PluginController();
+    };
+
+    $container[MediaController::class] = static function (ContainerInterface $container): MediaController {
+        return new MediaController();
+    };
+
+    $container[UpdateController::class] = static function (ContainerInterface $container): UpdateController {
+        return new UpdateController();
+    };
+
+    $container[RegenerateThumbnailsController::class] = static function (ContainerInterface $container): RegenerateThumbnailsController {
+        return new RegenerateThumbnailsController();
+    };
+
+    $container[AuthorController::class] = static function (ContainerInterface $container): AuthorController {
+        return new AuthorController();
+    };
+
+    $container[TagController::class] = static function (ContainerInterface $container): TagController {
+        return new TagController();
+    };
+
+    $container[SearchController::class] = static function (ContainerInterface $container): SearchController {
+        return new SearchController();
+    };
+
+    $container[SitemapController::class] = static function (ContainerInterface $container): SitemapController {
+        return new SitemapController();
+    };
+
+    $container[PostController::class] = static function (ContainerInterface $container): PostController {
+        return new PostController();
+    };
+
+    $container[FeedController::class] = static function (ContainerInterface $container): FeedController {
+        return new FeedController();
+    };
+
+    $container[BlogController::class] = static function (ContainerInterface $container): BlogController {
+        return new BlogController();
+    };
+
+    $container[CustomHomepageController::class] = static function (ContainerInterface $container): CustomHomepageController {
+        return new CustomHomepageController();
+    };
+
+    $container[ErrorController::class] = static function (ContainerInterface $container): ErrorController {
+        return new ErrorController();
     };
 
     /** END CONTROLLER */
