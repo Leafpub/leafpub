@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html/leafpub
+  db:
+    image: mariadb
+    volumes:
+        - ./data/db:/var/lib/mysql
+    ports:
+        - "3306:3306"
+    environment:
+      MYSQL_DATABASE: leafpub
+      MYSQL_USER: leafpub
+      MYSQL_PASSWORD: leafpub
+      MYSQL_ROOT_PASSWORD: leafpub
+
+  adminer:
+      image: adminer:4.3.1-standalone
+      ports:
+          - "8080:8080"
