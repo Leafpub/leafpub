@@ -14,7 +14,7 @@ class PostMeta extends AbstractModel
 {
     protected static ?\Leafpub\Models\Tables\PostMeta $_instance = null;
 
-    protected static $allowedCaller = [
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\Post',

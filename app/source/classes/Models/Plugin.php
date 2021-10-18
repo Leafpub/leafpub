@@ -35,7 +35,7 @@ class Plugin extends AbstractModel
     /**
      * @var array<class-string<\Leafpub\Controller\AdminController>>|array<class-string<\Leafpub\Controller\APIController>>|array<class-string<\Leafpub\Leafpub>>|array<class-string<\Leafpub\Models\Plugin>>
      */
-    protected static $allowedCaller = [
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Leafpub',

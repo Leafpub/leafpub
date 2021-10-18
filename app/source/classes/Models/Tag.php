@@ -36,7 +36,7 @@ class Tag extends AbstractModel
     public const NOT_FOUND = 4;
     protected static ?\Leafpub\Models\Tables\Tag $_instance = null;
 
-    protected static $allowedCaller = [
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\Post',

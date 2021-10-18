@@ -35,7 +35,7 @@ class Upload extends AbstractModel
     public const UNSUPPORTED_FILE_TYPE = 4;
     protected static ?\Leafpub\Models\Tables\Upload $_instance = null;
 
-    protected static $allowedCaller = [
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\Post',

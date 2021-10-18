@@ -37,7 +37,7 @@ class Post extends AbstractModel
     public const NOT_FOUND = 4;
     protected static ?\Leafpub\Models\Tables\Post $_instance = null;
 
-    protected static $allowedCaller = [
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\Post',
@@ -82,15 +82,15 @@ class Post extends AbstractModel
         $options = $evt->getEventData();
 
         // Convert dates to UTC
-        if ($options['start_date']) {
+        if (isset($options['start_date'])) {
             $start_date = Leafpub::localToUtc($options['start_date']);
         }
-        if ($options['end_date']) {
+        if (isset($options['end_date'])) {
             $end_date = Leafpub::localToUtc($options['end_date']);
         }
 
         // If there's a query of > 4 chars, make it a fulltext search
-        $is_fulltext = $options['query'] && strlen($options['query']) >= 4;
+        $is_fulltext = isset($options['query']) && strlen($options['query']) >= 4;
 
         $columns = [
             'id', 'slug', 'created', 'pub_date', 'author',
@@ -120,11 +120,11 @@ class Post extends AbstractModel
                 $wh->expression('CONCAT(slug, title) LIKE ?', '%' . $options['query'] . '%');
             }
 
-            if ($options['author']) {
+            if (isset($options['author'])) {
                 $wh->equalTo('author', $options['author']);
             }
 
-            if ($options['tag']) {
+            if (isset($options['tag'])) {
                 $prefix = Tables\TableGateway::$prefix;
                 $wh->expression(
                     '(
@@ -136,27 +136,27 @@ class Post extends AbstractModel
                 );
             }
 
-            if ($options['status']) {
+            if (isset($options['status'])) {
                 $wh->in('status', (array) $options['status']);
             }
 
-            if ($options['ignore_featured']) {
+            if (isset($options['ignore_featured'])) {
                 $wh->notEqualTo('featured', 1);
             }
 
-            if ($options['ignore_sticky']) {
+            if (isset($options['ignore_sticky'])) {
                 $wh->notEqualTo('sticky', 1);
             }
 
-            if ($options['ignore_pages']) {
+            if (isset($options['ignore_pages'])) {
                 $wh->notEqualTo('page', 1);
             }
 
-            if ($options['start_date']) {
+            if (isset($options['start_date'])) {
                 $wh->greateThanOrEqualTo('pub_date', $options['start_date']);
             }
 
-            if ($options['end_date']) {
+            if (isset($options['end_date'])) {
                 $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             }
         };
@@ -536,10 +536,10 @@ class Post extends AbstractModel
         $select->from($prefix . 'view_posts');
 
         // Convert dates to UTC
-        if ($options['start_date']) {
+        if (isset($options['start_date'])) {
             $start_date = Leafpub::localToUtc($options['start_date']);
         }
-        if ($options['end_date']) {
+        if (isset($options['end_date'])) {
             $end_date = Leafpub::localToUtc($options['end_date']);
         }
 
@@ -552,11 +552,11 @@ class Post extends AbstractModel
             }
 
             // Add options to query
-            if ($options['author']) {
+            if (isset($options['author'])) {
                 $wh->equalTo('author', $options['author']);
             }
 
-            if ($options['tag']) {
+            if (isset($options['tag'])) {
                 $wh->expression(
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
@@ -567,27 +567,27 @@ class Post extends AbstractModel
                 );
             }
 
-            if ($options['status']) {
+            if (isset($options['status'])) {
                 $wh->equalTo('status', $options['status']);
             }
 
-            if ($options['ignore_featured']) {
+            if (isset($options['ignore_featured'])) {
                 $wh->notEqualTo('featured', 1);
             }
 
-            if ($options['ignore_sticky']) {
+            if (isset($options['ignore_sticky'])) {
                 $wh->notEqualTo('sticky', 1);
             }
 
-            if ($options['ignore_pages']) {
+            if (isset($options['ignore_pages'])) {
                 $wh->notEqualTo('page', 1);
             }
 
-            if ($options['start_date']) {
+            if (isset($options['start_date'])) {
                 $wh->greateThanOrEqualTo('pub_date', $options['start_date']);
             }
 
-            if ($options['end_date']) {
+            if (isset($options['end_date'])) {
                 $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             }
         };
@@ -658,19 +658,19 @@ class Post extends AbstractModel
         $select->from($prefix . 'view_posts');
 
         // Convert dates to UTC
-        if ($options['start_date']) {
+        if (isset($options['start_date'])) {
             $start_date = Leafpub::localToUtc($options['start_date']);
         }
-        if ($options['end_date']) {
+        if (isset($options['end_date'])) {
             $end_date = Leafpub::localToUtc($options['end_date']);
         }
 
         $where = function ($wh) use ($options, $prefix, $slug) {
-            if ($options['author']) {
+            if (isset($options['author'])) {
                 $wh->equalTo('author', $options['author']);
             }
 
-            if ($options['tag']) {
+            if (isset($options['tag'])) {
                 $wh->expression(
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
@@ -681,27 +681,27 @@ class Post extends AbstractModel
                 );
             }
 
-            if ($options['status']) {
+            if (isset($options['status'])) {
                 $wh->in('status', (array) $options['status']);
             }
 
-            if ($options['ignore_featured']) {
+            if (isset($options['ignore_featured'])) {
                 $wh->notEqualTo('featured', 1);
             }
 
-            if ($options['ignore_sticky']) {
+            if (isset($options['ignore_sticky'])) {
                 $wh->notEqualTo('sticky', 1);
             }
 
-            if ($options['ignore_pages']) {
+            if (isset($options['ignore_pages'])) {
                 $wh->notEqualTo('page', 1);
             }
 
-            if ($options['start_date']) {
+            if (isset($options['start_date'])) {
                 $wh->greaterThanOrEqualTo('pub_date', $options['start_date']);
             }
 
-            if ($options['end_date']) {
+            if (isset($options['end_date'])) {
                 $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             }
 
@@ -727,10 +727,11 @@ class Post extends AbstractModel
         $select->limit(1);
 
         try {
-            $post = $model->selectWith($select)->toArray()[0];
-            if (!$post) {
+            $posts = $model->selectWith($select)->toArray();
+            if ($posts === []) {
                 return false;
             }
+            $post = $posts[0];
         } catch (\PDOException $e) {
             return false;
         }
@@ -766,10 +767,10 @@ class Post extends AbstractModel
         ], (array) $options);
 
         // Convert dates to UTC
-        if ($options['start_date']) {
+        if (isset($options['start_date'])) {
             $start_date = Leafpub::localToUtc($options['start_date']);
         }
-        if ($options['end_date']) {
+        if (isset($options['end_date'])) {
             $end_date = Leafpub::localToUtc($options['end_date']);
         }
 
@@ -782,11 +783,11 @@ class Post extends AbstractModel
         $where = function ($wh) use ($options, $prefix, $slug) {
             $wh->notEqualTo($prefix . 'view_posts.slug', $slug);
 
-            if ($options['author']) {
+            if (isset($options['author'])) {
                 $wh->equalTo('author', $options['author']);
             }
 
-            if ($options['tag']) {
+            if (isset($options['tag'])) {
                 $wh->expression(
                     '(
                         SELECT COUNT(*) from ' . $prefix . 'tags
@@ -797,27 +798,27 @@ class Post extends AbstractModel
                 );
             }
 
-            if ($options['status']) {
+            if (isset($options['status'])) {
                 $wh->expression('status', implode(',', (array) $options['status']));
             }
 
-            if ($options['ignore_featured']) {
+            if (isset($options['ignore_featured'])) {
                 $wh->notEqualTo('featured', 1);
             }
 
-            if ($options['ignore_sticky']) {
+            if (isset($options['ignore_sticky'])) {
                 $wh->notEqualTo('sticky', 1);
             }
 
-            if ($options['ignore_pages']) {
+            if (isset($options['ignore_pages'])) {
                 $wh->notEqualTo('page', 1);
             }
 
-            if ($options['start_date']) {
+            if (isset($options['start_date'])) {
                 $wh->greaterThanOrEqualTo('pub_date', $options['start_date']);
             }
 
-            if ($options['end_date']) {
+            if (isset($options['end_date'])) {
                 $wh->lessThanOrEqualTo('pub_date', $options['end_date']);
             }
 
@@ -895,12 +896,12 @@ class Post extends AbstractModel
      * Renders a post
      *
      * @param string $slug_or_post
-     * @param null   $options
+     * @param array   $options
      *
      * @return mixed
      *
      **/
-    public static function render($slug_or_post, $options = null)
+    public static function render($slug_or_post, array $options = [])
     {
         // Get the post
         if (is_array($slug_or_post)) {
@@ -919,15 +920,14 @@ class Post extends AbstractModel
         $post['pub_date'] = Leafpub::parseDate($post['pub_date']);
 
         // Only render if it's visible to the public or a preview
-        if (!self::isVisible($post) && !$options['preview']) {
+        if (!self::isVisible($post) && isset($options['preview']) && !$options['preview']) {
             return false;
         }
 
         // Determine which template to use
-        if ($options['zen']) {
+        if (isset($options['zen'])) {
             $template = Leafpub::path('source/templates/editor.zen.hbs');
         } else {
-            $options['amp'] = false;
             $template = Theme::getPath($post['page'] ? 'page.hbs' : 'post.hbs');
         }
 
@@ -936,11 +936,10 @@ class Post extends AbstractModel
             'post' => $post,
             'special_vars' => [
                 'meta' => [
-                    'amp' => (bool) $options['amp'],
-                    'embed_media' => $options['embed_media'],
-                    'embed_social' => $options['embed_social'],
-                    'editable' => (bool) $options['editable'],
-                    'preview' => (bool) $options['preview'],
+                    'embed_media' => $options['embed_media'] ?? false,
+                    'embed_social' => $options['embed_social'] ?? false,
+                    'editable' => $options['editable'] ?? false,
+                    'preview' => $options['preview'] ?? false,
                     'title' => !empty($post['meta_title']) ? $post['meta_title'] : $post['title'],
                     'description' => !empty($post['meta_description']) ?
                         $post['meta_description'] :
@@ -1054,11 +1053,11 @@ class Post extends AbstractModel
             'helpers' => ['theme', 'url', 'utility'],
             // If we're editing or previewing, don't pass in user data to simulate what an
             // unauthenticated user would see.
-            'user' => ($options['editable'] || $options['preview']) ? false : Session::user(),
+            'user' => (isset($options['editable']) || isset($options['preview'])) ? false : Session::user(),
         ]);
 
         // Check for required helpers
-        if ($options['editable']) {
+        if (isset($options['editable'])) {
             // There's no reliable way to check for the existence of a Handlebar helper without
             // parsing the template file and all of the partials it uses before rendering. As a
             // workaround, we check for certain known strings that will be in the HTML when a post
@@ -1078,7 +1077,7 @@ class Post extends AbstractModel
 
         // Append a <base> tag for editable posts and post previews so they render properly no
         // matter where the rendering document exists.
-        if ($options['editable'] || $options['preview']) {
+        if (isset($options['editable']) || isset($options['preview'])) {
             $html = str_replace(
                 '<!--{{leafpub_head}}-->',
                 '<!--{{leafpub_head}}--><base href="' .

@@ -10,9 +10,11 @@ declare(strict_types=1);
 
 namespace Leafpub\Models;
 
+use Leafpub\Session;
+
 abstract class AbstractModel implements ModelInterface
 {
-    protected static $allowedCaller;
+    protected static array $allowedCaller;
 
     public static function truncate()
     {
@@ -20,7 +22,7 @@ abstract class AbstractModel implements ModelInterface
             throw new \Exception('Only owner and admin are allowed to truncate tables!');
         }
 
-        return self::getModel()->truncate();
+        return static::getModel()->truncate();
     }
 
     abstract protected static function getModel();

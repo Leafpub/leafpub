@@ -38,7 +38,8 @@ class User extends AbstractModel
     public const PASSWORD_TOO_SHORT = 10;
     public const UNABLE_TO_ASSIGN_POSTS = 11;
     protected static ?\Leafpub\Models\Tables\User $_instance = null;
-    protected static $allowedCaller = [
+
+    protected static array $allowedCaller = [
         'Leafpub\\Controller\\AdminController',
         'Leafpub\\Controller\\APIController',
         'Leafpub\\Models\\User',
