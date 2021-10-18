@@ -85,7 +85,8 @@ class Session extends Leafpub
      * @param string $password
      *
      *
-     **/
+     * @return bool
+     */
     public static function login(string $username, string $password): bool
     {
         if (User::verifyPassword($username, $password)) {
@@ -118,10 +119,10 @@ class Session extends Leafpub
      * Updates the authenticated user's token and data. This method should be called anytime the
      * authenticated user is updated. If the username (slug) has changed, pass it to $new_username.
      *
-     * @param string $new_username
+     * @param string|null $new_username
      *
      *
-     **/
+     */
     public static function update(string $new_username = null): void
     {
         // Has the username (slug) changed?
@@ -139,11 +140,11 @@ class Session extends Leafpub
      * Gets the user that is currently logged in. If $property is set, only that property will be
      * returned.
      *
-     * @param string $property
+     * @param string|null $property
      *
      * @return mixed
      *
-     **/
+     */
     public static function user(string $property = null)
     {
         if (self::isAuthenticated()) {

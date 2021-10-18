@@ -31,7 +31,7 @@ class BlogController
         array $args
     ): ResponseInterface
     {
-        $page = isset($args['page']) ? $args['page'] : false;
+        $page = $args['page'] ?? 1;
         $html = Blog::render($page);
 
         return $html === false ?

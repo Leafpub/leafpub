@@ -25,15 +25,16 @@ class Search extends Leafpub
      * Renders a search page
      *
      * @param string $query
-     * @param in     $page
+     * @param int     $page
      *
-     * @return mixed
+     * @return string
      *
      **/
-    public static function render($query, $page = 1)
+    public static function render(string $query, int $page = 1): string
     {
+        $pagination = [];
         // Get the search's posts
-        if (mb_strlen($query) !== 0) {
+        if ($query !== '') {
             $posts = Post::getMany([
                 'query' => (string) (string) $query,
                 'page' => $page,
@@ -55,7 +56,7 @@ class Search extends Leafpub
             self::url($query, $pagination['previous_page']) : null;
 
         // Determine meta title based on query
-        if (mb_strlen($query) !== 0) {
+        if ($query !== '') {
             $meta_title = Language::term('search_results_for_{query}', [
                 'query' => $query,
             ]);
