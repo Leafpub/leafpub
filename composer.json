@@ -7,7 +7,7 @@
         "ext-openssl": "*",
         "ext-pdo_mysql": "*",
         "zordius/lightncandy": "^1.0",
-        "firebase/php-jwt": "^3.0",
+        "firebase/php-jwt": "^6.0",
         "slim/slim": "^3.0",
         "claviska/simpleimage": "^3.0",
         "erusev/parsedown": "^1.6",
